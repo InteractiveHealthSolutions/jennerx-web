@@ -1,0 +1,14 @@
+@font-face { font-family: Scriptini; src: url('../fonts/SCRIPTIN.ttf'); } 
+@font-face { font-family: YanoneKaffeesatz; src: url('../fonts/YanoneKaffeesatz-Regular.ttf'); } 
+@font-face {
+    font-family: JinkyRegular;
+    src: url('../fonts/JINKY-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: MomsTypewriterRegular;
+    src: url('../fonts/Moms_typewriter-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}

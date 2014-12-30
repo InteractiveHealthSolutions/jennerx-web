@@ -1,0 +1,174 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tabAddress"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/Lavender"
+    android:orientation="vertical"
+    android:paddingBottom="15dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:paddingTop="15dp"
+    tools:context=".AddressActivity" >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textViewHouseNo"
+                style="@style/ThemeTextSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ru_enrollment_label_AddressHouseNo"
+                android:textColor="@color/PaleBlue" />
+
+            <EditText
+                android:id="@+id/editTextHouseNo"
+                style="@style/ThemeText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textShortMessage" />
+
+            <TextView
+                android:id="@+id/textViewStreet"
+                style="@style/ThemeTextSmall"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ru_enrollment_label_AddressStreet"
+                android:textColor="@color/PaleBlue" />
+
+            <EditText
+                android:id="@+id/editTextStreet"
+                style="@style/ThemeTextSmall"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textShortMessage"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/textViewSector"
+                style="@style/ThemeTextSmall"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ru_enrollment_label_AddressSector"
+                android:textColor="@color/PaleBlue" />
+
+            <EditText
+                android:id="@+id/editTextSector"
+                style="@style/ThemeText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textShortMessage" />
+
+            <TextView
+                android:id="@+id/textViewColony"
+                style="@style/ThemeTextSmall"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ru_enrollment_label_AddressColony"
+                android:textColor="@color/PaleBlue" />
+
+            <EditText
+                android:id="@+id/editTextColony"
+                style="@style/ThemeText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textShortMessage" />
+
+            <TextView
+                android:id="@+id/textViewTown"
+                style="@style/ThemeTextSmall"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ru_enrollment_label_AddressTown"
+                android:textColor="@color/PaleBlue" />
+
+            <Spinner
+                android:id="@+id/spinnerTown"
+                style="@style/ThemeText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/textViewUc"
+                style="@style/ThemeTextSmall"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ru_enrollment_label_AddressUC"
+                android:textColor="@color/PaleBlue" />
+
+            <Spinner
+                android:id="@+id/spinnerUC"
+                style="@style/ThemeText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/textViewCity"
+                style="@style/ThemeTextSmall"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ru_enrollment_label_AddressCity"
+                android:textColor="@color/PaleBlue" />
+
+            <Spinner
+                android:id="@+id/spinnerCity"
+                style="@style/ThemeText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/textViewLandmark"
+                style="@style/ThemeTextSmall"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ru_enrollment_label_AddressLandmark"
+                android:textColor="@color/PaleBlue" />
+
+            <EditText
+                android:id="@+id/editTextLandmark"
+                style="@style/ThemeText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" 
+                android:inputType="textShortMessage"/>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:weightSum="2" >
+
+                <Button
+                    android:id="@+id/btnCloseAddress"
+                    style="@style/btnStyDefault"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:onClick="onSubmit"
+                    android:text="@string/application_ok" />
+
+                <Button
+                    android:id="@+id/btnCancelAddress"
+                    style="@style/btnStyDefault"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:onClick="cancel"
+                    android:text="@string/application_cancel" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

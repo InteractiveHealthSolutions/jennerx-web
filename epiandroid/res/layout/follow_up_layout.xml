@@ -1,0 +1,356 @@
+<RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/Lavender"
+    android:orientation="vertical"
+    tools:context=".FollowUpActivity" >
+
+    <TabHost
+        android:id="@android:id/tabhost"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/layoutButtons" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <!-- start -->
+
+            <HorizontalScrollView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="true"
+                android:scrollbars="none" >
+
+                <TabWidget
+                    android:id="@android:id/tabs"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+                </TabWidget>
+            </HorizontalScrollView>
+            <!-- end -->
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <!-- BIODATA TAB -->
+
+                <LinearLayout
+                    android:id="@+id/tabChildData"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:id="@+id/horizontalChildID"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:orientation="horizontal"
+                        android:weightSum="4" >
+
+                        <EditText
+                            android:id="@+id/edtTextProjectId"
+                            style="@style/ThemeTextLeftPadding"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:hint="@string/enrollment_label_ProjectId"
+                            android:inputType="phone"
+                            android:maxLength="14"
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                        <ImageView
+                            android:id="@+id/imgViewScanID"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:onClick="scan"
+                            android:src="@drawable/camera" />
+
+                        <ImageView
+                            android:id="@+id/imgViewFetchData"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:onClick="fetchData"
+                            android:src="@drawable/tick" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:orientation="horizontal"
+                        android:weightSum="4" >
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="2" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/btnScan"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/btnFetch"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutTextView1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="2dp"
+                        android:weightSum="2" >
+
+                        <TextView
+                            android:id="@+id/textViewLastEPINo"
+                            style="@style/ThemeTextSmall"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="@string/followViewEPI"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="@color/PaleBlue" />
+
+                        <TextView
+                            android:id="@+id/textViewDOB"
+                            style="@style/ThemeTextSmall"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="@string/followViewDOB"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="@color/PaleBlue" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutEditText1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:weightSum="2" >
+
+                        <EditText
+                            android:id="@+id/editTextLastEPINo"
+                            style="@style/ThemeTextLeftPadding"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_below="@+id/textViewLastEPINo"
+                            android:layout_weight="1"
+                            android:hint="EPI number"
+                            android:inputType="phone"
+                            android:maxLength="8" />
+
+                        <EditText
+                            android:id="@+id/edtTextDOBFUP"
+                            style="@style/ThemeText"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentLeft="@+id/textViewLastDOB"
+                            android:layout_weight="1"
+                            android:editable="false"
+                            android:hint="DOB" />
+                    </LinearLayout>
+
+                    <!-- Child's name -->
+
+                    <LinearLayout
+                        android:id="@+id/layoutTextView2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="15dp"
+                        android:weightSum="2" >
+
+                        <TextView
+                            android:id="@+id/textViewChildName"
+                            style="@style/ThemeTextSmall"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="@string/followViewChild"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="@color/PaleBlue" />
+
+                        <TextView
+                            android:id="@+id/textViewFatherName"
+                            style="@style/ThemeTextSmall"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:editable="false"
+                            android:text="@string/followViewFather"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="@color/PaleBlue" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutEditText2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:weightSum="2" >
+
+                        <EditText
+                            android:id="@+id/editTextChildFullName"
+                            style="@style/ThemeTextLeftPadding"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_below="@+id/textViewLastEPINo"
+                            android:layout_weight="1"
+                            android:hint="Child&apos;s name" />
+
+                        <EditText
+                            android:id="@+id/textViewFatherFullName"
+                            style="@style/ThemeText"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentLeft="@+id/textViewLastDOB"
+                            android:layout_weight="1"
+                            android:hint="Father&apos;s name" />
+                    </LinearLayout>
+
+                    <!-- Program details -->
+
+                    <LinearLayout
+                        android:id="@+id/layoutTextView3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="7dp"
+                        android:weightSum="1" >
+                        <CheckBox
+                            android:id="@+id/chkboxSMSFUP"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/followCHKSMS" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutTextView4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dp"
+                        android:weightSum="2" >
+
+                        <TextView
+                            android:id="@+id/textViewMobileNumber"
+                            style="@style/ThemeTextSmall"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:paddingTop="5dp"
+                            android:text="@string/followViewMobile"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="@color/PaleBlue" />
+
+                        <TextView
+                            android:id="@+id/textViewLandlineNumber"
+                            style="@style/ThemeTextSmall"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:paddingTop="5dp"
+                            android:text="@string/followViewLandline"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="@color/PaleBlue" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutEditText3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:weightSum="2" >
+
+                        <EditText
+                            android:id="@+id/editTexMobileNumber"
+                            style="@style/ThemeTextLeftPadding"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_below="@+id/textViewLastEPINo"
+                            android:layout_weight="1"
+                            android:hint="@string/editMobileDigits"
+                            android:inputType="phone"
+                            android:textSize="14sp" />
+
+                        <EditText
+                            android:id="@+id/editTextLandlineNumber"
+                            style="@style/ThemeText"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentLeft="@+id/textViewLastDOB"
+                            android:layout_weight="1"
+                            android:hint="@string/editMobileDigits"
+                            android:inputType="phone"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+                <!-- END OF BIODATA TAB -->
+
+
+                <!-- VACCINATION SCHEDULE START -->
+
+                <LinearLayout
+                    android:id="@+id/tabNextVaccines"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <fragment
+                        android:id="@+id/fragmentVac"
+                        android:name="org.ird.android.epi.fragments.VaccineScheduleFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+                    </ScrollView>
+                </LinearLayout>
+                <!-- VACCINATION SCHEDULE END -->
+                <!-- SUPPLEMENTARY VACCINATION SCHEDULE START -->
+
+                <LinearLayout
+                    android:id="@+id/tabSupplementaryVaccines"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <fragment
+                        android:id="@+id/fragmentSupplementaryVac"
+                        android:name="org.ird.android.epi.fragments.SupplementaryVaccineFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+                    </ScrollView>
+                </LinearLayout>
+                <!-- SUPPLEMENTARY VACCINATION SCHEDULE END -->
+
+            </FrameLayout>
+        </LinearLayout>
+    </TabHost>
+
+</RelativeLayout>

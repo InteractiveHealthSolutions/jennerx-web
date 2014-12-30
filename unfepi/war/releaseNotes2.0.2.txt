@@ -1,0 +1,14 @@
+Release Notes : (version 2.0.2 unfepi webapp):
+----------------------------------------------
+
+Bug Fixes:
+----------
+1- An error was preventing followups being submitted due to missing Preference object in VaccinationCenterVisit object in followupController
+2- A nullPointerException was been thrown by submission of addVaccinationCenter form because of modified location model. city table was deleted from db but code was still accessing it.
+
+Features and improvements:
+--------------------------
+3- Code for making dumps was optimized as well as procedures for doing so. Time for creation of dumps reduced from 500 sec to 140 sec.
+4- Data edit form made available in child dashboard.
+5- Vaccination Centers add form was added with a checkbox for select all vaccine days for any particular vaccine. This would help wastage of time and effort in selecting 7 days for each vaccine.
+6- Exception trace page now shows full exception trace to help team report excatly what had happened.

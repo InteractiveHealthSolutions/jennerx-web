@@ -1,0 +1,199 @@
+<configuration debug="true">
+
+    <property resource="unfepi.properties" />
+    
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+<!-- 	<appender name="EMAIL" class="ch.qos.logback.classic.net.SMTPAppender">
+		<smtpHost>smtp.gmail.com</smtpHost>
+		<smtpPort>587</smtpPort>
+		<STARTTLS>true</STARTTLS>
+		<username>YOUR_USERNAME@gmail.com</username>
+		<password>YOUR_GMAIL_xPASSWORD</password>
+
+		<to>EMAIL-DESTINATION</to>
+		<to>ANOTHER_EMAIL_DESTINATION</to> additional destinations are possible
+		<from>YOUR_USERNAME@gmail.com</from>
+		<subject>TESTING: %logger{20} - %m</subject>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>%date %-5level %logger - %message%n</pattern>
+		</layout>
+	</appender>-->
+
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${application.log.log-files-location}/epilog/epilogbacklog.log</file>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>epilogbacklog.%i.log</fileNamePattern>
+			<minIndex>1</minIndex>
+			<maxIndex>5</maxIndex>
+		</rollingPolicy>
+
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>3MB</maxFileSize>
+		</triggeringPolicy>
+		<encoder>
+			<pattern>%d %-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="FILE_NOTIFIERJOB" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${application.log.log-files-location}/epilog/notifierjoblog.log</file>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>notifierjoblog.%i.log</fileNamePattern>
+			<minIndex>1</minIndex>
+			<maxIndex>5</maxIndex>
+		</rollingPolicy>
+
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>3MB</maxFileSize>
+		</triggeringPolicy>
+		<encoder>
+			<pattern>%d %-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="FILE_REMINDERJOB" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${application.log.log-files-location}/epilog/reminderjoblog.log</file>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>reminderjoblog.%i.log</fileNamePattern>
+			<minIndex>1</minIndex>
+			<maxIndex>5</maxIndex>
+		</rollingPolicy>
+
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>3MB</maxFileSize>
+		</triggeringPolicy>
+		<encoder>
+			<pattern>%d %-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="FILE_RESPONSEJOB" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${application.log.log-files-location}/epilog/responsejoblog.log</file>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>responsejoblog.%i.log</fileNamePattern>
+			<minIndex>1</minIndex>
+			<maxIndex>5</maxIndex>
+		</rollingPolicy>
+
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>3MB</maxFileSize>
+		</triggeringPolicy>
+		<encoder>
+			<pattern>%d %-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="FILE_INCENTIVEJOB" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${application.log.log-files-location}/epilog/incentivejoblog.log</file>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>incentivejoblog.%i.log</fileNamePattern>
+			<minIndex>1</minIndex>
+			<maxIndex>5</maxIndex>
+		</rollingPolicy>
+
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>3MB</maxFileSize>
+		</triggeringPolicy>
+		<encoder>
+			<pattern>%d %-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="FILE_DB" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${application.log.log-files-location}/epilog/dbduplicatetarseel.log</file>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>dbduplicatetarseel.%i.log</fileNamePattern>
+			<minIndex>1</minIndex>
+			<maxIndex>5</maxIndex>
+		</rollingPolicy>
+
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>100KB</maxFileSize>
+		</triggeringPolicy>
+		<encoder>
+			<pattern>%d %-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="FILE_MOBILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>/usr/share/tomcat6/epilog/mobilerequests.log</file>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>mobilerequests.%i.log</fileNamePattern>
+			<minIndex>1</minIndex>
+			<maxIndex>5</maxIndex>
+		</rollingPolicy>
+
+		<triggeringPolicy
+			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>3MB</maxFileSize>
+		</triggeringPolicy>
+		<encoder>
+			<pattern>%d %-4relative [%thread] %-5level %logger{35} - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+	<appender name="FILE_EMAILS" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${application.log.log-files-location}/epilog/emails.log</file>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>emails.%i.log</fileNamePattern>
+			<minIndex>1</minIndex>
+			<maxIndex>5</maxIndex>
+		</rollingPolicy>
+
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>3MB</maxFileSize>
+		</triggeringPolicy>
+		<encoder>
+			<pattern>%d %-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+		</encoder>
+	</appender>
+<appender name="DB" class="ch.qos.logback.classic.db.DBAppender">
+    <connectionSource class="ch.qos.logback.core.db.DataSourceConnectionSource">
+      <dataSource class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <driverClass>${unfepi.database.connection.driver_class}<!-- com.mysql.jdbc.Driver --></driverClass>
+        <jdbcUrl>${unfepi.database.connection.url}<!-- jdbc:mysql://localhost:3306/unfepi --></jdbcUrl>
+        <user>${unfepi.database.connection.username}</user>
+        <password>${unfepi.database.connection.password}</password>
+      </dataSource>
+    </connectionSource>
+  </appender>
+
+	<logger name="notifierjobAppender" additivity="false">
+		<appender-ref ref="FILE_NOTIFIERJOB" />
+	</logger>
+	<logger name="reminderjobAppender" additivity="false">
+		<appender-ref ref="FILE_REMINDERJOB" />
+	</logger>
+	<logger name="responsejobAppender" additivity="false">
+		<appender-ref ref="FILE_RESPONSEJOB" />
+	</logger>
+	<logger name="incentivejobAppender" additivity="false">
+		<appender-ref ref="FILE_INCENTIVEJOB" />
+	</logger>
+	<logger name="emailsAppender" additivity="false">
+		<appender-ref ref="FILE_EMAILS" />
+	</logger>
+	<logger name="fileAppender" additivity="false">
+		<appender-ref ref="FILE" />
+	</logger>
+	<logger name="dbAppender" additivity="false">
+		<appender-ref ref="DB" />
+	</logger>
+	<logger name="mobileAppender" additivity="false">
+		<appender-ref ref="FILE_MOBILE" />
+	</logger>
+
+<!-- DONOT Change it causes DB logger fail to do log entry for ALL TRANSACTIONS -->
+	<root level="info">
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration> 

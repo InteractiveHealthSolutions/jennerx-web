@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tables">
+         <item>CREATE TABLE IF NOT EXISTS location (
+            locationId TEXT NOT NULL COLLATE NOCASE, 
+            name TEXT NOT NULL UNIQUE COLLATE NOCASE, 
+    		parent TEXT NOT NULL COLLATE NOCASE,	       
+            locationType TEXT NOT NULL COLLATE NOCASE,
+            PRIMARY KEY (locationId))
+        </item>
+       
+        <item>
+            CREATE TABLE IF NOT EXISTS locationType (
+            typeName TEXT NOT NULL COLLATE NOCASE,
+            typeId TEXT NOT NULL UNIQUE COLLATE NOCASE,
+            PRIMARY KEY (typeId))
+        </item>
+        <item>
+            CREATE TABLE IF NOT EXISTS centre (
+            centreId TEXT NOT NULL UNIQUE COLLATE NOCASE,
+            name TEXT NOT NULL COLLATE NOCASE,
+            PRIMARY KEY (centreId))
+        </item> 
+    </string-array>
+    
+</resources>

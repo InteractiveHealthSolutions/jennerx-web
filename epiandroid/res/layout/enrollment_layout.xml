@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/Lavender"
+    android:orientation="vertical"
+    android:weightSum="10"
+    tools:context=".EnrollmentActivity" >
+
+    <TabHost
+        android:id="@android:id/tabhost"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="8"
+        android:paddingBottom="15sp" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <HorizontalScrollView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="true"
+                android:scrollbars="none" >
+
+                <TabWidget
+                    android:id="@android:id/tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+                </TabWidget>
+            </HorizontalScrollView>
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <!-- ENROLLMENT HOME -->
+
+                <LinearLayout
+                    android:id="@+id/tabEnrollmentHome"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical" >
+
+                    <fragment
+                        android:id="@+id/fragEnrolHeader"
+                        android:name="org.ird.android.epi.fragments.ChildHeaderFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:weightSum="3" >
+
+                        <ImageView
+                            android:id="@+id/imgStkScan"
+                            android:layout_width="12dp"
+                            android:layout_height="70dp"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_weight="0.75"
+                            android:onClick="openBiodataActivity"
+                            android:src="@drawable/baby" />
+
+                        <TextView
+                            android:id="@+id/mainViewHeading"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="40dp"
+                            android:layout_weight="1.75"
+                            android:clickable="true"
+                            android:onClick="openBiodataActivity"
+                            android:text="@string/enrollViewBio"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textColor="@color/PaleBlue" />
+
+                        <ImageView
+                            android:id="@+id/imgStatusBio"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="35dp"
+                            android:layout_weight="0.5"
+                            android:clickable="true"
+                            android:onClick="openBiodataActivity"
+                            android:src="@drawable/unknown" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:weightSum="3" >
+
+                        <ImageView
+                            android:id="@+id/imgStkScan1"
+                            android:layout_width="12dp"
+                            android:layout_height="70dp"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_weight="0.75"
+                            android:clickable="true"
+                            android:onClick="openAddressActivity"
+                            android:src="@drawable/address" />
+
+                        <TextView
+                            android:id="@+id/textView2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="40dp"
+                            android:layout_weight="1.75"
+                            android:clickable="true"
+                            android:onClick="openAddressActivity"
+                            android:text="@string/enrollViewAddress"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textColor="@color/PaleBlue" />
+
+                        <ImageView
+                            android:id="@+id/imgStatusAddress"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="35dp"
+                            android:layout_weight="0.5"
+                            android:onClick="openAddressActivity"
+                            android:src="@drawable/unknown" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:weightSum="3" >
+
+                        <ImageView
+                            android:id="@+id/imgStkScan2"
+                            android:layout_width="12dp"
+                            android:layout_height="70dp"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_weight="0.75"
+                            android:onClick="openProgramDetails"
+                            android:src="@drawable/reminder" />
+
+                        <TextView
+                            android:id="@+id/textView3"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="40dp"
+                            android:layout_weight="1.75"
+                            android:clickable="true"
+                            android:onClick="openProgramDetails"
+                            android:text="@string/enrollViewReminder"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textColor="@color/PaleBlue"
+                            android:textColorLink="@color/DarkBlue" />
+
+                        <ImageView
+                            android:id="@+id/imgStatusProgram"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="35dp"
+                            android:layout_weight="0.5"
+                            android:onClick="openProgramDetails"
+                            android:src="@drawable/unknown" />
+                    </LinearLayout>
+                </LinearLayout>
+                <!-- ENROLLMENT HOME ENDS HERE -->
+
+
+                <!-- VACCINATIONS -->
+
+                <LinearLayout
+                    android:id="@+id/tabVaccineSchedule"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical" >
+
+                    <fragment
+                        android:id="@+id/fragmentScheduleEnrollment"
+                        android:name="org.ird.android.epi.fragments.VaccineScheduleFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+                    </ScrollView>
+                </LinearLayout>
+                <!-- VACCINATIONS END HERE -->
+                
+                <!-- SUPPLEMENTARY VACCINATIONS -->
+
+                <LinearLayout
+                    android:id="@+id/tabSupplemetaryVaccineSchedule"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical" >
+
+                    <fragment
+                        android:id="@+id/fragmentSupplemetaryEnrollment"
+                        android:name="org.ird.android.epi.fragments.SupplementaryVaccineFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+                    </ScrollView>
+                </LinearLayout>
+                <!-- SUPPLEMENTARY VACCINATIONS END HERE -->
+
+            </FrameLayout>
+        </LinearLayout>
+    </TabHost>
+
+</RelativeLayout>

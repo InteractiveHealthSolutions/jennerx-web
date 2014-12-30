@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/Lavender"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:id="@+id/scrollViewLotteries"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_above="@+id/linearLayout2"
+        android:layout_below="@+id/textView3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="24dp"
+        android:paddingLeft="10dp" >
+
+        <LinearLayout
+            android:id="@+id/layoutLottery"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:weightSum="2" >
+
+        <Button
+            android:id="@+id/btnStkOk"
+            style="@style/btnStyDefault"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/linearLayout1"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="22dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="@string/btnConsume" />
+
+        <Button
+            android:id="@+id/btnStkCancel"
+            style="@style/btnStyDefault"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/btnStkOk"
+            android:layout_alignRight="@+id/txtVwStkSelected"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="@string/application_cancel" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView3"
+        android:paddingLeft="10dp"
+        android:weightSum="3" >
+
+        <TextView
+            android:id="@+id/txtVwStkCode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/followViewCode"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtVwStkAmount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Amount(Rs.)"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtVwStkSelected"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/storeViewSelected"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!--
+         <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imgStkScan"
+        android:layout_below="@+id/imgStkScan"
+        android:text="Scan"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+    -->
+
+
+    <!--
+         <ImageView
+        android:id="@+id/imgStkScan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/editTextStkID"
+        android:layout_toRightOf="@+id/textView3"
+        android:clickable="true"
+        android:src="@drawable/camera" />
+    -->
+
+
+    <!--
+         <EditText
+        android:id="@+id/editTextStkID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView2"
+        android:layout_toRightOf="@+id/textView2"
+        android:ems="10"
+        android:inputType="phone"
+        android:maxLength="14" />
+    -->
+
+
+    <!--
+         <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView1"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:text="Child ID" />
+    -->
+    <!--
+         <TextView
+        android:id="@+id/TextView01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/radGroupStk"
+        android:layout_marginTop="15dp"
+        android:layout_toLeftOf="@+id/editTextStkID"
+        android:text="ID Type" />
+    -->
+
+
+    <!--
+         <Button
+        android:id="@+id/btnStkFetch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/textView4"
+        android:layout_alignTop="@+id/TextView01"
+        android:text="   Fetch   " />
+    -->
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/radGroupStk"
+        android:layout_marginTop="31dp"
+        android:background="@color/Black" >
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/horizontalChildID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/txtViewNumberUpdate"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:weightSum="4" >
+
+        <EditText
+            android:id="@+id/editTextStkID"
+            style="@style/ThemeTextLeftPadding"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_weight="2"
+            android:hint="@string/storeChildId"
+            android:inputType="phone"
+            android:maxLength="14"
+            android:textAppearance="?android:attr/textAppearanceMedium" >
+
+            <requestFocus />
+        </EditText>
+
+        <ImageView
+            android:id="@+id/imgStkScan"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:src="@drawable/camera" />
+
+        <ImageView
+            android:id="@+id/btnStkFetch"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:src="@drawable/tick" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/horizontalChildID"
+        android:orientation="horizontal"
+        android:weightSum="4" >
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="2" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/btnScan"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/btnFetch"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtViewNumberUpdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/linearLayout1"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="@string/storeKeeperHead"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/PaleBlue" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/linearLayout3"
+        android:layout_marginTop="24dp"
+        android:paddingLeft="10dp"
+        android:text="@string/storeViewLottry"
+        android:textColor="@color/PaleBlue" />
+
+    <TextView
+        android:id="@+id/txtVwID"
+        style="@style/ThemeTextSmall"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/linearLayout1"
+        android:layout_marginLeft="10dp"
+        android:text="@string/storeViewId"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/PaleBlue" />
+
+</RelativeLayout>

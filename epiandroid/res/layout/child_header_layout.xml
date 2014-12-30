@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content" xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical">
+ <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:layout_marginLeft="5dp" android:layout_marginRight="5dp" android:layout_marginTop="5dp" android:background="#9797ff" android:orientation="horizontal" android:paddingTop="5dp" android:weightSum="4">
+	
+	<TextView android:id="@+id/txtVwNameLabel" android:layout_width="0dp"
+		android:layout_height="wrap_content" android:layout_marginLeft="5dp"
+		android:layout_weight="0.5" android:text="Name"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:textColor="@color/NavajoWhite" android:textSize="14dp"/>
+     
+	<TextView android:id="@+id/txtVwName" android:layout_width="0dp"
+		android:layout_height="wrap_content" android:layout_marginLeft="5dp"
+		android:layout_weight="1" android:text=""
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:textColor="@color/White" />
+
+        <ImageView
+            android:id="@+id/imgGender"
+            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.5" android:src="@drawable/unknown"/>
+        <TextView android:id="@+id/txtVwGChar" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.5" android:text="N/A" android:textColor="@color/White"/>
+        <TextView
+            android:id="@+id/txtVwAgeLabel"
+            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.5" android:text="Age :" android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@color/NavajoWhite" android:textSize="14sp"/>
+        <TextView
+            android:id="@+id/txtVwAge"
+            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="" android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@color/White"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent"
+		android:layout_height="wrap_content" android:layout_marginLeft="5dp" 
+		android:layout_marginRight="5dp" android:background="#9797ff" android:paddingBottom="5dp" android:weightSum="4">
+        <TextView android:id="@+id/txtVwID"
+			android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginLeft="5dp" android:layout_weight="0.5" android:text="ID :" android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@color/NavajoWhite"/>
+        
+        <TextView android:id="@+id/txtVwQR"
+            	android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1.5" android:textAppearance="?android:attr/textAppearanceSmall" android:ems="10" android:textColor="@color/White">
+            <requestFocus />
+        </TextView>
+
+        <!-- EPI NO. HERE -->
+        <TextView android:id="@+id/txtVwEPILabel"
+			android:layout_width="0dp" android:layout_height="wrap_content"
+			android:layout_weight="0.75" android:text="EPI No. :" android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@color/NavajoWhite"/>
+        
+        <TextView android:id="@+id/txtVwEpiValue"
+            	android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1.25" android:textAppearance="?android:attr/textAppearanceSmall"
+            	android:textColor="@color/White"  android:ems="10"/>
+          
+       
+    </LinearLayout>
+	
+</LinearLayout>

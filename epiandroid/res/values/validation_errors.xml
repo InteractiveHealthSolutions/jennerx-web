@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ru_validation_error_childid_empty">EPI Card ke sticker pe tap karein ya EPI Card pe darj ki gayi ID likhein</string>
+    <string name="ru_validation_error_childid_invalid">ID 14 digit ki honi chahiye. Pehla hindsa 1 say lay kar 5 ka ho sakta hai</string>    
+    <string name="ru_validation_error_epino_empty">"Bache ka EPI Card Number likhein!"</string>
+    <string name="ru_validation_error_epino_201">"EPI No. '201' sey shuru hona chahiye"</string>
+    <string name="ru_validation_error_child_first_name_empty">Bache ka naam likhein</string>
+    <string name="ru_validation_error_name">Naam mein sirf huroof likhain</string>
+    <string name="ru_validation_error_father_first_name_empty">Waalid ka naam khali nahee ho sakta</string>
+    <string name="ru_validation_error_gender_empty">Bache ka jans ka sawal khali nehien ho sakta</string>
+    <string name="ru_validation_error_dob_age_empty">Bache ki tareekh pedaish ya umr ka sawal khali nahi ho sakta</string>
+    <string name="ru_validation_error_dob_future">Bache ki tareekh pedaish mustakbil ki nahi hosakti</string>    
+    <string name="ru_validation_error_town_empty">Town khali nehien ho sakta</string>
+    <string name="ru_validation_error_city_empty">City khali nehien ho sakta</string>
+    <string name="ru_validation_error_child_more_than_5_years_old">Bacha 5 saal sey bara nahee ho sakta</string>
+    <string name="ru_validation_error_course_empty">Teekon ke course ka sawal khali nehien ho sakta"</string>
+    <string name="ru_validation_error_vaccination_given_empty">Vaccination ka sawal khali nahee ho sakta</string>
+    <string name="ru_validation_error_vaccination_date_past">Vaccination date maazi ki nahee ho sakti</string>
+    <string name="ru_validation_error_vaccine_given">Yeh vaccine di ja chuki hai</string>
+    <string name="ru_validation_error_vaccination_next_empty">Agli Vaccination ka sawal khali nahee ho sakta</string>
+    <string name="ru_validation_error_vaccination_over_1_year_BCG">"Khayal karein! Bachay ko 1 saal se ziada umr pe BCG nehien lagna chahiye!"</string>
+    <string name="ru_validation_error_vaccination_over_2_years_Pentavalent">"Khayal karein! Bachay ko 2 saal se ziada umr pe Pentavalent nehien lagna chahiye!"</string>
+    <string name="ru_validation_error_vaccination_over_5_years_Measles">"Khayal karein!Bachay ko 5 saal se ziada umr pe Measles nehien lagna chahiye!"</string>
+    <string name="ru_validation_error_vaccination_under_age">"Khayal karein! Bache ki umr iss teekay ke liye kam hai!"</string>
+    <string name="ru_validation_error_next_vaccination_out_of_order">"Agli vaccine schedule ke mutabiq nehien hai. Issey check karein"</string>
+    <string name="ru_validation_error_current_vaccination_out_of_order">"Yeh vaccine schedule ke mutabiq nehien hai. Issey check karein"</string>
+    <string name="ru_validation_error_next_vaccination_P1_P2_gap">"P1 aur P2 ke darmian 4 hafton ka waqfa zaroori hai!"</string>
+    <string name="ru_validation_error_next_vaccination_P2_P3_gap">"P2 aur P3 ke darmian 4 hafton ka waqfa zaroori hai!"</string>
+    <string name="ru_validation_error_next_vaccination_M1_M2_gap">"M1 aur M2 ke darmian kam az kam 4 hafton ka waqfa zaroori hai!"</string>
+    <string name="ru_validation_error_mobile_no_empty">Mobile no. khali nahi ho sakta</string>
+    <string name="ru_validation_error_mobile_no_start_03">Mobile no. 03 sey shuru hona chahiye</string>
+    <string name="ru_validation_error_mobile">"Mobile number '03' sey shuru hoga aur 11 digit taweel hona chahiya"</string>
+    <string name="ru_validation_error_unknown_number_type">"Namaloom Afrad. PTCL ya mobile number enter karain"</string>
+    <string name="ru_validation_error_mobile_no_11digits">Mobile no. 11 digits ka hona chahiye</string>
+    <string name="ru_validation_error_landline_area_code">"Landline 0 aur city code sey shuru karain jaisay'021'"</string>
+    <string name="ru_validation_error_lottery_empty">"Lottery Ka sawal khali nahee ho sakta"</string>
+    <string name="ru_validation_error_username">User name durust nahee</string>
+    <string name="ru_validation_error_password">Password durust nahee</string>
+    <string name="ru_enrollment_form_incomplete">Form abhi tak submit nahee hua,pehlay form submit karien phir lottery run hogi</string>    
+    <string name="ru_enrollment_form_no_lottery">Aay</string>
+    <string name="ru_validation_success">valid</string>
+</resources>

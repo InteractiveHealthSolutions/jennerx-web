@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+	<item
+	   android:id="@+id/menu_item_upload" 
+	   android:title="Submit"
+	   android:icon="@drawable/upload_icon" 
+	   android:showAsAction="ifRoom|withText"/>
+<!-- 	<item
+	    android:id="@+id/menu_item_nfc" 
+	    android:title="NFC"
+	    android:icon="@drawable/nfc_logo"
+	    android:showAsAction="ifRoom|withText"/> -->
+<!-- <item
+	    android:id="@+id/menu_item_lottery" 
+	    android:title="Lottery"
+	    android:icon="@drawable/lottery"
+	    android:showAsAction="ifRoom|withText"/> -->
+		
+	<item
+	    android:id="@+id/menu_item_close" 
+	    android:title="Close"
+	    android:icon="@drawable/exit_icon"
+	    android:showAsAction="ifRoom|withText"/> 
+	
+</menu>

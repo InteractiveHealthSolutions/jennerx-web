@@ -1,0 +1,152 @@
+#nav_div{
+min-width: 1000px;
+padding-left:10px;
+padding-top:0px;
+
+}
+nav { 
+  /*width: 1000px;*/
+  height: 46px;
+} 
+
+/**
+Stylesheet for SooperFish by www.SooperThemes.com
+Author: Jurriaan Roelofs
+*/
+
+/* Configuration of menu width */
+html body ul.sf-menu ul, html body ul.sf-menu ul li {
+  width: 180px;
+}
+
+html body ul.sf-menu ul ul {
+  margin: 0 0 0 180px;
+}
+
+/* Framework for proper showing/hiding/positioning */
+/* DO NOT EDIT FROM HERE */
+ul.sf-menu, ul.sf-menu * {
+  margin: 0;
+  padding: 0;
+}
+
+ul.sf-menu {
+  display: block;
+  position: relative;
+}
+
+ul.sf-menu li {
+  display: block;
+  list-style: none;
+  float: left;
+  position: relative;
+}
+
+ul.sf-menu li:hover {
+  visibility: inherit; /* fixes IE7 'sticky bug' */
+}
+
+ul.sf-menu a {
+  display: block;
+  position: relative;
+}
+
+ul.sf-menu ul {
+  position: absolute;
+  left: 0;
+  width: 150px; 
+  top: auto;
+  left: -999999px;
+}
+
+ul.sf-menu ul a {
+  zoom: 1; /* IE6/7 fix */
+}
+
+ul.sf-menu ul li {
+  float: right; /* Must always be floated otherwise there will be a rogue 1px margin-bottom in IE6/7 */
+  width: 150px;
+}
+
+ul.sf-menu ul ul {
+  top: 0;
+  margin: 0 0 0 150px
+}
+
+ul.sf-menu li:hover ul,ul.sf-menu li:focus ul,ul.sf-menu li.sf-hover ul,
+ul.sf-menu ul li:hover ul,ul.sf-menu ul li:focus ul,ul.sf-menu ul li.sf-hover ul,
+ul.sf-menu ul ul li:hover ul,ul.sf-menu ul ul li:focus ul,ul.sf-menu ul ul li.sf-hover ul,
+ul.sf-menu ul ul ul li:hover ul,ul.sf-menu ul ul ul li:focus ul,ul.sf-menu ul ul ul li.sf-hover ul {
+  left: auto;
+}
+
+ul.sf-menu li:hover ul ul,ul.sf-menu li:focus ul ul,ul.sf-menu li.sf-hover ul ul,
+ul.sf-menu ul li:hover ul ul,ul.sf-menu ul li:focus ul ul,ul.sf-menu ul li.sf-hover ul ul,
+ul.sf-menu ul ul li:hover ul ul,ul.sf-menu ul ul li:focus ul ul,ul.sf-menu ul ul li.sf-hover ul ul,
+ul.sf-menu ul ul ul li:hover ul ul,ul.sf-menu ul ul ul li:focus ul ul,ul.sf-menu ul ul ul li.sf-hover ul ul {
+  left: -999999px;
+}
+
+/* autoArrows CSS */
+span.sf-arrow {
+  width: 7px;
+  height: 7px;
+  position: absolute;
+  top: 8px;
+  right: 0;
+  display: block;
+  background: url(../images/images/arrows-black.png) no-repeat 0 0;
+  overflow: hidden; /* making sure IE6 doesn't overflow and expand the box */
+  font-size: 1px;
+}
+
+ul ul span.sf-arrow {
+  right: 12px;
+  top: 7px;
+  background-position: 0 100%;
+}
+
+/* Theming the menu */
+ul#nav {
+  float: left;
+}
+
+ul#nav li.current a {
+  color: #FFF;}
+
+ul#nav ul {
+  background: #88E2F8;
+}
+
+ul#nav li a {
+  padding: 7px 20px;
+  font-family: 'trebuchet ms',helvetica,arial,verdana,sans;
+  text-decoration: none;
+  color: #111;
+  background: #88E2F8;
+  margin-right: 2px;
+  border-radius: 7px 7px 0 0;
+  -moz-border-radius: 7px 7px 0 0;
+  -webkit-border: 7px 7px 0 0;}
+
+ul#nav li a:hover, ul#nav li a:focus {
+  color: #FFF;
+}
+
+ul#nav li ul li a {
+  margin-right: 0;
+  border-radius: 0 0 0 0;
+  -moz-border-radius: 0 0 0 0;
+  -webkit-border: 0 0 0 0;
+}
+
+span.sf-arrow {
+  top: 15px;
+  right: 5px;
+  background-image: url(../images/arrows-white.png);
+}
+
+ul ul span.sf-arrow {
+  right: 12px;
+  top: 15px;
+}

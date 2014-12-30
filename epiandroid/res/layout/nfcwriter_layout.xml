@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <TextView
+        android:id="@+id/txtVwChildID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:text="Child ID" />
+
+    <EditText
+        android:id="@+id/edtTxtNFCData"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_below="@id/txtVwChildID"
+        android:ems="10"
+        android:inputType="number"
+        android:enabled="false"
+        android:paddingLeft="@dimen/activity_vertical_margin"
+        android:paddingTop="@dimen/activity_vertical_margin" />
+
+    <Button
+        android:id="@+id/btnWrite"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"       
+        android:onClick="onClick"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/edtTxtNFCData"
+        android:text="Write"
+        android:width="10dp" />
+</RelativeLayout>

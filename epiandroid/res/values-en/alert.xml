@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="alert_age_correct">Please note the calculated date.</string>
+    <string name="alert_age_not_calculated">Correct age could not be calculated. Using default date.</string>
+	<string name="alert_wait">Waiting for response from server</string>
+	<string name="alert_wait_ru">Baraye meharbani, Server sey rabtay ka intezar keejyay </string>
+	<string name="alert_tag_written_go_back">ID written successfully on Tag. The form will now close.</string>
+	<string name="alert_tag_in_contact">Tag in contact. Current reading of the tag:  </string>
+	<string name="alert_form_submitted_write_tag_and_lottery">Form Submitted successfully. You should now write ID to tag and conduct lottery.</string>
+	<string name="alert_form_submitted_lottery">Form Submitted successfully. You should now conduct lottery.</string>
+	<string name="alert_form_submitted_write_tag">Form Submitted successfully. You should now write ID to tag.</string>
+	<string name="uploading">Uploading, please wait.</string>
+	<string name="form_already_submitted">Form already submitted, you can not submit it again.</string>
+	<string name="form_submitted">Form Submitted successfully</string>
+	<string name="success">Success</string>
+</resources>

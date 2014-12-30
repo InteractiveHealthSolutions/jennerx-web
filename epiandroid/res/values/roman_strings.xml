@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ru_enrollment_label_ProjectId">Project ID</string>
+    <string name="ru_enrollment_label_ManualId">3-digit EPI No.</string>    
+    <string name="ru_enrollment_label_EpiNo">EPI Card Number</string>
+    <string name="ru_enrollment_label_IsChildNamed">Bache ka naam nahi rakha gaya</string>
+    <string name="ru_enrollment_label_ChildName">"Bache ka naam"</string>
+    <string name="ru_enrollment_label_ChildFirstName">"First"</string>
+    <string name="ru_enrollment_label_ChildLastName">"Last"</string>
+    <string name="ru_enrollment_label_FatherName">"Waalid ka naam"</string>
+    <string name="ru_enrollment_label_FatherFirstName">"First"</string>
+    <string name="ru_enrollment_label_FatherLastName">"Last"</string>
+    <string name="ru_enrollment_label_ChildGender">"Bache ki Jins"</string>
+    <string name="ru_enrollment_label_ChildAgeDOBMode">"Bache ki tareekh pedaish ya umr"</string>
+    <string name="ru_enrollment_label_ChildDOB"></string>
+    <string name="ru_enrollment_label_Days">Days</string>
+    <string name="ru_enrollment_label_Weeks">Weeks</string>
+    <string name="ru_enrollment_label_Months">Months</string>
+    <string name="ru_enrollment_label_Years">Years</string>
+    <string name="ru_enrollment_label_Address">Address</string>
+    <string name="ru_enrollment_label_AddressHouseNo">House No</string>
+    <string name="ru_enrollment_label_AddressStreet">Street</string>
+    <string name="ru_enrollment_label_AddressSector">Sector</string>
+    <string name="ru_enrollment_label_AddressColony">Colony</string>
+    <string name="ru_enrollment_label_AddressTown">Town</string>
+    <string name="ru_enrollment_label_AddressTownOther">Other Town</string>
+    <string name="ru_enrollment_label_AddressUC">Union Council</string>
+    <string name="ru_enrollment_label_AddressLandmark">Koi qareebi nishaani</string>
+    <string name="ru_enrollment_label_AddressCity">City</string>
+    <string name="ru_enrollment_label_AddressOtherCity">OtherCity</string>
+    <string name="ru_enrollment_label_SameCentreComplete">Kya teekon ka course iss hee center se mukamal karenge?</string>
+    <string name="ru_enrollment_label_VaccineGivenName">Aaj bache ko kaun sa vaccine diya gaya?</string>
+    <string name="ru_enrollment_label_WasPolioGiven">Kyaa aaj Polio vaccine diya gaya?</string>
+    <string name="ru_enrollment_label_WasPCVGiven">Kyaa aaj PCV vaccine diya gaya?</string>
+    <string name="ru_enrollment_label_VaccinationDate">Vaccine lagne ki taareekh</string>
+    <string name="ru_enrollment_label_NextVaccine">Agla vaccine</string>
+    <string name="ru_enrollment_label_NextVaccineDate">Agli aane ki tareekh</string>
+    <string name="ru_enrollment_label_SMSReminderNeeded">Kya aap ko SMS reminder chahiye hein?</string>
+    <string name="ru_enrollment_label_PrimaryContactNo">SMS reminder ke liye Mobile Number</string>
+    <string name="ru_enrollment_label_SecondaryNo">Landline No.</string>
+    <string name="ru_enrollment_label_PrimaryNo">Mobile No.</string>
+    
+    <string name="ru_enrollment_label_SecondaryContactNo">Raabtay ke liye koi aur number</string>
+    <string name="ru_enrollment_label_LotteryNeeded">Kya aap kurandazi mein hisa lena chahein gey?</string>
+</resources>

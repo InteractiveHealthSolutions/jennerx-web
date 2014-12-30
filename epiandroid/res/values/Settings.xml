@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Server_URL">http://localhost/unfepi/serv</string>
+    <string name="Server_Port">8080</string>
+</resources>

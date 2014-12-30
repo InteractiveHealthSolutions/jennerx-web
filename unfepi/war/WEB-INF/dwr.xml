@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dwr PUBLIC
+    "-//GetAhead Limited//DTD Direct Web Remoting 2.0//EN"
+    "http://directwebremoting.org/schema/dwr20.dtd">
+
+<dwr>
+
+	<allow>
+		<create creator="new" javascript="JDate">
+	      <param name="class" value="java.util.Date"/>
+		</create>
+
+		<convert match="java.lang.Exception" converter="exception">
+			<param name="exclude" value="stackTrace"/>
+		</convert>
+		<convert converter="enum" match="org.ird.unfepi.model.Model$TimeIntervalUnit" />
+		<convert converter="bean" match="org.ird.unfepi.model.Vaccine">
+			<param name="include" value="vaccineId, name, fullName, shortName, minGracePeriodDays, maxGracePeriodDays, vaccineGaps"/>
+		</convert>
+		<convert converter="bean" match="org.ird.unfepi.model.VaccineGap">
+			<param name="include" value="gapTimeUnit, value, mandatory, priority"/>
+		</convert>
+		<convert converter="bean" match="org.ird.unfepi.web.utils.VaccineSchedule">
+			<param name="exclude" value=""/>
+		</convert>
+		<convert converter="bean" match="org.ird.unfepi.model.VaccinePrerequisite">
+			<param name="exclude" value=""/>
+		</convert>
+		<convert converter="bean" match="org.ird.unfepi.model.Vaccination">
+			<param name="exclude" value=""/>
+		</convert>
+		<convert converter="bean" match="org.ird.unfepi.model.VaccinePrerequisiteId">
+			<param name="exclude" value=""/>
+		</convert>
+		<convert converter="bean" match="org.ird.unfepi.model.CommunicationNote">
+			<param name="exclude" value="createdByUserId, "/>
+		</convert>
+		<convert converter="enum" match="org.ird.unfepi.model.CommunicationNote$CommunicationEventType" />
+		<!-- <convert converter="bean" match="org.ird.unfepi.model.Child">
+			<param name="include" value="cellNoLatest,childId,firstName"/>
+		</convert>
+		<convert converter="bean" match="org.ird.unfepi.model.Vaccinator">
+			<param name="include" value="cellNoLatest,childId,firstName"/>
+		</convert>
+		<convert converter="bean" match="org.ird.unfepi.model.Storekeeper">
+			<param name="include" value="cellNoLatest,childId,firstName"/>
+		</convert> -->
+		<convert converter="bean" match="org.json.JSONObject"/>
+		<convert converter="bean" match="org.json.JSONArray"/>
+		
+		<create creator="new" javascript="DWRVaccineService">
+			<param name="class" value="org.ird.unfepi.web.dwr.DWRVaccineService" />
+			<include method="addVaccine"/>
+			<include method="hasPatientTakenVaccine"/>
+			<include method="calculateNextAssignedDate"/>
+			<include method="getNextVaccine"/>
+			<include method="calculateMeasles2DateFromMeasles1"/>
+			<include method="validatePrivilegedEntryNextVaccine"/>
+			<include method="hasRecievedVaccine"/>
+			<include method="generateDefaultSchedule"/>
+			<include method="updateSchedule"/>
+			<include method="getSchedule"/>
+			<include method="overrideSchedule"/>
+			<include method="validateVaccineScheduleDates"/>
+		</create>
+		<create creator="new" javascript="DWRAdminTaskService">
+			<param name="class" value="org.ird.unfepi.web.dwr.DWRAdminTaskService" />
+			<include method="updateIrSetting"/>
+			<include method="getSystemInconsistencies"/>
+		</create>
+		<create creator="new" javascript="DWRReportService">
+			<param name="class" value="org.ird.unfepi.web.dwr.DWRReportService" />
+			<include method="getSummaryEnrollmentByCenter"/>
+			<include method="getSystemInconsistencies"/>
+			<include method="getSummaryFollowupAgeAppropriate"/>
+			<include method="getSummaryFollowupAgeAppropriateWRetro"/>
+		</create>
+		<create creator="new" javascript="DWREntityService">
+			<param name="class" value="org.ird.unfepi.web.dwr.DWREntityService" />
+			<include method="getContactNumberList"/>
+			<include method="getLocationList"/>
+			<include method="getLocationHierarchy"/>
+		</create>	
+		<create creator="new" javascript="DWRUserService">
+			<param name="class" value="org.ird.unfepi.web.dwr.DWRUserService" />
+			<include method="changePassword"/>
+			<include method="isIdMapperExists"/>
+			<include method="isUsernameExists"/>
+			<include method="resetPassword"/>
+		</create>
+		<create creator="new" javascript="DWRCsvService">
+			<param name="class" value="org.ird.unfepi.web.dwr.DWRCsvService" />
+			<include method="getCsvUploaded"/>
+		</create>
+		<create creator="new" javascript="DWRChildService">
+			<param name="class" value="org.ird.unfepi.web.dwr.DWRChildService" />
+			<include method="getChildrenEnrolledCountOnDay"/>
+			<include method="changeEpiNumber"/>
+			<include method="consumeLottery"/>
+		</create>
+		<create creator="new" javascript="DWRValidationService">
+			<param name="class" value="org.ird.unfepi.web.dwr.DWRValidationService" />
+			<include method="validateMobileNumber"/>
+		</create>
+		<create creator="new" javascript="DWRDailySummaryService">
+			<param name="class" value="org.ird.unfepi.web.dwr.DWRDailySummaryService" />
+			<include method="isDailySummaryExists"/>
+			<include method="isAnyOtherDailySummaryExists"/>
+		</create>
+		<create creator="new" javascript="DWRVaccinatorService">
+			<param name="class" value="org.ird.unfepi.web.dwr.DWRVaccinatorService" />
+			<include method="getVaccinatorsCountOnCenter"/>
+			<include method="doIncentivizeVaccinators"/>
+			<include method="markPaid"/>
+			<include method="isIdExists"/>
+		</create>
+		<create creator="new" javascript="DWRStorekeeperService">
+			<param name="class" value="org.ird.unfepi.web.dwr.DWRStorekeeperService" />
+			<include method="getStorekeepersOnCityId"/>
+			<include method="isIdExists"/>
+			<include method="doIncentivizeStorekeepers"/>
+			<include method="markPaid"/>
+		</create>
+		<create creator="new" javascript="DWRVaccinationCenterService">
+			<param name="class" value="org.ird.unfepi.web.dwr.DWRVaccinationCenterService" />
+			<include method="getVaccinationCentersCountInCity"/>
+			<include method="isIdExists"/>
+			<include method="getAllVaccinationCenters"/>
+		</create>
+		<create creator="new" javascript="DWRLotteryGeneratorService">
+			<param name="class" value="org.ird.unfepi.web.dwr.DWRLotteryGeneratorService" />
+			<!-- <include method="verifyParams"/> -->
+			<include method="isIdExists"/>
+		</create>
+		
+		<create creator="new" javascript="DWRCommunicationService">
+			<param name="class" value="org.ird.unfepi.web.dwr.DWRCommunicationService" />
+			<include method="queueSms"/>
+			<include method="addNote"/>
+			<include method="getCommunicationNotes"/>
+			<include method="postReply"/>
+		</create>
+	</allow>
+	
+	<signatures>
+<![CDATA[
+
+			import java.util.Date;
+			import java.util.ArrayList;
+			import java.util.HashMap;
+			import java.util.List;
+			import java.util.Map;
+			import org.ird.unfepi.model.Vaccine;
+			import org.json.JSONArray;
+			import org.json.JSONObject;  
+		]]>
+
+	</signatures>
+  	
+</dwr>
