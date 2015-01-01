@@ -39,4 +39,15 @@
     <string name="ru_enrollment_form_incomplete">Form abhi tak submit nahee hua,pehlay form submit karien phir lottery run hogi</string>    
     <string name="ru_enrollment_form_no_lottery">Aay</string>
     <string name="ru_validation_success">valid</string>
+    <string name="validation_error_childid_empty">Child ID can not be empty</string>
+    <string name="validation_error_childid_invalid">Child ID must start be exatly 6 digit long</string>
+    <string name="validation_success_">valid</string>
+    <string name="login_error_connecting_server">Error connecting with the server.</string>
+    <string name="login_error_credentials_format_incorrect">Incorrect format of Username and password.</string>
+    <string name="error_server_side">Error occurred in server. Error code:</string>
+    <string name="login_server_response_processing_error">Error while processing response from server.</string>
+    <string name="date_calculation_error">Incorrect date sent for calculation</string>
+    <string name="server_success">Form submitted successfully.</string>
+    <string name="nfc_write_error">Error while writing/reading to NFC tag</string>
+    
 </resources>
