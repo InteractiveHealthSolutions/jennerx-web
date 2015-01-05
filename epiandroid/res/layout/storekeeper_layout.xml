@@ -101,82 +101,12 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!--
-         <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/imgStkScan"
-        android:layout_below="@+id/imgStkScan"
-        android:text="Scan"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-    -->
-
-
-    <!--
-         <ImageView
-        android:id="@+id/imgStkScan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/editTextStkID"
-        android:layout_toRightOf="@+id/textView3"
-        android:clickable="true"
-        android:src="@drawable/camera" />
-    -->
-
-
-    <!--
-         <EditText
-        android:id="@+id/editTextStkID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView2"
-        android:layout_toRightOf="@+id/textView2"
-        android:ems="10"
-        android:inputType="phone"
-        android:maxLength="14" />
-    -->
-
-
-    <!--
-         <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textView1"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
-        android:text="Child ID" />
-    -->
-    <!--
-         <TextView
-        android:id="@+id/TextView01"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/radGroupStk"
-        android:layout_marginTop="15dp"
-        android:layout_toLeftOf="@+id/editTextStkID"
-        android:text="ID Type" />
-    -->
-
-
-    <!--
-         <Button
-        android:id="@+id/btnStkFetch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/textView4"
-        android:layout_alignTop="@+id/TextView01"
-        android:text="   Fetch   " />
-    -->
-
+    
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/radGroupStk"
         android:layout_marginTop="31dp"
         android:background="@color/Black" >
     </LinearLayout>
