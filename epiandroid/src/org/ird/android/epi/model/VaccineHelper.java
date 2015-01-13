@@ -415,9 +415,6 @@ public class VaccineHelper
 	 * based on their duration from the date of birth. The ordering
 	 * is needed when displaying the vaccine(s) in the vaccination
 	 * schedule.
-	 * 
-	 * @author Omer
-	 *
 	 */
 	private static class OrderedVaccine implements Comparable
 	{
