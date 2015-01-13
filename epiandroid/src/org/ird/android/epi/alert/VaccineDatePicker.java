@@ -19,9 +19,7 @@ import android.content.Context;
  * This class is used to start the DatePickerDialog and set the value returned by it
  * in a View. Currently the Class is coded for an EditText but this can be changed.
  * 
- * @author Omer
- * 
- *  */
+ */
 public class VaccineDatePicker implements OnClickListener, OnDateSetListener{
 
 	private Date _defaulDate;
