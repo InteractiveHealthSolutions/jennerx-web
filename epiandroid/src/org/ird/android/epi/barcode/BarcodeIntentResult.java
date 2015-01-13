@@ -21,7 +21,7 @@ package org.ird.android.epi.barcode;
  * Encapsulates the result of a barcode scan invoked through {@link BarcodeIntentIntegrator}.
  * </p>
  * 
- * @author Sean Owen
+ *
  */
 public final class BarcodeIntentResult
 {
