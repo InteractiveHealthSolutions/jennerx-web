@@ -43,10 +43,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-/**
- * @author Saad
- *
- */
 public class VaccineScheduleFragment extends ListFragment implements
 		OnItemLongClickListener
 {
