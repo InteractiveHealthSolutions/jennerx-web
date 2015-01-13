@@ -369,9 +369,6 @@ public class VaccinationValidator
 
 	/**
 	 * Class used to hold the result of prerequisite vaccines checked
-	 * 
-	 * @author Omer
-	 * 
 	 */
 
 	public static class PrerequisiteValidationResult
