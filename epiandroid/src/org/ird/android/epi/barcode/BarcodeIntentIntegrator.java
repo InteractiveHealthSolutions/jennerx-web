@@ -127,11 +127,6 @@ import android.util.Log;
  * containing the names of formats to scan for explicitly, like "PDF_417", to use such formats.
  * </p>
  * 
- * @author Sean Owen
- * @author Fred Lin
- * @author Isaac Potoczny-Jones
- * @author Brad Drehmer
- * @author gcstang
  */
 public class BarcodeIntentIntegrator
 {
