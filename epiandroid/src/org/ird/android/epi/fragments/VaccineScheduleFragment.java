@@ -523,7 +523,8 @@ public class VaccineScheduleFragment extends ListFragment implements
 			if (row != null)
 			{
 			
-			/** checking if vaccine is not expired and
+			/** checking if vaccine is not expired
+			 *  and its predecessor vaccine is given and
 			 *  has higher due date than todays date
 			 *  then set that vaccine as scheduled
 			 */
