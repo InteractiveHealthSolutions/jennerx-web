@@ -526,6 +526,11 @@ public class VaccineScheduleFragment extends ListFragment implements
 		{
 			if (row != null)
 			{
+			
+			/** checking if vaccine is not expired and
+			 *  has higher due date than todays date
+			 *  then set that vaccine as scheduled
+			 */
 				if (row.isEditable() && row.isApplicable() && row.isEligible()
 						&& row.getDueDate().getTime() > new Date().getTime() && row.isSelected() != true
 						&& !(child == null || "".equalsIgnoreCase(child.getProjectId().trim())))
