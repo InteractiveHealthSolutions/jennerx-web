@@ -47,10 +47,6 @@ import android.widget.Toast;
  * @author Saad
  *
  */
-/**
- * @author Saad
- *
- */
 public class VaccineScheduleFragment extends ListFragment implements
 		OnItemLongClickListener
 {
