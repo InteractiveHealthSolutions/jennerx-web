@@ -428,30 +428,7 @@ public class VaccineScheduleFragment extends ListFragment implements
 			row.setEligible(false);
 			row.setStatus(null);
 
-			/**
-			 * We have to change its "Given" status to false also
-			 * Error case: Setting Penta1 to "Retro" and
-			 * set Penta2 to "Vaccinated". Changing status of
-			 * Penta1 to scheduled will crash the application
-			 * due to inconsistent state of Penta2 i.e:
-			 * Penta2 "Status" will be null and "Given" status
-			 * to true.
-			 * 
-			 */
-
 			row.setGiven(false);
-
-
-			/**
-			 * We have to change its "setSelected" status to false also
-			 * as this vaccine/row is not valid right now
-			 * Error case: Setting Penta1 to "Retro" and
-			 * set Penta2 to "Vaccinated". Changing status of
-			 * Penta1 to scheduled will change the status of
-			 * Penta2 to null but its"setSelected" status will remain
-			 * to true.
-			 * 
-			 */
 
 			row.setSelected(false);
 		}
