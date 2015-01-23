@@ -91,7 +91,6 @@ public class VaccineScheduleApdapter extends ArrayAdapter<VaccineScheduleRow>
 			// Set 'Given Date' if vaccine already given, Other set 'Due Date'
 			if (row.isGiven())
 			{
-
 				if (row.status.equals(VaccinationStatus.RETRO_DATE_MISSING.name()))
 					txtVwDateValue.setText("Retro: No date specified");
 				else if (row.status.equals(VaccinationStatus.RETRO.name()))

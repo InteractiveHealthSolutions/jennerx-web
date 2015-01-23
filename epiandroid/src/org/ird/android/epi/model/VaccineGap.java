@@ -1,23 +1,46 @@
 package org.ird.android.epi.model;
 
-public class VaccineGap {
-	
-	int priority;	
-	String gapType;	
-	String timeUnit;	
-	int value;	
+public class VaccineGap
+{
+
+	int priority;
+	// int gapTypeId;
+	// String gapType;
+	VaccineGapType gapType;
+
+	String timeUnit;
+	int value;
 	Vaccine vacine;
 	boolean isMandatory;
-	
-	public VaccineGap(Vaccine vaccine, int priority, String gapType,
+
+	public VaccineGap(Vaccine vaccine, int priority, VaccineGapType gapType,
 			String timeUnit, int value, boolean isMandatory)
 	{
 		this.vacine = vaccine;
 		this.priority = priority;
 		this.gapType = gapType;
 		this.timeUnit = timeUnit;
-		this.value = value;		
+		this.value = value;
 		this.isMandatory = isMandatory;
+	}
+
+	/**
+	 * this constructor is supposed to be used only for saving vaccineGap in sqlite DB
+	 * 
+	 * @param vaccine
+	 * @param gapType
+	 * @param timeUnit
+	 * @param value
+	 */
+	public VaccineGap(Vaccine vaccine, VaccineGapType gapType, String timeUnit, int value)
+	{
+		this.vacine = vaccine;
+		// this.priority = priority;
+		this.gapType = gapType;
+		// this.gapTypeId = gapTypeId;
+		this.timeUnit = timeUnit;
+		this.value = value;
+		// this.isMandatory = isMandatory;
 	}
 
 	public int getPriority()
@@ -30,12 +53,12 @@ public class VaccineGap {
 		this.priority = priority;
 	}
 
-	public String getGapType()
+	public VaccineGapType getGapType()
 	{
 		return gapType;
 	}
 
-	public void setGapType(String gapType)
+	public void setGapType(VaccineGapType gapType)
 	{
 		this.gapType = gapType;
 	}
@@ -79,6 +102,6 @@ public class VaccineGap {
 	{
 		this.isMandatory = isMandatory;
 	}
-	
-	
+
+
 }

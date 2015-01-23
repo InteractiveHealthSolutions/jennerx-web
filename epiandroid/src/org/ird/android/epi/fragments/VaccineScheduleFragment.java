@@ -30,6 +30,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ListFragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -43,17 +44,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-/**
- * @author Saad
- *
- */
-/**
- * @author Saad
- *
- */
 public class VaccineScheduleFragment extends ListFragment implements OnItemLongClickListener
 {
-
 	Vaccine[] vaccines = null;
 	Child child;
 	Vaccination[] vaccinations = null;
@@ -69,18 +61,20 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 
 	private CentreDBHelper centreDbHelper;
 	private List<Centre> centres;
+	private Context context;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
+		context = getActivity().getApplicationContext();
+
 		updateSchedule();
-
-
 
 		getListView().setOnItemLongClickListener(this);
 		centreDbHelper = new CentreDBHelper(getActivity());
 		centres = centreDbHelper.getCentres();
+
 	}
 
 	/*
@@ -141,7 +135,7 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 					// Calculating default due date from dob
 					// Date defaultDate = VaccineHelper.getDueDatefromBirth(row.getVaccineName(), child != null ? child.getDateOfBirth() : null);
 
-					Date defaultDate = VaccineHelper.getDueDate(child != null ? child.getDateOfBirth() : null, row, listRows);
+					Date defaultDate = VaccineHelper.getDueDate(child != null ? child.getDateOfBirth() : null, row, listRows, context);
 
 					row.setDueDate(defaultDate);
 				}
@@ -166,8 +160,7 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 		// Fill get vaccines if they are not yet filled
 		if (this.vaccines == null)
 		{
-
-			this.vaccines = VaccineHelper.getSortedVaccines();
+			this.vaccines = VaccineHelper.getSortedVaccines(context);
 		}
 
 		listRows = new ArrayList<VaccineScheduleRow>();
@@ -237,7 +230,7 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 	@Override
 	public void onListItemClick(ListView l, View v, final int pos, long id)
 	{
-		// check a child is associated with this schdedule
+		// check a child is associated with this schedule
 		if (child == null || "".equalsIgnoreCase(child.getProjectId().trim()))
 		{
 			EpiUtils.showDismissableDialog(getActivity(), "No child with valid ID provided, you can only view the schedule", "Sorry").show();
@@ -251,7 +244,6 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 		}
 		else if (listRows.get(pos).isEditable())
 		{
-
 			if (!listRows.get(pos).isApplicable())
 			{
 				IDialogListener dialogListener = new IDialogListener()
@@ -284,8 +276,6 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 				// EpiUtils.showYesNoDialog(getActivity(), "Child is too old for this vaccine. Are you sure you want to continue?", "Alert", "Yes", "No", dialogListener).show();
 				String childOldConfirmation = "Iss bache kee umer vaccine kee muqarara mudat se ziada hochuki hai. Kya aap phir bhi tika lagana chaheingay?";
 				EpiUtils.showYesNoDialog(getActivity(), childOldConfirmation, "Alert", "Yes", "No", dialogListener).show();
-
-
 
 			}
 			else
@@ -396,13 +386,11 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 
 	public void validationsBeforeActivity(VaccineScheduleRow row, ArrayList<VaccineScheduleRow> rows)
 	{
-
 		/**
 		 * Validate Prereq vaccine
-		 * 
 		 */
 
-		VaccinationValidator.PrerequisiteValidationResult result = VaccinationValidator.checkPrerequisites(row.getVaccineName(), rows);
+		VaccinationValidator.PrerequisiteValidationResult result = VaccinationValidator.checkPrerequisites(row.getVaccineName(), rows, context);
 
 		boolean missingPrerequisite;
 		missingPrerequisite = result.hasErrors;
@@ -414,7 +402,11 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 		else
 		{
 			row.setEligible(false);
-			row.setStatus(null);
+			row.setStatus(null);			
+
+			row.setGiven(false);			
+
+			row.setSelected(false);
 		}
 	}
 
@@ -424,9 +416,10 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
 	{
-
-		if (listRows.get(position).isEditable() && listRows.get(position).isEligible() && listRows.get(position).getDueDate().getTime() > new Date().getTime()
-				&& listRows.get(position).isSelected() != true && !(child == null || "".equalsIgnoreCase(child.getProjectId().trim())))
+		if (listRows.get(position).isEditable() && listRows.get(position).isApplicable() && listRows.get(position).isEligible()
+				&& listRows.get(position).getDueDate().getTime() > new Date().getTime()
+				&& listRows.get(position).isSelected() != true
+				&& !(child == null || "".equalsIgnoreCase(child.getProjectId().trim())))
 		{
 
 			// Making sure that Vaccination is not being scheduled on a Sunday
@@ -447,7 +440,8 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 
 			return true;
 		}
-		else if (listRows.get(position).isEditable() && listRows.get(position).isEligible() && listRows.get(position).isSelected() == true)
+		else if (listRows.get(position).isEditable() && listRows.get(position).isEligible()
+				&& listRows.get(position).isSelected() == true)
 		{
 			if (listRows.get(position).getStatus() != null)
 			{
@@ -509,25 +503,30 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 		{
 			if (row != null)
 			{
-				if (row.isEditable() && row.isEligible() && row.getDueDate().getTime() > new Date().getTime()
-						&& row.isSelected() != true && !(child == null || "".equalsIgnoreCase(child.getProjectId().trim())))
+				if (row.isEditable() && row.isApplicable() && row.isEligible()
+						&& row.getDueDate().getTime() > new Date().getTime()
+						&& row.isSelected() != true
+						&& !(child == null || "".equalsIgnoreCase(child.getProjectId().trim())))
 				{
-					// Making sure that Vaccination is not being scheduled on a Sunday
+					// Making sure that Vaccination is not being scheduled on a
+					// Sunday
 					Calendar c = Calendar.getInstance();
 					c.setTime(row.getDueDate());
+
 					int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+
 					if (dayOfWeek == 1)
 					{
 						c.setTime(row.getDueDate());
 						c.add(Calendar.DATE, 1);
 						row.setDueDate(c.getTime());
 					}
+
 					row.setStatus(VaccinationStatus.SCHEDULED.name());
-					row.setSelected(true);				
+					row.setSelected(true);
 				}
 			}
 		}
-
 	}
 
 	public void validateLateGap(VaccineScheduleRow row)
@@ -537,7 +536,7 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 		 */
 		if (child != null && !row.isSelected() && child.getDateOfBirth() != null)
 		{
-			Boolean isLate = VaccinationValidator.checkLateVaccinationGap(row, child.getDateOfBirth());
+			Boolean isLate = VaccinationValidator.checkLateVaccinationGap(row, child.getDateOfBirth(), context);
 			if (isLate)
 				row.setApplicable(false);
 			else

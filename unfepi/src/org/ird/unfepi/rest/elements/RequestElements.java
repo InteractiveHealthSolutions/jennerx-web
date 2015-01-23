@@ -1,43 +1,59 @@
 package org.ird.unfepi.rest.elements;
 
-public class RequestElements {
-	//APPLICATION
+public class RequestElements
+{
+	// APPLICATION
 	public static final String APP_VER = "appver";
 	public static final String USER_TYPE = "userType";
 	public static final String REQ_TYPE = "rqtyp";
 	public static final String REQ_TYPE_FETCH = "rqtftch";
 	public static final String REQ_TYPE_SUBMIT = "rqtsbmt";
 	public static final String REQ_USER = "rqtusr";
-	
-	public static final String METADATA_TYPE="mtdtaTyp";
-	public static final String METADATA_ALL="all";
-	public static final String METADATA_LOCATION="loc";
-	public static final String METADATA_LOCATION_TYPE="loctype";
-	public static final String METADATA_VACCINE="vac";
-	public static final String METADATA_VACCINE_SCHEDULE="vacsched";
-	public static final String METADATA_VACCINATION_CENTRES="centr";	
-	public static final String METADATA_USER="user";
-	
-	public static final String METADATA_FIELD_LOCATION_ID="locationId";
-	public static final String METADATA_FIELD_LOCATION_NAME="fullName";
-	public static final String METADATA_FIELD_LOCATION_PARENT="parentLocation";
-	public static final String METADATA_FIELD_LOCATION_TYPE_NAME="typeName";
-	public static final String METADATA_FIELD_LOCATION_TYPE_ID="locationTypeId";		
-	public static final String METADATA_FIELD_VACCINATION_CENTRE_ID="mappedId";
-	public static final String METADATA_FIELD_VACCINATION_CENTRE_NAME="name";
-	
-	
+
+	public static final String METADATA_TYPE = "mtdtaTyp";
+	public static final String METADATA_ALL = "all";
+	public static final String METADATA_LOCATION = "loc";
+	public static final String METADATA_LOCATION_TYPE = "loctype";
+	public static final String METADATA_VACCINE = "vac";
+	public static final String METADATA_VACCINEGAP = "vacgap";
+	public static final String METADATA_VACCINEGAPTYPE = "vacgaptype";
+	public static final String METADATA_VACCINEPREREQUISITE = "vacpreq";
+	public static final String METADATA_VACCINE_SCHEDULE = "vacsched";
+	public static final String METADATA_VACCINATION_CENTRES = "centr";
+	public static final String METADATA_USER = "user";
+
+	public static final String METADATA_FIELD_LOCATION_ID = "locationId";
+	public static final String METADATA_FIELD_LOCATION_NAME = "fullName";
+	public static final String METADATA_FIELD_LOCATION_PARENT = "parentLocation";
+	public static final String METADATA_FIELD_LOCATION_TYPE_NAME = "typeName";
+	public static final String METADATA_FIELD_LOCATION_TYPE_ID = "locationTypeId";
+	public static final String METADATA_FIELD_VACCINATION_CENTRE_ID = "mappedId";
+	public static final String METADATA_FIELD_VACCINATION_CENTRE_NAME = "name";
+
+	public static final String METADATA_FIELD_VACCINE_ID = "vaccineId";
+	public static final String METADATA_FIELD_VACCINE_NAME = "name";
+	public static final String METADATA_FIELD_VACCINE_ISSUPPLEMENTARY = "issupplementary";
+
+	public static final String METADATA_FIELD_VACCINEGAP_VACCINEGAPTYPEID = "vaccineGapTypeId";
+	public static final String METADATA_FIELD_VACCINEGAP_GAPTIMEUNIT = "gapTimeUnit";
+	public static final String METADATA_FIELD_VACCINEGAP_VALUE = "value";
+
+	public static final String METADATA_FIELD_VACCINEGAPTYPE_NAME = "name";
+
+	public static final String METADATA_FIELD_VACCINEPREREQUISITE_ID = "vaccinePrerequisiteId";
+	public static final String METADATA_FIELD_VACCINEPREREQUISITE_MANDATORY = "mandatory";
+
 	public static final String FETCH_FORM_TYPE = "ftfrmtp";
 	public static final String SUBMIT_FORM_TYPE = "sbfrmtp";
 
 	public static final String LG_USERNAME = "urnm";
-	public static final String LG_USERID = "userID"; 
+	public static final String LG_USERID = "userID";
 	public static final String LG_PASSWORD = "urpwd";
 	public static final String LG_PHONETIME = "phndttm";
-	public static final String USER_TYPE_VACCINATOR="vac";
-	public static final String USER_TYPE_STOREKEEPER="stk";
-	
-	public static final String REQUEST_DATE_FORMAT="reqdateformat";
+	public static final String USER_TYPE_VACCINATOR = "vac";
+	public static final String USER_TYPE_STOREKEEPER = "stk";
+
+	public static final String REQUEST_DATE_FORMAT = "reqdateformat";
 
 	public static final String UV_CHILDID = "chlid";
 	public static final String UV_CURR_VACCINE_RECIEVED = "vccrcvdnam";
@@ -53,14 +69,14 @@ public class RequestElements {
 	public static final String CHILD_ID = "chlid";
 	public static final String MR_NUMBER = "chlmr";
 
-	// Screening Form 
+	// Screening Form
 	public static final String CHILDID = "ChildID";
 	public static final String CHILD_HEALTHY = "childHealthy";
 	public static final String SCREENING_DATE = "screeningDate";
 	public static final String VACCINATOR = "vaccinator";
 	public static final String VACCINATION_CENTER = "vaccinationCenter";
 
-	// Enrollment Form 
+	// Enrollment Form
 	public static final String CHILD_PROG_ID = "childProgID";
 	public static final String CHILD_QR_ID = "chldQrId";
 	public static final String CHILD_NFC_ID = "chldNfcId";
@@ -93,9 +109,9 @@ public class RequestElements {
 	public static final String RELIGION_OTHER = "religionOther";
 	public static final String LANGUAGE = "language";
 	public static final String LANGUAGE_OTHER = "languageOther";
-	public static final String VACCINATION_STATUS="vaccStatus";
-	public static final String VACCINATION_SCHEDULE="vacSched";	
-	public static final String VACCINATION_SUPPLEMENTARY="vacSupp";
+	public static final String VACCINATION_STATUS = "vaccStatus";
+	public static final String VACCINATION_SCHEDULE = "vacSched";
+	public static final String VACCINATION_SUPPLEMENTARY = "vacSupp";
 	public static final String CURRENT_VACCINE = "currVacc";
 	public static final String NEXT_VACCINE = "nextVacc";
 	public static final String VACCINES_GIVEN = "vaccsGiven";
@@ -121,8 +137,8 @@ public class RequestElements {
 	public static final String LOTTERY_DENIAL_REASON = "lotteryDenialReason";
 	public static final String LOTTERY_DENIAL_REASON_OTHER = "lotteryDenialReasonOther";
 	public static final String VERIFICATION_CODE = "verificationCOde";
-	public static final String VACCINATION_RECORD_NUM="vaccRecNum";
-	public static final String LOTTERY_CONSUMED="lotryCnsmed";
+	public static final String VACCINATION_RECORD_NUM = "vaccRecNum";
+	public static final String LOTTERY_CONSUMED = "lotryCnsmed";
 	public static final String AMOUNT_WON = "amntWon";
 	public static final String UPDATE_VERIFICATION_CODE = "UpdateVCode";
 	public static final String VACCINEID = "vaccineID";
@@ -143,7 +159,7 @@ public class RequestElements {
 	public static final String LOTTERY_CHANGED = "lotteryChanged";
 	public static final String NEW_EPI_NO_GIVEN = "newEpiNoGiven";
 	public static final String NEW_EPI_NO = "newEpiNo";
-	public static final String LOTTERIES_AVAILABLE="lotryAvlbl";
+	public static final String LOTTERIES_AVAILABLE = "lotryAvlbl";
 
 
 	public static final String VACCINATOR_CODE = "vaccinatorCode";
@@ -166,13 +182,13 @@ public class RequestElements {
 	public static final String PENTA_REMINDERS_SMS = "PentaReminderSMS";
 	public static final String BCG_LOTTERY = "BCGLottery";
 	public static final String PENTA_LOTTERY = "PentaReminderSMS";
-	
-	//DAILY SUMMARY
+
+	// DAILY SUMMARY
 	public static final String TOTAL_ENROL_PER_DAY = "TotalEnrolmentPerDay";
 	public static final String TOTAL_FOLLOW_PER_DAY = "TotalFollowPerDay";
 	public static final String TOTAL_TT_TODAY = "TotalTT_Today";
 	public static final String TOTAL_OPV_TODAY = "TotalOPV_Today";
-	public static final String TOTAL_VISITED_TODAY = "TotalVisitedToday";	
+	public static final String TOTAL_VISITED_TODAY = "TotalVisitedToday";
 	public static final String TOTAL_OPV0 = "TotalOPV0";
 	public static final String TOTAL_OPV1 = "TotalOPV1";
 	public static final String TOTAL_OPV2 = "TotalOPV2";

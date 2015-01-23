@@ -1,26 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string-array name="tables">
-         <item>CREATE TABLE IF NOT EXISTS location (
+        <item>CREATE TABLE IF NOT EXISTS location (
             locationId TEXT NOT NULL COLLATE NOCASE, 
             name TEXT NOT NULL UNIQUE COLLATE NOCASE, 
     		parent TEXT NOT NULL COLLATE NOCASE,	       
             locationType TEXT NOT NULL COLLATE NOCASE,
-            PRIMARY KEY (locationId))
-        </item>
-       
-        <item>
-            CREATE TABLE IF NOT EXISTS locationType (
+            PRIMARY KEY (locationId))</item>
+        <item>CREATE TABLE IF NOT EXISTS locationType (
             typeName TEXT NOT NULL COLLATE NOCASE,
             typeId TEXT NOT NULL UNIQUE COLLATE NOCASE,
-            PRIMARY KEY (typeId))
-        </item>
-        <item>
-            CREATE TABLE IF NOT EXISTS centre (
+            PRIMARY KEY (typeId))</item>
+        <item>CREATE TABLE IF NOT EXISTS centre (
             centreId TEXT NOT NULL UNIQUE COLLATE NOCASE,
             name TEXT NOT NULL COLLATE NOCASE,
-            PRIMARY KEY (centreId))
-        </item> 
+            PRIMARY KEY (centreId))</item>
+        <item>CREATE TABLE IF NOT EXISTS vaccine (
+  			vaccineId TEXT NOT NULL UNIQUE COLLATE NOCASE,
+  			name TEXT NOT NULL COLLATE NOCASE,
+ 			issupplementary TEXT NOT NULL COLLATE NOCASE,
+  			PRIMARY KEY (vaccineId))</item>
+        <item>CREATE TABLE IF NOT EXISTS vaccinegap (
+  			vaccineGapTypeId  TEXT NOT NULL COLLATE NOCASE,
+  			vaccineId TEXT NOT NULL COLLATE NOCASE,
+  			gapTimeUnit TEXT NOT NULL COLLATE NOCASE,
+  			value TEXT NOT NULL COLLATE NOCASE,
+  			PRIMARY KEY (vaccineGapTypeId,vaccineId))</item>
+        <item>CREATE TABLE IF NOT EXISTS vaccinegaptype (
+  			vaccineGapTypeId TEXT NOT NULL UNIQUE COLLATE NOCASE,
+  			name TEXT NOT NULL COLLATE NOCASE,
+  			PRIMARY KEY (vaccineGapTypeId))</item>
+        <item>CREATE TABLE IF NOT EXISTS vaccineprerequisite (
+  			vaccineId TEXT NOT NULL,
+     		vaccinePrerequisiteId TEXT NOT NULL,
+ 			mandatory TEXT DEFAULT NULL,
+  			PRIMARY KEY (vaccineId,vaccinePrerequisiteId))</item>
     </string-array>
-    
+
 </resources>

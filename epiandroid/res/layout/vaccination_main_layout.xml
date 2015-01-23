@@ -8,27 +8,38 @@
     android:paddingRight="8dp"
     android:weightSum="2" >
 
-    <LinearLayout
-        android:id="@+id/llMain"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical" >
-    </LinearLayout>
 
-    <ListView
-        android:id="@id/android:list"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.75" />
+        <LinearLayout
+            android:id="@+id/llMain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+        </LinearLayout>
 
-    <Button
-        android:id="@+id/vacBtnRefresh"
-        style="@style/btnStyDefault"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginTop="5dp"
-        android:layout_weight="0.25"
-        android:onClick="refresh"
-        android:text="@string/btnRefresh" />
+        <ListView
+            android:id="@id/android:list"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/vacBtnRefresh" />
+
+        <!-- android:layout_weight="0.90" -->
+
+        <Button
+            android:id="@+id/vacBtnRefresh"
+            style="@style/btnStyDefault"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="5dp"
+            android:onClick="refresh"
+            android:text="@string/btnRefresh" />
+
+        <!-- android:layout_weight="0.10" -->
+
+    </RelativeLayout>
 
 </LinearLayout>

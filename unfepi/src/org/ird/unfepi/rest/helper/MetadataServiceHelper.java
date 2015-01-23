@@ -27,22 +27,27 @@ import org.ird.unfepi.service.impl.CustomQueryServiceImpl;
 import org.json.simple.JSONObject;
 
 public class MetadataServiceHelper
-{	
+{
 	ServiceContext sc = Context.getServices();
-	
+
 	public static String getMetadata()
 	{
 		try
 		{
-			JSONObject mainResponse=new JSONObject();
-			
+			JSONObject mainResponse = new JSONObject();
+
 			fillLocation(mainResponse);
 			fillLocationType(mainResponse);
 			fillVaccinationCentres(mainResponse);
-			
+
+			fillVaccine(mainResponse);
+			fillVaccineGap(mainResponse);
+			fillVaccineGapType(mainResponse);
+			fillVaccinePrerequisite(mainResponse);
+
 			HashMap<String, Object> resp = new HashMap<String, Object>();
 			resp.put("METADATA", mainResponse);
-			
+
 			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_SUCCESS, resp);
 		}
 		catch (Exception e)
@@ -54,106 +59,139 @@ public class MetadataServiceHelper
 			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_INTERNAL_ERROR, map);
 		}
 	}
-	
+
 	public String getMetadata(String dataType)
-	{	
-		if (dataType==null)
+	{
+		if (dataType == null)
 			return null;
-		
-		JSONObject mainResponse=new JSONObject();		
-		
-		if(dataType.equalsIgnoreCase(RequestElements.METADATA_LOCATION))
-		{			
-			fillLocation(mainResponse);			
+
+		JSONObject mainResponse = new JSONObject();
+
+		if (dataType.equalsIgnoreCase(RequestElements.METADATA_LOCATION))
+		{
+			fillLocation(mainResponse);
 		}
-		else if(dataType.equalsIgnoreCase(RequestElements.METADATA_LOCATION_TYPE))
+		else if (dataType.equalsIgnoreCase(RequestElements.METADATA_LOCATION_TYPE))
 		{
 			fillLocationType(mainResponse);
 		}
-		else if(dataType.equalsIgnoreCase(RequestElements.METADATA_VACCINE))
+		else if (dataType.equalsIgnoreCase(RequestElements.METADATA_VACCINE))
 		{
 			fillVaccine(mainResponse);
 		}
-		else if(dataType.equalsIgnoreCase(RequestElements.METADATA_VACCINATION_CENTRES))
+		else if (dataType.equalsIgnoreCase(RequestElements.METADATA_VACCINATION_CENTRES))
 		{
 			fillVaccinationCentres(mainResponse);
 		}
-		
-		else if(dataType.equalsIgnoreCase(RequestElements.METADATA_VACCINE_SCHEDULE))
+
+		else if (dataType.equalsIgnoreCase(RequestElements.METADATA_VACCINE_SCHEDULE))
 		{
 			fillVaccine(mainResponse);
 		}
-		
-		else if(dataType.equalsIgnoreCase(RequestElements.METADATA_USER))
+
+		else if (dataType.equalsIgnoreCase(RequestElements.METADATA_USER))
 		{
 			fillUser(mainResponse);
 		}
-		else if(dataType.equalsIgnoreCase(RequestElements.METADATA_ALL))
+		else if (dataType.equalsIgnoreCase(RequestElements.METADATA_ALL))
 		{
-			fillLocation(mainResponse);	
+			fillLocation(mainResponse);
 			fillLocationType(mainResponse);
 			fillVaccine(mainResponse);
 			fillVaccinationCentres(mainResponse);
 			fillVaccine(mainResponse);
 			fillUser(mainResponse);
-		}			
-		
-		if(mainResponse != null && mainResponse.values().size() >1)
+		}
+
+		if (mainResponse != null && mainResponse.values().size() > 1)
 			return mainResponse.toJSONString();
-		else 
+		else
 			return null;
 	}
-	
+
 	private static void fillLocation(JSONObject mainResponse)
 	{
-		String[] columns = new String[]{RequestElements.METADATA_FIELD_LOCATION_ID,
-										RequestElements.METADATA_FIELD_LOCATION_NAME,
-										RequestElements.METADATA_FIELD_LOCATION_PARENT,
-										"locationType"};
+		String[] columns = new String[] { RequestElements.METADATA_FIELD_LOCATION_ID,
+				RequestElements.METADATA_FIELD_LOCATION_NAME,
+				RequestElements.METADATA_FIELD_LOCATION_PARENT,
+				"locationType" };
 		String table = "location";
-		fetchMetaData(/*"location"*/RequestElements.METADATA_LOCATION, columns, table, mainResponse);
+		fetchMetaData(/* "location" */RequestElements.METADATA_LOCATION, columns, table, mainResponse);
 	}
-	
+
 	private static void fillLocationType(JSONObject mainResponse)
 	{
-		String[] columns = new String[]{RequestElements.METADATA_FIELD_LOCATION_TYPE_ID,
-										RequestElements.METADATA_FIELD_LOCATION_TYPE_NAME };
+		String[] columns = new String[] { RequestElements.METADATA_FIELD_LOCATION_TYPE_ID,
+				RequestElements.METADATA_FIELD_LOCATION_TYPE_NAME };
 		String table = "locationtype";
-		fetchMetaData(/*"locationtype"*/RequestElements.METADATA_LOCATION_TYPE, columns, table, mainResponse);
+		fetchMetaData(/* "locationtype" */RequestElements.METADATA_LOCATION_TYPE, columns, table, mainResponse);
 	}
-	
+
 	private static void fillVaccine(JSONObject mainResponse)
 	{
-		//TODO: after discussion with Maimoona. Vaccine table needs restructuring
-		//TODO: add logic for returning the vaccine data here
+		// TODO: after discussion with Maimoona. Vaccine table needs restructuring
+		// TODO: add logic for returning the vaccine data here
+
+		String[] columns = new String[] { RequestElements.METADATA_FIELD_VACCINE_ID, RequestElements.METADATA_FIELD_VACCINE_NAME, RequestElements.METADATA_FIELD_VACCINE_ISSUPPLEMENTARY };
+		String table = "vaccine";
+		fetchMetaData(RequestElements.METADATA_VACCINE, columns, table, mainResponse);
 	}
-	
+
+	private static void fillVaccineGap(JSONObject mainResponse)
+	{
+		String[] columns = new String[] { RequestElements.METADATA_FIELD_VACCINEGAP_VACCINEGAPTYPEID, RequestElements.METADATA_FIELD_VACCINE_ID,
+				RequestElements.METADATA_FIELD_VACCINEGAP_GAPTIMEUNIT, RequestElements.METADATA_FIELD_VACCINEGAP_VALUE };
+		String table = "vaccinegap";
+		fetchMetaData(RequestElements.METADATA_VACCINEGAP, columns, table, mainResponse);
+	}
+
+	private static void fillVaccineGapType(JSONObject mainResponse)
+	{
+		/*
+		 * Columns in the order of "vaccineGapTypeId","name"
+		 */
+
+		String[] columns = new String[] { RequestElements.METADATA_FIELD_VACCINEGAP_VACCINEGAPTYPEID, RequestElements.METADATA_FIELD_VACCINEGAPTYPE_NAME };
+		String table = "vaccinegaptype";
+		fetchMetaData(RequestElements.METADATA_VACCINEGAPTYPE, columns, table, mainResponse);
+	}
+
+	private static void fillVaccinePrerequisite(JSONObject mainResponse)
+	{
+		/*
+		 * Columns in the order of "vaccineId","vaccinePrerequisiteId", "mandatory"
+		 */
+
+		String[] columns = new String[] { RequestElements.METADATA_FIELD_VACCINE_ID, RequestElements.METADATA_FIELD_VACCINEPREREQUISITE_ID,
+				RequestElements.METADATA_FIELD_VACCINEPREREQUISITE_MANDATORY };
+		String table = "vaccineprerequisite";
+		fetchMetaData(RequestElements.METADATA_VACCINEPREREQUISITE, columns, table, mainResponse);
+	}
+
 	private static void fillUser(JSONObject mainResponse)
 	{
-		//TODO: add logic for returning the User data here
+		// TODO: add logic for returning the User data here
 	}
-	
+
 	private static void fillVaccinationCentres(JSONObject mainResponse)
 	{
-		
-		String[] columns = new String[]{RequestElements.METADATA_FIELD_VACCINATION_CENTRE_ID,
+
+		String[] columns = new String[] { RequestElements.METADATA_FIELD_VACCINATION_CENTRE_ID,
 				RequestElements.METADATA_FIELD_VACCINATION_CENTRE_NAME };
 		String table = "vaccinationcenter";
 		fetchMetaData(RequestElements.METADATA_VACCINATION_CENTRES, columns, table, mainResponse);
-		
-}
-	
-	
-	
-	private static void fetchMetaData(String dataType, String[] columns, String table, JSONObject container )
+
+	}
+
+	private static void fetchMetaData(String dataType, String[] columns, String table, JSONObject container)
 	{
 		try
 		{
-			if(container== null)
+			if (container == null)
 				container = new JSONObject();
-			String query = CustomQueryBuilder.query(columns, table);			
+			String query = CustomQueryBuilder.query(columns, table);
 			ServiceContext sc = Context.getServices();
-			List results =sc.getCustomQueryService().getDataBySQL(query);
+			List results = sc.getCustomQueryService().getDataBySQL(query);
 			ResponseBuilder.buildMetadataResponse(container, dataType, columns, results);
 		}
 		catch (Exception e)
@@ -162,23 +200,23 @@ public class MetadataServiceHelper
 			e.printStackTrace();
 		}
 	}
-	
+
 	public File zipData(File tempFile)
-	{	
-		//get the temporary file first
-		if(tempFile.exists())
+	{
+		// get the temporary file first
+		if (tempFile.exists())
 		{
 			try
 			{
 				FileInputStream fis = new FileInputStream(tempFile);
 				File tempZipFile = File.createTempFile("raw", "cmprsd");
-				if(tempZipFile.exists())
+				if (tempZipFile.exists())
 				{
 					ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(tempZipFile));
 					ZipEntry entry = new ZipEntry(tempFile.getName());
 					zos.putNextEntry(entry);
 					byte[] data = new byte[1024];
-					while(fis.read(data)>0)
+					while (fis.read(data) > 0)
 					{
 						zos.write(data, 0, data.length);
 					}
@@ -196,19 +234,19 @@ public class MetadataServiceHelper
 				return null;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	public static File createTempFile(String data)
 	{
 		try
-		{			
+		{
 			File temp = File.createTempFile("rwData", "meta");
 			temp.createNewFile();
-			
+
 			if (temp.exists())
-			{				
+			{
 				FileOutputStream fos = new FileOutputStream(temp);
 				fos.write(data.getBytes());
 				fos.flush();
@@ -218,7 +256,7 @@ public class MetadataServiceHelper
 			}
 		}
 		catch (Exception e)
-		{			
+		{
 			GlobalParams.MOBILELOGGER.error("Error occured while creating file for metadata");
 			GlobalParams.MOBILELOGGER.error(e.getMessage());
 			e.printStackTrace();
@@ -226,6 +264,4 @@ public class MetadataServiceHelper
 		}
 		return null;
 	}
-
-
 }

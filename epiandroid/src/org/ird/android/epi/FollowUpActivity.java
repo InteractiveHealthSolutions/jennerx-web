@@ -118,11 +118,14 @@ public class FollowUpActivity extends TabActivity implements IDialogListener, On
 	// Flags form management
 	boolean isFinished = false;
 
+	private Context context;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.follow_up_layout);
+		this.context = getApplicationContext();
 
 		res = getResources();
 		tabFollowUp = getTabHost();
@@ -671,17 +674,31 @@ public class FollowUpActivity extends TabActivity implements IDialogListener, On
 				tempObj = vaccinations.getJSONObject(i);
 				if (tempObj == null)
 					continue;
+
+				// if vaccine is supplementary then don't add it
+				// we will handle them separately
+
+				vaccineName = tempObj.getString(RequestElements.VACCINENAME);
+
+				if (VaccineService.isSupplementaryVaccine(vaccineName, context))
+				{
+					continue;
+				}
+
 				// Get Vaccination related fields from JSON sent from server
+
 				strDueDate = tempObj.getString(RequestElements.NEXT_ALLOTTED_DATE);
 				strVacDate = tempObj.getString(RequestElements.DATE_OF_VACCINATION);
-				vaccineName = tempObj.getString(RequestElements.VACCINENAME);
+				// vaccineName = tempObj.getString(RequestElements.VACCINENAME);
 				centre = tempObj.getString(RequestElements.VACCINATION_CENTER);
 				status = tempObj.getString(RequestElements.VACCINATION_STATUS);
+
 				// Prepare Vaccination object
+
 				tempVacc = new Vaccination();
 				tempVacc.setDueDate(DateTimeUtils.StringToDate(strDueDate, null));
 				tempVacc.setVaccinationDate(DateTimeUtils.StringToDate(strVacDate, null));
-				vaccine = VaccineService.getVaccineByName(vaccineName);
+				vaccine = VaccineService.getVaccineByName(vaccineName, context);
 				tempVacc.setGivenVaccine(vaccine);
 				tempVacc.setCentre(centre);
 
