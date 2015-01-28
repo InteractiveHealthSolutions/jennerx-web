@@ -55,7 +55,7 @@ public class StaticScheduleAdapter extends ArrayAdapter<Vaccine> {
 			}
 
 			txtVwDateValue.setText(Html.fromHtml(scheduleText));
-			txtVwDateValue.setTextColor(R.color.PaleBlue);
+			txtVwDateValue.setTextColor(cxt.getResources().getColor(R.color.PaleBlue));
 			
 
 		}

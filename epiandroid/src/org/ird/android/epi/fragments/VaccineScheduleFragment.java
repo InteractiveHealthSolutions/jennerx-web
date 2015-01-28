@@ -30,6 +30,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ListFragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -43,10 +44,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class VaccineScheduleFragment extends ListFragment implements
-		OnItemLongClickListener
-{
-
+public class VaccineScheduleFragment extends ListFragment implements OnItemLongClickListener{
 	Vaccine[] vaccines = null;
 	Child child;
 	Vaccination[] vaccinations = null;
@@ -62,16 +60,20 @@ public class VaccineScheduleFragment extends ListFragment implements
 
 	private CentreDBHelper centreDbHelper;
 	private List<Centre> centres;
+	private Context context;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
+		context = getActivity().getApplicationContext();
+
 		updateSchedule();
 
 		getListView().setOnItemLongClickListener(this);
 		centreDbHelper = new CentreDBHelper(getActivity());
 		centres = centreDbHelper.getCentres();
+
 	}
 
 	/*
@@ -132,7 +134,7 @@ public class VaccineScheduleFragment extends ListFragment implements
 			{
 				if (!row.isSelected())
 				{
-					Date defaultDate = VaccineHelper.getDueDate(child != null ? child.getDateOfBirth() : null, row, listRows);
+					Date defaultDate = VaccineHelper.getDueDate(child != null ? child.getDateOfBirth() : null, row, listRows, context);
 
 					row.setDueDate(defaultDate);
 				}
@@ -157,8 +159,7 @@ public class VaccineScheduleFragment extends ListFragment implements
 		// Fill get vaccines if they are not yet filled
 		if (this.vaccines == null)
 		{
-
-			this.vaccines = VaccineHelper.getSortedVaccines();
+			this.vaccines = VaccineHelper.getSortedVaccines(context);
 		}
 
 		listRows = new ArrayList<VaccineScheduleRow>();
@@ -228,7 +229,7 @@ public class VaccineScheduleFragment extends ListFragment implements
 	@Override
 	public void onListItemClick(ListView l, View v, final int pos, long id)
 	{
-		// check a child is associated with this schdedule
+		// check a child is associated with this schedule
 		if (child == null || "".equalsIgnoreCase(child.getProjectId().trim()))
 		{
 			EpiUtils.showDismissableDialog(
@@ -248,7 +249,6 @@ public class VaccineScheduleFragment extends ListFragment implements
 		}
 		else if (listRows.get(pos).isEditable())
 		{
-
 			if (!listRows.get(pos).isApplicable())
 			{
 				IDialogListener dialogListener = new IDialogListener()
@@ -399,15 +399,11 @@ public class VaccineScheduleFragment extends ListFragment implements
 	public void validationsBeforeActivity(VaccineScheduleRow row,
 			ArrayList<VaccineScheduleRow> rows)
 	{
-
 		/**
 		 * Validate Prereq vaccine
-		 * 
 		 */
 
-		VaccinationValidator.PrerequisiteValidationResult result = VaccinationValidator
-				.checkPrerequisites(row.getVaccineName(), rows);
-
+		VaccinationValidator.PrerequisiteValidationResult result = VaccinationValidator.checkPrerequisites(row.getVaccineName(), rows, context);
 		boolean missingPrerequisite;
 		missingPrerequisite = result.hasErrors;
 
@@ -418,7 +414,11 @@ public class VaccineScheduleFragment extends ListFragment implements
 		else
 		{
 			row.setEligible(false);
-			row.setStatus(null);
+			row.setStatus(null);			
+
+			row.setGiven(false);			
+
+			row.setSelected(false);
 
 			row.setGiven(false);
 
@@ -518,27 +518,25 @@ public class VaccineScheduleFragment extends ListFragment implements
 		{
 			if (row != null)
 			{
-			
-			/** checking if vaccine is not expired
-			 *  and its predecessor vaccine is given and
-			 *  has higher due date than todays date
-			 *  then set that vaccine as scheduled
-			 */
 				if (row.isEditable() && row.isApplicable() && row.isEligible()
-						&& row.getDueDate().getTime() > new Date().getTime() && row.isSelected() != true
+						&& row.getDueDate().getTime() > new Date().getTime()
+						&& row.isSelected() != true
 						&& !(child == null || "".equalsIgnoreCase(child.getProjectId().trim())))
 				{
 					// Making sure that Vaccination is not being scheduled on a
 					// Sunday
 					Calendar c = Calendar.getInstance();
 					c.setTime(row.getDueDate());
+
 					int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+
 					if (dayOfWeek == 1)
 					{
 						c.setTime(row.getDueDate());
 						c.add(Calendar.DATE, 1);
 						row.setDueDate(c.getTime());
 					}
+
 					row.setStatus(VaccinationStatus.SCHEDULED.name());
 					row.setSelected(true);
 				}
@@ -553,7 +551,7 @@ public class VaccineScheduleFragment extends ListFragment implements
 		 */
 		if (child != null && !row.isSelected() && child.getDateOfBirth() != null)
 		{
-			Boolean isLate = VaccinationValidator.checkLateVaccinationGap(row, child.getDateOfBirth());
+			Boolean isLate = VaccinationValidator.checkLateVaccinationGap(row, child.getDateOfBirth(), context);
 			if (isLate)
 				row.setApplicable(false);
 			else

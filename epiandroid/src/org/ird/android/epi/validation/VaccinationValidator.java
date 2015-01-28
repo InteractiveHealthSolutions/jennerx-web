@@ -35,18 +35,18 @@ public class VaccinationValidator
 	 * @return the List implementation containing all the missing
 	 *         vaccinesprerequisites.
 	 */
-	public static VaccinationValidator.PrerequisiteValidationResult checkPrerequisites(String name, ArrayList<VaccineScheduleRow> rows)
+	public static VaccinationValidator.PrerequisiteValidationResult checkPrerequisites(String name, ArrayList<VaccineScheduleRow> rows, Context cxt)
 	{
 
 		PrerequisiteValidationResult result = new PrerequisiteValidationResult();
-		Vaccine vac = VaccineService.getVaccineByName(name);
+		Vaccine vac = VaccineService.getVaccineByName(name, cxt);
 		if (vac == null)
 		{
 			result.addErrorVaccine("No vaccine found against given name");
 			return result;
 		}
 
-		VaccinePrerequisite[] prereqs = VaccineService.getPrerequisiteVaccine(vac);
+		VaccinePrerequisite[] prereqs = VaccineService.getPrerequisiteVaccine(vac, cxt);
 
 		if (prereqs.length < 1)
 			return result;
@@ -77,21 +77,21 @@ public class VaccinationValidator
 		return result;
 	}
 
-	public static boolean checkPreviousVaccineGap(Date assignedDate, VaccineScheduleRow row, ArrayList<VaccineScheduleRow> rows)
+	public static boolean checkPreviousVaccineGap(Date assignedDate, VaccineScheduleRow row, ArrayList<VaccineScheduleRow> rows, Context cxt)
 	{
 
 		// Copied from VaccineValidator
-		Vaccine vaccine = VaccineService.getVaccineByName(row.getVaccineName());
+		Vaccine vaccine = VaccineService.getVaccineByName(row.getVaccineName(), cxt);
 		Date prerequisiteDate = null;
 
 		// check gap from the last vaccine
-		VaccineGap previousGap = VaccineHelper.fetchGap(vaccine, VaccineConstants.GAP_TYPE_PREVIOUS_VACCINE);
+		VaccineGap previousGap = VaccineHelper.fetchGapByTypeName(vaccine, VaccineConstants.GAP_TYPE_PREVIOUS_VACCINE, cxt);
 
 		// no gap hence no need to check anything else, all's fine :)
 		if (previousGap == null)
 			return true;
 
-		VaccinePrerequisite[] reqs = VaccineService.getPrerequisiteVaccine(vaccine);
+		VaccinePrerequisite[] reqs = VaccineService.getPrerequisiteVaccine(vaccine, cxt);
 		/*
 		 * ASSUMPTION: THERE IS ALWAYS ONE PREREQUISITE. WILL HAVE TO CHANGE
 		 * THIS WILL HAVE TO CHANGE THIS METHOD IF THIS CHANGES
@@ -130,7 +130,7 @@ public class VaccinationValidator
 			// get the required difference in days
 			Calendar calPrereq = GregorianCalendar.getInstance();
 			calPrereq.setTime(prerequisiteDate);
-			
+
 			if (previousGap.getTimeUnit() == VaccineConstants.GAP_TIME_DAY)
 			{
 				calPrereq.add(Calendar.DAY_OF_MONTH, previousGap.getValue());
@@ -156,20 +156,20 @@ public class VaccinationValidator
 		}
 		return false;
 	}
-	
-	
 
-	public static boolean checkStandardGap(Date assignedDate, String vaccineName, VaccineScheduleRow[] rows, int position)
+
+
+	public static boolean checkStandardGap(Date assignedDate, String vaccineName, VaccineScheduleRow[] rows, int position, Context cxt)
 	{
 		Vaccine vaccine;
 		VaccineGap standardGap;
 		Date lastVaccinatedDate;
 
-		vaccine = VaccineService.getVaccineByName(vaccineName);
+		vaccine = VaccineService.getVaccineByName(vaccineName, cxt);
 		// this vaccine does not exist
 		if (vaccine == null)
 			return false;
-		standardGap = VaccineHelper.fetchGap(vaccine, VaccineConstants.GAP_TYPE_STANDARD);
+		standardGap = VaccineHelper.fetchGapByTypeName(vaccine, VaccineConstants.GAP_TYPE_STANDARD, cxt);
 		if (standardGap == null)
 			return true; // the gap does not exist, so this does not apply to it
 
@@ -231,7 +231,7 @@ public class VaccinationValidator
 		return false;
 	}
 
-	public static boolean checkBirthdateGap(Date assignedDate, ArrayList<VaccineScheduleRow> rows, VaccineScheduleRow row, Date dob)
+	public static boolean checkBirthdateGap(Date assignedDate, ArrayList<VaccineScheduleRow> rows, VaccineScheduleRow row, Date dob, Context cxt)
 	{
 		Date dueDate;
 		Child ch;
@@ -240,7 +240,7 @@ public class VaccinationValidator
 		if (assignedDate == null)
 			return false;
 
-		vaccine = VaccineService.getVaccineByName(row.getVaccineName());
+		vaccine = VaccineService.getVaccineByName(row.getVaccineName(), cxt);
 
 		if (vaccine != null)
 		{
@@ -266,16 +266,16 @@ public class VaccinationValidator
 		return false;
 	}
 
-	public static boolean checkLateVaccinationGap(VaccineScheduleRow row, Date dob)
+	public static boolean checkLateVaccinationGap(VaccineScheduleRow row, Date dob, Context cxt)
 	{
 		Vaccine vaccine;
 		VaccineGap lateGap;
 
-		vaccine = VaccineService.getVaccineByName(row.getVaccineName());
+		vaccine = VaccineService.getVaccineByName(row.getVaccineName(), cxt);
 
 		if (vaccine != null)
 		{
-			lateGap = VaccineHelper.fetchGap(vaccine, VaccineConstants.GAP_TYPE_LATE);
+			lateGap = VaccineHelper.fetchGapByTypeName(vaccine, VaccineConstants.GAP_TYPE_LATE, cxt);
 
 			if (lateGap != null)
 			{
@@ -369,6 +369,9 @@ public class VaccinationValidator
 
 	/**
 	 * Class used to hold the result of prerequisite vaccines checked
+	 * 
+	 * @author Omer
+	 * 
 	 */
 
 	public static class PrerequisiteValidationResult

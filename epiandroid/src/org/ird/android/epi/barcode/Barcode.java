@@ -4,6 +4,10 @@
 
 package org.ird.android.epi.barcode;
 
+/**
+ * @author owais.hussain@irdresearch.org
+ * 
+ */
 public class Barcode
 {
 	public static final int		BARCODE_REQUEST_CODE	= 0;

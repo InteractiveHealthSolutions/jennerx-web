@@ -30,6 +30,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.app.ListFragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,25 +40,31 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class StaticScheduleActivity extends ListActivity {
+public class StaticScheduleActivity extends ListActivity
+{
 
 	Vaccine[] vaccines = null;
 	ArrayList<Vaccine> listRows;
 	StaticScheduleAdapter vaccinesAdapter = null;
 	VaccineGap[] vacGap;
+	Context cxt;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
+		this.cxt = getApplicationContext();
 		listRows = new ArrayList<Vaccine>();
-		vacGap = VaccineService.getAllGaps();
+		vacGap = VaccineService.getAllGaps(this.cxt);
 		updateSchedule();
 	}
 
-	public void updateSchedule() {
+	public void updateSchedule()
+	{
 
-		vaccines = VaccineHelper.getSortedVaccines();
-		for (Vaccine vac : vaccines) {
+		vaccines = VaccineHelper.getSortedVaccines(this.cxt);
+		for (Vaccine vac : vaccines)
+		{
 			listRows.add(vac);
 		}
 		vaccinesAdapter = new StaticScheduleAdapter(StaticScheduleActivity.this, listRows, vacGap);

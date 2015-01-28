@@ -14,7 +14,12 @@ import org.ird.android.epi.dal.VaccineService;
 import org.ird.android.epi.validation.VaccinationValidator;
 
 import android.R.integer;
+import android.content.Context;
 
+/**
+ * @author Saad
+ *
+ */
 public class VaccineHelper
 {
 	static OrderedVaccine[] orderedVaccines = null;
@@ -23,9 +28,9 @@ public class VaccineHelper
 	public static boolean isSorted = false;
 	private static VaccineGap[] allGaps;
 
-	private static void calculateDaysFromBirth()
+	private static void calculateDaysFromBirth(Context cxt)
 	{
-		vaccines = VaccineService.getAllVaccines();
+		vaccines = VaccineService.getAllCompulsoryVaccines(cxt);
 		vaccineDays = new int[vaccines.length];
 		orderedVaccines = new OrderedVaccine[vaccines.length];
 
@@ -35,12 +40,16 @@ public class VaccineHelper
 
 		for (int i = 0; i < vaccines.length; i++)
 		{
-			currentGaps = VaccineService.getGapsForVaccine(vaccines[i]);
+			currentGaps = VaccineService.getGapsForVaccine(vaccines[i], cxt);
 			Calendar cal = GregorianCalendar.getInstance();
 			cal.setTime(new Date());
 			for (VaccineGap gap : currentGaps)
 			{
-				if (gap.getGapType().equals(VaccineConstants.GAP_TYPE_BIRTHDATE))
+				// Need to get gap from Birthdate
+				// We are assuming that all "VaccineGapType" are saved
+				// in sqliteDB
+
+				if (gap.getGapType().getName().equals(VaccineConstants.GAP_TYPE_BIRTHDATE))
 				{
 					if (gap.getTimeUnit().equals(VaccineConstants.GAP_TIME_DAY))
 					{
@@ -58,16 +67,23 @@ public class VaccineHelper
 						// daysFromBirth = gap.getValue() * 30;
 					}
 					daysFromBirth = DateTimeUtils.daysBetween(new Date(), cal.getTime());
-					vaccineDays[i] = daysFromBirth;
+					// vaccineDays[i] = daysFromBirth;
 					orderVac = new OrderedVaccine(vaccines[i], daysFromBirth);
 					orderedVaccines[i] = orderVac;
 				}
 			}
 		}
+
 		Arrays.sort(orderedVaccines);
+
+		// Have to assign days after sorting
+		for (int i = 0; i < orderedVaccines.length; i++)
+		{
+			vaccineDays[i] = orderedVaccines[i].gapFromBirth;
+		}
 	}
 
-	public static Date calculateDueDate(Vaccine vaccine, Date dateOfBirth, Vaccination[] vaccinations)
+	public static Date calculateDueDate(Vaccine vaccine, Date dateOfBirth, Vaccination[] vaccinations, Context cxt)
 	{
 		Calendar cal = GregorianCalendar.getInstance();
 		Date dueDate = null;
@@ -76,12 +92,12 @@ public class VaccineHelper
 		Date lastVaccinationDate = null;
 
 		// get all the gaps for the vaccine
-		VaccineGap[] gaps = VaccineService.getGapsForVaccine(vaccine);
+		VaccineGap[] gaps = VaccineService.getGapsForVaccine(vaccine, cxt);
 
 		// DATE OF BIRTH GAP
 
 		// first obtain date with respect to birth date
-		VaccineGap dobGap = fetchGap(gaps, VaccineConstants.GAP_TYPE_BIRTHDATE);
+		VaccineGap dobGap = fetchGapByTypeName(gaps, VaccineConstants.GAP_TYPE_BIRTHDATE);
 		if (dobGap != null)
 		{
 			dueDate = getDueDatefromBirth(vaccine.getName(), dateOfBirth);
@@ -90,12 +106,13 @@ public class VaccineHelper
 
 		// //PREVIOUS GAP////////
 		// check gap from the last vaccine
-		VaccineGap previousGap = fetchGap(gaps, VaccineConstants.GAP_TYPE_PREVIOUS_VACCINE);
+		VaccineGap previousGap = fetchGapByTypeName(gaps, VaccineConstants.GAP_TYPE_PREVIOUS_VACCINE);
 		if (previousGap != null)
 		{
-			VaccinePrerequisite[] reqs = VaccineService.getPrerequisiteVaccine(vaccine);
+			VaccinePrerequisite[] reqs = VaccineService.getPrerequisiteVaccine(vaccine, cxt);
+
 			/*
-			 * ASSUMPTION: THERE IS ALWAYS ONE PREREQUISITE. WILL HAVE TO CHANGE THIS
+			 * ASSUMPTION: THERE IS ALWAYS ONE PREREQUISITE.
 			 * WILL HAVE TO CHANGE THIS METHOD IF THIS CHANGES
 			 */
 
@@ -194,16 +211,15 @@ public class VaccineHelper
 		return cal.getTime();
 	}
 
-	public static Date getDueDate(Date dateOfBirth, VaccineScheduleRow row, ArrayList<VaccineScheduleRow> rows)
+	public static Date getDueDate(Date dateOfBirth, VaccineScheduleRow row, ArrayList<VaccineScheduleRow> rows, Context cxt)
 	{
 		Date dueDatefromDOB = VaccineHelper.getDueDatefromBirth(row.getVaccineName(), dateOfBirth != null ? dateOfBirth : null);
 
-		// Copied from VaccineValidator
-		Vaccine vaccine = VaccineService.getVaccineByName(row.getVaccineName());
+		Vaccine vaccine = VaccineService.getVaccineByName(row.getVaccineName(), cxt);
 		Date prerequisiteVaccinationDate = null;
 
 		// check gap from the last vaccine
-		VaccineGap previousGap = VaccineHelper.fetchGap(vaccine, VaccineConstants.GAP_TYPE_PREVIOUS_VACCINE);
+		VaccineGap previousGap = VaccineHelper.fetchGapByTypeName(vaccine, VaccineConstants.GAP_TYPE_PREVIOUS_VACCINE, cxt);
 
 		// no gap hence no need to check anything else, all's fine :)
 		if (previousGap == null)
@@ -211,26 +227,28 @@ public class VaccineHelper
 			Calendar cal = GregorianCalendar.getInstance();
 			cal.setTime(dueDatefromDOB);
 
-			// Initializing calender else it will not be initialized
-			// Integer calInitializer = cal.get(Calendar.DAY_OF_WEEK);
 			return moveDateIfSunday(cal);
 		}
 
-		VaccinePrerequisite[] reqs = VaccineService.getPrerequisiteVaccine(vaccine);
+		VaccinePrerequisite[] reqs = VaccineService.getPrerequisiteVaccine(vaccine, cxt);
 		/*
-		 * ASSUMPTION: THERE IS ALWAYS ONE PREREQUISITE. WILL HAVE TO CHANGE
+		 * ASSUMPTION: THERE IS ALWAYS ONE PREREQUISITE.
 		 * THIS WILL HAVE TO CHANGE THIS METHOD IF THIS CHANGES
 		 */
 		Calendar calDOBandPrereq = null;
 
-		if (reqs.length == 1 && reqs[0] != null)// get the only prerequisite
-												// this vaccine has got
+		/*
+		 * get the only prerequisite
+		 * this vaccine has got
+		 */
+
+		if (reqs.length == 1 && reqs[0] != null)
 		{
 			for (VaccineScheduleRow _row : rows)
 			{
 				if (_row.getVaccineName().equals(reqs[0].getPrereq().getName()))
 				{
-					// if this _row is not set to any status then set due date from DOB
+					// checking if preReq vaccine has any status
 					if (_row.getStatus() == null)
 					{
 						// this code producing 1 less day for dueDatefromDOB = 41 for penta1
@@ -286,7 +304,11 @@ public class VaccineHelper
 						// }
 					}
 
-					// If this _row is set to any status other then Retro_Missing then set due date from DOB or previous gap
+					/*
+					 * If preReq vaccine is set to any status
+					 * other then Retro_Missing then
+					 * set due date from DOB or previous gap
+					 */
 					// checking with enum name
 					else if ((_row.getStatus().equals(VaccinationStatus.RETRO_DATE_MISSING.name()) == false))
 					{
@@ -299,15 +321,15 @@ public class VaccineHelper
 							calDOBandPrereq.setTime(prerequisiteVaccinationDate);
 							calDOBandPrereq.get(Calendar.DAY_OF_YEAR);
 
-							if (previousGap.getTimeUnit() == VaccineConstants.GAP_TIME_DAY)
+							if (previousGap.getTimeUnit().equalsIgnoreCase(VaccineConstants.GAP_TIME_DAY))
 							{
 								calDOBandPrereq.add(Calendar.DAY_OF_MONTH, previousGap.getValue());
 							}
-							else if (previousGap.getTimeUnit() == VaccineConstants.GAP_TIME_WEEK)
+							else if (previousGap.getTimeUnit().equalsIgnoreCase(VaccineConstants.GAP_TIME_WEEK))
 							{
 								calDOBandPrereq.add(Calendar.WEEK_OF_YEAR, previousGap.getValue());
 							}
-							else if (previousGap.getTimeUnit() == VaccineConstants.GAP_TIME_MONTH)
+							else if (previousGap.getTimeUnit().equals(VaccineConstants.GAP_TIME_MONTH))
 							{
 								calDOBandPrereq.add(Calendar.MONTH, previousGap.getValue());
 							}
@@ -359,11 +381,11 @@ public class VaccineHelper
 		return null;
 	}
 
-	public static Vaccine[] getSortedVaccines()
+	public static Vaccine[] getSortedVaccines(Context cxt)
 	{
 		// initialize the arrays of both vaccine class and the helper class objects ie OrderedVaccine
 		if (vaccines == null || orderedVaccines == null)
-			calculateDaysFromBirth();
+			calculateDaysFromBirth(cxt);
 
 		if (!isSorted)
 		{
@@ -378,6 +400,7 @@ public class VaccineHelper
 		{
 			vaccines[i] = orderedVaccines[i].vaccine;
 		}
+
 		isSorted = true;
 	}
 
@@ -389,24 +412,39 @@ public class VaccineHelper
 	 *            String from the class VaccineConstants
 	 * @return
 	 */
-	public static VaccineGap fetchGap(VaccineGap[] targetGaps, String gapType)
+	public static VaccineGap fetchGapByTypeName(VaccineGap[] targetGaps, String gapTypeName)
 	{
 		for (VaccineGap gap : targetGaps)
 		{
-			if (gap.getGapType().equalsIgnoreCase(gapType))
+			if (gap.getGapType().getName().equalsIgnoreCase(gapTypeName))
+			{
 				return gap;
+			}
 		}
+
 		return null;
 	}
 
-	public static VaccineGap fetchGap(Vaccine vaccine, String gapType)
+	/**
+	 * Fetches vaccine gap by name of VaccineGapType
+	 * 
+	 * @param vaccine
+	 * @param gapTypeName
+	 * @param cxt
+	 * @return
+	 */
+	public static VaccineGap fetchGapByTypeName(Vaccine vaccine, String gapTypeName, Context cxt)
 	{
-		VaccineGap[] targetGaps = VaccineService.getGapsForVaccine(vaccine);
+		VaccineGap[] targetGaps = VaccineService.getGapsForVaccine(vaccine, cxt);
+
 		for (VaccineGap gap : targetGaps)
 		{
-			if (gap.getGapType().equalsIgnoreCase(gapType))
+			if (gap.getGapType().getName().equalsIgnoreCase(gapTypeName))
+			{
 				return gap;
+			}
 		}
+
 		return null;
 	}
 
@@ -415,6 +453,9 @@ public class VaccineHelper
 	 * based on their duration from the date of birth. The ordering
 	 * is needed when displaying the vaccine(s) in the vaccination
 	 * schedule.
+	 * 
+	 * @author Omer
+	 *
 	 */
 	private static class OrderedVaccine implements Comparable
 	{

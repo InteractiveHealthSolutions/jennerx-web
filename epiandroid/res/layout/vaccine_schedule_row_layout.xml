@@ -9,11 +9,8 @@
         style="@style/schedule_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/chkBoxVaccination"
-        android:layout_alignBottom="@+id/chkBoxVaccination"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_toRightOf="@+id/chkBoxVaccination"
+        android:layout_marginTop="5dp"        
         android:text="Vaccine Name Here" />
 
     <TextView

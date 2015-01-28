@@ -20,6 +20,7 @@ import org.ird.android.epi.model.VaccineName;
 import org.ird.android.epi.validation.VaccinationValidator;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.SQLException;
 import android.os.Bundle;
@@ -64,6 +65,8 @@ public class VaccinationDetails extends Activity
 
 	final boolean[] answer = new boolean[1];
 
+	private Context context;
+
 	// private ArrayList<VaccinationStatus> statusList;
 
 	@Override
@@ -71,6 +74,7 @@ public class VaccinationDetails extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.vaccine_schdule_details_layout);
+		this.context = getApplicationContext();
 
 		bundle = getIntent().getExtras();
 		pos = bundle.getInt("itemPos");
@@ -321,8 +325,8 @@ public class VaccinationDetails extends Activity
 			Date dt = DateTimeUtils.StringToDate(edtTextDate.getText().toString(), null);
 			// TODO: validate the date here:
 
-			birthdateValidated = VaccinationValidator.checkBirthdateGap(dt, rows, row, child.getDateOfBirth());
-			previousVaccineValidated = VaccinationValidator.checkPreviousVaccineGap(dt, row, rows);
+			birthdateValidated = VaccinationValidator.checkBirthdateGap(dt, rows, row, child.getDateOfBirth(), context);
+			previousVaccineValidated = VaccinationValidator.checkPreviousVaccineGap(dt, row, rows, context);
 			if (!chkBxMissing.isChecked())
 			{
 
@@ -513,13 +517,13 @@ public class VaccinationDetails extends Activity
 					Calendar c = Calendar.getInstance();
 					c.setTime(dt);
 					int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
-					
+
 					if (dayOfWeek == 1)
 					{
 						EpiUtils.showDismissableDialog(this, "Cannot schedule vaccination on Sunday.", "Error").show();
 						return false;
 					}
-					
+
 					else
 					{
 						row.setDueDate(dt);
@@ -529,7 +533,7 @@ public class VaccinationDetails extends Activity
 						row.setApplicable(true);
 					}
 				}
-				
+
 				else
 				{
 					EpiUtils.showDismissableDialog(this, "Date must be greater than the current date for the status to be set as Scheduled", "Error").show();
@@ -538,7 +542,7 @@ public class VaccinationDetails extends Activity
 				}
 
 			}
-			
+
 			else if (spStatus.getSelectedItem().equals(VaccinationStatus.VACCINATED))
 			{
 				if (dt.getTime() == today.getTime())
