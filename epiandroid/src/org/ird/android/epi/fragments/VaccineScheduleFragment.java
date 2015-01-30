@@ -418,11 +418,7 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 
 			row.setGiven(false);			
 
-			row.setSelected(false);
-
-			row.setGiven(false);
-
-			row.setSelected(false);
+			row.setSelected(false);		
 		}
 	}
 
