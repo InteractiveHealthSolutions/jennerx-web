@@ -44,8 +44,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class VaccineScheduleFragment extends ListFragment implements OnItemLongClickListener
-{
+public class VaccineScheduleFragment extends ListFragment implements OnItemLongClickListener{
 	Vaccine[] vaccines = null;
 	Child child;
 	Vaccination[] vaccinations = null;
@@ -78,17 +77,20 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 	}
 
 	/*
-	 * Had to Override this method due to addition of refresh button in the default layout of
-	 * ListFragment
-	 * (non-Javadoc)
+	 * Had to Override this method due to addition of refresh button in the
+	 * default layout of ListFragment (non-Javadoc)
 	 * 
-	 * @see android.app.ListFragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
+	 * @see android.app.ListFragment#onCreateView(android.view.LayoutInflater,
+	 * android.view.ViewGroup, android.os.Bundle)
 	 */
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState)
 	{
-		inflater.getContext().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
-		View view = inflater.inflate(R.layout.vaccination_main_layout, container);
+		inflater.getContext().getSystemService(
+				getActivity().LAYOUT_INFLATER_SERVICE);
+		View view = inflater.inflate(R.layout.vaccination_main_layout,
+				container);
 		return view;
 	}
 
@@ -132,9 +134,6 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 			{
 				if (!row.isSelected())
 				{
-					// Calculating default due date from dob
-					// Date defaultDate = VaccineHelper.getDueDatefromBirth(row.getVaccineName(), child != null ? child.getDateOfBirth() : null);
-
 					Date defaultDate = VaccineHelper.getDueDate(child != null ? child.getDateOfBirth() : null, row, listRows, context);
 
 					row.setDueDate(defaultDate);
@@ -233,13 +232,19 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 		// check a child is associated with this schedule
 		if (child == null || "".equalsIgnoreCase(child.getProjectId().trim()))
 		{
-			EpiUtils.showDismissableDialog(getActivity(), "No child with valid ID provided, you can only view the schedule", "Sorry").show();
+			EpiUtils.showDismissableDialog(
+					getActivity(),
+					"No child with valid ID provided, you can only view the schedule",
+					"Sorry").show();
 			return;
 		}
 		else if (!listRows.get(pos).isEligible())
 		{// if not eligible, do not
 			// proceed
-			EpiUtils.showDismissableDialog(getActivity(), "This vaccine can not be given now, please check age of child OR" + " missing required vaccines", "Sorry").show();
+			EpiUtils.showDismissableDialog(
+					getActivity(),
+					"This vaccine can not be given now, please check age of child OR"
+							+ " missing required vaccines", "Sorry").show();
 			return;
 		}
 		else if (listRows.get(pos).isEditable())
@@ -251,7 +256,8 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 					@Override
 					public void onDialogPositiveClick(Map... o)
 					{
-						Intent intent = new Intent(getActivity(), VaccinationDetails.class);
+						Intent intent = new Intent(getActivity(),
+								VaccinationDetails.class);
 						intent.putExtra("listRow", listRows);
 						intent.putExtra("itemPos", pos);
 						intent.putExtra("child", child);
@@ -273,14 +279,18 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 					}
 				};
 
-				// EpiUtils.showYesNoDialog(getActivity(), "Child is too old for this vaccine. Are you sure you want to continue?", "Alert", "Yes", "No", dialogListener).show();
+				// EpiUtils.showYesNoDialog(getActivity(),
+				// "Child is too old for this vaccine. Are you sure you want to continue?",
+				// "Alert", "Yes", "No", dialogListener).show();
 				String childOldConfirmation = "Iss bache kee umer vaccine kee muqarara mudat se ziada hochuki hai. Kya aap phir bhi tika lagana chaheingay?";
-				EpiUtils.showYesNoDialog(getActivity(), childOldConfirmation, "Alert", "Yes", "No", dialogListener).show();
+				EpiUtils.showYesNoDialog(getActivity(), childOldConfirmation,
+						"Alert", "Yes", "No", dialogListener).show();
 
 			}
 			else
 			{
-				Intent intent = new Intent(getActivity(), VaccinationDetails.class);
+				Intent intent = new Intent(getActivity(),
+						VaccinationDetails.class);
 				intent.putExtra("listRow", this.listRows);
 				intent.putExtra("itemPos", pos);
 				intent.putExtra("child", child);
@@ -290,7 +300,8 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 		}
 		else
 		{
-			Toast.makeText(getActivity(), R.string.errorMsg, Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), R.string.errorMsg, Toast.LENGTH_SHORT)
+					.show();
 		}
 
 	}
@@ -379,19 +390,20 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 		catch (Exception e)
 		{
 			Log.e(VaccineScheduleFragment.class.getSimpleName(), e.getMessage());
-			Log.e(VaccineScheduleFragment.class.getSimpleName(), "Error getting vaccinations from schedule");
+			Log.e(VaccineScheduleFragment.class.getSimpleName(),
+					"Error getting vaccinations from schedule");
 		}
 		return array;
 	}
 
-	public void validationsBeforeActivity(VaccineScheduleRow row, ArrayList<VaccineScheduleRow> rows)
+	public void validationsBeforeActivity(VaccineScheduleRow row,
+			ArrayList<VaccineScheduleRow> rows)
 	{
 		/**
 		 * Validate Prereq vaccine
 		 */
 
 		VaccinationValidator.PrerequisiteValidationResult result = VaccinationValidator.checkPrerequisites(row.getVaccineName(), rows, context);
-
 		boolean missingPrerequisite;
 		missingPrerequisite = result.hasErrors;
 
@@ -406,7 +418,7 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 
 			row.setGiven(false);			
 
-			row.setSelected(false);
+			row.setSelected(false);		
 		}
 	}
 
@@ -490,7 +502,6 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 		listRows = listRowsDuplicate;
 		updateSchedule();
 	}
-
 
 	/**
 	 * It set vaccines to sheduled if they are applicable

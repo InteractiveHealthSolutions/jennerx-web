@@ -444,15 +444,7 @@ public class LoginActivity extends Activity implements android.view.View.OnClick
 				updateFirstTime();
 				intent = new Intent(this, MainActivity.class);
 				startActivity(intent);
-			}
-
-			else if (GlobalConstants.USER_ROLE.equalsIgnoreCase(getResources().getString(R.string.storekeeper)) && isLogin)
-			{
-				updateFirstTime();
-				intent = new Intent(this, StorekeeperActivity.class);
-				startActivity(intent);
-			}
-
+			}			
 		}
 		// Outcome 3: Some other error occurred in server. Show error code which
 		// is sent in the response
