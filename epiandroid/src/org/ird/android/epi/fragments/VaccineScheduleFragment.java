@@ -44,7 +44,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class VaccineScheduleFragment extends ListFragment implements OnItemLongClickListener{
+public class VaccineScheduleFragment extends ListFragment implements OnItemLongClickListener
+{
 	Vaccine[] vaccines = null;
 	Child child;
 	Vaccination[] vaccinations = null;
@@ -390,14 +391,12 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 		catch (Exception e)
 		{
 			Log.e(VaccineScheduleFragment.class.getSimpleName(), e.getMessage());
-			Log.e(VaccineScheduleFragment.class.getSimpleName(),
-					"Error getting vaccinations from schedule");
+			Log.e(VaccineScheduleFragment.class.getSimpleName(), "Error getting vaccinations from schedule");
 		}
 		return array;
 	}
 
-	public void validationsBeforeActivity(VaccineScheduleRow row,
-			ArrayList<VaccineScheduleRow> rows)
+	public void validationsBeforeActivity(VaccineScheduleRow row, ArrayList<VaccineScheduleRow> rows)
 	{
 		/**
 		 * Validate Prereq vaccine
@@ -414,11 +413,11 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 		else
 		{
 			row.setEligible(false);
-			row.setStatus(null);			
+			row.setStatus(null);
 
-			row.setGiven(false);			
+			row.setGiven(false);
 
-			row.setSelected(false);		
+			row.setSelected(false);
 		}
 	}
 
