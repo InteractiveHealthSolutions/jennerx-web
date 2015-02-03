@@ -131,15 +131,15 @@ public class VaccinationValidator
 			Calendar calPrereq = GregorianCalendar.getInstance();
 			calPrereq.setTime(prerequisiteDate);
 
-			if (previousGap.getTimeUnit() == VaccineConstants.GAP_TIME_DAY)
+			if (previousGap.getTimeUnit().equalsIgnoreCase(VaccineConstants.GAP_TIME_DAY))
 			{
 				calPrereq.add(Calendar.DAY_OF_MONTH, previousGap.getValue());
 			}
-			else if (previousGap.getTimeUnit() == VaccineConstants.GAP_TIME_WEEK)
+			else if (previousGap.getTimeUnit().equalsIgnoreCase(VaccineConstants.GAP_TIME_WEEK))
 			{
 				calPrereq.add(Calendar.WEEK_OF_YEAR, previousGap.getValue());
 			}
-			else if (previousGap.getTimeUnit() == VaccineConstants.GAP_TIME_MONTH)
+			else if (previousGap.getTimeUnit().equalsIgnoreCase(VaccineConstants.GAP_TIME_MONTH))
 			{
 				calPrereq.add(Calendar.MONTH, previousGap.getValue());
 			}
