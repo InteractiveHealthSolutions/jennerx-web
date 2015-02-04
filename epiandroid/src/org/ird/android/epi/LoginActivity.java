@@ -74,7 +74,7 @@ public class LoginActivity extends Activity implements android.view.View.OnClick
 	/**
 	 * SharedPreferences which hold the preferences value.
 	 */
-	private SharedPreferences pref;	
+	private SharedPreferences pref;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -96,7 +96,7 @@ public class LoginActivity extends Activity implements android.view.View.OnClick
 
 		pref = PreferenceManager.getDefaultSharedPreferences(this);
 
-		pref.registerOnSharedPreferenceChangeListener(LoginActivity.this);		
+		pref.registerOnSharedPreferenceChangeListener(LoginActivity.this);
 		sharedPref = getSharedPreferences("Application Config", MODE_PRIVATE);
 
 		/**
@@ -419,7 +419,8 @@ public class LoginActivity extends Activity implements android.view.View.OnClick
 						}
 						reader.saveMetadata((JSONObject) mapParams.get(key));
 						Toast.makeText(this, R.string.appSynced, Toast.LENGTH_SHORT).show();
-
+						
+						// Meta-data has been downloaded, so update the flag "isFirstTime" to false and save it
 						updateFirstTimeFlag();
 					}
 				}
@@ -435,7 +436,7 @@ public class LoginActivity extends Activity implements android.view.View.OnClick
 			// Proceed as per the selected role
 			Intent intent = null;
 			if (GlobalConstants.USER_ROLE.equalsIgnoreCase(getResources().getString(R.string.vaccinator)) && isLogin)
-			{				
+			{
 				intent = new Intent(this, MainActivity.class);
 				startActivity(intent);
 			}
@@ -593,7 +594,7 @@ public class LoginActivity extends Activity implements android.view.View.OnClick
 			// else if (!(map.get("tokenized_url")).equals(Boolean.valueOf(_prefMap.get("tokenized_url"))))
 			else if (!(EpiUtils.objectToBool(map.get("tokenized_url")).equals(EpiUtils.objectToBool(_prefMap.get("tokenized_url")))))
 			{
-				isFirstTime = true;				
+				isFirstTime = true;
 			}
 		}
 	}
