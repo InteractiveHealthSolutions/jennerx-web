@@ -233,7 +233,7 @@ public class EpiUtils extends Activity
 			preferences = PreferenceManager.getDefaultSharedPreferences(cxt);
 		}
 		// use complete server URL
-		boolean useServerAdress = preferences.getBoolean("tokenized_url", false);
+		boolean useServerAdress = preferences.getBoolean("use_tokenized_url", false);
 		if (useServerAdress)
 		{
 			serverAddress = preferences.getString("fully_qualifified_url", "");
@@ -328,7 +328,39 @@ public class EpiUtils extends Activity
 		}
 	}
 
-	/**Convert Dp to px
+	/**It will convert Object to Boolean if object is String or Boolean.
+	 * It will throw exception if type is other than mentioned one.
+	 * @param value
+	 * @return
+	 */
+	public static Boolean objectToBool(Object value)
+	{
+		if (value instanceof Boolean)
+		{
+			return (Boolean) value;
+		}
+
+		else if (value instanceof String)
+		{
+			String s = (String) value;
+
+			if (s.equals("1") || s.equalsIgnoreCase("true"))
+			{
+				return true;
+			}
+
+			else if (s.equals("0") || s.equalsIgnoreCase("false"))
+			{
+				return false;
+			}
+		}
+		
+		throw new IllegalArgumentException("Unknown type");
+	}
+
+	/**
+	 * Convert Dp to px
+	 * 
 	 * @param context
 	 * @param dp
 	 * @return

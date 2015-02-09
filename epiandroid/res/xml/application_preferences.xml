@@ -4,13 +4,13 @@
     <PreferenceCategory android:title="Connection Settings" >
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="tokenized_url"
+            android:key="use_tokenized_url"
             android:title="Complete Server URL" >
         </CheckBoxPreference>
 
         <EditTextPreference
             android:defaultValue="http://125.209.94.150:7000/UNFEPI/serv"
-            android:dependency="tokenized_url"
+            android:dependency="use_tokenized_url"
             android:key="fully_qualifified_url"
             android:shouldDisableView="true"
             android:title="Server address" >

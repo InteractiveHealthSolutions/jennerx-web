@@ -74,8 +74,7 @@ public class LoginActivity extends Activity implements android.view.View.OnClick
 	/**
 	 * SharedPreferences which hold the preferences value.
 	 */
-	private SharedPreferences pref;
-	private Map<String, String> prefMap;
+	private SharedPreferences defaultPref;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -95,14 +94,14 @@ public class LoginActivity extends Activity implements android.view.View.OnClick
 
 		hideErrors();
 
-		pref = PreferenceManager.getDefaultSharedPreferences(this);
+		PreferenceManager.setDefaultValues(this, R.xml.application_preferences, false);
+		defaultPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-		pref.registerOnSharedPreferenceChangeListener(LoginActivity.this);
-		prefMap = (Map<String, String>) pref.getAll();
+		defaultPref.registerOnSharedPreferenceChangeListener(LoginActivity.this);
 		sharedPref = getSharedPreferences("Application Config", MODE_PRIVATE);
 
 		/**
-		 * initializing isfirsttime from shared preference.
+		 * initializing isFirstTime from shared preference.
 		 */
 		isFirstTime = sharedPref.getBoolean("isFirstTime", true);
 	}
@@ -191,10 +190,11 @@ public class LoginActivity extends Activity implements android.view.View.OnClick
 		// Login button clicked
 		if (v.getId() == btnLogin.getId())
 		{
-			sharedPref();
+			doSyncIfFirstTime();
 			saveDefaultPref();
 
-			isLogin = true;
+			isLogin = false;
+
 			if (validate().size() == 0)
 			{
 				try
@@ -209,8 +209,8 @@ public class LoginActivity extends Activity implements android.view.View.OnClick
 						handleException(new Exception("No Parameters in payload for sending to server.Can not proceed."));
 						isLogin = false;
 					}
-
 				}
+
 				catch (Exception e)
 				{
 					handleException(e);
@@ -375,10 +375,6 @@ public class LoginActivity extends Activity implements android.view.View.OnClick
 		// connecting to it
 		if (response == null)
 		{
-			// Toast.makeText(this,
-			// getString(R.string.login_error_connecting_server),
-			// Toast.LENGTH_LONG).show();
-
 			sharedPref = getSharedPreferences("Application Config", MODE_PRIVATE);
 			editor = sharedPref.edit();
 			editor.putBoolean("isFirstTime", true);
@@ -400,14 +396,11 @@ public class LoginActivity extends Activity implements android.view.View.OnClick
 					{
 						GlobalConstants.USER_PROGRAM_ID = (Integer) (mapParams.get(key));
 
-						// Integer userId = (Integer) (mapParams.get(key));
-						// GlobalConstants.USER_PROGRAM_ID = userId;
-						//
-						// sharedPref = getSharedPreferences("Application Config", MODE_PRIVATE);
-						// editor = sharedPref.edit();
-						// editor.putInt("userid_pref", userId);
-						// editor.commit();
+						// User credentials are correct, so make user login
+
+						isLogin = true;
 					}
+
 					else if (ResponseElements.CENTRE_ID.toString().equalsIgnoreCase(key))
 					{
 						GlobalConstants.VACCINATION_CENTRE_ID = (Integer) (mapParams.get(key));
@@ -418,14 +411,16 @@ public class LoginActivity extends Activity implements android.view.View.OnClick
 						{
 							DatabaseUtil util = new DatabaseUtil(LoginActivity.this);
 							util.buildDatabase(true);
+							reader.saveMetadata((JSONObject) mapParams.get(key));
+							Toast.makeText(this, R.string.appSynced, Toast.LENGTH_SHORT).show();
+							// Meta-data has been downloaded, so update the flag "isFirstTime" to false and save it
+							updateFirstTimeFlag();
 						}
 						catch (Throwable e1)
 						{
 							Toast.makeText(this, e1.getMessage(), Toast.LENGTH_LONG).show();
 							e1.printStackTrace();
 						}
-						reader.saveMetadata((JSONObject) mapParams.get(key));
-						Toast.makeText(this, R.string.appSynced, Toast.LENGTH_SHORT).show();
 					}
 				}
 			}
@@ -441,10 +436,9 @@ public class LoginActivity extends Activity implements android.view.View.OnClick
 			Intent intent = null;
 			if (GlobalConstants.USER_ROLE.equalsIgnoreCase(getResources().getString(R.string.vaccinator)) && isLogin)
 			{
-				updateFirstTime();
 				intent = new Intent(this, MainActivity.class);
 				startActivity(intent);
-			}			
+			}
 		}
 		// Outcome 3: Some other error occurred in server. Show error code which
 		// is sent in the response
@@ -467,7 +461,7 @@ public class LoginActivity extends Activity implements android.view.View.OnClick
 			break;
 
 		case R.id.action_synch:
-			onSynch();
+			doSynch();
 			break;
 
 		case R.id.action_about:
@@ -509,17 +503,22 @@ public class LoginActivity extends Activity implements android.view.View.OnClick
 
 	}
 
-	public void sharedPref()
+
+	/**
+	 * It downloads Meta-data if app is being synchrozied first time
+	 * 
+	 */
+	public void doSyncIfFirstTime()
 	{
 
 		if (isFirstTime)
 		{
-			onSynch();
+			doSynch();
 		}
 
 	}
 
-	public void onSynch()
+	public void doSynch()
 	{
 		isLogin = false;
 		if (progress == null)
@@ -556,37 +555,60 @@ public class LoginActivity extends Activity implements android.view.View.OnClick
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key)
 	{
-
 		if (!isFirstTime)
 		{
-			Map<String, String> map = (Map<String, String>) sharedPreferences.getAll();
+			/**
+			 * Our logic to trigger on "isFirstTime" depends on following scenarios
+			 * 1) If user server URL is changed
+			 * 2) If app is running after fresh installation (It is handled on "onClick" event of Login button)
+			 */			
 
-			String protocol = map.get("protocol_pref");
-			String ip = map.get("ip_pref");
-			String port = map.get("port_pref");
-			String appName = map.get("appname_pref").trim() + "/serv";
+			Map<String, Object> map = (Map<String, Object>) sharedPreferences.getAll();
+			
+			// if "Complete server URL" is checked then ignore rest of the changes
 
-			String serverAddress = protocol.trim() + ip.trim() + ":" + port.trim() + "/" + appName.trim();
+			if (EpiUtils.objectToBool(map.get("use_tokenized_url")) == true)
+			{
+				// if new change belongs to fully_qualified_url then
+				// turn on the "isFirstFlag"
 
-			if (!(serverAddress.trim().equals(prefMap.get("fully_qualifified_url").trim())))
-				isFirstTime = true;
-			else if (!(map.get("appname_pref").equals(prefMap.get("appname_pref"))))
-				isFirstTime = true;
-			else if (!(map.get("port_pref").equals(prefMap.get("port_pref"))))
-				isFirstTime = true;
-			else if (!(map.get("fully_qualifified_url").equals(prefMap.get("fully_qualifified_url"))))
-				isFirstTime = true;
-			else if (!(map.get("ip_pref").equals(prefMap.get("ip_pref"))))
-				isFirstTime = true;
-			else if (!(map.get("ip_pref").equals(prefMap.get("ip_pref"))))
-				isFirstTime = true;
-			else if (map.get("tokenized_url") != prefMap.get("tokenized_url"))
-				isFirstTime = true;
+				if (key.equalsIgnoreCase("fully_qualifified_url") == true)
+				{
+					isFirstTime = true;
+				}
+
+				else if (key.equals("use_tokenized_url") == true)
+				{
+					isFirstTime = true;
+				}		
+			}
+
+			else
+			{
+				if (key.equalsIgnoreCase("appname_pref") == true)
+				{
+					isFirstTime = true;
+				}
+
+				else if (key.equalsIgnoreCase("ip_pref") == true)
+				{
+					isFirstTime = true;
+				}
+
+				else if (key.equalsIgnoreCase("port_pref") == true)
+				{
+					isFirstTime = true;
+				}			
+			}
 		}
-
 	}
 
-	private void updateFirstTime()
+	/**
+	 * It performs two functions:
+	 * (1) It changes value of isFirstTime value to false
+	 * (2) It saves isFirstTime(false) into Shared-Preference
+	 */
+	private void updateFirstTimeFlag()
 	{
 
 		if (isFirstTime)
