@@ -233,7 +233,7 @@ public class EpiUtils extends Activity
 			preferences = PreferenceManager.getDefaultSharedPreferences(cxt);
 		}
 		// use complete server URL
-		boolean useServerAdress = preferences.getBoolean("tokenized_url", false);
+		boolean useServerAdress = preferences.getBoolean("use_tokenized_url", false);
 		if (useServerAdress)
 		{
 			serverAddress = preferences.getString("fully_qualifified_url", "");
