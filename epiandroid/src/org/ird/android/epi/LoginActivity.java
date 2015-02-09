@@ -193,7 +193,6 @@ public class LoginActivity extends Activity implements android.view.View.OnClick
 			doSyncIfFirstTime();
 			saveDefaultPref();
 
-			// TODO:
 			isLogin = false;
 
 			if (validate().size() == 0)
