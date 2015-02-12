@@ -17,12 +17,20 @@ public enum ResponseStatus
 	// public static final int STATUS_UNRECOGNISED_VERSION= 6;
 	// public static final int STATUS_INCORRECT_CREDENTIALS= 7;
 
+	/* Following are errors related to DB and server
+	 * so their status code will be
+	 * more relevant as status message */
+	
 	INVALID(0, "0"),
 	STATUS_SUCCESS(1, "1"),
 	STATUS_FAILURE(2, "2"),
 	STATUS_DATA_ERROR(3, "3"),
 	STATUS_INTERNAL_ERROR(4, "4"),
 	STATUS_INCORRECT_DATA_FORMAT_ERROR(5, "5"),
+
+	/* Following are errors due to old/invalid version application
+	 * or wrong credentials */
+
 	STATUS_UNRECOGNISED_VERSION(6, "Application ka version ghalat hai"),
 	STATUS_INCORRECT_CREDENTIALS(7, "Username ya Password durust nahee hai"),
 	STATUS_OLD_VERSION(8, "Application ka version purana hai");
