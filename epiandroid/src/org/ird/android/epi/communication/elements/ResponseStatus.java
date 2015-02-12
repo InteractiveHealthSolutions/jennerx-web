@@ -1,13 +1,49 @@
 package org.ird.android.epi.communication.elements;
 
-public class ResponseStatus
-{	
-	public static final int INVALID = 0;
-	public static final int STATUS_SUCCESS= 1;
-	public static final int STATUS_FAILURE= 2;
-	public static final int STATUS_DATA_ERROR= 3;
-	public static final int STATUS_INTERNAL_ERROR= 4;
-	public static final int STATUS_INCORRECT_DATA_FORMAT_ERROR= 5;
-	public static final int STATUS_UNRECOGNISED_VERSION= 6;
-	public static final int STATUS_INCORRECT_CREDENTIALS= 7;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import android.R;
+
+public enum ResponseStatus
+{
+	// public static final int INVALID = 0;
+	// public static final int STATUS_SUCCESS= 1;
+	// public static final int STATUS_FAILURE= 2;
+	// public static final int STATUS_DATA_ERROR= 3;
+	// public static final int STATUS_INTERNAL_ERROR= 4;
+	// public static final int STATUS_INCORRECT_DATA_FORMAT_ERROR= 5;
+	// public static final int STATUS_UNRECOGNISED_VERSION= 6;
+	// public static final int STATUS_INCORRECT_CREDENTIALS= 7;
+
+	INVALID(0, "0"),
+	STATUS_SUCCESS(1, "1"),
+	STATUS_FAILURE(2, "2"),
+	STATUS_DATA_ERROR(3, "3"),
+	STATUS_INTERNAL_ERROR(4, "4"),
+	STATUS_INCORRECT_DATA_FORMAT_ERROR(5, "5"),
+	STATUS_UNRECOGNISED_VERSION(6, "Application ka version ghalat hai"),
+	STATUS_INCORRECT_CREDENTIALS(7, "Username ya Password durust nahee hai"),
+	STATUS_OLD_VERSION(8, "Application ka version purana hai");
+
+
+	private final Integer id;
+	private final String message;
+
+	ResponseStatus(Integer id, String message)
+	{
+		this.id = id;
+		this.message = message;
+	}
+
+	public Integer getId()
+	{
+		return this.id;
+	}
+
+	public String getMessage()
+	{
+		return message;
+	}
 }
