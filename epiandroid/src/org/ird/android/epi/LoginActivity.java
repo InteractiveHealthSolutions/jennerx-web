@@ -446,8 +446,10 @@ public class LoginActivity extends Activity implements android.view.View.OnClick
 		// is sent in the response
 		else
 		{			
+			// getting appropriate enum by using received response code.
 			ResponseStatus recievedResponseStatus = ResponseStatus.values()[reader.readStatus(response)];			
 
+			// showing response status message
 			Toast.makeText(this, getString(R.string.error_server_side) + " " + recievedResponseStatus.getMessage(), Toast.LENGTH_LONG).show();
 		}
 	}
