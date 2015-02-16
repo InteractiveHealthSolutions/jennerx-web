@@ -237,7 +237,15 @@ public class BiodataActivity extends Activity implements OnCheckedChangeListener
 		}
 		else
 		{
-			new DatePickerDialog(BiodataActivity.this, d, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show();
+			DatePickerDialog datePickerDialog = new DatePickerDialog(BiodataActivity.this, d,
+					cal.get(Calendar.YEAR),
+					cal.get(Calendar.MONTH),
+					cal.get(Calendar.DAY_OF_MONTH));
+
+			// setting todays date as a max date for calendar
+			datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
+			datePickerDialog.show();
+
 			txtDateOfBirth.setText(EpiUtils.getDateFormat().format(cal.getTime()));
 		}
 
@@ -312,7 +320,7 @@ public class BiodataActivity extends Activity implements OnCheckedChangeListener
 
 	private void toggleChildName(boolean isNamed)
 	{
-		//if (!isNamed)
+		// if (!isNamed)
 		if (isNamed == false)
 		{
 			txtChildFirstName.setVisibility(View.GONE);

@@ -385,7 +385,8 @@ public class LoginActivity extends Activity implements android.view.View.OnClick
 		}
 
 		// Outcome 2: success message from server
-		else if (ResponseStatus.STATUS_SUCCESS == reader.readStatus(response))
+
+		else if (ResponseStatus.STATUS_SUCCESS.getId().equals(reader.readStatus(response)))
 		{
 			try
 			{
@@ -440,11 +441,16 @@ public class LoginActivity extends Activity implements android.view.View.OnClick
 				startActivity(intent);
 			}
 		}
+
 		// Outcome 3: Some other error occurred in server. Show error code which
 		// is sent in the response
 		else
-		{
-			Toast.makeText(this, getString(R.string.error_server_side) + response, Toast.LENGTH_LONG).show();
+		{			
+			// getting appropriate enum by using received response code.
+			ResponseStatus recievedResponseStatus = ResponseStatus.values()[reader.readStatus(response)];			
+
+			// showing response status message
+			Toast.makeText(this, getString(R.string.error_server_side) + " " + recievedResponseStatus.getMessage(), Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -561,10 +567,10 @@ public class LoginActivity extends Activity implements android.view.View.OnClick
 			 * Our logic to trigger on "isFirstTime" depends on following scenarios
 			 * 1) If user server URL is changed
 			 * 2) If app is running after fresh installation (It is handled on "onClick" event of Login button)
-			 */			
+			 */
 
 			Map<String, Object> map = (Map<String, Object>) sharedPreferences.getAll();
-			
+
 			// if "Complete server URL" is checked then ignore rest of the changes
 
 			if (EpiUtils.objectToBool(map.get("use_tokenized_url")) == true)
@@ -580,7 +586,7 @@ public class LoginActivity extends Activity implements android.view.View.OnClick
 				else if (key.equals("use_tokenized_url") == true)
 				{
 					isFirstTime = true;
-				}		
+				}
 			}
 
 			else
@@ -598,7 +604,7 @@ public class LoginActivity extends Activity implements android.view.View.OnClick
 				else if (key.equalsIgnoreCase("port_pref") == true)
 				{
 					isFirstTime = true;
-				}			
+				}
 			}
 		}
 	}

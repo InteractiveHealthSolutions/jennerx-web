@@ -497,7 +497,7 @@ public class FollowUpActivity extends TabActivity implements IDialogListener, On
 		}
 
 		// Outcome 2: Success message from server. Check ResponseParams
-		else if (ResponseStatus.STATUS_SUCCESS == responseCode)
+		else if (ResponseStatus.STATUS_SUCCESS.getId().equals(responseCode))
 		{
 			// TODO:Update Vaccination Schedule
 			mapParams = reader.readParams(response);
@@ -535,7 +535,7 @@ public class FollowUpActivity extends TabActivity implements IDialogListener, On
 			EpiUtils.showDismissableDialog(this, getResources().getString(R.string.form_submitted), "Success").show();
 
 		}
-		else if (ResponseStatus.STATUS_FAILURE == responseCode)
+		else if (ResponseStatus.STATUS_FAILURE.getId().equals(responseCode))
 		{
 			try
 			{

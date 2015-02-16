@@ -506,10 +506,8 @@ public class EnrollmentActivity extends TabActivity implements OnMenuItemClickLi
 		}
 
 		// Outcome 2: Success message from server. Check ResponseParams
-		else if (ResponseStatus.STATUS_SUCCESS == responseCode)
+		else if (ResponseStatus.STATUS_SUCCESS.getId().equals(responseCode))
 		{
-
-
 			isFinished = true;
 			// show alert
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -530,7 +528,7 @@ public class EnrollmentActivity extends TabActivity implements OnMenuItemClickLi
 
 		// Outcome 3: Failure due to data sent from mobile. ResponseParams
 		// likely
-		else if (ResponseStatus.STATUS_FAILURE == responseCode)
+		else if (ResponseStatus.STATUS_FAILURE.getId().equals(responseCode))
 		{
 			try
 			{
