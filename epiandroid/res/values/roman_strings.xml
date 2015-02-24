@@ -40,6 +40,6 @@
     <string name="ru_enrollment_label_SecondaryNo">Landline No.</string>
     <string name="ru_enrollment_label_PrimaryNo">Mobile No.</string>
     
-    <string name="ru_enrollment_label_SecondaryContactNo">Raabtay ke liye koi aur number</string>
+    <string name="ru_enrollment_label_SecondaryContactNo">Raabtay ke liye koi aur number (Optional)</string>
     <string name="ru_enrollment_label_LotteryNeeded">Kya aap kurandazi mein hisa lena chahein gey?</string>
 </resources>
