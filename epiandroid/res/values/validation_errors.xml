@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="ru_validation_error_childid_empty">EPI Card ke sticker pe tap karein ya EPI Card pe darj ki gayi ID likhein</string>
-    <string name="ru_validation_error_childid_invalid">ID 14 digit ki honi chahiye. Pehla hindsa 1 say lay kar 5 ka ho sakta hai</string>    
-    <string name="ru_validation_error_epino_empty">"Bache ka EPI Card Number likhein!"</string>
+    <string name="ru_validation_error_childid_invalid">ID 14 digit ki honi chahiye. Pehla hindsa 1 say lay kar 5 ka ho sakta hai</string>
+    <string name="ru_validation_error_epino_empty">"EPI No. 8 digit ka hona chahiye"</string>
     <string name="ru_validation_error_epino_201">"EPI No. '201' sey shuru hona chahiye"</string>
     <string name="ru_validation_error_child_first_name_empty">Bache ka naam likhein</string>
     <string name="ru_validation_error_name">Naam mein sirf huroof likhain</string>
+    <string name="ru_validation_error_name_missing_length">Naam 3 ya issay ziayada huroof ka hona chahiye</string>
     <string name="ru_validation_error_father_first_name_empty">Waalid ka naam khali nahee ho sakta</string>
     <string name="ru_validation_error_gender_empty">Bache ka jans ka sawal khali nehien ho sakta</string>
     <string name="ru_validation_error_dob_age_empty">Bache ki tareekh pedaish ya umr ka sawal khali nahi ho sakta</string>
-    <string name="ru_validation_error_dob_future">Bache ki tareekh pedaish mustakbil ki nahi hosakti</string>    
+    <string name="ru_validation_error_dob_future">Bache ki tareekh pedaish mustakbil ki nahi hosakti</string>
     <string name="ru_validation_error_town_empty">Town khali nehien ho sakta</string>
     <string name="ru_validation_error_city_empty">City khali nehien ho sakta</string>
     <string name="ru_validation_error_child_more_than_5_years_old">Bacha 5 saal sey bara nahee ho sakta</string>
@@ -37,8 +39,8 @@
     <string name="ru_validation_error_username">User name durust nahee</string>
     <string name="ru_validation_error_username_empty">User name khali nahee ho sakta</string>
     <string name="ru_validation_error_password">Password durust nahee</string>
-     <string name="ru_validation_error_password_empty">Password khali nahee ho sakta</string>
-    <string name="ru_enrollment_form_incomplete">Form abhi tak submit nahee hua,pehlay form submit karien phir lottery run hogi</string>    
+    <string name="ru_validation_error_password_empty">Password khali nahee ho sakta</string>
+    <string name="ru_enrollment_form_incomplete">Form abhi tak submit nahee hua,pehlay form submit karien phir lottery run hogi</string>
     <string name="ru_enrollment_form_no_lottery">Aay</string>
     <string name="ru_validation_success">valid</string>
     <string name="validation_error_childid_empty">Child ID can not be empty</string>
@@ -51,5 +53,5 @@
     <string name="date_calculation_error">Incorrect date sent for calculation</string>
     <string name="server_success">Form submitted successfully</string>
     <string name="nfc_write_error">Error while writing/reading to NFC tag</string>
-    
+
 </resources>
