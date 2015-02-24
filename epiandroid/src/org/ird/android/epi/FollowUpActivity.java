@@ -187,9 +187,8 @@ public class FollowUpActivity extends TabActivity implements IDialogListener, On
 		txtPrimaryNo = (EditText) findViewById(R.id.editTexMobileNumber);
 		txtViewPrimaryNo = (TextView) findViewById(R.id.textViewMobileNumber);
 
-		txtSecondaryNo = (EditText) findViewById(R.id.editTextLandlineNumber);
-		txtViewSecondaryNo = (TextView) findViewById(R.id.textViewLandlineNumber);
-
+		txtSecondaryNo = (EditText) findViewById(R.id.editTextSecondaryNumber);
+		txtViewSecondaryNo = (TextView) findViewById(R.id.textViewSecondaryNumber);
 	}
 
 	private void setListeners()
@@ -260,6 +259,24 @@ public class FollowUpActivity extends TabActivity implements IDialogListener, On
 			txtProjectId.setError(result.getMessage());
 			allClear = false;
 		}
+		
+		// Child Name
+		String _childFirstName = txtchildName.getText().toString().trim();
+		result = validator.validateName(_childFirstName);
+		if (!result.isValid())
+		{
+			allClear = false;			
+			txtchildName.setError(result.getMessage());
+		}
+
+		// Father name
+		String _fatherFirstName = txtFatherName.getText().toString().trim();
+		result = validator.validateName(_fatherFirstName);
+		if (!result.isValid())
+		{
+			allClear = false;			
+			txtFatherName.setError(result.getMessage());
+		}
 
 		List<VaccineScheduleRow> rows = schedule.getRows();
 
@@ -318,7 +335,6 @@ public class FollowUpActivity extends TabActivity implements IDialogListener, On
 				txtViewSecondaryNo.setVisibility(View.GONE);
 			}
 		}
-
 	}
 
 	@SuppressWarnings("unchecked")
