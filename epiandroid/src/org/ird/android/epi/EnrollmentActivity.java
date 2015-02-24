@@ -634,7 +634,11 @@ public class EnrollmentActivity extends TabActivity implements OnMenuItemClickLi
 
 	private boolean validateForm()
 	{
+		String genericErrorMessage = "Error(s) in Form. Please check for missing data of "
+				+ "Biodata, Address and Reminder sections";
+
 		boolean allClear = true;
+
 		if (_addressValidated != true || _biodataValidated != true || _progamDetailsValidated != true)
 			allClear = false;
 
@@ -648,13 +652,15 @@ public class EnrollmentActivity extends TabActivity implements OnMenuItemClickLi
 
 		if (!allClear)
 		{
-			EpiUtils.showDismissableDialog(this, "Error(s) in Form. Please fix and retry", "Error").show();
+			EpiUtils.showDismissableDialog(this, genericErrorMessage, "Error").show();
 		}
+		
 		else if (!header.getProjectID().matches(Regex.NUMERIC.toString()))
 		{
-			EpiUtils.showDismissableDialog(this, "Error(s) in ID. Please fix and retry", "Error").show();
+			EpiUtils.showDismissableDialog(this, genericErrorMessage, "Error").show();
 			allClear = false;
 		}
+
 		return allClear;
 	}
 
