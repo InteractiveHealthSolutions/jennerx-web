@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
@@ -32,6 +33,8 @@ public class ValidatorUtil extends Activity
 	private static short VACCINE_P3 = 3;
 	private static short VACCINE_M1 = 4;
 	private static short VACCINE_M2 = 5;
+
+	private final Integer NAME_REQUIRED_LENGTH = 3;
 
 	// hiding default constructor
 	private ValidatorUtil()
@@ -95,7 +98,7 @@ public class ValidatorUtil extends Activity
 			res = this._context.getResources();
 		}
 
-		if ((id == null) || !id.matches(Regex.CHILD_ID.toString()))
+		if ((id == null) || !id.matches(Regex.CHILD_ID.toString()) || !id.matches(Regex.NUMERIC.toString()))
 		{
 			return fillError(this._context.getString(R.string.ru_validation_error_childid_invalid));
 		}
@@ -105,21 +108,41 @@ public class ValidatorUtil extends Activity
 
 	public ValidatorResult validateEpiNo(String no)
 	{
-		if (!no.startsWith("201"))
-			return fillError(this._context.getString(R.string.ru_validation_error_epino_201));
-
 		if (no.length() != 8)
+		{
 			return fillError(this._context.getString(R.string.ru_validation_error_epino_empty));
+		}
+
+		if (!no.startsWith("201"))
+		{
+			return fillError(this._context.getString(R.string.ru_validation_error_epino_201));
+		}
 
 		if (!no.matches("^201[0-9]{5}"))
+		{
 			return fillError(this._context.getString(R.string.ru_validation_error_epino_empty));
+		}
 
 		return sendSuccess();
 	}
 
+
+	/**
+	 * Validates name against 2 rules
+	 * 1) Name can't contain special characters and numbers
+	 * 2) Minimum length for Name is 3
+	 * 
+	 * @param name
+	 * @return
+	 */
 	public ValidatorResult validateName(String name)
 	{
-		if (!name.matches(Regex.WHITESPACE_ALPHA.toString()))
+		if (TextUtils.isEmpty(name) || name.length() < NAME_REQUIRED_LENGTH)
+		{
+			return fillError(_context.getString(R.string.ru_validation_error_name_missing_length));
+		}
+
+		else if (!name.matches(Regex.WHITESPACE_ALPHA.toString()))
 		{
 			return fillError(_context.getString(R.string.ru_validation_error_name));
 		}
@@ -190,9 +213,13 @@ public class ValidatorUtil extends Activity
 
 	/**
 	 * Method to validate the child is not overaged for this vaccine
-	 * @param vaccineString the same of the vaccine to be given
-	 * @param dateOfBirth child's date of birth
-	 * @param currentVaccinationDate the date this vaccine is to be administered
+	 * 
+	 * @param vaccineString
+	 *            the same of the vaccine to be given
+	 * @param dateOfBirth
+	 *            child's date of birth
+	 * @param currentVaccinationDate
+	 *            the date this vaccine is to be administered
 	 * @return
 	 */
 	private ValidatorResult validateOverageVaccine(String vaccineString, Date dateOfBirth, Date currentVaccinationDate)
@@ -252,9 +279,12 @@ public class ValidatorUtil extends Activity
 	/***
 	 * Method to insure the two vaccine are given in order with the guidelines. Method works for combinations of
 	 * both (1)last vaccine and current vaccine and (2) current vaccine and next vaccine
-	 * @param vaccine1 vaccine to be given
-	 * @param vaccine2 last vaccine give
-	 * @return ValidatorResult object with message and outcome of the validation 
+	 * 
+	 * @param vaccine1
+	 *            vaccine to be given
+	 * @param vaccine2
+	 *            last vaccine give
+	 * @return ValidatorResult object with message and outcome of the validation
 	 */
 	private ValidatorResult validateVaccineSequence(String vaccine1, String vaccine2)
 	{
@@ -388,13 +418,20 @@ public class ValidatorUtil extends Activity
 	/**
 	 * Method for making sure that the vaccination conforms the the age restrictions and the sequence from
 	 * the last given vaccine
-	 * @param isEnrollment flag to ignore the last vaccination if this is the first captured vaccination
-	 * in the system
-	 * @param dateOfBirth needed for determinging the eligibility for a vaccine
-	 * @param lastDate the date on which the child was last vaccinated
-	 * @param lastVaccine last vaccine the child recieved
-	 * @param currentDate date for the current vaccination
-	 * @param currentVaccine the vaccine being administered
+	 * 
+	 * @param isEnrollment
+	 *            flag to ignore the last vaccination if this is the first captured vaccination
+	 *            in the system
+	 * @param dateOfBirth
+	 *            needed for determinging the eligibility for a vaccine
+	 * @param lastDate
+	 *            the date on which the child was last vaccinated
+	 * @param lastVaccine
+	 *            last vaccine the child recieved
+	 * @param currentDate
+	 *            date for the current vaccination
+	 * @param currentVaccine
+	 *            the vaccine being administered
 	 * @return
 	 */
 	public ValidatorResult validateCurrentVaccination(Boolean isEnrollment, Date dateOfBirth, Date lastDate, String lastVaccine, Date currentDate, String currentVaccine)
