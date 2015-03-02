@@ -104,7 +104,6 @@ public class IdChangeActivity extends Activity implements IBaseForm, INetworkUse
 		// Outcome 2: Success message from server. Check ResponseParams
 		else if (ResponseStatus.STATUS_SUCCESS.getId().equals(responseCode))
 		{
-
 			// show alert
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage("ID updated successfully");

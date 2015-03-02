@@ -310,7 +310,6 @@ public class VaccinationDetails extends Activity
 
 	public boolean validateRows(VaccineScheduleRow row, ArrayList<VaccineScheduleRow> rows, Child child)
 	{
-
 		/**
 		 * assigning values to rows based on the selection of spinner
 		 */
@@ -323,6 +322,7 @@ public class VaccinationDetails extends Activity
 			boolean birthdateValidated = false;
 			boolean previousVaccineValidated = false;
 			Date dt = DateTimeUtils.StringToDate(edtTextDate.getText().toString(), null);
+		
 			// TODO: validate the date here:
 
 			birthdateValidated = VaccinationValidator.checkBirthdateGap(dt, rows, row, child.getDateOfBirth(), context);
@@ -339,14 +339,13 @@ public class VaccinationDetails extends Activity
 				// TODO: update child record first
 				if (child.getDateOfBirth() != null)
 				{
-
 					if (dt.getTime() < child.getDateOfBirth().getTime())
 					{
 						EpiUtils.showDismissableDialog(this, "Date cannot be less than the birthdate.", "Error").show();
 						return false;
 					}
-
 				}
+				
 				// Test validation results
 				if (!birthdateValidated)
 				{

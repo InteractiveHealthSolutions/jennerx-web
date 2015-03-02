@@ -377,8 +377,8 @@ public class BiodataActivity extends Activity implements OnCheckedChangeListener
 			result = validator.validateName(_childFirstName);
 			if (!result.isValid())
 			{
-				allValid = false;
-				txtChildFirstName.setError(getResources().getString(R.string.ru_validation_error_child_first_name_empty));
+				allValid = false;				
+				txtChildFirstName.setError(result.getMessage());
 			}
 
 		}
@@ -388,8 +388,8 @@ public class BiodataActivity extends Activity implements OnCheckedChangeListener
 		result = validator.validateName(_fatherFirstName);
 		if (!result.isValid())
 		{
-			allValid = false;
-			txtFatherFirstName.setError(getResources().getString(R.string.ru_validation_error_father_first_name_empty));
+			allValid = false;			
+			txtFatherFirstName.setError(result.getMessage());
 		}
 		// No one born before 2010 can be registered in the program
 		Date minDate = DateTimeUtils.StringToDate("01/01/2010", DateTimeUtils.DATE_FORMAT_SHORT);

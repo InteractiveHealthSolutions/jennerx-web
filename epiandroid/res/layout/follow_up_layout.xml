@@ -110,7 +110,6 @@
                             android:gravity="center"
                             android:text="@string/btnFetch"
                             android:textStyle="bold" />
-
                     </LinearLayout>
 
                     <LinearLayout
@@ -139,7 +138,6 @@
                             android:text="@string/followViewDOB"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="@color/PaleBlue" />
-
                     </LinearLayout>
 
                     <LinearLayout
@@ -199,7 +197,6 @@
                             android:text="@string/followViewFather"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="@color/PaleBlue" />
-
                     </LinearLayout>
 
                     <LinearLayout
@@ -215,7 +212,8 @@
                             android:layout_height="match_parent"
                             android:layout_below="@+id/textViewLastEPINo"
                             android:layout_weight="1"
-                            android:hint="Child&apos;s name" />
+                            android:hint="Child&apos;s name"
+                            android:maxLength="20" />
 
                         <EditText
                             android:id="@+id/textViewFatherFullName"
@@ -224,7 +222,8 @@
                             android:layout_height="match_parent"
                             android:layout_alignParentLeft="@+id/textViewLastDOB"
                             android:layout_weight="1"
-                            android:hint="Father&apos;s name" />
+                            android:hint="Father&apos;s name"
+                            android:maxLength="20" />
                     </LinearLayout>
 
                     <!-- Program details -->
@@ -235,6 +234,7 @@
                         android:layout_height="wrap_content"
                         android:paddingTop="7dp"
                         android:weightSum="1" >
+
                         <CheckBox
                             android:id="@+id/chkboxSMSFUP"
                             android:layout_width="0dp"
@@ -262,13 +262,14 @@
                             android:textColor="@color/PaleBlue" />
 
                         <TextView
-                            android:id="@+id/textViewLandlineNumber"
+                            android:id="@+id/textViewSecondaryNumber"
                             style="@style/ThemeTextSmall"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
+                            android:paddingRight="5dp"
                             android:paddingTop="5dp"
-                            android:text="@string/followViewLandline"
+                            android:text="@string/followViewSecondaryNumber"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="@color/PaleBlue" />
 
@@ -289,10 +290,11 @@
                             android:layout_weight="1"
                             android:hint="@string/editMobileDigits"
                             android:inputType="phone"
+                            android:maxLength="11"
                             android:textSize="14sp" />
 
                         <EditText
-                            android:id="@+id/editTextLandlineNumber"
+                            android:id="@+id/editTextSecondaryNumber"
                             style="@style/ThemeText"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
@@ -300,10 +302,9 @@
                             android:layout_weight="1"
                             android:hint="@string/editMobileDigits"
                             android:inputType="phone"
+                            android:maxLength="11"
                             android:textSize="14sp" />
-
                     </LinearLayout>
-
                 </LinearLayout>
                 <!-- END OF BIODATA TAB -->
 

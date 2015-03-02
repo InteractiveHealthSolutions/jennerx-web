@@ -131,7 +131,7 @@
     <string name="followCheckLottery">Lottery</string>
     <string name="followCHKSMS">SMS</string>
     <string name="followViewMobile">Mobile Number</string>
-    <string name="followViewLandline">Landline Number</string>
+    <string name="followViewSecondaryNumber">Raabtay ke liye koi aur number</string>
     <string name="followViewID">Old ID:</string>
     <string name="idnetViewNID">New ID:</string>
     <string name="btnUpdate">Update</string>

@@ -33,7 +33,7 @@
             android:weightSum="2" >
 
             <CheckBox
-                android:id="@+id/checkBoxPolio"
+                android:id="@+id/checkBoxPolio2"
                 style="@style/ThemeText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
