@@ -128,7 +128,9 @@ public class GlobalParams
 	public enum IncentiveWorkType{
 		CHILD_LOTTERY_WINNINGS,
 		CHILD_LOTTERY_DISTINCT_CHILDREN,
-		CHILD_LOTTERY_WON_AMOUNT
+		CHILD_LOTTERY_WON_AMOUNT,
+		TOTAL_TRANSACTIONS,
+		TOTAL_AMOUNT_DUE
 	}
 	public enum DownloadableType {
 
