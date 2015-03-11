@@ -1,10 +1,16 @@
 package org.ird.unfepi.utils;
 
+import java.nio.channels.SeekableByteChannel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.ird.unfepi.GlobalParams;
 import org.ird.unfepi.GlobalParams.DownloadableType;
 import org.ird.unfepi.GlobalParams.IncentiveWorkType;
@@ -19,6 +25,7 @@ import org.ird.unfepi.model.StorekeeperIncentiveTransaction;
 import org.ird.unfepi.model.StorekeeperIncentiveTransaction.TranscationStatus;
 import org.ird.unfepi.model.StorekeeperIncentiveWorkProgress;
 import org.ird.unfepi.model.User;
+import org.ird.unfepi.model.Vaccination;
 import org.ird.unfepi.model.Vaccination.TimelinessStatus;
 import org.ird.unfepi.model.Vaccination.VACCINATION_STATUS;
 import org.ird.unfepi.model.Vaccinator;
@@ -232,10 +239,8 @@ public class IncentiveUtils {
 			headerrowProcess.addRowElement("Incentivization Event Date");
 			headerrowProcess.addRowElement("Incentivization Date From");
 			headerrowProcess.addRowElement("Incentivization Date To");
-			headerrowProcess.addRowElement("Lotteries Done / Total Winnings");
-			headerrowProcess.addRowElement("Total Amount Won (Child)");
-			headerrowProcess.addRowElement("Commission Rate");
-			headerrowProcess.addRowElement("Subtotal / Total Amount Won (Vaccinator)");
+			headerrowProcess.addRowElement("Vaccinations Done");
+			headerrowProcess.addRowElement("Subtotal / Total Amount Due (Vaccinator)");
 			headerrowProcess.addRowElement("EP Serv. Charges");
 			headerrowProcess.addRowElement("Total");
 			headerrowProcess.addRowElement("Incentive Calculation Formula");
@@ -245,97 +250,82 @@ public class IncentiveUtils {
 			int i=1;
 			for (Vaccinator vaccinator : vactorl) {
 				try{
-					String sqlvcin = "SELECT substr(cenid.programid,1,2) 'Area ID'" +
-							", cenid.programid 'Vaccination Center'" +
-							", vaccid.programid 'Vaccinator'" +
-							", count(transactionid) 'Total Winnings'" +
-							", count(distinct t.childid) 'Total Mothers'" +
-							", sum(t.amount) 'Total Amount won(Mothers)'" +
-							//", sum(t.amount)*2/5 'Amount won(Vaccinator)'" +
-							", '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeLower)+" - "+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeUpper)+"' dateRange " +
-							", (select group_concat('--',numberType,':',number) from contactnumber where mappedid=v.vaccinatorId) contactnumbersofvaccinator " +
-							", (select group_concat('H.No:',a.addHouseNumber,' Street:',a.addStreet,' Sector:',a.addSector,' Colony:',a.addColony,' Town:',a.addtown,' UC:',a.addUc,' LMARK:',a.addLandmark,' CityID:',CAST(a.cityId AS char(2))) from address a where a.mappedid=v.vaccinatorId) addressofvaccinatorId " +
-							" FROM transaction t" +
-							" left join vaccination v on t.childid=v.childid and t.vaccineid=v.vaccineid" +
-							" left join idmapper cenid on v.vaccinationcenterid = cenid.mappedid" +
-							" left join idmapper vaccid on v.vaccinatorid= vaccid.mappedid" +
-							" left join address ad on t.childid=ad.mappedid" +
-							" where vaccinatorId="+vaccinator.getMappedId()+" " +
-							" and v.vaccinationstatus = '"+VACCINATION_STATUS.VACCINATED+"' " +
-							" and v.timelinessStatus <> '"+TimelinessStatus.EARLY+"' " +
-							" and t.winningDate between '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeLower)+"' and '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeUpper)+"' ";
-							
-					System.out.println(sqlvcin);
+					int groupCount = 5;
+					int[] vaccineIds = new int[]{1,2,3,4,5,6};
+					Map<Integer, Map<String, Object>> vimap = new HashMap<Integer, Map<String, Object>>();
+					for (int vid : vaccineIds) {
+						String sql = "SELECT * FROM vaccination WHERE vaccineId="+vid+" AND vaccinatorId="+vaccinator.getMappedId()+" AND vaccinationStatus = 'VACCINATED' AND DATE(vaccinationDate) BETWEEN '2014-10-01' AND '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeUpper)+"' "
+								+ "AND vaccinationRecordNum NOT IN (SELECT vaccinationId FROM vaccinator_incentive_log) ORDER BY vaccinationDate";
+						
+						System.out.println(sql);
 
-					List list = sc.getCustomQueryService().getDataBySQL(sqlvcin);
-					
-					Object[] cols = (Object[]) list.get(0);
-					
-					float totaltransactions = Integer.parseInt(cols[3].toString());
-					float totalamountWonByMother = Float.parseFloat(cols[5] == null?"0":cols[5].toString());
-					Float totalamountWonByVaccinator = null;
+						List vlist = sc.getCustomQueryService().getDataBySQLMapResult(sql);
+						
+						if(vlist.size() % groupCount != 0){
+							vlist = vlist.subList(0, vlist.size()-(vlist.size()%groupCount));
+						}
+						
+						List<VaccinatorIncentiveParams> viparam = sc.getIncentiveService().findVaccinatorIncentiveParamsByCriteria(null, null, vid, vid, 0, 10, true, null);
+						
+						HashMap<String, Object> vacmap = new HashMap<String, Object>();
+						vacmap.put("totalCount", vlist.size());
+						vacmap.put("vaccinations", vlist);
+						vacmap.put("groupCount", groupCount);
+						vacmap.put("amountPerTransactionGroup", viparam.get(0).getDenomination());
+						vacmap.put("totalDueAmount", (vlist.size()/groupCount)*viparam.get(0).getDenomination());
+						
+						vimap.put(vid, vacmap);
+					}
 
-					List<VaccinatorIncentiveParams> incentparaml = sc.getIncentiveService().findVaccinatorIncentiveParamsByCriteria(null, null, null, null, 0, 1, true, null);
-					VaccinatorIncentiveParams incentparam = null;
+					int totalTransactions = 0;
+					float totalAmountDue = 0;
+					
+					for (int vid : vimap.keySet()) {
+						totalTransactions += (Integer) vimap.get(vid).get("totalCount");
+						totalAmountDue += (Float) vimap.get(vid).get("totalDueAmount");
+					}
+					
 					Boolean isincentivized = null;
 					Float incentamount = null;
 					String caluculationDescr = null;
 					Integer epcharges = null;
 					
-					if(incentparaml.size() > 0){
-						incentparam = incentparaml.get(0);
-						
-						isincentivized = totaltransactions > 0;
-						
-						totalamountWonByVaccinator = incentparam.getCommission() * totalamountWonByMother;
-						
-						List<VariableSetting> epchargesl = sc.getIRSettingService().findByCriteria(null, VariableSettingType.EP_CHARGES.name(), null, null, totalamountWonByVaccinator, totalamountWonByVaccinator, true, 0, 1);
-						
-						if(epchargesl.size() > 0){
-							epcharges = Integer.parseInt(epchargesl.get(0).getValue());
-							incentamount = isincentivized ? (totalamountWonByVaccinator + epcharges) : null;
-							caluculationDescr = isincentivized ?
-									("(commission*TotalAmountWonByMothers)+EPCharges " +
-									": ("+incentparam.getCommission()+"*"+totalamountWonByMother+")+"+epcharges)
-									:null;
-						}
-						else {
-							caluculationDescr = "UNABLE TO GET EP CHARGES";
-						}
-						
+					isincentivized = totalTransactions > 0;
+					
+					List<VariableSetting> epchargesl = sc.getIRSettingService().findByCriteria(null, VariableSettingType.EP_CHARGES.name(), null, null, totalAmountDue, totalAmountDue, true, 0, 1);
+					
+					if(epchargesl.size() > 0){
+						epcharges = Integer.parseInt(epchargesl.get(0).getValue());
+						incentamount = isincentivized ? (totalAmountDue + epcharges) : null;
+						caluculationDescr = isincentivized ?
+								("(TotalAmountDue+EPCharges) " + ": ("+totalAmountDue+"+"+epcharges+")"):null;
 					}
 					else {
-						caluculationDescr = "UNABLE TO GET COMMISSION RATE";
+						caluculationDescr = "UNABLE TO GET EP CHARGES";
 					}
 					
 					VaccinatorIncentiveParticipant siparti = new VaccinatorIncentiveParticipant();
-					siparti.setCriteriaElementValue((int) totalamountWonByMother);
+					siparti.setCriteriaElementValue((int) totalAmountDue);
 					siparti.setIsIncentivised(isincentivized);
 					siparti.setVaccinatorId(vaccinator.getMappedId());
 					siparti.setVaccinatorIncentiveEventId(sieventId);
-					siparti.setVaccinatorIncentiveParamsId(incentparam == null ? null : incentparam.getVaccinatorIncentiveParamsId());
+					siparti.setVaccinatorIncentiveParamsId(null);
 					siparti.setDescription(caluculationDescr);
 					int sipartiId = Integer.parseInt(sc.getIncentiveService().saveVaccinatorIncentiveParticipant(siparti).toString());
 					
 					VaccinatorIncentiveWorkProgress siworkproge = new VaccinatorIncentiveWorkProgress();
-					siworkproge.setWorkType(IncentiveWorkType.CHILD_LOTTERY_WINNINGS.name());
-					siworkproge.setWorkValue(Float.toString(totaltransactions));
+					siworkproge.setWorkType(IncentiveWorkType.TOTAL_TRANSACTIONS.name());
+					siworkproge.setWorkValue(Float.toString(totalTransactions));
 					siworkproge.setVaccinatorIncentiveParticipantId(sipartiId);
 					
-					VaccinatorIncentiveWorkProgress siworkproge1 = new VaccinatorIncentiveWorkProgress();
-					siworkproge1.setWorkType(IncentiveWorkType.CHILD_LOTTERY_DISTINCT_CHILDREN.name());
-					siworkproge1.setWorkValue(cols[4] == null ? null : cols[4].toString());
-					siworkproge1.setVaccinatorIncentiveParticipantId(sipartiId);
-					
 					VaccinatorIncentiveWorkProgress siworkproge2 = new VaccinatorIncentiveWorkProgress();
-					siworkproge2.setWorkType(IncentiveWorkType.CHILD_LOTTERY_WON_AMOUNT.name());
-					siworkproge2.setWorkValue(Float.toString(totalamountWonByMother));
+					siworkproge2.setWorkType(IncentiveWorkType.TOTAL_AMOUNT_DUE.name());
+					siworkproge2.setWorkValue(Float.toString(totalAmountDue));
 					siworkproge2.setVaccinatorIncentiveParticipantId(sipartiId);
 					
 					sc.getIncentiveService().saveVaccinatorIncentiveWorkProgress(siworkproge);
-					sc.getIncentiveService().saveVaccinatorIncentiveWorkProgress(siworkproge1);
 					sc.getIncentiveService().saveVaccinatorIncentiveWorkProgress(siworkproge2);
-
+					
 					if(isincentivized != null && isincentivized){
 						VaccinatorIncentiveTransaction sitrans = new VaccinatorIncentiveTransaction();
 						sitrans.setAmountDue(incentamount);
@@ -346,26 +336,57 @@ public class IncentiveUtils {
 						sitrans.setDescription(caluculationDescr);
 						
 						sc.getIncentiveService().saveVaccinatorIncentiveTransaction(sitrans);
+						
+						for (Integer vid : vimap.keySet()) {
+							List<Map<String, Object>> vaccl = (List<Map<String, Object>>)vimap.get(vid).get("vaccinations");
+
+							if(vaccl.size() >0)
+							{
+							Session ses = Context.getNewSession();
+							Transaction tx = ses.beginTransaction();
+							String sql = "INSERT INTO vaccinator_incentive_log (vaccinatorIncentiveParticipantId, vaccinationId, dateCreated) "
+									+ "VALUES ";
+							
+							for (Map<String, Object> vacc : vaccl) {
+								sql += "("+sipartiId+", "+vacc.get("vaccinationRecordNum")+", NOW()),";
+							}
+							
+							if(sql.trim().endsWith(",")){
+								sql = sql.trim().substring(0, sql.length()-1);
+							}
+							System.out.println(sql);
+							
+							ses.createSQLQuery(sql).executeUpdate();
+							tx.commit();
+							ses.close();
+							}
+						}
 					}
 					
-					sc.commitTransaction();
-					 
+				String sqlvcin = "SELECT (select group_concat('--',numberType,':',number) from contactnumber where mappedid=v.mappedId) contactnumbersofvaccinator " +
+					", (select group_concat('H.No:',a.addHouseNumber,' Street:',a.addStreet,' Sector:',a.addSector,' Colony:',a.addColony,' Town:',a.addtown,' UC:',a.addUc,' LMARK:',a.addLandmark,' CityID:',CAST(a.cityId AS char(2))) from address a where a.mappedid=v.mappedId) addressofvaccinatorId " +
+					" FROM vaccinator v WHERE mappedId="+vaccinator.getMappedId();
+						
+				System.out.println(sqlvcin);
+
+				List list = sc.getCustomQueryService().getDataBySQL(sqlvcin);
+			
+				Object[] cols = (Object[]) list.get(0);
+				
 					CsveeRow datarowProcess = new CsveeRow();
 					datarowProcess.addRowElement(i);
 					datarowProcess.addRowElement(vaccinator.getVaccinationCenter()==null?"":vaccinator.getVaccinationCenter().getIdMapper().getIdentifiers().get(0).getIdentifier());
 					datarowProcess.addRowElement(vaccinator.getIdMapper().getIdentifiers().get(0).getIdentifier());
 					datarowProcess.addRowElement(vaccinator.getFullName());
-					datarowProcess.addRowElement(cols[8]);//address
+					datarowProcess.addRowElement(cols[0]);//address
 					datarowProcess.addRowElement(vaccinator.getNic());//nic
-					datarowProcess.addRowElement(cols[7]);//phone
+					datarowProcess.addRowElement(cols[1]);//phone
 					datarowProcess.addRowElement(vaccinator.getEpAccountNumber());//EP acc no
 					datarowProcess.addRowElement(vievent.getDateOfEvent());
 					datarowProcess.addRowElement(vievent.getDataRangeDateLower());
 					datarowProcess.addRowElement(vievent.getDataRangeDateUpper());
-					datarowProcess.addRowElement(totaltransactions);
-					datarowProcess.addRowElement(totalamountWonByMother);
-					datarowProcess.addRowElement(incentparam==null?null:incentparam.getCommission());
-					datarowProcess.addRowElement((isincentivized != null && isincentivized) ? totalamountWonByVaccinator: null);
+					datarowProcess.addRowElement(totalTransactions);
+					datarowProcess.addRowElement((isincentivized != null && isincentivized) ? totalAmountDue: null);
 					datarowProcess.addRowElement(epcharges==null?null:epcharges);
 					datarowProcess.addRowElement(incentamount);
 					datarowProcess.addRowElement(caluculationDescr);
@@ -382,44 +403,10 @@ public class IncentiveUtils {
 				
 				i++;
 			}
-			
-			Csvee csvSummary = new Csvee();
-			
-			CsveeRow headerrowSummary = new CsveeRow();
-			headerrowSummary.addRowElement("Sr. No.");
-			headerrowSummary.addRowElement("Area ID");
-			headerrowSummary.addRowElement("Vaccination Center");
-			headerrowSummary.addRowElement("Vaccinator");
-			headerrowSummary.addRowElement("Total Winnings");
-			headerrowSummary.addRowElement("Total Mothers");
-			headerrowSummary.addRowElement("Total Amount Won (Mothers)");
-			headerrowSummary.addRowElement("Total Amount Won (Vaccinator)");
-			headerrowSummary.addRowElement("Date Range");
 
-			csvSummary.addHeader(headerrowSummary);
-			
-			String sqlvcinSummary = "SELECT substr(cenid.programid,1,2) 'Area ID'" +
-					", cenid.programid 'Vaccination Center'" +
-					", vaccid.programid 'Vaccinator'" +
-					", count(transactionid) 'Total Winnings'" +
-					", count(distinct t.childid) 'Total Mothers'" +
-					", sum(t.amount) 'Total Amount won(Mothers)'" +
-					", sum(t.amount)*2/5 'Amount won(Vaccinator)'" +
-					", '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeLower)+" - "+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeUpper)+"' dateRange" +
-					" FROM transaction t" +
-					" left join vaccination v on t.childid=v.childid and t.vaccineid=v.vaccineid" +
-					" left join idmapper cenid on v.vaccinationcenterid = cenid.mappedid" +
-					" left join idmapper vaccid on v.vaccinatorid= vaccid.mappedid" +
-					" left join address ad on t.childid=ad.mappedid" +
-					" where v.vaccinationstatus='vaccinated' " +
-					" and t.winningDate between '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeLower)+"' and '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeUpper)+"' " +
-							" group by vaccinator";
-					
-			List listSummary = sc.getCustomQueryService().getDataBySQL(sqlvcinSummary);
-			
-			csvSummary.populateCsvFromList(listSummary, true);
-			
-			
+			sc.commitTransaction();
+System.out.println("all vaccinators processed:");			
+
 			Csvee csvAllTransactions = new Csvee();
 			
 			CsveeRow headerrowAllTransactions = new CsveeRow();
@@ -427,45 +414,43 @@ public class IncentiveUtils {
 			headerrowAllTransactions.addRowElement("Area ID");
 			headerrowAllTransactions.addRowElement("Vaccination Center");
 			headerrowAllTransactions.addRowElement("Vaccinator");
-			headerrowAllTransactions.addRowElement("Transaction ID");
-			headerrowAllTransactions.addRowElement("Amount Won (Mother)");
+			headerrowAllTransactions.addRowElement("Vaccination ID");
 			headerrowAllTransactions.addRowElement("Child ID");
 			headerrowAllTransactions.addRowElement("Vaccine");
-			headerrowAllTransactions.addRowElement("Winning Date");
-			headerrowAllTransactions.addRowElement("Transaction Date(Consumption)");
-			headerrowAllTransactions.addRowElement("Transaction Status");
-			headerrowAllTransactions.addRowElement("Date Range");
+			headerrowAllTransactions.addRowElement("Vaccine Date");
+			headerrowAllTransactions.addRowElement("Date Limit");
 
 			csvAllTransactions.addHeader(headerrowAllTransactions);
 			
-			String sqlvcinAllTransactions = "SELECT substr(cenid.programid,1,2) 'Area ID'" +
-					", cenid.programid 'Vaccination Center'" +
-					", vaccid.programid 'Vaccinator'" +
-					", t.transactionid 'Transaction ID'" +
-					", t.amount 'Amount Won(Mother)'" +
-					", chlid.programid 'Child ID'" +
+			String sqlvcinAllTransactions = "SELECT substr(cenid.identifier,1,2) 'Area ID'" +
+					", cenid.identifier 'Vaccination Center'" +
+					", vaccid.identifier 'Vaccinator'" +
+					", v.vaccinationId 'Vaccination ID'" +
+					", chlid.identifier 'Child ID'" +
 					", vac.name 'Vaccine'" +
-					", t.winningdate 'Winning Date' " +
-					", t.transactiondate 'Transaction Date(Consumption)' " +
-					", t.status 'Transaction Status'" +
-					", '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeLower)+" - "+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeUpper)+"' dateRange" +
-					" FROM transaction t " +
-					" left join vaccination v on t.childid=v.childid and t.vaccineid=v.vaccineid " +
-					" left join idmapper cenid on v.vaccinationcenterid = cenid.mappedid " +
-					" left join idmapper vaccid on v.vaccinatorid= vaccid.mappedid " +
-					" left join idmapper chlid on t.childid=chlid.mappedid" +
-					" left join vaccine vac on t.vaccineid=vac.vaccineid" +
-					" where v.vaccinationstatus='vaccinated'" +
-					"  and t.winningDate between '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeLower)+"' and '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeUpper)+"' " +
-					"  order by vaccinator;";
+					", vn.vaccinationDate 'Vaccine Date' " +
+					", '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeUpper)+"' DateLimit" +
+					" FROM vaccinator_incentive_log v " +
+					" left join vaccination vn on v.vaccinationId=vn.vaccinationRecordNum " +
+					" left join identifier cenid on vn.vaccinationcenterid = cenid.mappedid AND cenid.preferred = TRUE " +
+					" left join identifier vaccid on vn.vaccinatorid= vaccid.mappedid AND cenid.preferred = TRUE  " +
+					" left join identifier chlid on vn.childid=chlid.mappedid AND cenid.preferred = TRUE " +
+					" left join vaccine vac on vn.vaccineid=vac.vaccineid" +
+					" where DATE(v.dateCreated) = CURDATE() "
+					+ " order by vaccinator;";
 					
-			List listAllTransaction = sc.getCustomQueryService().getDataBySQL(sqlvcinAllTransactions);
+			System.out.println(sqlvcinAllTransactions);
 			
+			Session ss = Context.getNewSession();
+			ss.beginTransaction();
+			List listAllTransaction = ss.createSQLQuery(sqlvcinAllTransactions).list();
+			ss.close();
+System.out.println("listAllTransaction:"+listAllTransaction.size());			
 			csvAllTransactions.populateCsvFromList(listAllTransaction, true);
 			
 			FileUtils.saveDownloadable(csvProcess.getCsvStream(true), GlobalParams.VACCINATOR_INCENTIVE_DOWNLOADABLE_CSV_INITIALS+"_"+new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+".csv", GlobalParams.INCENTIVE_CSV_DIR, user, DownloadableType.INCENTIVE_REPORT);
-			FileUtils.saveDownloadable(csvSummary.getCsvStream(true), "VaccinatorIncentiveSummaryCSV"+"_"+new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+".csv", GlobalParams.INCENTIVE_CSV_DIR, user, DownloadableType.INCENTIVE_REPORT);
 			FileUtils.saveDownloadable(csvAllTransactions.getCsvStream(true), "VaccinatorIncentiveAllTransactionsCSV"+"_"+new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+".csv", GlobalParams.INCENTIVE_CSV_DIR, user, DownloadableType.INCENTIVE_REPORT);
+System.out.println("GOING TO COMMIT");
 		}
 		catch (Exception e) {
 			GlobalParams.INCENTIVEJOBLOGGER.error("Error running job:" ,e);
