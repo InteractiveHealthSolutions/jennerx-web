@@ -1413,7 +1413,7 @@ public class ValidatorUtils {
 				vepi = ValidatorUtils.validateNewEpiNumber(centerVisit.getEpiNumber(), centerVisit.getVaccinationCenterId(), false, sc);
 			}
 			else if(!isNewEnrollment && centerVisit.getChildId() != null){
-				vepi = ValidatorUtils.validateEpiNumber(centerVisit.getEpiNumber(), centerVisit.getVaccinationCenterId(), centerVisit.getChildId(), true, dataEntrySource.equals(DataEntrySource.MOBILE));
+				vepi = ValidatorUtils.validateEpiNumber(centerVisit.getEpiNumber(), centerVisit.getVaccinationCenterId(), centerVisit.getChildId(), false, false/*dataEntrySource.equals(DataEntrySource.MOBILE)*/);
 			}
 			
 			if(!vepi.STATUS().equals(ValidatorStatus.OK)){
