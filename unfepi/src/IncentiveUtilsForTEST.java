@@ -1,12 +1,13 @@
-package org.ird.unfepi.utils;
-
-import java.nio.channels.SeekableByteChannel;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
 
 import org.hibernate.Session;
@@ -23,11 +24,9 @@ import org.ird.unfepi.model.StorekeeperIncentiveParams;
 import org.ird.unfepi.model.StorekeeperIncentiveParticipant;
 import org.ird.unfepi.model.StorekeeperIncentiveTransaction;
 import org.ird.unfepi.model.StorekeeperIncentiveTransaction.TranscationStatus;
+import org.ird.unfepi.model.DownloadableReport;
 import org.ird.unfepi.model.StorekeeperIncentiveWorkProgress;
 import org.ird.unfepi.model.User;
-import org.ird.unfepi.model.Vaccination;
-import org.ird.unfepi.model.Vaccination.TimelinessStatus;
-import org.ird.unfepi.model.Vaccination.VACCINATION_STATUS;
 import org.ird.unfepi.model.Vaccinator;
 import org.ird.unfepi.model.VaccinatorIncentiveEvent;
 import org.ird.unfepi.model.VaccinatorIncentiveParams;
@@ -37,8 +36,9 @@ import org.ird.unfepi.model.VaccinatorIncentiveWorkProgress;
 import org.ird.unfepi.model.VariableSetting;
 import org.ird.unfepi.report.Csvee;
 import org.ird.unfepi.report.CsveeRow;
+import org.ird.unfepi.utils.Utils;
 
-public class IncentiveUtils {
+public class IncentiveUtilsForTEST {
 
 	public static boolean determineLotteryWon(int probablilityPercent){
 		return new Random().nextInt(100) < probablilityPercent;
@@ -159,7 +159,8 @@ public class IncentiveUtils {
 						sc.getIncentiveService().saveStorekeeperIncentiveTransaction(sitrans);
 					}
 					
-					sc.commitTransaction();
+					//DONOT COMMIT IF WANT TO PREVENT DB CHANGES
+					/// /// /// /*sc.commitTransaction();*/
 					 
 					CsveeRow datarow = new CsveeRow();
 					datarow.addRowElement(i);
@@ -194,8 +195,10 @@ public class IncentiveUtils {
 				i++;
 			}
 			
-			FileUtils.saveDownloadable(csv.getCsvStream(true), GlobalParams.STOREKEEPER_INCENTIVE_DOWNLOADABLE_CSV_INITIALS+"_"+new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+".csv", GlobalParams.INCENTIVE_CSV_DIR, user, DownloadableType.INCENTIVE_REPORT);
-		}
+			////DONOT USE IT SINCE IT UPDATES DOWNLOADABLES RECORD
+			/*/////////
+			////FileUtils.saveDownloadable(csv.getCsvStream(true), GlobalParams.STOREKEEPER_INCENTIVE_DOWNLOADABLE_CSV_INITIALS+"_"+new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+".csv", GlobalParams.INCENTIVE_CSV_DIR, user, DownloadableType.INCENTIVE_REPORT);
+*/		}
 		catch (Exception e) {
 			GlobalParams.INCENTIVEJOBLOGGER.error("Error running job:" ,e);
 			e.printStackTrace();
@@ -255,7 +258,9 @@ public class IncentiveUtils {
 					Map<Integer, Map<String, Object>> vimap = new HashMap<Integer, Map<String, Object>>();
 					for (int vid : vaccineIds) {
 						String sql = "SELECT * FROM vaccination WHERE vaccineId="+vid+" AND vaccinatorId="+vaccinator.getMappedId()+" AND vaccinationStatus = 'VACCINATED' AND DATE(vaccinationDate) BETWEEN '2014-10-01' AND '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeUpper)+"' "
-								+ "AND vaccinationRecordNum NOT IN (SELECT vaccinationId FROM vaccinator_incentive_log) ORDER BY vaccinationDate";
+								////COMMITTED FOR GENERATING ALLLL DATA CSV
+								/*+ "AND vaccinationRecordNum NOT IN (SELECT vaccinationId FROM vaccinator_incentive_log) "*/
+								+ "ORDER BY vaccinationDate";
 						
 						System.out.println(sql);
 
@@ -341,10 +346,10 @@ public class IncentiveUtils {
 							List<Map<String, Object>> vaccl = (List<Map<String, Object>>)vimap.get(vid).get("vaccinations");
 
 							if(vaccl.size() >0)
-							{
+							{//////////DONT WANT TO COMMIT IN log for now ////CHANGED TO TEST
 							Session ses = Context.getNewSession();
 							Transaction tx = ses.beginTransaction();
-							String sql = "INSERT INTO vaccinator_incentive_log (vaccinatorIncentiveParticipantId, vaccinationId, dateCreated) "
+							String sql = "INSERT INTO _test_log (vaccinatorIncentiveParticipantId, vaccinationId, dateCreated) "
 									+ "VALUES ";
 							
 							for (Map<String, Object> vacc : vaccl) {
@@ -404,7 +409,9 @@ public class IncentiveUtils {
 				i++;
 			}
 
-			sc.commitTransaction();
+			////DONOT COMMIT IF WANT TO PREVENT DB CHANGES
+			/*///////////// 
+			 *///////////////sc.commitTransaction();*/
 System.out.println("all vaccinators processed:");			
 
 			Csvee csvAllTransactions = new Csvee();
@@ -430,7 +437,7 @@ System.out.println("all vaccinators processed:");
 					", vac.name 'Vaccine'" +
 					", vn.vaccinationDate 'Vaccine Date' " +
 					", '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeUpper)+"' DateLimit" +
-					" FROM vaccinator_incentive_log v " +
+					" FROM _test_log v " +/////CHANGED TO TEST
 					" left join vaccination vn on v.vaccinationId=vn.vaccinationRecordNum " +
 					" left join identifier cenid on vn.vaccinationcenterid = cenid.mappedid AND cenid.preferred = TRUE " +
 					" left join identifier vaccid on vn.vaccinatorid= vaccid.mappedid AND cenid.preferred = TRUE  " +
@@ -448,9 +455,14 @@ System.out.println("all vaccinators processed:");
 System.out.println("listAllTransaction:"+listAllTransaction.size());			
 			csvAllTransactions.populateCsvFromList(listAllTransaction, true);
 			
-			FileUtils.saveDownloadable(csvProcess.getCsvStream(true), GlobalParams.VACCINATOR_INCENTIVE_DOWNLOADABLE_CSV_INITIALS+"_"+new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+".csv", GlobalParams.INCENTIVE_CSV_DIR, user, DownloadableType.INCENTIVE_REPORT);
+			///DONOT WANT TO SAVE DATA IN DOWNLOADABLES
+			/*FileUtils.saveDownloadable(csvProcess.getCsvStream(true), GlobalParams.VACCINATOR_INCENTIVE_DOWNLOADABLE_CSV_INITIALS+"_"+new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+".csv", GlobalParams.INCENTIVE_CSV_DIR, user, DownloadableType.INCENTIVE_REPORT);
 			FileUtils.saveDownloadable(csvAllTransactions.getCsvStream(true), "VaccinatorIncentiveAllTransactionsCSV"+"_"+new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+".csv", GlobalParams.INCENTIVE_CSV_DIR, user, DownloadableType.INCENTIVE_REPORT);
-System.out.println("GOING TO COMMIT");
+*/
+			saveDownloadable(csvProcess.getCsvStream(true), GlobalParams.VACCINATOR_INCENTIVE_DOWNLOADABLE_CSV_INITIALS+"_"+new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+".csv", GlobalParams.INCENTIVE_CSV_DIR, user, DownloadableType.INCENTIVE_REPORT);
+			saveDownloadable(csvAllTransactions.getCsvStream(true), "VaccinatorIncentiveAllTransactionsCSV"+"_"+new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+".csv", GlobalParams.INCENTIVE_CSV_DIR, user, DownloadableType.INCENTIVE_REPORT);
+
+			System.out.println("GOING TO COMMIT");
 		}
 		catch (Exception e) {
 			GlobalParams.INCENTIVEJOBLOGGER.error("Error running job:" ,e);
@@ -461,6 +473,51 @@ System.out.println("GOING TO COMMIT");
 		}
 	}
 	
+	public static void saveDownloadable(ByteArrayOutputStream outputstr, String fileUniqueName, String additionalDirPath, User creator,DownloadableType downloadableType) throws IOException{
+		String finalpath = "";
+		
+		String dataFilePath = Context.getSetting("downloadable.report-path", System.getProperty("user.home"));
+		File dfile = new File(dataFilePath);
+		if(!dfile.exists()){
+			dataFilePath = System.getProperty("user.home");
+		}
+		if(!dataFilePath.endsWith(System.getProperty("file.separator"))){
+			dataFilePath += System.getProperty("file.separator");
+		}
+		
+		finalpath += dataFilePath;
+		
+		if(additionalDirPath.startsWith(System.getProperty("file.separator"))){
+			additionalDirPath = additionalDirPath.substring(additionalDirPath.indexOf(System.getProperty("file.separator")));
+		}
+		
+		if(!additionalDirPath.endsWith(System.getProperty("file.separator"))){
+			additionalDirPath += System.getProperty("file.separator");
+		}
+		
+		finalpath += additionalDirPath;
+		
+		if(fileUniqueName.startsWith(System.getProperty("file.separator"))){
+			fileUniqueName = fileUniqueName.substring(fileUniqueName.indexOf(System.getProperty("file.separator")));
+		}
+		
+		finalpath += fileUniqueName;
+		
+		File file = new File(finalpath);
+		if(!file.exists()){
+			File par = new File(file.getParent());
+			if(!par.exists()){
+				par.mkdirs();
+			}
+			
+			file.createNewFile();
+		}
+		
+		OutputStream os = new FileOutputStream(file);
+		os.write(outputstr.toByteArray());
+		os.flush();
+		os.close();
+	}
 	public static void main(String[] args) {
 		
 		for (int i = 0; i < 20; i++) 
