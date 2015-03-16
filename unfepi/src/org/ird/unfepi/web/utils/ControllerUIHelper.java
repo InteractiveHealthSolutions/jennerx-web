@@ -120,9 +120,10 @@ public class ControllerUIHelper {
 	 */
 	public static Vaccine getEnrollmentVaccine(List<VaccineSchedule> vaccineSchedule, Date birthdate, ServiceContext sc, Date visitDate){
 		int closestgap = 999999999;
-		Vaccine enrVacc = null;
+		List<Vaccine> enrVacc = new ArrayList<Vaccine>();
 		for (VaccineSchedule vsh : vaccineSchedule) {
-			if(vsh.getVaccination_date() != null && vsh.getStatus().equalsIgnoreCase(VaccineStatusType.VACCINATED.toString())){
+			if(vsh.getVaccination_date() != null && vsh.getStatus().equalsIgnoreCase(VaccineStatusType.VACCINATED.toString())
+					&& IMRUtils.getBirthdateGap(vsh.getVaccine().getVaccineId())!=null){
 				//what should have been the date of vaccination wrt schedule chart
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(birthdate);
@@ -147,12 +148,18 @@ public class ControllerUIHelper {
 				//if it is closest one mark it as enrollment vaccine
 				if(closestgap > gap){
 					closestgap = gap;
-					enrVacc = vsh.getVaccine();
+					enrVacc.add(vsh.getVaccine());
 				}
 			}
 		}
 		
-		return enrVacc;
+		Vaccine minIdVaccine = null;
+		for (Vaccine vaccine : enrVacc) {
+			if(minIdVaccine == null || minIdVaccine.getVaccineId()>vaccine.getVaccineId()){
+				minIdVaccine = vaccine;
+			}
+		}
+		return minIdVaccine;
 	}
 	
 	/** Manipulates (populates required default info) and saves data for entities participating in 
