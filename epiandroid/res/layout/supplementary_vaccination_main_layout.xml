@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
-    android:weightSum="2" >  
+    android:weightSum="2" >
 
     <RelativeLayout
         android:id="@+id/llMain"
@@ -14,11 +14,23 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
+        <Button
+            android:id="@+id/btnSelectAll"
+            style="@style/btnStyDefault"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="5dp"
+            android:text="@string/btnSelectAll" >
+        </Button>
+
         <ScrollView
             android:id="@+id/scrollView1"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/btnRefrsh" >         
+            android:layout_above="@+id/btnRefrsh"
+            android:layout_below="@+id/btnSelectAll"
+            android:layout_marginTop="5dp" >
 
             <LinearLayout
                 android:id="@+id/singelLnrLayout"
@@ -36,9 +48,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginTop="5dp"
             android:text="@string/btnRefresh" >
-         
         </Button>
-        
-    </RelativeLayout>   
+    </RelativeLayout>
 
 </LinearLayout>
