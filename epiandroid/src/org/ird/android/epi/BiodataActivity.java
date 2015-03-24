@@ -116,7 +116,7 @@ public class BiodataActivity extends Activity implements OnCheckedChangeListener
 		chkBoxIsChildNamed.setOnCheckedChangeListener(this);
 		arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.array_gender));
 		spGender.setAdapter(arrayAdapter);
-		spGender.setOnItemSelectedListener(this);
+		spGender.setOnItemSelectedListener(this);	
 
 		fillFields(getIntent().getExtras());
 	}
@@ -377,7 +377,7 @@ public class BiodataActivity extends Activity implements OnCheckedChangeListener
 			result = validator.validateName(_childFirstName);
 			if (!result.isValid())
 			{
-				allValid = false;				
+				allValid = false;
 				txtChildFirstName.setError(result.getMessage());
 			}
 
@@ -388,7 +388,7 @@ public class BiodataActivity extends Activity implements OnCheckedChangeListener
 		result = validator.validateName(_fatherFirstName);
 		if (!result.isValid())
 		{
-			allValid = false;			
+			allValid = false;
 			txtFatherFirstName.setError(result.getMessage());
 		}
 		// No one born before 2010 can be registered in the program
