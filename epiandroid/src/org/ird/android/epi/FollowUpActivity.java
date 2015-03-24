@@ -159,6 +159,8 @@ public class FollowUpActivity extends TabActivity implements IDialogListener, On
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+		changeControlsState(false);
 	}
 
 	@Override
@@ -196,6 +198,8 @@ public class FollowUpActivity extends TabActivity implements IDialogListener, On
 		TabHost tabHost = getTabHost();
 
 		tabHost.setOnTabChangedListener(this);
+
+		chkBoxSmsReminder.setOnCheckedChangeListener(this);
 	}
 
 	@Override
@@ -259,13 +263,13 @@ public class FollowUpActivity extends TabActivity implements IDialogListener, On
 			txtProjectId.setError(result.getMessage());
 			allClear = false;
 		}
-		
+
 		// Child Name
 		String _childFirstName = txtchildName.getText().toString().trim();
 		result = validator.validateName(_childFirstName);
 		if (!result.isValid())
 		{
-			allClear = false;			
+			allClear = false;
 			txtchildName.setError(result.getMessage());
 		}
 
@@ -274,8 +278,34 @@ public class FollowUpActivity extends TabActivity implements IDialogListener, On
 		result = validator.validateName(_fatherFirstName);
 		if (!result.isValid())
 		{
-			allClear = false;			
+			allClear = false;
 			txtFatherName.setError(result.getMessage());
+		}
+
+		// Need to validate the numbers SmsReminder is checked
+		if (chkBoxSmsReminder.isChecked())
+		{
+			// mobile number
+			result = validator.validateMobile(txtPrimaryNo.getText().toString());
+			if (!result.isValid())
+			{
+				allClear = false;
+				txtPrimaryNo.setError(result.getMessage());
+			}
+		}
+
+		// Secondary mobile number is optional and its rules are given below:
+		// Proper mobile number should be given
+		// Otherwise it should be left blank
+
+		if (txtSecondaryNo.getText().toString().isEmpty() == false)
+		{
+			result = validator.validateMobile(txtSecondaryNo.getText().toString());
+			if (!result.isValid())
+			{
+				allClear = false;
+				txtSecondaryNo.setError(result.getMessage());
+			}
 		}
 
 		List<VaccineScheduleRow> rows = schedule.getRows();
@@ -333,6 +363,15 @@ public class FollowUpActivity extends TabActivity implements IDialogListener, On
 				txtViewPrimaryNo.setVisibility(View.GONE);
 				txtSecondaryNo.setVisibility(View.GONE);
 				txtViewSecondaryNo.setVisibility(View.GONE);
+			}
+		}
+
+		if (widget.getId() == chkBoxSmsReminder.getId())
+		{
+			if (checked == false)
+			{
+				// If Sms Reminder is not checked then Primary No. should not show any error
+				txtPrimaryNo.setError(null);
 			}
 		}
 	}
@@ -490,6 +529,8 @@ public class FollowUpActivity extends TabActivity implements IDialogListener, On
 	@Override
 	public void responseRecieved(String response)
 	{
+		changeControlsState(true);
+
 		String requestType = null;
 		if (progress != null)
 		{
@@ -574,7 +615,11 @@ public class FollowUpActivity extends TabActivity implements IDialogListener, On
 
 		else
 		{
-			EpiUtils.showDismissableDialog(this, "Response from server: Response Code = " + responseCode, "Alert").show();
+			// getting appropriate enum by using received response code.
+			ResponseStatus recievedResponseStatus = ResponseStatus.values()[responseCode];
+
+			EpiUtils.showDismissableDialog(this, "Response from server: Response Code = " + recievedResponseStatus.getId()
+					+ "\n" + recievedResponseStatus.getMessage(), "Alert").show();
 		}
 	}
 
@@ -803,4 +848,24 @@ public class FollowUpActivity extends TabActivity implements IDialogListener, On
 
 	}
 
+
+	/**
+	 * Use to change state of EPI no, DOB, Child and Father name, Sms check box and both contact number fields
+	 * 
+	 */
+	private void changeControlsState(Boolean newState)
+	{
+		txtEpiNo.setEnabled(newState);
+		txtDOB.setEnabled(newState);
+
+		txtchildName.setEnabled(newState);
+		txtFatherName.setEnabled(newState);
+
+		// CheckBoxs
+		chkBoxSmsReminder.setEnabled(newState);
+
+		// EditText
+		txtPrimaryNo.setEnabled(newState);
+		txtSecondaryNo.setEnabled(newState);
+	}
 }
