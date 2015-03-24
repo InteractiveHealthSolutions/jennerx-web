@@ -141,7 +141,6 @@ public class ProgramActivity extends Activity implements
 					txtSecondaryNo.setError(result.getMessage());
 				}
 			}
-
 		}
 		return allValid;
 	}
