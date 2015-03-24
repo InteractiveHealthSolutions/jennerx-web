@@ -553,7 +553,12 @@ public class EnrollmentActivity extends TabActivity implements OnMenuItemClickLi
 		// is sent in the response
 		else
 		{
-			EpiUtils.showServerSideError(this, responseCode, this).show();
+			// getting appropriate enum by using received response code.
+			ResponseStatus recievedResponseStatus = ResponseStatus.values()[responseCode];
+
+			// EpiUtils.showServerSideError(this, responseCode, this).show();
+			EpiUtils.showDismissableDialog(this, "Response from server: Response Code = " + recievedResponseStatus.getId()
+					+ "\n" + recievedResponseStatus.getMessage(), "Alert").show();
 		}
 	}
 
@@ -654,7 +659,7 @@ public class EnrollmentActivity extends TabActivity implements OnMenuItemClickLi
 		{
 			EpiUtils.showDismissableDialog(this, genericErrorMessage, "Error").show();
 		}
-		
+
 		else if (!header.getProjectID().matches(Regex.NUMERIC.toString()))
 		{
 			EpiUtils.showDismissableDialog(this, genericErrorMessage, "Error").show();
@@ -815,10 +820,23 @@ public class EnrollmentActivity extends TabActivity implements OnMenuItemClickLi
 			params.put(RequestElements.ADD_TOWN, _town);
 			params.put(RequestElements.ADD_CITY, _city);
 
-			// program details
+
 			params.put(RequestElements.VACCINATION_SUPPLEMENTARY, supplementary != null ? supplementary.getVaccinations() : null);
+
+			// if (supplementary != null)
+			// {
+			// params.put(RequestElements.VACCINATION_SCHEDULE, schedule != null ? schedule.getVaccinations(supplementary.getVaccinations()) : null);
+			// }
+			//
+			// else
+			// {
 			params.put(RequestElements.VACCINATION_SCHEDULE, schedule != null ? schedule.getVaccinations() : null);
+			// }
+
+
 			// params.put(RequestElements.NEXT_VACCINE, getNextVaccines());
+
+			// program details
 			params.put(RequestElements.SAME_CENTER, String.valueOf(_sameCentre));
 			params.put(RequestElements.SMS_REMINDER_APP, Boolean.toString(_sms));
 			params.put(RequestElements.PRIMARY_NUMBER, _mobile);
