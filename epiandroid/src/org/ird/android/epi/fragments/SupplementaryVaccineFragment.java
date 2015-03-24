@@ -38,6 +38,7 @@ import android.widget.TextView;
 public class SupplementaryVaccineFragment extends Fragment
 {
 	Button referesh;
+	Button btnSelectAll;
 	String stringDate;
 
 	CheckBox[] vacChkBoxes;
@@ -83,7 +84,7 @@ public class SupplementaryVaccineFragment extends Fragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		View view = inflater.inflate(R.layout.supplementary_vaccination_main_layout, container);		
+		View view = inflater.inflate(R.layout.supplementary_vaccination_main_layout, container);
 
 		TextView txtView;
 
@@ -128,7 +129,7 @@ public class SupplementaryVaccineFragment extends Fragment
 			vacChkBoxes[i].setLayoutParams(commonParams);
 
 			int sdk = android.os.Build.VERSION.SDK_INT;
-			
+
 			if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN)
 			{
 				vacChkBoxes[i].setBackgroundDrawable(null);
@@ -176,6 +177,22 @@ public class SupplementaryVaccineFragment extends Fragment
 			}
 		});
 
+		
+		// Registering click event for "SelectAll" button
+		btnSelectAll = (Button) view.findViewById(R.id.btnSelectAll);
+
+		btnSelectAll.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View arg0)
+			{
+				for (CheckBox c : vacChkBoxes)
+				{
+					c.setChecked(true);
+				}
+			}
+		});
+
 		return view;
 	}
 
@@ -212,8 +229,10 @@ public class SupplementaryVaccineFragment extends Fragment
 					temp.put(RequestElements.VACCINATION_STATUS, VaccinationStatus.VACCINATED);
 					temp.put(RequestElements.VACCINENAME, chkBox.getText().toString());
 					temp.put(RequestElements.DATE_OF_VACCINATION, stringDate);
-					temp.put(RequestElements.NEXT_ALLOTTED_DATE, null);
+					
+					// temp.put(RequestElements.NEXT_ALLOTTED_DATE, null);
 					// TODO: add actual centre id here
+					
 					temp.put(RequestElements.VACCINATION_CENTER, GlobalConstants.VACCINATION_CENTRE_ID);
 
 					array.put(temp);
