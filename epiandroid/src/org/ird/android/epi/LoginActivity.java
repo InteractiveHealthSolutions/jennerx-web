@@ -222,8 +222,7 @@ public class LoginActivity extends Activity implements android.view.View.OnClick
 				if (this._ERROR_STRING != null)
 				{
 					EpiUtils.showAlert(this, getResources().getString(R.string.login_error_credentials_format_incorrect) + ":" + this._ERROR_STRING.toString(), "Errors", this).show();
-					this._ERROR_STRING = null; // clean up errors' object for
-												// re-use
+					this._ERROR_STRING = null; // clean up errors' object for re-use
 				}
 				else
 				{
@@ -310,12 +309,12 @@ public class LoginActivity extends Activity implements android.view.View.OnClick
 		result = validator.validatePassword(password);
 		if (!result.isValid())
 		{
-			if (isValid)
-			{
+//			if (isValid)
+//			{
 				list.add(result);
 				isValid = false;
 				errors.append("\n" + result.getMessage());
-			}
+//			}
 		}
 		this._ERROR_STRING = errors;
 		return list;
