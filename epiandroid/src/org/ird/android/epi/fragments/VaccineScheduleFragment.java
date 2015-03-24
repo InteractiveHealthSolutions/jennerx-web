@@ -3,6 +3,7 @@ package org.ird.android.epi.fragments;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +41,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -388,6 +390,52 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 				}
 			}
 		}
+
+		catch (Exception e)
+		{
+			Log.e(VaccineScheduleFragment.class.getSimpleName(), e.getMessage());
+			Log.e(VaccineScheduleFragment.class.getSimpleName(), "Error getting vaccinations from schedule");
+		}
+		return array;
+	}
+
+	/**It will add supplementary Vaccines along with 
+	 * compulsory vaccines
+	 * @param suppVaccineJSONArray
+	 * @return
+	 */
+	public JSONArray getVaccinations(JSONArray suppVaccineJSONArray)
+	{
+		JSONArray array = new JSONArray();
+		JSONObject temp = null;
+
+		try
+		{
+			for (VaccineScheduleRow row : listRows)
+			{
+				if (row.isSelected())
+				{
+					temp = new JSONObject();
+					temp.put(RequestElements.VACCINATION_STATUS, row.getStatus());
+					temp.put(RequestElements.VACCINENAME, row.getVaccineName());
+					temp.put(RequestElements.DATE_OF_VACCINATION, DateTimeUtils.DateToString(row.getVaccinationDate(), null));
+					// temp.put(RequestElements.NEXT_ALLOTTED_DATE, DateTimeUtils.DateToString(row.getDueDate(), null));
+					// TODO: add actual centre id here
+					temp.put(RequestElements.VACCINATION_CENTER, getCentreId(row));
+
+					array.put(temp);
+				}
+			}
+
+			// Inserting Supplementary Vaccine
+
+			for (int i = 0; i < suppVaccineJSONArray.length(); i++)
+			{
+				JSONObject suppVaccineObject = suppVaccineJSONArray.getJSONObject(i);
+				array.put(suppVaccineObject);
+			}
+		}
+
 		catch (Exception e)
 		{
 			Log.e(VaccineScheduleFragment.class.getSimpleName(), e.getMessage());
