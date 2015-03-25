@@ -119,6 +119,7 @@
             android:inputType="textPersonName"
              android:maxLength="20"
             android:visibility="visible" />
+        
 
         <!--
              <TextView
