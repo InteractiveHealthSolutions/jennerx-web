@@ -218,7 +218,7 @@ public class FollowupHelper
 		}
 		else
 		{
-			return ResponseBuilder.buildResponse(ResponseStatus.INVALID, null);
+			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_ID_CHILD_NOT_EXIST, null);
 		}
 	}
 
