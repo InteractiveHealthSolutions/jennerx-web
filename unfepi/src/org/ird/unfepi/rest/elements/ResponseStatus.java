@@ -6,7 +6,7 @@ public class ResponseStatus
 	 * Child ID does not exist
 	 */
 
-	public static final int INVALID = 0;
+	public static final int STATUS_ID_CHILD_NOT_EXIST = 0;
 
 	/**
 	 * Status for denoting the successful completion of the request
