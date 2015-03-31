@@ -15,7 +15,6 @@ import org.ird.android.epi.barcode.Barcode;
 import org.ird.android.epi.common.DateTimeUtils;
 import org.ird.android.epi.common.EpiUtils;
 import org.ird.android.epi.common.GlobalConstants;
-import org.ird.android.epi.common.SharedPreferencesReader;
 import org.ird.android.epi.communication.HTTPSender;
 import org.ird.android.epi.communication.INetworkUser;
 import org.ird.android.epi.communication.ResponseReader;
@@ -30,8 +29,6 @@ import org.ird.android.epi.validation.Regex;
 import org.ird.android.epi.validation.VaccinationValidator;
 import org.ird.android.epi.validation.ValidatorResult;
 import org.ird.android.epi.validation.ValidatorUtil;
-import org.json.JSONArray;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -770,12 +767,7 @@ public class EnrollmentActivity extends TabActivity implements OnMenuItemClickLi
 		{
 			// demographics
 
-			params.put(RequestElements.REQUEST_DATE_FORMAT, GlobalConstants.DATE_FORMAT);
-
-			// getting UserId from preferences
-			// SharedPreferences sharedPref = getSharedPreferences("Application Config", MODE_PRIVATE);
-			// Integer userId = SharedPreferencesReader.readUserId(sharedPref);
-			// params.put(RequestElements.LG_USERID, userId);
+			params.put(RequestElements.REQUEST_DATE_FORMAT, GlobalConstants.DATE_FORMAT);			
 
 			params.put(RequestElements.LG_USERID, GlobalConstants.USER_PROGRAM_ID);
 
@@ -822,17 +814,8 @@ public class EnrollmentActivity extends TabActivity implements OnMenuItemClickLi
 
 
 			params.put(RequestElements.VACCINATION_SUPPLEMENTARY, supplementary != null ? supplementary.getVaccinations() : null);
-
-			// if (supplementary != null)
-			// {
-			// params.put(RequestElements.VACCINATION_SCHEDULE, schedule != null ? schedule.getVaccinations(supplementary.getVaccinations()) : null);
-			// }
-			//
-			// else
-			// {
-			params.put(RequestElements.VACCINATION_SCHEDULE, schedule != null ? schedule.getVaccinations() : null);
-			// }
-
+		
+			params.put(RequestElements.VACCINATION_SCHEDULE, schedule != null ? schedule.getVaccinations() : null);		
 
 			// params.put(RequestElements.NEXT_VACCINE, getNextVaccines());
 
