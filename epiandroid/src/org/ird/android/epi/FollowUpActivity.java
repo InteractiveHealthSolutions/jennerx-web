@@ -257,9 +257,22 @@ public class FollowUpActivity extends TabActivity implements IDialogListener, On
 			allClear = false;
 		}
 
+		// TODO: Need to see validation rule for Primary Number
+		// Validation rules for Primary mobile number:
+		// Proper mobile number should be given if SMS Reminder is checked
+		// Otherwise it should be left blank
 
-		// Need to validate the numbers SmsReminder is checked
-		if (chkBoxSmsReminder.isChecked())
+		if (chkBoxSmsReminder.isChecked() == true)
+		{
+			result = validator.validateMobile(txtPrimaryNo.getText().toString());
+			if (!result.isValid())
+			{
+				allClear = false;
+				txtPrimaryNo.setError(result.getMessage());
+			}
+		}
+
+		else if (txtPrimaryNo.getText().toString().isEmpty() == false)
 		{
 			// mobile number
 			result = validator.validateMobile(txtPrimaryNo.getText().toString());
