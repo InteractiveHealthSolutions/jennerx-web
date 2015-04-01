@@ -162,6 +162,7 @@
     <string name="date">Date: </string>
     <string name="VacName">Vaccine: </string>
     <string name="btnRefresh">Refresh</string>
+    <string name="btnSelectAll">Select All</string>
     <string name="minDate">Date cannot be less than Jan 1st 2010</string>
 
 </resources>

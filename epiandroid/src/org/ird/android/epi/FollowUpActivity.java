@@ -1,31 +1,23 @@
 package org.ird.android.epi;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.ird.android.epi.alert.IDialogListener;
 import org.ird.android.epi.alert.NetworkProgressDialog;
-import org.ird.android.epi.alert.SelvaMultiSpinner;
-import org.ird.android.epi.alert.VaccineDatePicker;
-import org.ird.android.epi.alert.VaccineScheduleExpandableListAdapter;
 import org.ird.android.epi.alert.VaccineScheduleRow;
 import org.ird.android.epi.barcode.Barcode;
 import org.ird.android.epi.common.DateTimeUtils;
 import org.ird.android.epi.common.EpiUtils;
 import org.ird.android.epi.common.GlobalConstants;
-import org.ird.android.epi.common.SharedPreferencesReader;
 import org.ird.android.epi.communication.elements.RequestElements;
 import org.ird.android.epi.communication.HTTPSender;
 import org.ird.android.epi.communication.INetworkUser;
 import org.ird.android.epi.communication.ResponseReader;
 import org.ird.android.epi.communication.elements.ResponseStatus;
-import org.ird.android.epi.dal.ChildService;
 import org.ird.android.epi.dal.VaccineService;
 import org.ird.android.epi.fragments.SupplementaryVaccineFragment;
 import org.ird.android.epi.fragments.VaccineScheduleFragment;
@@ -39,40 +31,26 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.R.integer;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.TabActivity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.util.SparseArray;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TabHost.OnTabChangeListener;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
 import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class FollowUpActivity extends TabActivity implements IDialogListener, OnCheckedChangeListener, IBaseForm, INetworkUser, OnTabChangeListener
 {
@@ -153,12 +131,25 @@ public class FollowUpActivity extends TabActivity implements IDialogListener, On
 		schedule = (VaccineScheduleFragment) getFragmentManager().findFragmentById(R.id.fragmentVac);
 		supplementary = (SupplementaryVaccineFragment) getFragmentManager().findFragmentById(R.id.fragmentSupplementaryVac);
 
+
 		getControls();
+
+		/*
+		 * Note: Initialize following EditText objects before disabling them.
+		 * Disabling EditText of Child and Father Name
+		 * to prevent changes.
+		 */
+
+		txtchildName.setEnabled(false);
+		txtFatherName.setEnabled(false);
+
 		setListeners();
 
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+		changeControlsState(false);
 	}
 
 	@Override
@@ -172,6 +163,10 @@ public class FollowUpActivity extends TabActivity implements IDialogListener, On
 		super.finish();
 	}
 
+
+	/**
+	 * Initializing form controls
+	 */
 	private void getControls()
 	{
 		txtProjectId = (EditText) findViewById(R.id.edtTextProjectId);
@@ -196,6 +191,8 @@ public class FollowUpActivity extends TabActivity implements IDialogListener, On
 		TabHost tabHost = getTabHost();
 
 		tabHost.setOnTabChangedListener(this);
+
+		chkBoxSmsReminder.setOnCheckedChangeListener(this);
 	}
 
 	@Override
@@ -259,23 +256,45 @@ public class FollowUpActivity extends TabActivity implements IDialogListener, On
 			txtProjectId.setError(result.getMessage());
 			allClear = false;
 		}
-		
-		// Child Name
-		String _childFirstName = txtchildName.getText().toString().trim();
-		result = validator.validateName(_childFirstName);
-		if (!result.isValid())
+
+		// TODO: Need to see validation rule for Primary Number
+		// Validation rules for Primary mobile number:
+		// Proper mobile number should be given if SMS Reminder is checked
+		// Otherwise it should be left blank
+
+		if (chkBoxSmsReminder.isChecked() == true)
 		{
-			allClear = false;			
-			txtchildName.setError(result.getMessage());
+			result = validator.validateMobile(txtPrimaryNo.getText().toString());
+			if (!result.isValid())
+			{
+				allClear = false;
+				txtPrimaryNo.setError(result.getMessage());
+			}
 		}
 
-		// Father name
-		String _fatherFirstName = txtFatherName.getText().toString().trim();
-		result = validator.validateName(_fatherFirstName);
-		if (!result.isValid())
+		else if (txtPrimaryNo.getText().toString().isEmpty() == false)
 		{
-			allClear = false;			
-			txtFatherName.setError(result.getMessage());
+			// mobile number
+			result = validator.validateMobile(txtPrimaryNo.getText().toString());
+			if (!result.isValid())
+			{
+				allClear = false;
+				txtPrimaryNo.setError(result.getMessage());
+			}
+		}
+
+		// Secondary mobile number is optional and its rules are given below:
+		// Proper mobile number should be given
+		// Otherwise it should be left blank
+
+		if (txtSecondaryNo.getText().toString().isEmpty() == false)
+		{
+			result = validator.validateMobile(txtSecondaryNo.getText().toString());
+			if (!result.isValid())
+			{
+				allClear = false;
+				txtSecondaryNo.setError(result.getMessage());
+			}
 		}
 
 		List<VaccineScheduleRow> rows = schedule.getRows();
@@ -335,6 +354,15 @@ public class FollowUpActivity extends TabActivity implements IDialogListener, On
 				txtViewSecondaryNo.setVisibility(View.GONE);
 			}
 		}
+
+		if (widget.getId() == chkBoxSmsReminder.getId())
+		{
+			if (checked == false)
+			{
+				// If Sms Reminder is not checked then Primary No. should not show any error
+				txtPrimaryNo.setError(null);
+			}
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -382,13 +410,7 @@ public class FollowUpActivity extends TabActivity implements IDialogListener, On
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		try
 		{
-			// getting UserId from preferences
-			// SharedPreferences sharedPref = getSharedPreferences("Application Config", MODE_PRIVATE);
-			// Integer userId = SharedPreferencesReader.readUserId(sharedPref);
-			// params.put(RequestElements.LG_USERID, userId);
-
 			params.put(RequestElements.LG_USERID, GlobalConstants.USER_PROGRAM_ID);
-
 
 			// TODO: Add mechanism to save enrollment centres on mobile.
 			params.put(RequestElements.ENROLLEMNT_CENTRE, GlobalConstants.VACCINATION_CENTRE_ID);
@@ -490,6 +512,8 @@ public class FollowUpActivity extends TabActivity implements IDialogListener, On
 	@Override
 	public void responseRecieved(String response)
 	{
+		changeControlsState(true);
+
 		String requestType = null;
 		if (progress != null)
 		{
@@ -574,7 +598,11 @@ public class FollowUpActivity extends TabActivity implements IDialogListener, On
 
 		else
 		{
-			EpiUtils.showDismissableDialog(this, "Response from server: Response Code = " + responseCode, "Alert").show();
+			// getting appropriate enum by using received response code.
+			ResponseStatus recievedResponseStatus = ResponseStatus.values()[responseCode];
+
+			EpiUtils.showDismissableDialog(this, "Response from server: Response Code = " + recievedResponseStatus.getId()
+					+ "\n" + recievedResponseStatus.getMessage(), "Alert").show();
 		}
 	}
 
@@ -803,4 +831,21 @@ public class FollowUpActivity extends TabActivity implements IDialogListener, On
 
 	}
 
+
+	/**
+	 * Use to change state of EPI no, DOB, Child and Father name, Sms check box and both contact number fields
+	 * 
+	 */
+	private void changeControlsState(Boolean newState)
+	{
+		txtEpiNo.setEnabled(newState);
+		txtDOB.setEnabled(newState);
+
+		// CheckBoxs
+		chkBoxSmsReminder.setEnabled(newState);
+
+		// EditText
+		txtPrimaryNo.setEnabled(newState);
+		txtSecondaryNo.setEnabled(newState);
+	}
 }
