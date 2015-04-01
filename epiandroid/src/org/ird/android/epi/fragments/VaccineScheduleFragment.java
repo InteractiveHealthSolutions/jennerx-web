@@ -8,7 +8,6 @@ import java.util.Map;
 
 import ord.ird.android.epi.db.CentreDBHelper;
 
-import org.ird.android.epi.BiodataActivity;
 import org.ird.android.epi.R;
 import org.ird.android.epi.VaccinationDetails;
 import org.ird.android.epi.VaccinationStatus;
@@ -28,7 +27,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.app.ListFragment;
 import android.content.Context;
 import android.content.Intent;
@@ -39,8 +37,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -88,10 +84,8 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState)
 	{
-		inflater.getContext().getSystemService(
-				getActivity().LAYOUT_INFLATER_SERVICE);
-		View view = inflater.inflate(R.layout.vaccination_main_layout,
-				container);
+		inflater.getContext().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
+		View view = inflater.inflate(R.layout.vaccination_main_layout, container);
 		return view;
 	}
 
@@ -120,7 +114,6 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 		{
 			validationsBeforeActivity(row, listRows);
 			validateLateGap(row);
-
 		}
 
 		/**
@@ -240,8 +233,8 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 			return;
 		}
 		else if (!listRows.get(pos).isEligible())
-		{// if not eligible, do not
-			// proceed
+		{
+			// if not eligible, do not proceed
 			EpiUtils.showDismissableDialog(
 					getActivity(),
 					"This vaccine can not be given now, please check age of child OR"
@@ -301,8 +294,7 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 		}
 		else
 		{
-			Toast.makeText(getActivity(), R.string.errorMsg, Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(getActivity(), R.string.errorMsg, Toast.LENGTH_SHORT).show();
 		}
 
 	}
@@ -381,13 +373,58 @@ public class VaccineScheduleFragment extends ListFragment implements OnItemLongC
 					temp.put(RequestElements.VACCINENAME, row.getVaccineName());
 					temp.put(RequestElements.DATE_OF_VACCINATION, DateTimeUtils.DateToString(row.getVaccinationDate(), null));
 					temp.put(RequestElements.NEXT_ALLOTTED_DATE, DateTimeUtils.DateToString(row.getDueDate(), null));
-					// TODO: add actual centre id here
 					temp.put(RequestElements.VACCINATION_CENTER, getCentreId(row));
 
 					array.put(temp);
 				}
 			}
 		}
+
+		catch (Exception e)
+		{
+			Log.e(VaccineScheduleFragment.class.getSimpleName(), e.getMessage());
+			Log.e(VaccineScheduleFragment.class.getSimpleName(), "Error getting vaccinations from schedule");
+		}
+		return array;
+	}
+
+	/**
+	 * It will add supplementary Vaccines along with
+	 * compulsory vaccines
+	 * 
+	 * @param suppVaccineJSONArray
+	 * @return
+	 */
+	public JSONArray getVaccinations(JSONArray suppVaccineJSONArray)
+	{
+		JSONArray array = new JSONArray();
+		JSONObject temp = null;
+
+		try
+		{
+			for (VaccineScheduleRow row : listRows)
+			{
+				if (row.isSelected())
+				{
+					temp = new JSONObject();
+					temp.put(RequestElements.VACCINATION_STATUS, row.getStatus());
+					temp.put(RequestElements.VACCINENAME, row.getVaccineName());
+					temp.put(RequestElements.DATE_OF_VACCINATION, DateTimeUtils.DateToString(row.getVaccinationDate(), null));
+					temp.put(RequestElements.VACCINATION_CENTER, getCentreId(row));
+
+					array.put(temp);
+				}
+			}
+
+			// Inserting Supplementary Vaccine
+
+			for (int i = 0; i < suppVaccineJSONArray.length(); i++)
+			{
+				JSONObject suppVaccineObject = suppVaccineJSONArray.getJSONObject(i);
+				array.put(suppVaccineObject);
+			}
+		}
+
 		catch (Exception e)
 		{
 			Log.e(VaccineScheduleFragment.class.getSimpleName(), e.getMessage());

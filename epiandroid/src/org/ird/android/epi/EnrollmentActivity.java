@@ -15,7 +15,6 @@ import org.ird.android.epi.barcode.Barcode;
 import org.ird.android.epi.common.DateTimeUtils;
 import org.ird.android.epi.common.EpiUtils;
 import org.ird.android.epi.common.GlobalConstants;
-import org.ird.android.epi.common.SharedPreferencesReader;
 import org.ird.android.epi.communication.HTTPSender;
 import org.ird.android.epi.communication.INetworkUser;
 import org.ird.android.epi.communication.ResponseReader;
@@ -30,8 +29,6 @@ import org.ird.android.epi.validation.Regex;
 import org.ird.android.epi.validation.VaccinationValidator;
 import org.ird.android.epi.validation.ValidatorResult;
 import org.ird.android.epi.validation.ValidatorUtil;
-import org.json.JSONArray;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -553,7 +550,12 @@ public class EnrollmentActivity extends TabActivity implements OnMenuItemClickLi
 		// is sent in the response
 		else
 		{
-			EpiUtils.showServerSideError(this, responseCode, this).show();
+			// getting appropriate enum by using received response code.
+			ResponseStatus recievedResponseStatus = ResponseStatus.values()[responseCode];
+
+			// EpiUtils.showServerSideError(this, responseCode, this).show();
+			EpiUtils.showDismissableDialog(this, "Response from server: Response Code = " + recievedResponseStatus.getId()
+					+ "\n" + recievedResponseStatus.getMessage(), "Alert").show();
 		}
 	}
 
@@ -654,7 +656,7 @@ public class EnrollmentActivity extends TabActivity implements OnMenuItemClickLi
 		{
 			EpiUtils.showDismissableDialog(this, genericErrorMessage, "Error").show();
 		}
-		
+
 		else if (!header.getProjectID().matches(Regex.NUMERIC.toString()))
 		{
 			EpiUtils.showDismissableDialog(this, genericErrorMessage, "Error").show();
@@ -765,12 +767,7 @@ public class EnrollmentActivity extends TabActivity implements OnMenuItemClickLi
 		{
 			// demographics
 
-			params.put(RequestElements.REQUEST_DATE_FORMAT, GlobalConstants.DATE_FORMAT);
-
-			// getting UserId from preferences
-			// SharedPreferences sharedPref = getSharedPreferences("Application Config", MODE_PRIVATE);
-			// Integer userId = SharedPreferencesReader.readUserId(sharedPref);
-			// params.put(RequestElements.LG_USERID, userId);
+			params.put(RequestElements.REQUEST_DATE_FORMAT, GlobalConstants.DATE_FORMAT);			
 
 			params.put(RequestElements.LG_USERID, GlobalConstants.USER_PROGRAM_ID);
 
@@ -815,10 +812,14 @@ public class EnrollmentActivity extends TabActivity implements OnMenuItemClickLi
 			params.put(RequestElements.ADD_TOWN, _town);
 			params.put(RequestElements.ADD_CITY, _city);
 
-			// program details
+
 			params.put(RequestElements.VACCINATION_SUPPLEMENTARY, supplementary != null ? supplementary.getVaccinations() : null);
-			params.put(RequestElements.VACCINATION_SCHEDULE, schedule != null ? schedule.getVaccinations() : null);
+		
+			params.put(RequestElements.VACCINATION_SCHEDULE, schedule != null ? schedule.getVaccinations() : null);		
+
 			// params.put(RequestElements.NEXT_VACCINE, getNextVaccines());
+
+			// program details
 			params.put(RequestElements.SAME_CENTER, String.valueOf(_sameCentre));
 			params.put(RequestElements.SMS_REMINDER_APP, Boolean.toString(_sms));
 			params.put(RequestElements.PRIMARY_NUMBER, _mobile);
