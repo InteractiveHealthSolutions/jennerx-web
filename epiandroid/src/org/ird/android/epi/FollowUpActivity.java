@@ -679,8 +679,7 @@ public class FollowUpActivity extends TabActivity implements IDialogListener, On
 		{
 			// obtain values from JSON
 			primaryNumber = preferences.getString(RequestElements.PRIMARY_NUMBER);
-			secondaryNumber = preferences.getString(RequestElements.SECONDARY_NUMBER);
-			lottery = Boolean.parseBoolean(preferences.getString(RequestElements.LOTTERY_APPROVAL).toString());
+			secondaryNumber = preferences.getString(RequestElements.SECONDARY_NUMBER);			
 			sms = Boolean.parseBoolean(preferences.getString(RequestElements.SMS_REMINDER_APP).toString());
 
 			// update controls
