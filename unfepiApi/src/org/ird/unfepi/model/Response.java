@@ -26,7 +26,17 @@ public class Response {
 		M_CALL,
 		R_CALL,
 		SMS,
+		VACCINE_SCHEDULE_INQUIRY
 	}
+	
+	public enum ResponseStatus{
+		ACCEPTED,
+		REJECTED,
+		IN_PROGRESS,
+		WAITING_ID_CONFIRMATION,
+		N_A
+	}
+	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int responseId;
@@ -47,6 +57,9 @@ public class Response {
 	@Enumerated(EnumType.STRING)
 	@Column(length = 20)
 	private ResponseType responseType;
+	
+	@Enumerated(EnumType.STRING)
+	private ResponseStatus responseStatus;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date responseDate;
@@ -112,6 +125,18 @@ public class Response {
 
 	public void setResponseType(ResponseType responseType) {
 		this.responseType = responseType;
+	}
+
+	public ResponseStatus getResponseStatus() {
+		return responseStatus;
+	}
+
+	public void setResponseStatus(ResponseStatus responseStatus) {
+		this.responseStatus = responseStatus;
+	}
+
+	public void setEventId(Integer eventId) {
+		this.eventId = eventId;
 	}
 
 	public Date getResponseDate() {

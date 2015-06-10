@@ -29,6 +29,11 @@ public class CommunicationNote {
 		INBOUND,
 	}
 	
+	public enum CommunicationCategory{
+		VACCINE_SCHEDULE_INQUIRY,
+		N_A
+	}
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int communicationNoteId;
@@ -54,8 +59,13 @@ public class CommunicationNote {
 	
 	private String probeClass;
 	
+	private String groupId;
+
 	@Enumerated(EnumType.STRING)
 	private CommunicationEventType communicationEventType;
+
+	@Enumerated(EnumType.STRING)
+	private CommunicationCategory communicationCategory;
 	
 	private String description;
 	
@@ -158,6 +168,14 @@ public class CommunicationNote {
 		this.probeClass = probeClass;
 	}
 
+	public String getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(String groupId) {
+		this.groupId = groupId;
+	}
+
 	public CommunicationEventType getCommunicationEventType() {
 		return communicationEventType;
 	}
@@ -165,6 +183,14 @@ public class CommunicationNote {
 	public void setCommunicationEventType(
 			CommunicationEventType communicationEventType) {
 		this.communicationEventType = communicationEventType;
+	}
+
+	public CommunicationCategory getCommunicationCategory() {
+		return communicationCategory;
+	}
+
+	public void setCommunicationCategory(CommunicationCategory communicationCategory) {
+		this.communicationCategory = communicationCategory;
 	}
 
 	public String getDescription() {

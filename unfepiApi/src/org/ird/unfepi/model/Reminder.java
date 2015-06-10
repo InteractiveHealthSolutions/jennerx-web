@@ -30,10 +30,11 @@ public class Reminder implements java.io.Serializable {
 	public enum ReminderType{
 		NEXT_VACCINATION_REMINDER,
 		LOTTERY_WON_REMINDER,
-		LOTTERY_CONSUMED_REMINDER
+		LOTTERY_CONSUMED_REMINDER,
+		VACCINE_SCHEDULE_INQUIRY
 	}
 	
-	private static final long	serialVersionUID	= -5225086305187569559L;
+	private static final long serialVersionUID	= -5225086305187569559L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

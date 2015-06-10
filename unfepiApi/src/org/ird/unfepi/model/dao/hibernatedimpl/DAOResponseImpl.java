@@ -12,6 +12,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.ird.unfepi.model.Response;
+import org.ird.unfepi.model.Response.ResponseStatus;
 import org.ird.unfepi.model.Response.ResponseType;
 import org.ird.unfepi.model.dao.DAOResponse;
 
@@ -45,7 +46,7 @@ public class DAOResponseImpl extends DAOHibernateImpl implements DAOResponse{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Response> findByCriteria(Integer mappedId, Short[] roleId, boolean notWithRole, Date begindate, Date enddate, 
-			String[] originator, String[] recipient, ResponseType[] responseType, String referenceNumber, 
+			String[] originator, String[] recipient, ResponseType[] responseType, ResponseStatus[] responseStatus, String referenceNumber, 
 			Class eventClass, Integer eventId, String bodyMatches, 
 			int firstResult, int fetchsize, boolean isreadonly, String[] mappingsToJoin, String sqlFilter) 
 	{
@@ -72,6 +73,9 @@ public class DAOResponseImpl extends DAOHibernateImpl implements DAOResponse{
 		}
 		if(responseType != null){
 			cri.add(Restrictions.in("responseType", responseType));
+		}
+		if(responseStatus != null){
+			cri.add(Restrictions.in("responseStatus", responseStatus));
 		}
 		if(referenceNumber != null){
 			cri.add(Restrictions.eq("referenceNumber", referenceNumber));
