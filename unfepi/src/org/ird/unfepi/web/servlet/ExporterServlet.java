@@ -2156,7 +2156,7 @@ public class ExporterServlet extends HttpServlet
 			SmsStatus smsstatus = StringUtils.isEmptyOrWhitespaceOnly(req.getParameter("smsstatus")) ? null : SmsStatus.valueOf(req.getParameter("smsstatus"));
 			boolean isNotChecked = StringUtils.isEmptyOrWhitespaceOnly(req.getParameter("smsstatusNotchk")) ? false : true;
 			
-			list = sc.getUserSmsService().findUserSmsByCriteria(dueDatefrom, dueDateto, sentDatefrom, sentDateto, smsstatus, isNotChecked, null, null, 0, Integer.MAX_VALUE, true, new String[]{"idMapper","createdByUserId"});
+			list = sc.getUserSmsService().findUserSmsByCriteria(dueDatefrom, dueDateto, sentDatefrom, sentDateto, smsstatus, isNotChecked, null, null, 0, null, Integer.MAX_VALUE, 0, true, new String[]{"idMapper","createdByUserId"});
 			
 			response.setContentType("application/zip"); 
 			response.setHeader("Content-Disposition", "attachment; filename=Exporter_customsms_"+GlobalParams.CSV_FILENAME_DATE_FORMAT.format(new Date())+".zip"); 
