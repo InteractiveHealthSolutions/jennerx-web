@@ -163,7 +163,7 @@ public class ViewVaccinationRecordController implements Controller{
 				
 				//////////////////FOR searching VACCINATION CENTERS
 				if(vaccstatus != null && vaccstatus.equals(VACCINATION_STATUS.PENDING) && vaccCenter != null){
-					filter += " and v.child.idMapper.identifiers[0].identifier like '"+sc.getIdMapperService().findIdMapper(vaccCenter).getProgramId()+"%' ";
+//TODO					filter += " and v.child.idMapper.identifiers[0].identifier like '"+sc.getIdMapperService().findIdMapper(vaccCenter).getProgramId()+"%' ";
 				}
 				else if(vaccCenter != null){
 					filter += " and v.vaccinationCenterId ="+vaccCenter+" ";
@@ -214,7 +214,7 @@ public class ViewVaccinationRecordController implements Controller{
 
 	//		req.setAttribute("lastSearchVaccstatusNotchked", lastSearchVaccstatusNotchked);
 	
-			model.put("vaccine", sc.getVaccinationService().getAll(true, "vaccineId"));		
+//TODO			model.put("vaccine", sc.getVaccinationService().getAll(true, "vaccineId"));		
 			model.put("vaccinationCenters", sc.getVaccinationService().getAllVaccinationCenter(true, new String[]{"idMapper"}));
 			model.put("vaccinators", sc.getVaccinationService().getAllVaccinator(0, Integer.MAX_VALUE, true, new String[]{"idMapper"}));
 			model.put("pvacc", list);
