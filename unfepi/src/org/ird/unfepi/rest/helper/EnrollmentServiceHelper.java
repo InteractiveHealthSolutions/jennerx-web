@@ -1,51 +1,33 @@
 package org.ird.unfepi.rest.helper;
 
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.ird.unfepi.GlobalParams;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Address;
 import org.ird.unfepi.model.Child;
 import org.ird.unfepi.model.ContactNumber;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
-import org.ird.unfepi.model.IdMapper;
 import org.ird.unfepi.model.LotterySms;
 import org.ird.unfepi.model.Model.ContactTeleLineType;
 import org.ird.unfepi.model.Model.Gender;
 import org.ird.unfepi.model.User;
-import org.ird.unfepi.model.Vaccination;
-import org.ird.unfepi.model.Vaccination.VACCINATION_STATUS;
 import org.ird.unfepi.model.Vaccine;
 import org.ird.unfepi.rest.elements.RequestElements;
-import org.ird.unfepi.rest.elements.ResponseElements;
 import org.ird.unfepi.rest.elements.ResponseStatus;
 import org.ird.unfepi.service.UserService;
 import org.ird.unfepi.web.utils.ControllerUIHelper;
 import org.ird.unfepi.web.utils.VaccinationCenterVisit;
 import org.ird.unfepi.web.utils.VaccineSchedule;
-import org.ird.unfepi.web.utils.VaccineSchedule.VaccineStatusType;
 import org.ird.unfepi.web.validator.ValidatorUtils;
-import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
-import org.ird.unfepi.ChildLotteryRunner;
-import org.ird.unfepi.GlobalParams;
-
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.Statement;
-import com.sun.xml.internal.ws.client.ContentNegotiation;
+import org.json.simple.JSONObject;
 
 
 public class EnrollmentServiceHelper
