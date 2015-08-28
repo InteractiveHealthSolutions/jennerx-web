@@ -50,6 +50,7 @@
 				<c:forEach items="${cities}" var="ci">
 					<option value="${ci.cityId}">${ci.cityId}:${ci.cityName}</option>
 				</c:forEach>
+				<option value="66">Other</option>
 			</select>
 			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
