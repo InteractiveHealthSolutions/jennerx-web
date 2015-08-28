@@ -26,6 +26,7 @@ import org.ird.unfepi.model.Encounter.DataEntrySource;
 import org.ird.unfepi.model.IdMapper;
 import org.ird.unfepi.model.Identifier;
 import org.ird.unfepi.model.IdentifierType;
+import org.ird.unfepi.model.Location;
 import org.ird.unfepi.model.LotterySms;
 import org.ird.unfepi.model.Model.ContactTeleLineType;
 import org.ird.unfepi.model.Model.ContactType;
@@ -510,6 +511,13 @@ public class ControllerUIHelper {
 				sc.getVaccinationService().saveVaccinationCenterVaccineDay(vcdli);
 			}
 		}
+	}
+	
+	public static void doLocationRegistration(Location location, User user, ServiceContext sc)
+	{
+		location.setCreatedByUserId(user);
+		location.setCreatedDate(new Date());
+		sc.getCustomQueryService().save(location);
 	}
 	
 	/**
