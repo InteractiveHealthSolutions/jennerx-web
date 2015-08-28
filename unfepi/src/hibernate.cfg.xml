@@ -4,10 +4,16 @@
 		"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
-        <property name="hibernate.show_sql">true</property>
+       <!--  <property name="hibernate.show_sql">true</property>
 		<property name="hibernate.format_sql">true</property>
-		<property name="hibernate.use_sql_comments">true</property>
+		<property name="hibernate.use_sql_comments">true</property> -->
 		
+		
+<property name="hibernate.connection.useUnicode">true</property>
+<property name="hibernate.connection.characterEncoding">UTF-8</property>
+<property name="hibernate.connection.charSet">UTF-8</property> 
+		
+
 <!-- 		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
  		<property name="hibernate.connection.password">VA1913wm</property>
 		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/unfepi</property>
@@ -15,12 +21,6 @@
 		<property name="hibernate.hbm2ddl.auto">update</property> 
 		<property name="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
 		
-		
-
-<property name="hibernate.connection.useUnicode">true</property>
-<property name="hibernate.connection.characterEncoding">UTF-8</property>
-<property name="hibernate.connection.charSet">UTF-8</property> 
-
 		<property name="current_session_context_class">thread</property>
 		<property name="hibernate.c3p0.validate">true</property>
 		<property name="hibernate.generate_statistics">true</property>
@@ -38,7 +38,6 @@
  		<mapping class="org.ird.unfepi.model.Child" />
  		<mapping class="org.ird.unfepi.model.ChildLottery" />
  		<mapping class="org.ird.unfepi.model.ChildLotteryParams" />
- 		<mapping class="org.ird.unfepi.model.ChildResponse" />
 		<mapping class="org.ird.unfepi.model.City" />
 		<mapping class="org.ird.unfepi.model.CommunicationNote" />
 		<mapping class="org.ird.unfepi.model.ContactNumber" />
@@ -56,7 +55,6 @@
 		<mapping class="org.ird.unfepi.model.Location" />
 		<mapping class="org.ird.unfepi.model.LocationType" />
 		<mapping class="org.ird.unfepi.model.Notifier" />
-		<mapping class="org.ird.unfepi.model.OtherResponse" />
 		<mapping class="org.ird.unfepi.model.Permission" />
 		<mapping class="org.ird.unfepi.model.Relationship" />
 		<mapping class="org.ird.unfepi.model.Religion" />
@@ -72,7 +70,6 @@
 		<mapping class="org.ird.unfepi.model.StorekeeperIncentiveParticipant" />
 		<mapping class="org.ird.unfepi.model.StorekeeperIncentiveTransaction" />
 		<mapping class="org.ird.unfepi.model.StorekeeperIncentiveWorkProgress" />
-		<mapping class="org.ird.unfepi.model.StorekeeperResponse" />
 		<mapping class="org.ird.unfepi.model.User" />
 		<mapping class="org.ird.unfepi.model.UserSms" />
 		<mapping class="org.ird.unfepi.model.Vaccination" />
@@ -84,7 +81,6 @@
 		<mapping class="org.ird.unfepi.model.VaccinatorIncentiveParticipant" />
 		<mapping class="org.ird.unfepi.model.VaccinatorIncentiveTransaction" />
 		<mapping class="org.ird.unfepi.model.VaccinatorIncentiveWorkProgress" />
-		<mapping class="org.ird.unfepi.model.VaccinatorResponse" />
 		<mapping class="org.ird.unfepi.model.Vaccine" />
 		<mapping class="org.ird.unfepi.model.VaccineGap" />
 		<mapping class="org.ird.unfepi.model.VaccineGapType" />
