@@ -36,7 +36,8 @@
 	<prop key="/s_home_incentive.htm">urlFilenameViewController</prop>
 	<prop key="/s_home_reminder.htm">urlFilenameViewController</prop>
 	<prop key="/s_gallery.htm">urlFilenameViewController</prop>
-	
+	<prop key="/s_location_tree.htm">urlFilenameViewController</prop>
+		
 	<!-- DYNAMIC AND COMPLEX PAGES WITH CONTROLLER MAPPING -->
 	<prop key="/login.htm">LoginController</prop>
 	<prop key="/mainpage.htm">MainPageController</prop>
@@ -58,7 +59,8 @@
 	<prop key="/viewLotterySms.htm">ViewLotterySmsController</prop>
 	<prop key="/viewReminderSmswindow.htm">ViewReminderSmsWindowController</prop>
 	<prop key="/viewUserSmses.htm">ViewUserSmsController</prop>
-	
+	<prop key="/viewEpiCertificates.htm">ViewEpiCertificatesController</prop>
+		
 	<prop key="/childDashboard.htm">ChildDashboardController</prop>
 	<prop key="/addchild.htm">AddChildController</prop>
 	<prop key="/viewChildren.htm">ViewChildrenController</prop>
@@ -82,7 +84,10 @@
 	<prop key="/editVaccinationCenter.htm">EditVaccinationCenterController</prop>
 	<prop key="/viewVaccinationCenters.htm">ViewVaccinationCentersController</prop>
 	<prop key="/vaccinationCenterDetails.htm">ViewVaccinationCenterDetailsController</prop>
-	
+	<prop key="/addlocation.htm">AddLocationController</prop>
+	<prop key="/editlocation.htm">EditLocationController</prop>
+	<prop key="/viewLocations.htm">ViewLocationsController</prop>
+		
 	<prop key="/viewUsers.htm">ViewUsersController</prop>
 	<prop key="/adduser.htm">AddUserController</prop>
 	<prop key="/edituser.htm">EditUserController</prop>
@@ -290,6 +295,18 @@
 	        <property name="formName" value="custom_sms" />
         	<property name="formTitle" value="Custom Smses" />
         	<property name="permission" value="VIEW_USER_SMS" />
+        	<property name="isInsertable" value="false" />
+    	</bean>
+    </property>
+</bean>
+
+<bean name="ViewEpiCertificatesController" class="org.ird.unfepi.web.controller.ViewEpiCertificatesController">
+    <property name="formView" value="dataForm"/>
+	<property name="dataForm">
+	    <bean class="org.ird.unfepi.DataSearchForm">
+	        <property name="formName" value="epi_certificate" />
+        	<property name="formTitle" value="EPI Certificates" />
+        	<property name="permission" value="VIEW_EPI_CERTIFICATES" />
         	<property name="isInsertable" value="false" />
     	</bean>
     </property>
@@ -680,6 +697,69 @@
     	</bean>
     </property>
 </bean>
+
+<bean name="AddLocationController" class="org.ird.unfepi.web.controller.AddLocationController">
+	<property name="sessionForm">
+		<value>true</value>
+	</property>
+	<property name="commandName">
+		<value>command</value>
+	</property>
+	<property name="commandClass">
+		<value>org.ird.unfepi.model.Location</value>
+	</property>
+	<property name="validator">
+		<ref bean="locationValidator"/>
+	</property>
+	<property name="formView">
+		<value>dataForm</value>
+	</property>
+	<property name="dataEntryForm">
+	    <bean class="org.ird.unfepi.DataEntryForm">
+	        <property name="formName" value="location" />
+        	<property name="formTitle" value="Location (New)" />
+        	<property name="permission" value="ADD_LOCATIONS" />
+    	</bean>
+    </property>
+</bean>
+	<bean id="locationValidator" class="org.ird.unfepi.web.validator.LocationValidator"/>
+
+<bean name="EditLocationController" class="org.ird.unfepi.web.controller.EditLocationController">
+	<property name="sessionForm">
+		<value>true</value>
+	</property>
+	<property name="commandName">
+		<value>command</value>
+	</property>
+	<property name="commandClass">
+		<value>org.ird.unfepi.model.Location</value>
+	</property>
+	<property name="validator">
+		<ref bean="locationValidator"/>
+	</property>
+	<property name="formView">
+		<value>dataForm</value>
+	</property>
+	<property name="dataEditForm">
+	    <bean class="org.ird.unfepi.DataEditForm">
+	        <property name="formName" value="location" />
+        	<property name="formTitle" value="Location (Edit)" />
+        	<property name="permission" value="CORRECT_LOCATIONS" />
+    	</bean>
+    </property>
+</bean>
+<bean name="ViewLocationsController" class="org.ird.unfepi.web.controller.ViewLocationsController">
+    <property name="formView" value="dataForm"/>
+	<property name="dataForm">
+	    <bean class="org.ird.unfepi.DataSearchForm">
+	        <property name="formName" value="location" />
+        	<property name="formTitle" value="Locations" />
+        	<property name="permission" value="VIEW_LOCATIONS" />
+        	<property name="isInsertable" value="true" />
+    	</bean>
+    </property>
+</bean>
+
 <bean name="ViewUsersController" class="org.ird.unfepi.web.controller.ViewUsersController">
 	<property name="formView" value="dataForm"/>
 	<property name="dataForm">
