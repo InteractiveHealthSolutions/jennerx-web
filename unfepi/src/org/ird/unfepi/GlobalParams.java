@@ -229,7 +229,7 @@ public class GlobalParams
 	public static final int MAX_REMINDER_1_7_VALIDITY_DAYS = 6;
 	
 	public static final String SMS_TARSEEL_PROJECT_NAME = "unfepi";
-	public static final int SMS_TARSEEL_PROJECT_ID =  1;
+	public static final int SMS_TARSEEL_PROJECT_ID =  2;
 	
 	//-------------------------------------------------------------------
 	
