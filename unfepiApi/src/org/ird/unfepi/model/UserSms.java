@@ -22,6 +22,11 @@ import org.ird.unfepi.model.Model.SmsStatus;
 @Entity
 @Table(name = "usersms")
 public class UserSms {
+	public enum SmsType{
+		VACCINE_SCHEDULE_INQUIRY,
+		N_A
+	}
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     /*@Column(columnDefinition = "INT NOT NULL AUTO_INCREMENT")*/
@@ -59,8 +64,12 @@ public class UserSms {
 
 	/** The reminder status. */
 	@Enumerated(EnumType.STRING)
-	@Column(length = 20)
+	@Column(length = 120)
 	private SmsStatus smsStatus;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(length = 120)
+	private SmsType smsType;
 	
 	/** The description. */
 	
@@ -173,6 +182,12 @@ public class UserSms {
 		this.smsStatus = smsStatus;
 	}
 
+	public SmsType getSmsType() {
+		return smsType;
+	}
+	public void setSmsType(SmsType smsType) {
+		this.smsType = smsType;
+	}
 	/**
 	 * Gets the description.
 	 *

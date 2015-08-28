@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.ird.unfepi.model.Model.SmsStatus;
 import org.ird.unfepi.model.UserSms;
+import org.ird.unfepi.model.UserSms.SmsType;
 
 public interface DAOUserSms extends DAO{
 
@@ -14,7 +15,7 @@ public interface DAOUserSms extends DAO{
 
 	List<UserSms> findByCriteria(Date duedatesmaller, Date duedategreater,
 			Date sentdatesmaller, Date sentdategreater, SmsStatus smsStatus,
-			boolean putNotWithSmsStatus, Integer recipientId,  Short recipientRole, 
+			boolean putNotWithSmsStatus, SmsType smsType, String recipient, Integer recipientId, Short recipientRole, 
 			int firstResult, int fetchsize, boolean readonly, String[] mappingsToJoin);
 
 	List<UserSms> getAll(int firstResult, int fetchsize, boolean readonly);

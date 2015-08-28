@@ -11,6 +11,7 @@ import org.ird.unfepi.model.dao.DAOAddress;
 import org.ird.unfepi.model.dao.DAOCalendarDay;
 import org.ird.unfepi.model.dao.DAOChildLottery;
 import org.ird.unfepi.model.dao.DAOChildLotteryParams;
+import org.ird.unfepi.model.dao.DAOCommunicationNote;
 import org.ird.unfepi.model.dao.DAOContactNumber;
 import org.ird.unfepi.model.dao.DAODailySummary;
 import org.ird.unfepi.model.dao.DAODailySummaryVaccineGiven;
@@ -48,6 +49,7 @@ import org.ird.unfepi.model.dao.hibernatedimpl.DAOCalendarDayImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOChildImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOChildLotteryImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOChildLotteryParamsImpl;
+import org.ird.unfepi.model.dao.hibernatedimpl.DAOCommunicationNoteImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOContactNumberImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAODailySummaryImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAODailySummaryVaccineGivenImpl;
@@ -205,7 +207,8 @@ public class ServiceContext {
 		this.reminderService = new ReminderServiceImpl(this, remdao, remsmsdao);
 
 		DAOResponse daoresp=new DAOResponseImpl(session);
-		this.communicationService= new CommunicationServiceImpl(daoresp);
+		DAOCommunicationNote daocomm = new DAOCommunicationNoteImpl(session);
+		this.communicationService= new CommunicationServiceImpl(daoresp, daocomm);
 
 		// HibernateDAOFlagData fd=new HibernateDAOFlagData(session);
 		// this.fs=new FlagDataServiceImpl(fd);

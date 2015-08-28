@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.ird.unfepi.model.Model.SmsStatus;
+import org.ird.unfepi.model.UserSms.SmsType;
 import org.ird.unfepi.model.UserSms;
 
 public interface UserSmsService
@@ -16,7 +17,8 @@ public interface UserSmsService
 	List<UserSms> getAllUserSms(int firstResult, int fetchsize, boolean isreadonly, String[] mappingsToJoin);
 
 	List<UserSms> findUserSmsByCriteria(Date duedatesmaller,Date duedategreater,Date sentdatesmaller,
-			Date sentdategreater,SmsStatus smsStatus, boolean putNotWithSmsStatus, Integer recipientId, Short recipientRole,  
+			Date sentdategreater,SmsStatus smsStatus, boolean putNotWithSmsStatus, SmsType smsType, 
+			String recipient, Integer recipientId, Short recipientRole,  
 			int firstResult, int fetchsize, boolean readonly, String[] mappingsToJoin);
 	
 	void updateUserSms(UserSms usersms);

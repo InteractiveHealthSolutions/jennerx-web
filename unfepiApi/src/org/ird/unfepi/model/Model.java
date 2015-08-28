@@ -78,7 +78,8 @@ public class Model {
 		/** Missed. */
 		MISSED("MIS"),
 		/** Cancelled. */
-		CANCELLED("CNCL");
+		CANCELLED("CNCL"),
+		LOGGED("LGD");
 
 		/** The REPRESENTATION. */
 		private String REPRESENTATION;

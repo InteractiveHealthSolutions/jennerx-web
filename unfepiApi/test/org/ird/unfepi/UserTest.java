@@ -14,6 +14,11 @@ import org.junit.Test;
 public class UserTest {
 
 	@Test
+	public void testPwd() throws UserServiceException, Exception{
+		Context.instantiate(null);
+		Context.getAuthenticatedUser("administrator", "Admin123");
+	}
+	//@Test
 	public void userTest()
 	{
 		String[] users = new String[]{/*"administrator","saira","tariq","aamir","ali","hamidah","saba","fahad","vijay","subhash"*/};
@@ -21,7 +26,7 @@ public class UserTest {
 		
 /*		int ind=0;
 		for (String string : users) {*/
-			IdMapper id = new IdMapper(0, "110");
+			IdMapper id = new IdMapper();
 			id.setRoleId(sc.getUserService().getRole("ADMIN", false, null).getRoleId());
 			Serializable i = sc.getIdMapperService().saveIdMapper(id);
 			

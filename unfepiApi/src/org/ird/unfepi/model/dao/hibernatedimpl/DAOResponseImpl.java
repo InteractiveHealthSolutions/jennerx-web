@@ -57,7 +57,7 @@ public class DAOResponseImpl extends DAOHibernateImpl implements DAOResponse{
 		if(begindate!=null && enddate!=null){
 			cri.add(Restrictions.between("responseDate", begindate, enddate));
 		}
-		if(roleId!=null){
+		if(roleId!=null && roleId.length > 0){
 			if(notWithRole){
 				cri.add(Restrictions.not(Restrictions.in("idm.roleId", roleId)));
 			}
@@ -65,16 +65,16 @@ public class DAOResponseImpl extends DAOHibernateImpl implements DAOResponse{
 				cri.add(Restrictions.in("idm.roleId", roleId));
 			}
 		}
-		if(originator!=null){
+		if(originator!=null && originator.length > 0){
 			cri.add(Restrictions.in("originator", originator));
 		}
-		if(recipient!=null){
+		if(recipient!=null && recipient.length > 0){
 			cri.add(Restrictions.in("recipient", recipient));
 		}
-		if(responseType != null){
+		if(responseType != null && responseType.length > 0){
 			cri.add(Restrictions.in("responseType", responseType));
 		}
-		if(responseStatus != null){
+		if(responseStatus != null && responseStatus.length > 0){
 			cri.add(Restrictions.in("responseStatus", responseStatus));
 		}
 		if(referenceNumber != null){

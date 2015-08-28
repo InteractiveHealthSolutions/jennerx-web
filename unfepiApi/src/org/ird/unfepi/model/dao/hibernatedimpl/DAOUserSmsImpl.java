@@ -6,10 +6,12 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.ird.unfepi.model.Model.SmsStatus;
+import org.ird.unfepi.model.UserSms.SmsType;
 import org.ird.unfepi.model.UserSms;
 import org.ird.unfepi.model.dao.DAOUserSms;
 
@@ -52,7 +54,8 @@ public class DAOUserSmsImpl extends DAOHibernateImpl implements DAOUserSms{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<UserSms> findByCriteria(Date duedatesmaller,Date duedategreater,Date sentdatesmaller,
-			Date sentdategreater,SmsStatus smsStatus, boolean putNotWithSmsStatus, Integer recipientId, Short recipientRole,  
+			Date sentdategreater,SmsStatus smsStatus, boolean putNotWithSmsStatus, SmsType smsType, 
+			String recipient, Integer recipientId, Short recipientRole,  
 			int firstResult, int fetchsize, boolean readonly, String[] mappingsToJoin) {
 		Criteria cri=session.createCriteria(UserSms.class);
 
@@ -68,6 +71,12 @@ public class DAOUserSmsImpl extends DAOHibernateImpl implements DAOUserSms{
 				}else{
 					cri.add(Restrictions.eq("smsStatus", smsStatus));
 				}
+		}
+		if(smsType!=null){
+			cri.add(Restrictions.eq("smsType", smsType));
+		}
+		if(recipient != null){
+			cri.add(Restrictions.like("recipient", recipient, MatchMode.END));
 		}
 		if(recipientId != null){
 			cri.add(Restrictions.eq("recipientId", recipientId));

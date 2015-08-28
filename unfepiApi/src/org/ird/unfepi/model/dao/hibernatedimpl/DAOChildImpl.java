@@ -10,7 +10,6 @@ import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Example;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -79,8 +78,10 @@ public class DAOChildImpl extends DAOHibernateImpl implements DAOChild{
 	@Override
 	public Child findById(String programId, boolean isreadonly, String[] mappingsToJoin){
 		Criteria cri = session.createCriteria(Child.class).setReadOnly(isreadonly)
-				.createAlias("idMapper.identifiers", "idm").add(Restrictions.eq("idm.identifier", programId));
-			
+				.setFetchMode("idMapper",FetchMode.JOIN)
+				.createAlias("idMapper.identifiers", "idm")
+				.add(Restrictions.eq("idm.identifier", programId));
+
 		if(mappingsToJoin != null)
 			for (String mapping : mappingsToJoin) {
 				cri.setFetchMode(mapping, FetchMode.JOIN);

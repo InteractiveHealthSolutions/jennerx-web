@@ -107,16 +107,16 @@ public class DAOReminderSmsImpl extends DAOHibernateImpl implements DAOReminderS
 			if(mappedId != null){
 				cri.add(Restrictions.eq("vacc.childId", mappedId));
 			}
-			if(vaccine != null){
+			if(vaccine != null && vaccine.length > 0){
 				cri.add(Restrictions.in("vacc.vaccineId", vaccine));
 			}
 		}
 		if(reminder != null || reminderType != null){
 			cri.createAlias("reminder", "rem");
-			if(reminder!=null){
+			if(reminder!=null &&  reminder.length > 0){
 				cri.add(Restrictions.in("rem.reminderId", reminder));
 			}
-			if(reminderType != null){
+			if(reminderType != null && reminderType.length > 0){
 				cri.add(Restrictions.in("rem.reminderType", reminderType));
 			}
 		}

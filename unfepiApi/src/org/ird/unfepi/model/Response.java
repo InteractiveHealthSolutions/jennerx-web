@@ -55,7 +55,7 @@ public class Response {
 	private String recipient;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(length = 20)
+	@Column(length = 120)
 	private ResponseType responseType;
 	
 	@Enumerated(EnumType.STRING)
@@ -135,10 +135,6 @@ public class Response {
 		this.responseStatus = responseStatus;
 	}
 
-	public void setEventId(Integer eventId) {
-		this.eventId = eventId;
-	}
-
 	public Date getResponseDate() {
 		return responseDate;
 	}
@@ -179,11 +175,11 @@ public class Response {
 		this.eventClass = eventClass;
 	}
 
-	public int getEventId() {
+	public Integer getEventId() {
 		return eventId;
 	}
 
-	public void setEventId(int eventId) {
+	public void setEventId(Integer eventId) {
 		this.eventId = eventId;
 	}
 
