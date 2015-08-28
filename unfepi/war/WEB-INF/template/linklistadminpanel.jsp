@@ -15,3 +15,4 @@
 <li><a href="viewStorekeepers.htm">Storekeepers</a></li>
 <li><a href="viewVaccinators.htm">Vaccinators</a></li>
 <li><a href="viewVaccinationCenters.htm">Vaccination Centers</a></li>
+<li><a href="viewLocations.htm">Locations</a></li>

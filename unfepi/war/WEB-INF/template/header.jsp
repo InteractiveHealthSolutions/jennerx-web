@@ -60,10 +60,10 @@ var centerHeight = (window.screen.height - 400) / 2;
 
 function changepwdpopup()
 {
-	$('#winpwd').window('open');
+	jQuery('#winpwd').window('open');
 	return;
-	pwdpopupWindow = window.open('changepwd.htm','change password','width=600,height=400,left='+centerWidth+',top='+centerHeight+',resizable=no,toolbar=no,location=no,scrollbars=no,directories=no,status=no,menubar=no,copyhistory=no');
-	pwdpopupWindow.focus();
+	// pwdpopupWindow = window.open('changepwd.htm','change  password','width=600,height=400,left='+centerWidth+',top='+centerHeight+',resizable=no,toolbar=no,location=no,scrollbars=no,directories=no,status=no,menuba// r=no,copyhistory=no');
+	// pwdpopupWindow.focus();
 }
 
 function parent_disable() {
@@ -103,7 +103,7 @@ function convertToDate(stringDate) {
 			<span><c:out value="${sessionScope.fullname}" /></span>
 			<div id="winpwd"><%@ include file="/portlets/plt_change_pwd.jsp"%></div>
 <script type="text/javascript"><!--
-$('#winpwd').window({
+jQuery('#winpwd').window({
 	title: 'Change password',
 	width: 600,  
     height: 400,
