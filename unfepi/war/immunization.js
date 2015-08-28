@@ -31,6 +31,7 @@ function viewVaccinatorDetails(ids){
 	win=window.open('vaccinatorDetails.htm?programId='+ids,'VaccinatorDetails:'+ids,'width=500,height=600,resizable=no,toolbar=no,location=no,scrollbars=yes,directories=no,status=no,menubar=no,copyhistory=no');
 	win.focus();
 }
+
 function viewVaccinationCenterDetails(ids){
 	var win;
 
