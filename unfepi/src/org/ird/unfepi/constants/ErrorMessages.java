@@ -28,6 +28,9 @@ public class ErrorMessages
 	public static final String CENTER_NAME_INVALID = "Center name should not contain special characters";
 	public static final String CENTER_FULLNAME_INVALID = "Center full name should not contain special characters";
 	
+	public static final String LOCATION_NAME_INVALID = "Location name should not contain special characters";
+	public static final String LOCATION_FULLNAME_INVALID = "Location full name should not contain special characters";
+	
 	public static final String USERNAME_INVALID = "Username/Login ID must be non-whitespace alphanumeric sequence between 5-20 characters other than words admin or administrator";
 	public static final String USERNAME_OCCUPIED = "Username/Login ID given already occupied";
 
