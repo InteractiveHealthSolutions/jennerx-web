@@ -222,14 +222,14 @@ public class GlobalParams
 	//public static final String NOTIFIER_DEFAULT_CRON = "0 0/30 * * * ?";
 
 	public static final String RESPONSE_READER_CRON_SETTING = "response.reader.read-cron";
-	public static final String RESPONSE_READER_DEFAULT_CRON = "0 0/5 * * * ?";
+	public static final String RESPONSE_READER_DEFAULT_CRON = "0 0/1 * * * ?";
 	
 	public static final String ADMIN_EMAIL_PROPERTY = "admin.email-address";
 
 	public static final int MAX_REMINDER_1_7_VALIDITY_DAYS = 6;
 	
 	public static final String SMS_TARSEEL_PROJECT_NAME = "unfepi";
-	public static final int SMS_TARSEEL_PROJECT_ID =  2;
+	public static final int SMS_TARSEEL_PROJECT_ID =  1;
 	
 	//-------------------------------------------------------------------
 	
