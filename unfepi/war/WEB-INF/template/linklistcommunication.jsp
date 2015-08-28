@@ -1,5 +1,7 @@
 <li><a href="viewReminders.htm">View Reminders</a></li>				
 <li><a href="viewReminderSmsRecord.htm">Reminder History</a></li>
+<li><a href="viewResponses.htm">Responses</a></li>
+<li><a href="viewEpiCertificates.htm">EPI Certificates</a></li>
 <li><a href="#">Custom Sms</a>
 	<ul>
 		<li><a href="sendCustomSms.htm">Send Custom Sms</a></li>
