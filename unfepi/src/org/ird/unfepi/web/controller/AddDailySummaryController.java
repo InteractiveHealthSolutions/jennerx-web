@@ -72,12 +72,12 @@ public class AddDailySummaryController extends DataEntryFormController
 			e.setCreatedByUserId(user.getUser().getMappedId());
 			sc.getEncounterService().saveEncounter(e);
 
-			encr.add(EncounterUtil.createEncounterResult(e, "VACCINATION_CENTER", ds.getVaccinationCenterId()==null?null:sc.getVaccinationService().findVaccinationCenterById(ds.getVaccinationCenterId(), true, new String[]{"idMapper"}).getIdMapper().getIdentifiers().get(0).getIdentifier()));
+	/*TODO		encr.add(EncounterUtil.createEncounterResult(e, "VACCINATION_CENTER", ds.getVaccinationCenterId()==null?null:sc.getVaccinationService().findVaccinationCenterById(ds.getVaccinationCenterId(), true, new String[]{"idMapper"}).getIdMapper().getIdentifiers().get(0).getIdentifier()));
 			
 			for (DailySummaryVaccineGiven dsvg :  dsw.getDsvgList()) {
 				encr.add(EncounterUtil.createEncounterResult(e, dsvg.getVaccineName(), dsvg.getQuantityGiven()));
 			}
-
+*/
 			for (EncounterResults encounterres : encr) {
 				sc.getEncounterService().saveEncounterResult(encounterres);
 			}

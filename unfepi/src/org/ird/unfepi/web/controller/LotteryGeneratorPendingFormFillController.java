@@ -57,7 +57,7 @@ public class LotteryGeneratorPendingFormFillController extends SimpleFormControl
 	@Override
 	protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response, Object command, BindException errors)	throws Exception 
 	{
-		LoggedInUser user=UserSessionUtils.getActiveUser(request);
+		/*LoggedInUser user=UserSessionUtils.getActiveUser(request);
 		
 		Encounter encounter = null;
 		List<EncounterResults> encreslist = null;
@@ -162,7 +162,7 @@ public class LotteryGeneratorPendingFormFillController extends SimpleFormControl
 		}
 		finally{
 			sc.closeSession();
-		}
+		}*/
 		return null;
 	}
 	
@@ -176,7 +176,7 @@ public class LotteryGeneratorPendingFormFillController extends SimpleFormControl
 		}
 		else if(command instanceof EnrollmentWrapper){
 			ChildValidator validator = (ChildValidator) getValidator();
-			validator.validateEnrollment((EnrollmentWrapper) command, request.getParameter("nextVaccine"), errors);
+//TODO			validator.validateEnrollment((EnrollmentWrapper) command, request.getParameter("nextVaccine"), errors);
 		}
 		
 		return super.processFormSubmission(request, response, command, errors);
@@ -233,7 +233,7 @@ public class LotteryGeneratorPendingFormFillController extends SimpleFormControl
 				{
 					try{
 						if(vacc != null) {
-							ControllerUIHelper.prepareFollowupDisplayObjects(request, vacc, sc);	
+//TODO							ControllerUIHelper.prepareFollowupDisplayObjects(request, vacc, sc);	
 						}
 					}
 					catch (Exception e) {
@@ -255,7 +255,7 @@ public class LotteryGeneratorPendingFormFillController extends SimpleFormControl
 					EnrollmentWrapper enw = new EnrollmentWrapper();
 					enw.setChild(sc.getChildService().findChildById(encounter.getId().getP1id(), false, new String[]{"idMapper"}));
 					
-					enw.setCurrentVaccination(vacc);
+	//TODO				enw.setCurrentVaccination(vacc);
 					sc.closeSession();
 					
 					enw.getChild().setDateEnrolled(encounter.getDateEncounterEntered());
@@ -333,7 +333,7 @@ public class LotteryGeneratorPendingFormFillController extends SimpleFormControl
 					Vaccination vacc = (Vaccination) command;
 					model.put("vaccine", vacc.getVaccine());
 					
-					ControllerUIHelper.prepareFollowupReferenceData(request, model, vacc, sc);
+	//TODO				ControllerUIHelper.prepareFollowupReferenceData(request, model, vacc, sc);
 				}
 				else if(command instanceof EnrollmentWrapper)
 				{

@@ -49,7 +49,7 @@ public class FollowupVaccinationPrivilegedController extends SimpleFormControlle
 		LoggedInUser user=UserSessionUtils.getActiveUser(request);
 		ServiceContext sc = Context.getServices();
 		try{
-			List<ChildLotteryRunner> lotteryRes = ControllerUIHelper.doFollowup(DataEntrySource.WEB, (VaccinationCenterVisit) command, dateFormStart, user.getUser(), sc);
+			List<ChildLotteryRunner> lotteryRes = null;//ControllerUIHelper.doFollowup(DataEntrySource.WEB, (VaccinationCenterVisit) command, dateFormStart, user.getUser(), sc);
 			
 			sc.commitTransaction();
 
@@ -68,7 +68,7 @@ public class FollowupVaccinationPrivilegedController extends SimpleFormControlle
 				}
 			}
 			
-			return new ModelAndView(new RedirectView("viewVaccinationRecord.htm?action=search&editOrUpdateMessage="+editmessage+"&childIdName="+child.getIdMapper().getIdentifiers().get(0).getIdentifier()));
+//TODO			return new ModelAndView(new RedirectView("viewVaccinationRecord.htm?action=search&editOrUpdateMessage="+editmessage+"&childIdName="+child.getIdMapper().getIdentifiers().get(0).getIdentifier()));
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -79,6 +79,7 @@ public class FollowupVaccinationPrivilegedController extends SimpleFormControlle
 		finally{
 			sc.closeSession();
 		}
+		return null;
 	}
 	
 	@Override
@@ -176,9 +177,9 @@ public class FollowupVaccinationPrivilegedController extends SimpleFormControlle
 			ServiceContext sc = Context.getServices();
 			try{
 				Vaccination vacc = (Vaccination) command;
-				model.put("vaccines", sc.getVaccinationService().getAll(true));
-
-				ControllerUIHelper.prepareFollowupReferenceData(request, model, vacc, sc);
+//	TODO			model.put("vaccines", sc.getVaccinationService().getAll(true));
+//
+//				ControllerUIHelper.prepareFollowupReferenceData(request, model, vacc, sc);
 				
 				ControllerUIHelper.prepareVaccinationReferenceData(request, model, 
 						sc.getVaccinationService().getAllVaccinationCenter(true, new String[]{"idMapper"}), 

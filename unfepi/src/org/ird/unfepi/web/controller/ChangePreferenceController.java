@@ -49,7 +49,7 @@ public class ChangePreferenceController extends SimpleFormController
 		try{
 			String reminderCellNumber = request.getParameter("reminderCellNumber");
 			
-			ControllerUIHelper.doChangePreference(ls, reminderCellNumber, user.getUser(), sc);
+	//TODO		ControllerUIHelper.doChangePreference(ls, reminderCellNumber, user.getUser(), sc);
 			
 			EncounterUtil.createChangePreferenceEncounter(ls, reminderCellNumber, DataEntrySource.WEB, dateFormStart, user.getUser(), sc);
 			
@@ -119,7 +119,7 @@ public class ChangePreferenceController extends SimpleFormController
 			try{
 				String programId = request.getParameter("programId");
 				if(programId == null){
-					programId = sc.getIdMapperService().findIdMapper(lsms.getMappedId()).getProgramId();
+//TODO					programId = sc.getIdMapperService().findIdMapper(lsms.getMappedId()).getProgramId();
 				}
 				
 				model.put("programId", programId);
