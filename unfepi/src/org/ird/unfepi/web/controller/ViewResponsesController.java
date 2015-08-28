@@ -117,7 +117,7 @@ public class ViewResponsesController extends DataDisplayController{
 			
 			list = sc.getCommunicationService().getResponseByCriteria((idm == null?null:idm.getMappedId()), roleId, 
 					entityrole.equalsIgnoreCase(GlobalParams.OTHER_ROLE_NAME), receiveDatefrom, receiveDateto, org, recp, 
-					respType, null, null, null, null, 
+					respType, null, null, null, null, null, 
 					startRecord, WebGlobals.DEFAULT_PAGING_MAX_PAGE_ITEMS, true, new String[]{"idMapper"}, sqlFilter );
 			
 			Number r = sc.getCommunicationService().LAST_QUERY_TOTAL_ROW_COUNT(Response.class);

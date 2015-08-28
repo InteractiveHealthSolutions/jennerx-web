@@ -54,7 +54,7 @@ public class ViewUserSmsController extends DataDisplayController{
 				startRecord = Integer.parseInt(req.getParameter("pager.offset"));
 			}
 
-			list = sc.getUserSmsService().findUserSmsByCriteria(dueDatefrom, dueDateto, sentDatefrom, sentDateto, status, false, null, null, startRecord, WebGlobals.DEFAULT_PAGING_MAX_PAGE_ITEMS, true, new String[]{"idMapper","createdByUserId"});
+			list = sc.getUserSmsService().findUserSmsByCriteria(dueDatefrom, dueDateto, sentDatefrom, sentDateto, status, false, null, null, null, null, startRecord, WebGlobals.DEFAULT_PAGING_MAX_PAGE_ITEMS, true, new String[]{"idMapper","createdByUserId"});
 
 			if(sc.getUserSmsService().LAST_QUERY_TOTAL_ROW_COUNT(UserSms.class)!=null){
 			totalRows= sc.getUserSmsService().LAST_QUERY_TOTAL_ROW_COUNT(UserSms.class).intValue();

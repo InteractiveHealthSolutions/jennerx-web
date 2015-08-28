@@ -17,6 +17,7 @@ import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.CommunicationNote;
 import org.ird.unfepi.model.CommunicationNote.CommunicationEventType;
 import org.ird.unfepi.model.Model.SmsStatus;
+import org.ird.unfepi.model.UserSms.SmsType;
 import org.ird.unfepi.model.UserSms;
 import org.ird.unfepi.utils.UserSessionUtils;
 import org.irdresearch.smstarseel.context.TarseelContext;
@@ -209,6 +210,7 @@ public class DWRCommunicationService {
 			sms.setRecipientId(recipientMappedId);
 			sms.setReferenceNumber(referenceNum);
 			sms.setSmsStatus(SmsStatus.PENDING);
+			sms.setSmsType(SmsType.N_A);
 			sms.setText(smsText);
 			
 			sc.getUserSmsService().saveUserSms(sms);
