@@ -179,7 +179,7 @@ public class IRUtils {
 				reml=new ArrayList<ReminderSms>();
 			}
 			
-			List<Response> pr = sc.getCommunicationService().getResponseByCriteria(null, null, false, null, null, null, null, null, null, Vaccination.class, pv.getVaccinationRecordNum(), null, 0, 100, true, null, null);
+			List<Response> pr = sc.getCommunicationService().getResponseByCriteria(null, null, false, null, null, null, null, null, null, null, Vaccination.class, pv.getVaccinationRecordNum(), null, 0, 100, true, null, null);
 			
 			Vaccinator vaccinator = pv.getVaccinatorId()==null?null:sc.getVaccinationService().findVaccinatorById(pv.getVaccinatorId(), true, new String[]{"idMapper"});
 			VaccinationCenter center=pv.getVaccinationCenterId()==null?null:sc.getVaccinationService().findVaccinationCenterById(pv.getVaccinationCenterId(), true, new String[]{"idMapper"});
