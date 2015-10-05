@@ -1,4 +1,3 @@
-<%@ include file="/WEB-INF/template/include.jsp"%>
 
 <%@page import="org.ird.unfepi.DataForm"%>
 <%@page import="org.ird.unfepi.GlobalParams.SearchFilter"%>
@@ -8,6 +7,7 @@
 <%@page import="org.ird.unfepi.constants.SystemPermissions" %>
 
 <%@ include file="/WEB-INF/template/header.jsp" %>
+<%@ include file="/WEB-INF/template/include.jsp"%>
 
 <script type="text/javascript">
 <!--

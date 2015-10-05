@@ -56,17 +56,17 @@ if(isAuthIncentivize){
 %>
 <a class="icon" onclick="showIncentDiv();">INCENTIVIZE  <img alt="Incentivize" src="images/givemoney.png" class="icon-big"></a>
 <div id="incentivediv" style="display: none;outline: 1px blue ridge ;">
-select date<input id="incentivizationDateUpper" name="incentivizationDateUpper" value="" class="calendarbox" style="width: 90px" readonly="readonly"/>
+select date<input id="incentivizationDateUpper" name="incentivizationDateUpper" value="" maxdate="-2d" class="calendarbox" style="width: 90px" readonly="readonly"/>
 <input type="button" value="OK" style="width: 50px;" onclick="doIncentivize();">
 </div>
 </div>
 <script type="text/javascript">
 <!--
-$(function() {
+$( document ).ready(function() {
     $('#incentivizationDateUpper').datepicker({
     	duration: '',
         constrainInput: false,
-        maxDate: '-3d',
+        maxDate: '-2d',
         dateFormat: '<%=WebGlobals.GLOBAL_DATE_FORMAT_JS%>'
      });
 });

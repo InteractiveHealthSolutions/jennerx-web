@@ -54,10 +54,6 @@ public class ReminderUpdaterJob implements Job{
 								rem.setOriginator(om.getOriginator());
 								rem.setRecipient(om.getRecipient());
 							}
-							else if(hoursLeft < 5 || !DateUtils.datesEqual(new Date(), om.getSystemProcessingEndDate())){
-								rem.setReminderStatus(REMINDER_STATUS.PENDING);
-								rem.setDescription(om.getReferenceNumber()+"FAILED due to "+om.getFailureCause()+".");
-							}
 						}
 						else{
 							if(om.getStatus().equals(OutboundStatus.SENT)){
