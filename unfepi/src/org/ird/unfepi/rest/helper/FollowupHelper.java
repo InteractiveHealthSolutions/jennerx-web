@@ -77,14 +77,35 @@ public class FollowupHelper
 		centreId = Integer.valueOf((String) form.get(RequestElements.ENROLLEMNT_CENTRE).toString());
 		primaryNo = (String) form.get(RequestElements.PRIMARY_NUMBER);
 		secondaryNo = (String) form.get(RequestElements.SECONDARY_NUMBER);
+		String firstName = form.get(RequestElements.CHILD_FIRST_NAME).toString(); // to get the first name
+		//System.out.println(firstName);
 
 		Child child = new Child();
+		
 		ChildService childService = sc.getChildService();
-		child = childService.findChildById(identifier, true, new String[] { "idMapper" });
+		
+		// changes made to update the name
+		/*child.setFirstName(firstName);
+		try {
+			childService.updateChild(child);
+		} catch (ChildDataInconsistencyException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}*/
+		child = childService.findChildById(identifier, false, new String[] { "idMapper" });
+		
 		// a valid child was provided
 		if (child != null)
 		{
 			mappedId = child.getMappedId();
+			child.setFirstName(firstName);
+			try {
+				childService.updateChild(child);
+				//childService.saveChild(child);
+			} catch (ChildDataInconsistencyException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 
 		user = new User(userId);
@@ -193,6 +214,10 @@ public class FollowupHelper
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		catch(Throwable th)
+		{
+			String s = th.getMessage();
 		}
 
 		return ResponseBuilder.buildResponse(ResponseStatus.STATUS_SUCCESS, null);
