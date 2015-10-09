@@ -28,6 +28,8 @@
 var dgSummaryEnrollmentByCenter = "dgSummaryEnrollmentByCenterTable";
 var dgSummaryFupAgeAppropriate = "dgSummaryFollowupAgeAppropriate";
 var dgSummaryFupAgeAppropriateWRetro = "dgSummaryFollowupAgeAppropriateWRetro";
+var dgSummaryFupByVaccinator = "dgSummaryFupByVaccinatorTable";
+
 
 var paramMap = new Object();
 paramMap['<%=DWRParamsGeneral.vaccinationCenter.name()%>'] = "";
@@ -451,17 +453,123 @@ $( document ).ready(function() {
 		      ],
 		});
 	
-		// INIT CENTER FILTER
-		$("#vaccinationCentercombo").multiselect({height: 120, noneSelectedText: 'Select center',
-			selectedText: '# centers selected', 
-			close: function(){
-				refreshDatagrids();
-			},
-		}); 
+	}catch(e){alert(e);}
 	
+	// SUMMARY FUP BY VACCINATOR
+	try{
+	$('#'+dgSummaryFupByVaccinator).datagrid({
+		width:980,
+		nowrap: true, 
+		autoRowHeight: false,
+		showHeader: true,
+		noheader: true,
+		border: false,
+		collapsible:false, 
+		selectOnCheck: false,
+		singleSelect: true,
+		queryParams: paramMap,
+		url: DWRReportService.getSummaryFupByVaccinator,
+		pagination: true,
+		pageSize:20,
+		rowStyler: function(index,row){
+			if (row.identifier.toLowerCase() == 'total'){
+				return 'background-color:#F3E2A9;color:gray;font-weight: bolder'; // return inline style
+				// the function can return predefined css class and inline style
+				// return {class:'r1', style:{'color:#fff'}};	
+			}
+		},
+		toolbar: '#toolbarFupByVaccinator',
+		columns:[[
+					{field:'identifier', title: 'ID', width: 60},
+					{field:'name', title: 'Name', width: 130},
+					{field:'incentives', title: 'Incentives', width: 65},
+					{field:'total', title: 'Total', width: 65, align: 'right'},
+					
+					{field:'bcg', title: 'BCG(%)', width: 65,    align: 'right', 
+						formatter: function(value,row,index){
+							return getInPercent(value,row.total);
+						}
+					},
+					{field:'p1', title: 'Penta1(%)', width: 65,    align: 'right', 
+						formatter: function(value,row,index){
+							return getInPercent(value,row.total);
+						}
+					},
+					{field:'p2', title: 'Penta2(%)', width: 65,    align: 'right', 
+						formatter: function(value,row,index){
+							return getInPercent(value,row.total);
+						}
+					},
+					{field:'p3', title: 'Penta3(%)', width: 65,    align: 'right', 
+						formatter: function(value,row,index){
+							return getInPercent(value,row.total);
+						}
+					},
+					{field:'m1', title: 'Measles1(%)', width: 70,    align: 'right', 
+						formatter: function(value,row,index){
+							return getInPercent(value,row.total);
+						}
+					},
+					{field:'m2', title: 'Measles2(%)', width: 70,    align: 'right', 
+						formatter: function(value,row,index){
+							return getInPercent(value,row.total);
+						}
+					},
+					{field:'opv0', title: 'OPV0(%)', width: 65,    align: 'right', 
+						formatter: function(value,row,index){
+							return getInPercent(value,row.total);
+						}
+					},
+					{field:'opv1', title: 'OPV1(%)', width: 65,    align: 'right', 
+						formatter: function(value,row,index){
+							return getInPercent(value,row.total);
+						}
+					},
+					{field:'opv2', title: 'OPV2(%)', width: 65,    align: 'right', 
+						formatter: function(value,row,index){
+							return getInPercent(value,row.total);
+						}
+					},
+					{field:'opv3', title: 'OPV3(%)', width: 65,    align: 'right', 
+						formatter: function(value,row,index){
+							return getInPercent(value,row.total);
+						}
+					},
+					{field:'pcv1', title: 'PCV1(%)', width: 65,    align: 'right', 
+						formatter: function(value,row,index){
+							return getInPercent(value,row.total);
+						}
+					},
+					{field:'pcv2', title: 'PCV2(%)', width: 65,    align: 'right', 
+						formatter: function(value,row,index){
+							return getInPercent(value,row.total);
+						}
+					},
+					{field:'pcv3', title: 'PCV3(%)', width: 65,    align: 'right', 
+						formatter: function(value,row,index){
+							return getInPercent(value,row.total);
+						}
+					}
+
+			]]
+		});
 	}catch(e){alert(e);}
 
+	// INIT CENTER FILTER
+	$("#vaccinationCentercombo").multiselect({height: 120, noneSelectedText: 'Select center',
+		selectedText: '# centers selected', 
+		close: function(){
+			refreshDatagrids();
+		},
+	}); 
+	
 });
+
+function getInPercent(value,total) {
+	var prc = Math.round(100*value/total);
+	var v = isNaN(prc)?"":prc;
+	return v;
+}
 
 function hideColumnContent(value,row,index, column) {
 	if(value==null || column.field.toLowerCase().startsWith(row.cohort.toLowerCase())){
@@ -481,6 +589,7 @@ function refreshDatagrids() {
 		$('#'+dgSummaryEnrollmentByCenter).datagrid('load', paramMap);
 		$('#'+dgSummaryFupAgeAppropriate).datagrid('load', paramMap);
 		$('#'+dgSummaryFupAgeAppropriateWRetro).datagrid('load', paramMap);
+		$('#'+dgSummaryFupByVaccinator).datagrid('load', paramMap);
 	}catch(e){alert("ERROR:refreshDatagrids:"+e);}
 }
 function filterDateChanged() {
@@ -504,13 +613,14 @@ function addPercentage(value, percentage) {
 <form>
 <div class="searchpalette right">
 <select id="vaccinationCentercombo" name="vaccinationCentercombo" multiple="multiple"></select>
-Enrol date 
-        <input id="filterDatefrom" name="filterDatefrom" class="calendarbox"  readonly="readonly"/> 
-		<input id="filterDateto" name="filterDateto" class="calendarbox"  readonly="readonly"/>
+Date 
+        <input id="filterDatefrom" name="filterDatefrom" class="calendarbox"  readonly="readonly" value=""/> 
+		<input id="filterDateto" name="filterDateto" class="calendarbox"  readonly="readonly" value=""/>
 		<a class="clearDate" onclick="clearFilterDate();">X</a>
 		<script>
 		function clearFilterDate(){	
 			$('input[id^="filterDate"]').val("");
+			refreshDatagrids();
 		}
 		
 		$(function() {
@@ -638,6 +748,13 @@ $(".export").on('click', function (event) {
 				<th field="measles2done">%V</th>
 			</tr> -->
 		</table>
+	</div>
+	<div title="Immunizations by Vaccinator">
+		<div class="headingRuleUp" id="toolbarFupByVaccinator" style="background-color: transparent;" >
+			<span class="formheadingM">Summary Immunization by Vaccinator </span>
+			<a class="linkiconS iconcsv" onclick="exportCSV('<%=SystemPermissions.DOWNLOAD_SUMMARY_IMMUNIZATION_BY_VACCINATOR_CSV%>');"></a>
+		</div>
+		<table id="dgSummaryFupByVaccinatorTable" class="easyui-datagrid" ></table>
 	</div>
 </div>
 </form>
