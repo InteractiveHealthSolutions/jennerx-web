@@ -144,10 +144,10 @@ public class ControllerUIHelper {
 				}
 	
 				//How close vaccinationDate is with schedule chart.
-				int gap = Math.abs(DateUtils.differenceBetweenIntervals(cal.getTime(), visitDate, TIME_INTERVAL.DATE));
+				int gap = Math.abs(DateUtils.differenceBetweenIntervals(visitDate, cal.getTime(), TIME_INTERVAL.DATE));
 				
 				//if it is closest one mark it as enrollment vaccine
-				if(closestgap > gap){
+				if(closestgap >= gap-20){
 					closestgap = gap;
 					enrVacc.add(vsh.getVaccine());
 				}
