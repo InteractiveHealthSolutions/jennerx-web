@@ -86,6 +86,7 @@
 		<mapping class="org.ird.unfepi.model.VaccineGapType" />
 		<mapping class="org.ird.unfepi.model.VaccinePrerequisite" />
 		<mapping class="org.ird.unfepi.model.VariableSetting" />
+		<mapping class="org.ird.unfepi.model.Women" />
 		
     </session-factory>
 </hibernate-configuration>

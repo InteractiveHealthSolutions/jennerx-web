@@ -54,28 +54,28 @@ public class StarterServlet extends HttpServlet
 			Context.instantiate(prop);
 			GlobalParams.UNFEPI_PROPERTIES = prop;
 			
-			TarseelContext.instantiate(prop, "smstarseel.cfg.xml");
-			
-			System.out.println("......PROPERTIES LOADED SUCCESSFULLY......");
-		
-			//setup email server
-			System.out.println(">>>>INSTANTIATING EMAIL ENGINE......");
-			
-			EmailEngine.instantiateEmailEngine(prop);
-			
-			System.out.println("......EMAIL ENGINE STARTED SUCCESSFULLY......".toLowerCase());
-				
-			// start smser and notifiers etc
-			System.out.println(">>>>INSTANTIATING SCHEDULERS......");
-
-			SchedulerFactory schedFact = new StdSchedulerFactory(prop);
-			scheduler = schedFact.getScheduler();
-			SmserSystem.instantiateSmserSystem(scheduler);
-			ReportingSystem.instantiateReportingSystem(scheduler);
-		
-			startScheduler();
-		
-			System.out.println("......QUARTZ SCHEDULER STARTED SUCCESSFULLY......".toLowerCase());
+//			TarseelContext.instantiate(prop, "smstarseel.cfg.xml");
+//			
+//			System.out.println("......PROPERTIES LOADED SUCCESSFULLY......");
+//		
+//			//setup email server
+//			System.out.println(">>>>INSTANTIATING EMAIL ENGINE......");
+//			
+//			EmailEngine.instantiateEmailEngine(prop);
+//			
+//			System.out.println("......EMAIL ENGINE STARTED SUCCESSFULLY......".toLowerCase());
+//				
+//			// start smser and notifiers etc
+//			System.out.println(">>>>INSTANTIATING SCHEDULERS......");
+//
+//			SchedulerFactory schedFact = new StdSchedulerFactory(prop);
+//			scheduler = schedFact.getScheduler();
+//			SmserSystem.instantiateSmserSystem(scheduler);
+//			ReportingSystem.instantiateReportingSystem(scheduler);
+//		
+//			startScheduler();
+//		
+//			System.out.println("......QUARTZ SCHEDULER STARTED SUCCESSFULLY......".toLowerCase());
 		}
 		catch (Exception e) {
 			e.printStackTrace();

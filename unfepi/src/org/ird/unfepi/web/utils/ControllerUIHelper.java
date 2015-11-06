@@ -43,6 +43,7 @@ import org.ird.unfepi.model.VaccinationCenterVaccineDay;
 import org.ird.unfepi.model.VaccinationCenterVaccineDayId;
 import org.ird.unfepi.model.Vaccinator;
 import org.ird.unfepi.model.Vaccine;
+import org.ird.unfepi.model.Women;
 import org.ird.unfepi.model.exception.VaccinationDataException;
 import org.ird.unfepi.service.exception.ChildDataInconsistencyException;
 import org.ird.unfepi.service.exception.UserServiceException;
@@ -199,6 +200,31 @@ public class ControllerUIHelper {
 		EncounterUtil.createEnrollmentEncounter(dataEntrySource, projectId, childNamed, child, birthdateOrAge, ageYears, ageMonths, ageWeeks, ageDays, address, centerVisit, vaccineSchedule, completeCourseFromCenter, /*lotteryResults, */formStartDate, user, sc);
 		//return lotteryResults;
 	}
+	
+	
+	public static void doWomenEnrollment(DataEntrySource dataEntrySource, String projectId, Women women, 
+			String birthdateOrAge, String ageYears, String ageMonths, String ageWeeks, String ageDays, Address address, 
+			WomenVaccinationCenterVisit centerVisit, Date formStartDate, User user, String enrollmentVaccine, ServiceContext sc) throws ChildDataInconsistencyException
+	{
+		handleEnrollmentWomen(projectId, women, enrollmentVaccine, centerVisit.getVaccinationCenterId(), user, sc);
+		
+		handleWomenEnrollmentContactInfo(centerVisit.getContactPrimary(), centerVisit.getContactSecondary(), address, women, user, sc);
+		
+	/*	handleEnrollmentChild(projectId, childNamed, child, getEnrollmentVaccine(vaccineSchedule, child.getBirthdate(), sc, centerVisit.getVisitDate()), centerVisit.getVaccinationCenterId(), user, sc);
+
+
+	//	List<ChildLotteryRunner> lotteryResults = handleEnrollmentVaccinations(dataEntrySource, centerVisit, vaccineSchedule, centerVisit.getPreference().getHasApprovedReminders(), child, user, sc);
+		handleEnrollmentVaccinations(dataEntrySource, centerVisit, vaccineSchedule, centerVisit.getPreference().getHasApprovedReminders(), child, user, sc);
+
+		boolean measles2Given = IMRUtils.isMeasles2Given(vaccineSchedule, child.getDateEnrolled());
+		handlePreference(centerVisit.getPreference(), measles2Given , child, user, sc);
+		
+		handleEnrollmentContactInfo(centerVisit.getPreference().getHasApprovedReminders(), centerVisit.getContactPrimary(), centerVisit.getContactSecondary(), address, child, user, sc);
+		
+		EncounterUtil.createEnrollmentEncounter(dataEntrySource, projectId, childNamed, child, birthdateOrAge, ageYears, ageMonths, ageWeeks, ageDays, address, centerVisit, vaccineSchedule, completeCourseFromCenter, /*lotteryResults, *//*formStartDate, user, sc);*/
+		//return lotteryResults;
+	}
+	
 	
 	/** Manipulates (populates required default info) and saves data for entities participating in 
 	 * enrollment for lottery generator half filled forms. All values MUST have been validated via {@link ValidatorUtils#validateEnrollmentFillLotteryGenForm} before calling the method. 
@@ -640,6 +666,32 @@ public class ControllerUIHelper {
 		sc.getChildService().saveChild(child);
 	}
 	
+	
+	/** 
+	 * Manipulate and save IdMapper for role WOMEN and save women for ID assigned by IdMapper
+	 */
+	private static void handleEnrollmentWomen(String projectId, Women women, String enrollmentVaccine, Integer enrollmentCenter, User user, ServiceContext sc){
+		IdMapper idMapper = new IdMapper();
+		idMapper.setRoleId(sc.getUserService().getRole("women", false, null).getRoleId());
+		idMapper.setMappedId(Integer.parseInt(sc.getIdMapperService().saveIdMapper(idMapper).toString()));
+
+		Identifier ident = new Identifier();
+		ident.setIdentifier(projectId);
+		ident.setIdentifierType((IdentifierType)sc.getCustomQueryService().getDataByHQL("FROM IdentifierType WHERE name ='"+GlobalParams.IdentifierType.WOMEN_PROJECT_ID+"'").get(0));
+		ident.setLocationId(enrollmentCenter);
+		ident.setPreferred(true);
+		ident.setIdMapper(idMapper);
+		sc.getCustomQueryService().save(ident);
+
+
+		women.setCreator(user);
+		women.setMappedId(idMapper.getMappedId());
+		women.setStatus(Women.STATUS.FOLLOW_UP);
+		//women.setMappedId(idMapper.getMappedId());		
+		women.setEnrollmentVaccineId(sc.getVaccinationService().getByName(enrollmentVaccine).getVaccineId());
+		sc.getWomenService().save(women);
+	}
+	
 	/**
 	 * Manipulate and save primaryContact if approved reminders is TRUE OR primaryContact is not null. 
 	 * Manipulate and save secondaryContact if not null. 
@@ -673,6 +725,31 @@ public class ControllerUIHelper {
 		address.setAddressType(ContactType.PRIMARY);
 		address.setCreator(user);
 		address.setMappedId(child.getMappedId());
+		sc.getDemographicDetailsService().saveAddress(address);
+	}
+	
+	/**
+	 * Manipulate and save primaryContact if approved reminders is TRUE OR primaryContact is not null. 
+	 * Manipulate and save secondaryContact if not null. 
+	 * Manipulate and save address.
+	 */
+	private static void handleWomenEnrollmentContactInfo( String primaryContact, 
+			String secondaryContact, Address address, Women women, User user, ServiceContext sc) throws ChildDataInconsistencyException {
+
+		if(!StringUtils.isEmptyOrWhitespaceOnly(secondaryContact)){
+			ContactNumber secondaryCont = new ContactNumber();
+			secondaryCont .setCreator(user);
+			secondaryCont.setMappedId(women.getMappedId());
+			secondaryCont.setNumberType(ContactType.SECONDARY);
+			secondaryCont.setTelelineType(ContactTeleLineType.UNKNOWN);
+			secondaryCont.setNumber(secondaryContact);
+			
+			sc.getDemographicDetailsService().saveContactNumber(secondaryCont);
+		}
+		
+		address.setAddressType(ContactType.PRIMARY);
+		address.setCreator(user);
+		address.setMappedId(women.getMappedId());
 		sc.getDemographicDetailsService().saveAddress(address);
 	}
 	
