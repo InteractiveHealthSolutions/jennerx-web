@@ -74,6 +74,8 @@
 			<include method="getSystemInconsistencies"/>
 			<include method="getSummaryFollowupAgeAppropriate"/>
 			<include method="getSummaryFollowupAgeAppropriateWRetro"/>
+			<include method="getSummaryFupByVaccinator"/>
+			<include method="getSummaryFupByCenter"/>
 		</create>
 		<create creator="new" javascript="DWREntityService">
 			<param name="class" value="org.ird.unfepi.web.dwr.DWREntityService" />

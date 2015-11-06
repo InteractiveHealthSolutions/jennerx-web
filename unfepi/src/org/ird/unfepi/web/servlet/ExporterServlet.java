@@ -118,6 +118,14 @@ public class ExporterServlet extends HttpServlet
 		{
 			exportSummaryFollowups(req, response);
 		}
+		else if(extype.equalsIgnoreCase(SystemPermissions.DOWNLOAD_SUMMARY_IMMUNIZATION_BY_VACCINATOR_CSV.name()))
+		{
+			exportSummaryImmunizationByVaccinator(req, response);
+		}
+		else if(extype.equalsIgnoreCase(SystemPermissions.DOWNLOAD_SUMMARY_IMMUNIZATION_BY_CENTER_CSV.name()))
+		{
+			exportSummaryImmunizationByCenter(req, response);
+		}
 		else if(extype.equalsIgnoreCase(SystemPermissions.DOWNLOAD_CHILD_CSV.name()))
 		{
 			exportChildren(req, response);
@@ -1257,7 +1265,7 @@ public class ExporterServlet extends HttpServlet
 	private void exportSummaryFollowups(HttpServletRequest req, HttpServletResponse response) {
 		ServiceContext sc = Context.getServices();
 		try{
-			response.setContentType("application/zip"); 
+			response.setContentType("application/csv"); 
 			response.setHeader("Content-Disposition", "attachment; filename=Exporter_SummaryFollowupByCohortAndVaccine_"+GlobalParams.CSV_FILENAME_DATE_FORMAT.format(new Date())+".csv"); 
 
 			Csvee csv = new Csvee();
@@ -1418,7 +1426,7 @@ public class ExporterServlet extends HttpServlet
 	private void exportSummaryEnrollmentByCohort(HttpServletRequest req, HttpServletResponse response) {
 		ServiceContext sc = Context.getServices();
 		try{
-			response.setContentType("application/zip"); 
+			response.setContentType("application/csv"); 
 			response.setHeader("Content-Disposition", "attachment; filename=Exporter_SummaryEnrollmentByCohortAndGender_"+GlobalParams.CSV_FILENAME_DATE_FORMAT.format(new Date())+".csv"); 
 
 			Csvee csv = new Csvee();
@@ -1483,7 +1491,7 @@ public class ExporterServlet extends HttpServlet
 			List totalSuccessEvntsl = sc.getCustomQueryService().getDataBySQL(GlobalParams.QUERY_VACCINATIONS_RECEIVED);
 			Integer totalSuccessEvnts = Integer.parseInt(totalSuccessEvntsl.get(0).toString());
 			
-			response.setContentType("application/zip"); 
+			response.setContentType("application/csv"); 
 			response.setHeader("Content-Disposition", "attachment; filename=Exporter_SummaryProject_"+GlobalParams.CSV_FILENAME_DATE_FORMAT.format(new Date())+".csv"); 
 
 			Csvee csv = new Csvee();
@@ -1557,7 +1565,7 @@ public class ExporterServlet extends HttpServlet
 
 			List centersummary = sc.getCustomQueryService().getDataBySQL("CALL SummaryEnrByCenterCohort2('"+(center==null?"":center.trim())+"', "+d1f+", "+d1t+" , 0, "+Integer.MAX_VALUE+", '', '')");
 
-			response.setContentType("application/zip"); 
+			response.setContentType("application/csv"); 
 			response.setHeader("Content-Disposition", "attachment; filename=Exporter_SummaryEnrollmentByCohortAndCenter_"+GlobalParams.CSV_FILENAME_DATE_FORMAT.format(new Date())+".csv"); 
 
 			Csvee csv = new Csvee();
@@ -1630,7 +1638,7 @@ public class ExporterServlet extends HttpServlet
 
 			List centersummary = sc.getCustomQueryService().getDataBySQL("CALL SummaryFollowupAgeAppropriate('"+(center==null?"":center.trim())+"', "+d1f+", "+d1t+" , 0, "+Integer.MAX_VALUE+", '', '')");
 
-			response.setContentType("application/zip"); 
+			response.setContentType("application/csv"); 
 			response.setHeader("Content-Disposition", "attachment; filename=Exporter_SummaryFUPAgeAppropriate_"+GlobalParams.CSV_FILENAME_DATE_FORMAT.format(new Date())+".csv"); 
 
 			Csvee csv = new Csvee();
@@ -1692,6 +1700,157 @@ public class ExporterServlet extends HttpServlet
 		}
 	}
 	
+	private void exportSummaryImmunizationByVaccinator(HttpServletRequest req, HttpServletResponse response) {
+		ServiceContext sc = Context.getServices();
+		try{
+			String center = req.getParameter(DWRParamsGeneral.vaccinationCenter.name());
+			String date1from = req.getParameter(DWRParamsGeneral.date1from.name());
+			String date1to = req.getParameter(DWRParamsGeneral.date1to.name());
+			
+			String d1f = StringUtils.isEmptyOrWhitespaceOnly(date1from)?null:("'"+new SimpleDateFormat("yyyy-MM-dd").format(WebGlobals.GLOBAL_JAVA_DATE_FORMAT.parse(date1from))+"'");
+			String d1t = StringUtils.isEmptyOrWhitespaceOnly(date1to)?null:("'"+new SimpleDateFormat("yyyy-MM-dd").format(WebGlobals.GLOBAL_JAVA_DATE_FORMAT.parse(date1to))+"'");
+
+			List summary = sc.getCustomQueryService().getDataBySQL("CALL SummaryImmunizationByVaccinator('"+(center==null?"":center.trim())+"', "+d1f+", "+d1t+" , 0, "+Integer.MAX_VALUE+", '', '')");
+
+			response.setContentType("application/csv"); 
+			response.setHeader("Content-Disposition", "attachment; filename=Exporter_SummaryImmunizationByVaccinator_"+GlobalParams.CSV_FILENAME_DATE_FORMAT.format(new Date())+".csv"); 
+
+			Csvee csv = new Csvee();
+			
+			CsveeRow datarow1 = new CsveeRow();
+			datarow1.addRowElement("Summary Immunization by Vaccinator");
+			csv.addData(datarow1);
+			
+			CsveeRow datarowf1 = new CsveeRow();
+			datarowf1.addRowElement("Filters Applied : ");
+			csv.addData(datarowf1);
+			
+			CsveeRow datarowf2 = new CsveeRow();
+			datarowf2.addRowElement("Centers : "+(center==null?"not filtered":center.trim()));
+			csv.addData(datarowf2);
+			
+			CsveeRow datarowf3 = new CsveeRow();
+			datarowf3.addRowElement("Date : "+(d1f==null||d1t==null?"not filtered":(d1f+"  -  "+d1t))+"");
+			csv.addData(datarowf3);
+			
+			CsveeRow datarow2 = new CsveeRow();
+			datarow2.addRowElement("Vaccinator ID");
+			datarow2.addRowElement("Name");
+			datarow2.addRowElement("Incentives");
+			datarow2.addRowElement("Total");
+			datarow2.addRowElement("BCG (%)");
+			datarow2.addRowElement("Penta-1 (%)");
+			datarow2.addRowElement("Penta-2 (%)");
+			datarow2.addRowElement("Penta-3 (%)");
+			datarow2.addRowElement("Measles-1 (%)");
+			datarow2.addRowElement("Measles-2 (%)");
+			datarow2.addRowElement("OPV-0 (%)");
+			datarow2.addRowElement("OPV-1 (%)");
+			datarow2.addRowElement("OPV-2 (%)");
+			datarow2.addRowElement("OPV-3 (%)");
+			datarow2.addRowElement("PCV-1 (%)");
+			datarow2.addRowElement("PCV-2 (%)");
+			datarow2.addRowElement("PCV-3 (%)");
+
+			csv.addData(datarow2);
+			
+			for (Object object : summary) {
+				CsveeRow datarow = new CsveeRow();
+
+				Object[] objarr = (Object[])object;
+				for (Object object2 : objarr) {
+					datarow.addRowElement(object2);
+				}
+				csv.addData(datarow);
+			}
+			
+			response.getOutputStream().write(csv.getCsv(true));
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally{
+			sc.closeSession();
+		}
+	}
+	
+	private void exportSummaryImmunizationByCenter(HttpServletRequest req, HttpServletResponse response) {
+		ServiceContext sc = Context.getServices();
+		try{
+			String center = req.getParameter(DWRParamsGeneral.vaccinationCenter.name());
+			String date1from = req.getParameter(DWRParamsGeneral.date1from.name());
+			String date1to = req.getParameter(DWRParamsGeneral.date1to.name());
+			
+			String d1f = StringUtils.isEmptyOrWhitespaceOnly(date1from)?null:("'"+new SimpleDateFormat("yyyy-MM-dd").format(WebGlobals.GLOBAL_JAVA_DATE_FORMAT.parse(date1from))+"'");
+			String d1t = StringUtils.isEmptyOrWhitespaceOnly(date1to)?null:("'"+new SimpleDateFormat("yyyy-MM-dd").format(WebGlobals.GLOBAL_JAVA_DATE_FORMAT.parse(date1to))+"'");
+
+			List summary = sc.getCustomQueryService().getDataBySQL("CALL SummaryImmunizationByCenter('"+(center==null?"":center.trim())+"', "+d1f+", "+d1t+" , 0, "+Integer.MAX_VALUE+", '', '')");
+
+			response.setContentType("application/csv"); 
+			response.setHeader("Content-Disposition", "attachment; filename=Exporter_SummaryImmunizationByCenter_"+GlobalParams.CSV_FILENAME_DATE_FORMAT.format(new Date())+".csv"); 
+
+			Csvee csv = new Csvee();
+			
+			CsveeRow datarow1 = new CsveeRow();
+			datarow1.addRowElement("Summary Immunization by Center");
+			csv.addData(datarow1);
+			
+			CsveeRow datarowf1 = new CsveeRow();
+			datarowf1.addRowElement("Filters Applied : ");
+			csv.addData(datarowf1);
+			
+			CsveeRow datarowf2 = new CsveeRow();
+			datarowf2.addRowElement("Centers : "+(center==null?"not filtered":center.trim()));
+			csv.addData(datarowf2);
+			
+			CsveeRow datarowf3 = new CsveeRow();
+			datarowf3.addRowElement("Date : "+(d1f==null||d1t==null?"not filtered":(d1f+"  -  "+d1t))+"");
+			csv.addData(datarowf3);
+			
+			CsveeRow datarow2 = new CsveeRow();
+			datarow2.addRowElement("Center ID");
+			datarow2.addRowElement("Name");
+			datarow2.addRowElement("Total");
+			datarow2.addRowElement("BCG (%)");
+			datarow2.addRowElement("Penta-1 (%)");
+			datarow2.addRowElement("Penta-2 (%)");
+			datarow2.addRowElement("Penta-3 (%)");
+			datarow2.addRowElement("Measles-1 (%)");
+			datarow2.addRowElement("Measles-2 (%)");
+			datarow2.addRowElement("OPV-0 (%)");
+			datarow2.addRowElement("OPV-1 (%)");
+			datarow2.addRowElement("OPV-2 (%)");
+			datarow2.addRowElement("OPV-3 (%)");
+			datarow2.addRowElement("PCV-1 (%)");
+			datarow2.addRowElement("PCV-2 (%)");
+			datarow2.addRowElement("PCV-3 (%)");
+
+			csv.addData(datarow2);
+			
+			for (Object object : summary) {
+				CsveeRow datarow = new CsveeRow();
+
+				Object[] objarr = (Object[])object;
+				for (Object object2 : objarr) {
+					datarow.addRowElement(object2);
+				}
+				csv.addData(datarow);
+			}
+			
+			response.getOutputStream().write(csv.getCsv(true));
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally{
+			sc.closeSession();
+		}
+	}
+	
 	private void exportSummaryImmunizationAgeAppropriateWithRetro(HttpServletRequest req, HttpServletResponse response) {
 		ServiceContext sc = Context.getServices();
 		try{
@@ -1704,7 +1863,7 @@ public class ExporterServlet extends HttpServlet
 
 			List centersummary = sc.getCustomQueryService().getDataBySQL("CALL SummaryFollowupAgeAppropriateWRetro('"+(center==null?"":center.trim())+"', "+d1f+", "+d1t+" , 0, "+Integer.MAX_VALUE+", '', '')");
 
-			response.setContentType("application/zip"); 
+			response.setContentType("application/csv"); 
 			response.setHeader("Content-Disposition", "attachment; filename=Exporter_SummaryFUPAgeAppropriateWRetro_"+GlobalParams.CSV_FILENAME_DATE_FORMAT.format(new Date())+".csv"); 
 
 			Csvee csv = new Csvee();

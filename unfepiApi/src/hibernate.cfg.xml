@@ -5,12 +5,9 @@
 <hibernate-configuration>
     <session-factory>
 	<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-		<!-- <property name="hibernate.connection.password">epiLinux</property>
-		<property name="hibernate.connection.url">jdbc:mysql://125.209.94.150:10080/unfepi</property> -->
+
  		
-   		<!-- <property name="hibernate.connection.username">epiuser</property> -->
- 		
- 		<property name="hibernate.connection.password">VA1913wm</property>
+ 		<property name="hibernate.connection.password">$vicious$</property>
 		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/unfepi</property> 
  		<property name="hibernate.connection.username">root</property>
  		
@@ -91,6 +88,7 @@
 		<mapping class="org.ird.unfepi.model.VaccineGapType" />
 		<mapping class="org.ird.unfepi.model.VaccinePrerequisite" />
 		<mapping class="org.ird.unfepi.model.VariableSetting" />
+		<mapping class="org.ird.unfepi.model.Women"/>
 		
     </session-factory>
 </hibernate-configuration>

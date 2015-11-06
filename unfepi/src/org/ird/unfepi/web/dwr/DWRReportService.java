@@ -158,4 +158,96 @@ public class DWRReportService {
 	    System.out.println(map);
 		return map;
 	}
+	
+	public Map<String, Object> getSummaryFupByVaccinator(Map<String, String> params) throws ParseException {
+		HttpServletRequest req = WebContextFactory.get().getHttpServletRequest();
+		LoggedInUser user=UserSessionUtils.getActiveUser(req);
+		if(user==null){
+			try {
+				WebContextFactory.get().forwardToString("login.htm");
+			} catch (ServletException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		ServiceContext sc = Context.getServices();
+		String center = params.get(DWRParamsGeneral.vaccinationCenter.name());
+		String date1from = params.get(DWRParamsGeneral.date1from.name());
+		String date1to = params.get(DWRParamsGeneral.date1to.name());
+		
+		String d1f = StringUtils.isEmptyOrWhitespaceOnly(date1from)?null:("'"+new SimpleDateFormat("yyyy-MM-dd").format(WebGlobals.GLOBAL_JAVA_DATE_FORMAT.parse(date1from))+"'");
+		String d1t = StringUtils.isEmptyOrWhitespaceOnly(date1to)?null:("'"+new SimpleDateFormat("yyyy-MM-dd").format(WebGlobals.GLOBAL_JAVA_DATE_FORMAT.parse(date1to))+"'");
+
+        Map<String,Object> map = new HashMap<String,Object>();
+		List<Map<String,Object>> items = new ArrayList<Map<String,Object>>();
+		try{
+			int pageNumber = params.get("page") == null ? 0 : Integer.parseInt(params.get("page"))-1;
+			String sort = params.get("sort");
+			String order = params.get("order");
+
+			int pageSize = params.get("rows") == null ? WebGlobals.PAGER_PAGE_SIZE : Integer.parseInt(params.get("rows"));
+
+			items = sc.getCustomQueryService().getDataBySQLMapResult("CALL SummaryImmunizationByVaccinator('"+(center==null?"":center.trim())+"', "+d1f+", "+d1t+" , "+(pageNumber*pageSize)+", "+pageSize+", '"+(sort==null?"":sort)+"', '"+(order==null?"":order)+"')");
+		
+			int totalRows = StringUtils.isEmptyOrWhitespaceOnly(center)?sc.getVaccinationService().getAllVaccinator(0, 1000000000, true, null).size():center.split(",").length;
+			map.put("rows", items);
+		    map.put("total", totalRows);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally{
+			sc.closeSession();
+		}
+		
+	    //System.out.println(map);
+		return map;
+	}
+	
+	public Map<String, Object> getSummaryFupByCenter(Map<String, String> params) throws ParseException {
+		HttpServletRequest req = WebContextFactory.get().getHttpServletRequest();
+		LoggedInUser user=UserSessionUtils.getActiveUser(req);
+		if(user==null){
+			try {
+				WebContextFactory.get().forwardToString("login.htm");
+			} catch (ServletException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		ServiceContext sc = Context.getServices();
+		String center = params.get(DWRParamsGeneral.vaccinationCenter.name());
+		String date1from = params.get(DWRParamsGeneral.date1from.name());
+		String date1to = params.get(DWRParamsGeneral.date1to.name());
+		
+		String d1f = StringUtils.isEmptyOrWhitespaceOnly(date1from)?null:("'"+new SimpleDateFormat("yyyy-MM-dd").format(WebGlobals.GLOBAL_JAVA_DATE_FORMAT.parse(date1from))+"'");
+		String d1t = StringUtils.isEmptyOrWhitespaceOnly(date1to)?null:("'"+new SimpleDateFormat("yyyy-MM-dd").format(WebGlobals.GLOBAL_JAVA_DATE_FORMAT.parse(date1to))+"'");
+
+        Map<String,Object> map = new HashMap<String,Object>();
+		List<Map<String,Object>> items = new ArrayList<Map<String,Object>>();
+		try{
+			int pageNumber = params.get("page") == null ? 0 : Integer.parseInt(params.get("page"))-1;
+			String sort = params.get("sort");
+			String order = params.get("order");
+
+			int pageSize = params.get("rows") == null ? WebGlobals.PAGER_PAGE_SIZE : Integer.parseInt(params.get("rows"));
+
+			items = sc.getCustomQueryService().getDataBySQLMapResult("CALL SummaryImmunizationByCenter('"+(center==null?"":center.trim())+"', "+d1f+", "+d1t+" , "+(pageNumber*pageSize)+", "+pageSize+", '"+(sort==null?"":sort)+"', '"+(order==null?"":order)+"')");
+		
+			int totalRows = StringUtils.isEmptyOrWhitespaceOnly(center)?sc.getVaccinationService().getAllVaccinationCenter(0, 1000000000, true, null).size():center.split(",").length;
+			map.put("rows", items);
+		    map.put("total", totalRows);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally{
+			sc.closeSession();
+		}
+		
+	    //System.out.println(map);
+		return map;
+	}
 }

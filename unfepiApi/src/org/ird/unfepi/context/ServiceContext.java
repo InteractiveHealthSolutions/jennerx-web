@@ -91,6 +91,7 @@ import org.ird.unfepi.model.dao.hibernatedimpl.DAOVaccinatorIncentiveTransaction
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOVaccinatorIncentiveWorkProgressImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOVaccineImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOVariableSettingImpl;
+import org.ird.unfepi.model.dao.hibernatedimpl.DAOWomenImpl;
 import org.ird.unfepi.service.ChildService;
 import org.ird.unfepi.service.CommunicationService;
 import org.ird.unfepi.service.CustomQueryService;
@@ -105,6 +106,7 @@ import org.ird.unfepi.service.StorekeeperService;
 import org.ird.unfepi.service.UserService;
 import org.ird.unfepi.service.UserSmsService;
 import org.ird.unfepi.service.VaccinationService;
+import org.ird.unfepi.service.WomenService;
 import org.ird.unfepi.service.impl.ChildServiceImpl;
 import org.ird.unfepi.service.impl.CommunicationServiceImpl;
 import org.ird.unfepi.service.impl.CustomQueryServiceImpl;
@@ -119,6 +121,7 @@ import org.ird.unfepi.service.impl.StorekeeperServiceImpl;
 import org.ird.unfepi.service.impl.UserServiceImpl;
 import org.ird.unfepi.service.impl.UserSmsServiceImpl;
 import org.ird.unfepi.service.impl.VaccinationServiceImpl;
+import org.ird.unfepi.service.impl.WomenServiceImpl;
 
 public class ServiceContext {
 
@@ -157,6 +160,8 @@ public class ServiceContext {
 	private UserSmsService userSmsService;
 
 	private VaccinationService vaccinationService;
+	
+	private WomenService womenService;
 
 	ServiceContext(SessionFactory sessionObj) 
 	{
@@ -175,6 +180,9 @@ public class ServiceContext {
 		DAOScreening scrdao = new DAOScreeningImpl(session);
 		DAOLotterySms daolotsms = new DAOLotterySmsImpl(session);
 		this.childService = new ChildServiceImpl(this, chldoa, scrdao, daolotsms);
+		
+		DAOWomenImpl womendao = new DAOWomenImpl(session);
+		this.womenService = new WomenServiceImpl(this,womendao);
 
 		DAODirectQuery dirqudao = new DAODirectQueryImpl(session);
 		DAO dao = new DAOHibernateImpl(session);
@@ -372,4 +380,10 @@ public class ServiceContext {
 		//if(!session.getTransaction().isActive()) beginTransaction();
 		return vaccinationService;
 	}
+
+	public WomenService getWomenService() {
+		return womenService;
+	}
+	
+	
 }

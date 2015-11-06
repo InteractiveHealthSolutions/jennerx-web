@@ -88,7 +88,7 @@ public class DAOVaccinatorImpl extends DAOHibernateImpl implements DAOVaccinator
 	public List<Vaccinator> getAll(int firstResult, int fetchsize, boolean readonly, String[] mappingsToJoin) {
 		Criteria cri = session.createCriteria(Vaccinator.class)
 				.setReadOnly(readonly)
-				.createAlias("idMapper.identifiers", "idm");
+				.setFetchMode("idMapper",FetchMode.JOIN ).createAlias("idMapper.identifiers", "idm");
 				
 		setLAST_QUERY_TOTAL_ROW_COUNT((Number) cri.setProjection(Projections.rowCount()).uniqueResult());
 		cri.setProjection(null).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);

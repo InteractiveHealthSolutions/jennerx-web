@@ -75,13 +75,16 @@ public class Vaccination implements java.io.Serializable {
     /*@Column(columnDefinition = "INT NOT NULL AUTO_INCREMENT")*/
 	private int	vaccinationRecordNum;
 	
-	private Integer childId;
+	//private Integer childId;
+	
+	private Integer mapperId;
 	
 	/** The child. */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "childId", insertable = false, updatable = false)
 	@ForeignKey(name = "vaccination_childId_child_mappedId_FK")
-	private Child	child;
+	//private Child	child;
+	private IdMapper mapper;
 	
 	private Short vaccineId;
 	
@@ -225,12 +228,20 @@ public class Vaccination implements java.io.Serializable {
 		this.vaccinationRecordNum = vaccinationRecordNum;
 	}
 
+	public Integer getMapperId() {
+		return mapperId;
+	}
+
+	public void setMapperId(Integer mapperId) {
+		this.mapperId = mapperId;
+	}
+
 	/**
 	 * Gets the child.
 	 *
 	 * @return the child
 	 */
-	public Child getChild() {
+	/*public Child getChild() {
 		return child;
 	}
 
@@ -239,17 +250,17 @@ public class Vaccination implements java.io.Serializable {
 	 *
 	 * @param child the new child
 	 */
-	void setChild(Child child) {
+	/*void setChild(Child child) {
 		this.child = child;
-	}
+	}*/
 
-	public Integer getChildId() {
+	/*public Integer getChildId() {
 		return childId;
 	}
 
 	public void setChildId(Integer childId) {
 		this.childId = childId;
-	}
+	}*/
 
 	public Short getVaccineId() {
 		return vaccineId;
