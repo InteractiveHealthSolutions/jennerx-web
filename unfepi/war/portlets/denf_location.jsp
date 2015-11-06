@@ -42,8 +42,8 @@ function treeDataLoaderLocations(parentId){
 		<td>Location Type :<span class="mendatory-field">*</span></td>
 		<td><spring:bind path="command.locationType">
 			<select id="locationType" name="locationType" bind-value="${status.value}">
-				<c:forEach items="locationTypes" var="locationType_value"  >
-					<option>${locationType_value}</option>
+				<c:forEach items="${locationTypes}" var="locationType_value"  >
+					<option>${locationType_value.typeName}</option>
 				</c:forEach>
 			</select>
 			<br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
