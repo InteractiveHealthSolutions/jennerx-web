@@ -29,9 +29,11 @@ import org.ird.unfepi.model.Vaccination;
 import org.ird.unfepi.model.VaccinationCenter;
 import org.ird.unfepi.model.Vaccinator;
 import org.ird.unfepi.model.Vaccine;
+import org.ird.unfepi.model.Women;
 import org.ird.unfepi.web.utils.VaccinationCenterVisit;
 import org.ird.unfepi.web.utils.VaccineSchedule;
 import org.ird.unfepi.web.utils.VaccineSchedule.VaccineStatusType;
+import org.ird.unfepi.web.utils.WomenVaccinationCenterVisit;
 
 import com.mysql.jdbc.StringUtils;
 
@@ -62,6 +64,10 @@ public class EncounterUtil {
 		CHILD_NAMED,
 		FOLLOWUP_STATUS,
 		REMINDERS_APPROVED
+	}
+	
+	public enum ElementWomen {
+		FOLLOWUP_STATUS
 	}
 	
 	public enum ElementStorekeeper {
@@ -219,6 +225,41 @@ public class EncounterUtil {
 		encr.add(createEncounterResult(e, ElementContact.SECONDARY_CONTACT_NUMBER, centerVisit.getContactSecondary(), null, null));
 		
 		populateVaccinationEncounter(e, encr, centerVisit, vaccineSchedule, sc);
+		
+	//	populateLotteryEncounter(e, encr, lotteryRes, null);
+	
+		saveEncounterResults(encr, sc);
+	}
+	
+	public static void createWomenEnrollmentEncounter(IdMapper womenId, DataEntrySource dataEntrySource, String projectId,  Women women, 
+			String birthdateOrAge, String ageYears, String ageMonths, String ageWeeks, String ageDays, Address address, 
+			WomenVaccinationCenterVisit centerVisit,	Date formStartDate, User dataEntryUser, ServiceContext sc)
+	{
+		Encounter e = saveEncounter(womenId.getMappedId(), centerVisit.getVaccinatorId(), centerVisit.getVaccinationCenterId(), women.getDateEnrolled(), formStartDate, null, dataEntryUser.getMappedId(), EncounterType.ENROLLMENT, dataEntrySource, sc);
+
+		List<EncounterResults> encr = new ArrayList<EncounterResults>();
+		
+		encr.add(createEncounterResult(e, ElementGeneral.PROJECT_ID, projectId, null, null));
+		
+		encr.add(createEncounterResult(e, ElementGeneral.FIRST_NAME, women.getFirstName(), null, null));
+		encr.add(createEncounterResult(e, ElementGeneral.LAST_NAME, women.getLastName(), null, null));
+		encr.add(createEncounterResult(e, ElementGeneral.FATHER_FIRST_NAME, women.getFatherFirstName(), null, null));
+		encr.add(createEncounterResult(e, ElementGeneral.FATHER_LAST_NAME, women.getFatherLastName(), null, null));
+		encr.add(createEncounterResult(e, ElementChild.FOLLOWUP_STATUS, women.getStatus(), null, null));
+		encr.add(createEncounterResult(e, ElementGeneral.BIRTHDATE_OR_AGE, birthdateOrAge, null, null));
+		encr.add(createEncounterResult(e, ElementGeneral.BIRTHDATE, WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.format(women.getBirthdate()), null, null));
+		encr.add(createEncounterResult(e, ElementGeneral.BIRTHDATE_ESTIMATED, women.getEstimatedBirthdate(), null, null));
+		encr.add(createEncounterResult(e, ElementGeneral.AGE_YEARS, ageYears, null, null));
+		encr.add(createEncounterResult(e, ElementGeneral.AGE_MONTHS, ageMonths, null, null));
+		encr.add(createEncounterResult(e, ElementGeneral.AGE_WEEKS, ageWeeks, null, null));
+		encr.add(createEncounterResult(e, ElementGeneral.AGE_DAYS, ageDays, null, null));
+
+		populateAddressEncounters(e, encr, address, sc);
+		
+		encr.add(createEncounterResult(e, ElementContact.PRIMARY_CONTACT_NUMBER, centerVisit.getContactPrimary(), null, null));
+		encr.add(createEncounterResult(e, ElementContact.SECONDARY_CONTACT_NUMBER, centerVisit.getContactSecondary(), null, null));
+		
+		populateWomenVaccinationEncounter(e, encr, centerVisit, sc);
 		
 	//	populateLotteryEncounter(e, encr, lotteryRes, null);
 	
@@ -560,6 +601,15 @@ public class EncounterUtil {
 			}
 		}
 	}
+	
+	private static void populateWomenVaccinationEncounter(Encounter e , List<EncounterResults> encr, WomenVaccinationCenterVisit centerVisit,  ServiceContext sc)
+	{
+		encr.add(createEncounterResult(e, ElementVaccination.EPI_NUMBER, centerVisit.getEpiNumber(), null, null));
+		encr.add(createEncounterResult(e, ElementVaccination.VISIT_DATE, WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.format(centerVisit.getVisitDate()), null, null));
+		encr.add(createEncounterResult(e, ElementVaccination.VACCINATION_CENTER, centerVisit.getVaccinationCenterId(), null, null));
+		encr.add(createEncounterResult(e, ElementVaccination.VACCINATION_CENTER_ID, sc.getVaccinationService().findVaccinationCenterById(centerVisit.getVaccinationCenterId(), true, new String[]{"idMapper"}).getIdMapper().getIdentifiers().get(0).getIdentifier(), null, null));
+	}
+	
 	public static String getEncounterElementName(String variablePrefix, Enum elementName){
 		return variablePrefix+"_"+elementName;
 	}

@@ -20,8 +20,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.ForeignKey;
-import org.ird.unfepi.model.Vaccination.TimelinessStatus;
-import org.ird.unfepi.model.Vaccination.VACCINATION_STATUS;
 
 /**
  * @author Safwan
@@ -42,13 +40,19 @@ public class WomenVaccination implements java.io.Serializable {
 		UNKNOWN
 	}
 	
-	public enum VACCINATION_STATUS{
+	public enum WOMEN_VACCINATION_STATUS{
 		
 		PENDING("PND"),
 		
-		VACCINATED("VACC"),
+		VACCINATED("VACCINATED"),
 		
 		NOT_VACCINATED("NVAC"),
+		
+		SCHEDULED("SCHEDULED"),
+		
+		RETRO("RETRO"),
+		
+		RETRO_NO_DATE("RETRO (date missing)"),
 		
 		/**
 		 * Entry might be a result of unfilled form, or incomplete process that partially filled the table data
@@ -66,12 +70,12 @@ public class WomenVaccination implements java.io.Serializable {
 			return REPRESENTATION;
 		}
 
-		private VACCINATION_STATUS(String representation) {
+		private WOMEN_VACCINATION_STATUS(String representation) {
 			this.REPRESENTATION = representation;
 		}
 		
-		public static VACCINATION_STATUS findEnum(String representationString){
-			for (VACCINATION_STATUS en : VACCINATION_STATUS.values()) {
+		public static WOMEN_VACCINATION_STATUS findEnum(String representationString){
+			for (WOMEN_VACCINATION_STATUS en : WOMEN_VACCINATION_STATUS.values()) {
 				if(en.REPRESENTATION.equalsIgnoreCase(representationString)){
 					return en;
 				}
@@ -85,9 +89,9 @@ public class WomenVaccination implements java.io.Serializable {
     /*@Column(columnDefinition = "INT NOT NULL AUTO_INCREMENT")*/
 	private int	vaccinationRecordNum;
 	
-	//private Integer womenId;
+	private Integer womenId;
 	
-	private Integer mapperId;
+	//private Integer mapperId;
 	
 	/** The women. */
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -106,7 +110,7 @@ public class WomenVaccination implements java.io.Serializable {
 	
 	
 
-	private Boolean hasApprovedLottery;
+	//private Boolean hasApprovedLottery;
 	
 	private Integer vaccinationCenterId;
 	
@@ -133,8 +137,8 @@ public class WomenVaccination implements java.io.Serializable {
 	private Date	vaccinationDate;
 	
 	/** The vaccination duedate. */
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date	vaccinationDuedate;
+	/*@Temporal(TemporalType.TIMESTAMP)
+	private Date	vaccinationDuedate;*/
 	
 	private Boolean isVaccinationCenterChanged;
 	
@@ -145,7 +149,7 @@ public class WomenVaccination implements java.io.Serializable {
 	private TimelinessStatus timelinessStatus;
 	
 	
-	private String preferredReminderTiming;
+	//private String preferredReminderTiming;
 	/** The weight. */
 	private Float weight;
 	
@@ -158,7 +162,7 @@ public class WomenVaccination implements java.io.Serializable {
 	/** The vaccination status. */
 	@Enumerated(EnumType.STRING)
 	@Column(length = 20)
-	private VACCINATION_STATUS	vaccinationStatus;
+	private WOMEN_VACCINATION_STATUS	vaccinationStatus;
 	
 	/** The reason not timely vaccination. */
 	private String	reasonNotTimelyVaccination;
@@ -217,13 +221,21 @@ public class WomenVaccination implements java.io.Serializable {
 		this.vaccinationRecordNum = vaccinationRecordNum;
 	}
 
-	public Integer getMapperId() {
+	public Integer getWomenId() {
+		return womenId;
+	}
+
+	public void setWomenId(Integer womenId) {
+		this.womenId = womenId;
+	}
+
+	/*public Integer getMapperId() {
 		return mapperId;
 	}
 
 	public void setMapperId(Integer mapperId) {
 		this.mapperId = mapperId;
-	}
+	}*/
 
 	/**
 	 * Gets the women.
@@ -287,13 +299,13 @@ public class WomenVaccination implements java.io.Serializable {
 
 	
 
-	public Boolean getHasApprovedLottery() {
+	/*public Boolean getHasApprovedLottery() {
 		return hasApprovedLottery;
 	}
 
 	public void setHasApprovedLottery(Boolean hasApprovedLottery) {
 		this.hasApprovedLottery = hasApprovedLottery;
-	}
+	}*/
 
 	public VaccinationCenter getVaccinationCenter() {
 		return vaccinationCenter;
@@ -327,13 +339,13 @@ public class WomenVaccination implements java.io.Serializable {
 		this.vaccinationDate = vaccinationDate;
 	}
 
-	public Date getVaccinationDuedate() {
+	/*public Date getVaccinationDuedate() {
 		return vaccinationDuedate;
 	}
 
 	public void setVaccinationDuedate(Date vaccinationDuedate) {
 		this.vaccinationDuedate = vaccinationDuedate;
-	}
+	}*/
 
 	public Boolean getIsVaccinationCenterChanged() {
 		return isVaccinationCenterChanged;
@@ -371,13 +383,13 @@ public class WomenVaccination implements java.io.Serializable {
 
 	
 
-	public String getPreferredReminderTiming() {
+	/*public String getPreferredReminderTiming() {
 		return preferredReminderTiming;
 	}
 
 	public void setPreferredReminderTiming(String preferredReminderTiming) {
 		this.preferredReminderTiming = preferredReminderTiming;
-	}
+	}*/
 
 	/**
 	 * Gets the weight.
@@ -440,7 +452,7 @@ public class WomenVaccination implements java.io.Serializable {
 	 *
 	 * @return the vaccination status
 	 */
-	public VACCINATION_STATUS getVaccinationStatus() {
+	public WOMEN_VACCINATION_STATUS getVaccinationStatus() {
 		return vaccinationStatus;
 	}
 
@@ -449,7 +461,7 @@ public class WomenVaccination implements java.io.Serializable {
 	 *
 	 * @param vaccinationStatus the new vaccination status
 	 */
-	public void setVaccinationStatus(VACCINATION_STATUS vaccinationStatus) {
+	public void setVaccinationStatus(WOMEN_VACCINATION_STATUS vaccinationStatus) {
 		this.vaccinationStatus = vaccinationStatus;
 	}
 

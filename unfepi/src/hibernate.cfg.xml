@@ -87,6 +87,7 @@
 		<mapping class="org.ird.unfepi.model.VaccinePrerequisite" />
 		<mapping class="org.ird.unfepi.model.VariableSetting" />
 		<mapping class="org.ird.unfepi.model.Women" />
+		<mapping class="org.ird.unfepi.model.WomenVaccination"/>
 		
     </session-factory>
 </hibernate-configuration>

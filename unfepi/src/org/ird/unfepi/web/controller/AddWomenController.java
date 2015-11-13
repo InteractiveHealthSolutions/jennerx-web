@@ -3,6 +3,7 @@
  */
 package org.ird.unfepi.web.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,12 +18,12 @@ import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.LoggedInUser;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Address;
-import org.ird.unfepi.model.Vaccine;
-import org.ird.unfepi.model.Women;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
+import org.ird.unfepi.model.VaccinationStatusDate;
+import org.ird.unfepi.model.Women;
+import org.ird.unfepi.model.WomenVaccination;
 import org.ird.unfepi.utils.UserSessionUtils;
 import org.ird.unfepi.web.utils.ControllerUIHelper;
-import org.ird.unfepi.web.utils.VaccinationCenterVisit;
 import org.ird.unfepi.web.utils.WomenVaccinationCenterVisit;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
@@ -49,12 +50,49 @@ public class AddWomenController extends DataEntryFormController {
 		Address addr = ewr.getAddress();
 		String projectId = ewr.getProjectId();
 		ServiceContext sc = Context.getServices();
-		String vaccine = request.getParameter("shortName");
+		//String vaccine = request.getParameter("shortName");
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+		Date tt1Date = request.getParameter("tt1Date").isEmpty() ? null : formatter.parse(request.getParameter("tt1Date"));
+		Date tt2Date = request.getParameter("tt2Date").isEmpty() ? null : formatter.parse(request.getParameter("tt2Date"));
+		Date tt3Date = request.getParameter("tt3Date").isEmpty() ? null : formatter.parse(request.getParameter("tt3Date"));
+		Date tt4Date = request.getParameter("tt4Date").isEmpty() ? null : formatter.parse(request.getParameter("tt4Date"));
+		Date tt5Date = request.getParameter("tt5Date").isEmpty() ? null : formatter.parse(request.getParameter("tt5Date"));
+		/*
+		String tt1Status = request.getParameter("tt1Status");
+		String tt2Status = request.getParameter("tt2Status");
+		String tt3Status = request.getParameter("tt3Status");
+		String tt4Status = request.getParameter("tt4Status");
+		String tt5Status = request.getParameter("tt5Status");*/
+
+		/*
+		HashMap<String,hh> vaccines=new HashMap<String,hh>();
+		vaccines.put("TT1", new hh());
+		vaccines.put("TT2", request.getParameter("tt2Status"));
+		vaccines.put("TT3", request.getParameter("tt3Status"));
+		vaccines.put("TT4", request.getParameter("tt4Status"));
+		vaccines.put("TT5", request.getParameter("tt5Status"));
+		*/
 		
-		
+		HashMap<String,VaccinationStatusDate> vaccines = new HashMap<String,VaccinationStatusDate>();
+		vaccines.put("TT1", new VaccinationStatusDate(request.getParameter("tt1Status"), tt1Date));
+		vaccines.put("TT2", new VaccinationStatusDate(request.getParameter("tt2Status"), tt2Date));
+		vaccines.put("TT3", new VaccinationStatusDate(request.getParameter("tt3Status"), tt3Date));
+		vaccines.put("TT4", new VaccinationStatusDate(request.getParameter("tt4Status"), tt4Date));
+		vaccines.put("TT5", new VaccinationStatusDate(request.getParameter("tt5Status"), tt5Date));
+		String enrollmentVaccine = "";
+		Date enrollmentDate = null;
+	
+		for (String s : vaccines.keySet()) {
+			if(vaccines.get(s).getName().equalsIgnoreCase(WomenVaccination.WOMEN_VACCINATION_STATUS.VACCINATED.toString()))
+			{
+				enrollmentVaccine = s;
+				enrollmentDate = vaccines.get(s).getDate();
+			}
+
+		}
 		ControllerUIHelper.doWomenEnrollment(DataEntrySource.WEB, projectId, women, 
 				ewr.getBirthdateOrAge(), ewr.getwomenagey(), ewr.getwomenagem(), ewr.getwomenagew(), ewr.getwomenaged(), 
-				addr, centerVisit, dateFormStart, user.getUser(), vaccine, sc);
+				addr, centerVisit, dateFormStart, user.getUser(), enrollmentVaccine, enrollmentDate, vaccines, sc);
 		
 		
 		sc.commitTransaction();

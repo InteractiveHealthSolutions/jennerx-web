@@ -3,6 +3,8 @@
  */
 package org.ird.unfepi.service.impl;
 
+import java.io.Serializable;
+
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.CalendarDay;
 import org.ird.unfepi.model.Vaccination;
@@ -10,12 +12,15 @@ import org.ird.unfepi.model.VaccinationCenter;
 import org.ird.unfepi.model.VaccinationCenterVaccineDay;
 import org.ird.unfepi.model.Vaccinator;
 import org.ird.unfepi.model.Vaccine;
+import org.ird.unfepi.model.Women;
+import org.ird.unfepi.model.WomenVaccination;
 import org.ird.unfepi.model.dao.DAOCalendarDay;
 import org.ird.unfepi.model.dao.DAOVaccination;
 import org.ird.unfepi.model.dao.DAOVaccinationCenter;
 import org.ird.unfepi.model.dao.DAOVaccinationCenterVaccineDay;
 import org.ird.unfepi.model.dao.DAOVaccinator;
 import org.ird.unfepi.model.dao.DAOVaccine;
+import org.ird.unfepi.model.dao.DAOWomenVaccination;
 import org.ird.unfepi.service.WomenVaccinationService;
 
 /**
@@ -27,7 +32,7 @@ public class WomenVaccinationServiceImpl implements WomenVaccinationService {
 	private ServiceContext sc;
 	private DAOVaccine daovacc;
 	
-	private DAOVaccination daoptvaccination;
+	private DAOWomenVaccination daowomenvaccination;
 	
 	private DAOVaccinationCenter daovacccenter;
 	
@@ -37,11 +42,11 @@ public class WomenVaccinationServiceImpl implements WomenVaccinationService {
 	
 	private DAOVaccinationCenterVaccineDay daovaccday;
 	
-	public WomenVaccinationServiceImpl(ServiceContext sc, DAOVaccine daovacc, DAOVaccination daoptvaccination
+	public WomenVaccinationServiceImpl(ServiceContext sc, DAOVaccine daovacc, DAOWomenVaccination daowomenvaccination
 			, DAOVaccinationCenter daovacccenter, DAOVaccinator daovaccinator, DAOCalendarDay daocalendar, DAOVaccinationCenterVaccineDay daovaccday) {
 		this.sc = sc;
 		this.daovacc=daovacc;
-		this.daoptvaccination=daoptvaccination;
+		this.daowomenvaccination=daowomenvaccination;
 		this.daovacccenter = daovacccenter;
 		this.daovaccinator = daovaccinator;
 		this.daocalendar = daocalendar;
@@ -53,7 +58,7 @@ public class WomenVaccinationServiceImpl implements WomenVaccinationService {
 			return daovacc.LAST_QUERY_TOTAL_ROW_COUNT();
 		}
 		else if(clazz == Vaccination.class){
-			return daoptvaccination.LAST_QUERY_TOTAL_ROW_COUNT();
+			return daowomenvaccination.LAST_QUERY_TOTAL_ROW_COUNT();
 		}
 		else if(clazz == VaccinationCenter.class){
 			return daovacccenter.LAST_QUERY_TOTAL_ROW_COUNT();
@@ -75,6 +80,11 @@ public class WomenVaccinationServiceImpl implements WomenVaccinationService {
 	public Vaccine findVaccineById(short id) {
 		Vaccine obj = daovacc.findById(id);
 		return obj;
+	}
+
+	@Override
+	public Serializable save(WomenVaccination womenVaccination) {
+		return daowomenvaccination.save(womenVaccination);
 	}
 
 }

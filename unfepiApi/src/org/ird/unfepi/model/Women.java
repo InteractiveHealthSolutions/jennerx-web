@@ -21,7 +21,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.ForeignKey;
-import org.ird.unfepi.model.Child.STATUS;
+import org.ird.unfepi.model.Women.WOMENSTATUS;
 import org.ird.unfepi.model.Model.Gender;
 import org.ird.unfepi.utils.date.DateUtils;
 import org.ird.unfepi.utils.date.DateUtils.TIME_INTERVAL;
@@ -190,7 +190,7 @@ public enum WOMENSTATUS {
 	
 	@Enumerated(EnumType.STRING)
 	@Column(length = 20)
-	private STATUS	status;
+	private WOMENSTATUS	status;
 	
 	private Short enrollmentVaccineId;
 	
@@ -725,7 +725,7 @@ public enum WOMENSTATUS {
 	 *
 	 * @return the status
 	 */
-	public STATUS getStatus() {
+	public WOMENSTATUS getStatus() {
 		return status;
 	}
 	
@@ -734,7 +734,7 @@ public enum WOMENSTATUS {
 	 *
 	 * @param status the new status
 	 */
-	public void setStatus(STATUS status) {
+	public void setStatus(WOMENSTATUS status) {
 		this.status = status;
 	}
 	

@@ -60,4 +60,9 @@ public class DAOWomenVaccinationImpl extends DAOHibernateImpl implements
 		this.LAST_QUERY_TOTAL_ROW_COUNT = LAST_QUERY_TOTAL_ROW_COUNT;
 	}
 
+	@Override
+	public Number LAST_QUERY_TOTAL_ROW_COUNT() {
+		return LAST_QUERY_TOTAL_ROW_COUNT;
+	}
+
 }
