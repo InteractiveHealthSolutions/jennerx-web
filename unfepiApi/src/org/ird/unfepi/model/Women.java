@@ -48,6 +48,8 @@ public enum WOMENSTATUS {
 		/** Unresponsive. */
 		UNRESPONSIVE("UNRES"),
 		
+		ENROLLMENT("ENROLLMENT"),
+		
 		UNENROLLED("UNENR");
 		
 		/** The REPRESENTATION. */

@@ -285,6 +285,7 @@ public class ServiceContext {
 	}
 	
 	public void commitTransaction(){
+		// session.flush();
 		transaction.commit();
 	}
 	

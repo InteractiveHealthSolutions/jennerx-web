@@ -57,21 +57,6 @@ public class AddWomenController extends DataEntryFormController {
 		Date tt3Date = request.getParameter("tt3Date").isEmpty() ? null : formatter.parse(request.getParameter("tt3Date"));
 		Date tt4Date = request.getParameter("tt4Date").isEmpty() ? null : formatter.parse(request.getParameter("tt4Date"));
 		Date tt5Date = request.getParameter("tt5Date").isEmpty() ? null : formatter.parse(request.getParameter("tt5Date"));
-		/*
-		String tt1Status = request.getParameter("tt1Status");
-		String tt2Status = request.getParameter("tt2Status");
-		String tt3Status = request.getParameter("tt3Status");
-		String tt4Status = request.getParameter("tt4Status");
-		String tt5Status = request.getParameter("tt5Status");*/
-
-		/*
-		HashMap<String,hh> vaccines=new HashMap<String,hh>();
-		vaccines.put("TT1", new hh());
-		vaccines.put("TT2", request.getParameter("tt2Status"));
-		vaccines.put("TT3", request.getParameter("tt3Status"));
-		vaccines.put("TT4", request.getParameter("tt4Status"));
-		vaccines.put("TT5", request.getParameter("tt5Status"));
-		*/
 		
 		HashMap<String,VaccinationStatusDate> vaccines = new HashMap<String,VaccinationStatusDate>();
 		vaccines.put("TT1", new VaccinationStatusDate(request.getParameter("tt1Status"), tt1Date));

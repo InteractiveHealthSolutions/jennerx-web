@@ -13,9 +13,13 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.ird.unfepi.GlobalParams;
 import org.ird.unfepi.beans.EnrollmentWrapper;
 import org.ird.unfepi.constants.WebGlobals;
+import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Address;
 import org.ird.unfepi.model.CalendarDay;
@@ -213,7 +217,7 @@ public class ControllerUIHelper {
 		
 		handleWomenEnrollmentContactInfo(centerVisit.getContactPrimary(), centerVisit.getContactSecondary(), address, women, user, sc);
 		
-	//	EncounterUtil.createWomenEnrollmentEncounter(womenId, dataEntrySource, projectId, women, birthdateOrAge, ageYears, ageMonths, ageWeeks, ageDays, address, centerVisit, formStartDate, user, sc);
+		//EncounterUtil.createWomenEnrollmentEncounter(womenId, dataEntrySource, projectId, women, birthdateOrAge, ageYears, ageMonths, ageWeeks, ageDays, address, centerVisit, formStartDate, user, sc);
 		
 		handleWomenVaccination(sc, women, centerVisit, user, enrollmentVaccine, vaccines);
 		
@@ -234,27 +238,14 @@ public class ControllerUIHelper {
 	
 	public static void handleWomenVaccination(ServiceContext sc, Women women, WomenVaccinationCenterVisit centerVisit, User user, String enrollmentVaccine, HashMap <String,VaccinationStatusDate> vaccines){
 		
-		/*IdMapper idMapper = new IdMapper();
-		idMapper.setRoleId(sc.getUserService().getRole("women", false, null).getRoleId());
-		idMapper.setMappedId(Integer.parseInt(sc.getIdMapperService().saveIdMapper(idMapper).toString()));
-
-		Identifier ident = new Identifier();
-		ident.setIdentifierType((IdentifierType)sc.getCustomQueryService().getDataByHQL("FROM IdentifierType WHERE name ='"+GlobalParams.IdentifierType.WOMEN_PROJECT_ID+"'").get(0));
-		ident.setPreferred(true);
-		ident.setIdMapper(idMapper);
-		sc.getCustomQueryService().save(ident);*/
-		
-		WomenVaccination wv = new WomenVaccination();
-		
 		for(String s : vaccines.keySet()){
-			if(vaccines.get(s).getName() == ""){
-				continue;
-			} else {
+			WomenVaccination wv = new WomenVaccination();
+			if(vaccines.get(s).getName() != ""){
 				wv.setWomenId(women.getMappedId());
 				wv.setVaccinationCenterId(centerVisit.getVaccinationCenterId());
 				wv.setCreator(user);
 				wv.setVaccinatorId(centerVisit.getVaccinatorId());
-				wv.setVaccineId(sc.getVaccinationService().getByName(enrollmentVaccine).getVaccineId());
+				
 				wv.setVaccinationDate(women.getDateEnrolled());
 				if(vaccines.get(s).getName().equalsIgnoreCase(WOMEN_VACCINATION_STATUS.SCHEDULED.toString())){
 					wv.setNextAssignedDate(vaccines.get(s).getDate());
@@ -264,12 +255,14 @@ public class ControllerUIHelper {
 				// For now the logic is that the first vaccination from the centre is kept as first vaccination
 				if(vaccines.get(s).getName().equalsIgnoreCase(WOMEN_VACCINATION_STATUS.VACCINATED.toString())){
 					wv.setIsFirstVaccination(true);
+					wv.setVaccineId(sc.getVaccinationService().getByName(enrollmentVaccine).getVaccineId());
+				} else {
+					wv.setVaccineId(sc.getVaccinationService().getByName(s).getVaccineId());
+					wv.setIsFirstVaccination(false);
 				}
-				String name = vaccines.get(s).getName();
-				WOMEN_VACCINATION_STATUS wva = WOMEN_VACCINATION_STATUS.findEnum(vaccines.get(s).getName());
 				wv.setVaccinationStatus((WOMEN_VACCINATION_STATUS.findEnum(vaccines.get(s).getName())));
 				sc.getWomenVaccinationService().save(wv);
-			}
+			} 
 		}
 	}
 	
@@ -733,7 +726,7 @@ public class ControllerUIHelper {
 
 		women.setCreator(user);
 		women.setMappedId(idMapper.getMappedId());
-		women.setStatus(Women.WOMENSTATUS.FOLLOW_UP);
+		women.setStatus(Women.WOMENSTATUS.ENROLLMENT);
 		//women.setMappedId(idMapper.getMappedId());		
 		women.setEnrollmentVaccineId(sc.getVaccinationService().getByName(enrollmentVaccine).getVaccineId());
 		sc.getWomenService().save(women);

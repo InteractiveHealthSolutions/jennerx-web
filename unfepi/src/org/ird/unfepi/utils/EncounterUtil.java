@@ -245,7 +245,7 @@ public class EncounterUtil {
 		encr.add(createEncounterResult(e, ElementGeneral.LAST_NAME, women.getLastName(), null, null));
 		encr.add(createEncounterResult(e, ElementGeneral.FATHER_FIRST_NAME, women.getFatherFirstName(), null, null));
 		encr.add(createEncounterResult(e, ElementGeneral.FATHER_LAST_NAME, women.getFatherLastName(), null, null));
-		encr.add(createEncounterResult(e, ElementChild.FOLLOWUP_STATUS, women.getStatus(), null, null));
+		encr.add(createEncounterResult(e, ElementWomen.FOLLOWUP_STATUS, women.getStatus(), null, null));
 		encr.add(createEncounterResult(e, ElementGeneral.BIRTHDATE_OR_AGE, birthdateOrAge, null, null));
 		encr.add(createEncounterResult(e, ElementGeneral.BIRTHDATE, WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.format(women.getBirthdate()), null, null));
 		encr.add(createEncounterResult(e, ElementGeneral.BIRTHDATE_ESTIMATED, women.getEstimatedBirthdate(), null, null));
