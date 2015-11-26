@@ -41,7 +41,7 @@
  	 	<mapping class="org.ird.unfepi.model.Address" />
  		<mapping class="org.ird.unfepi.model.CalendarDay" />
  		<mapping class="org.ird.unfepi.model.Child" />
- 		<mapping class="org.ird.unfepi.model.ChildLottery" />
+ 		<mapping class="org.ird.unfepi.model.ChildIncentive" />
  		<mapping class="org.ird.unfepi.model.ChildLotteryParams" />
 		<mapping class="org.ird.unfepi.model.City" />
 		<mapping class="org.ird.unfepi.model.CommunicationNote" />
@@ -91,6 +91,10 @@
 		<mapping class="org.ird.unfepi.model.VaccineGapType" />
 		<mapping class="org.ird.unfepi.model.VaccinePrerequisite" />
 		<mapping class="org.ird.unfepi.model.VariableSetting" />
+		
+		<mapping class="org.ird.unfepi.model.Arm"/>
+		<mapping class="org.ird.unfepi.model.IncentiveParams"/>
+		<mapping class="org.ird.unfepi.model.VaccinatorIncentive"/>
 		
     </session-factory>
 </hibernate-configuration>

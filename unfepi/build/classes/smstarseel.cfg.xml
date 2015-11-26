@@ -6,11 +6,11 @@
     
 	<session-factory>
 		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-		<property name="hibernate.connection.password">epiLinux</property>
+		<property name="hibernate.connection.password">123456</property>
 		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/smstarseel</property>
 		<property name="hibernate.connection.username">root</property>
 		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-		<property name="hibernate.hbm2ddl.auto">update</property>
+		<!-- <property name="hibernate.hbm2ddl.auto">update</property> -->
 
 <property name="hibernate.connection.useUnicode">true</property>
 <property name="hibernate.connection.characterEncoding">UTF-8</property>
@@ -32,15 +32,5 @@
 		<property name="hibernate.c3p0.timeout">120</property>
 		<property name="hibernate.c3p0.acquireRetryAttempts">3</property>
 		<property name="hibernate.c3p0.max_statements">50</property>
-
-		<mapping class="org.irdresearch.smstarseel.data.CallLog" />
-		<mapping class="org.irdresearch.smstarseel.data.Device" />
-		<mapping class="org.irdresearch.smstarseel.data.InboundMessage" />
-		<mapping class="org.irdresearch.smstarseel.data.Setting" />
-		<mapping class="org.irdresearch.smstarseel.data.OutboundMessage" />
-		<mapping class="org.irdresearch.smstarseel.data.Permission" />
-		<mapping class="org.irdresearch.smstarseel.data.Project" />
-		<mapping class="org.irdresearch.smstarseel.data.Role" />
-		<mapping class="org.irdresearch.smstarseel.data.User" />
 	</session-factory>
 </hibernate-configuration>

@@ -18,9 +18,8 @@ import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.LoggedInUser;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Child;
-import org.ird.unfepi.model.ChildLottery;
+import org.ird.unfepi.model.ChildIncentive;
 import org.ird.unfepi.model.ReminderSms;
-import org.ird.unfepi.model.ChildLottery.CodeStatus;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
 import org.ird.unfepi.model.Vaccination.VACCINATION_STATUS;
 import org.ird.unfepi.utils.EncounterUtil;
@@ -128,38 +127,38 @@ public class DWRChildService {
 				return "ERROR: No child found with given ID";
 			}
 			
-			List<ChildLottery> chll = sc.getIncentiveService().findChildLotteryByCriteria(verificationCode, ch.getMappedId(), null, true, null, null, null, null, null, null, null, null, null, null, null, 0, 2, false, new String[]{"vaccination"});
+			List<ChildIncentive> listChildIncentive = sc.getIncentiveService().findChildIncentiveByCriteria(/*verificationCode,*/ ch.getMappedId(), null, true, null, null, null, null, /*null, null, null, null,*/ null, null, null, 0, 2, false, new String[]{"vaccination"});
 
-			if(chll.size() == 0){
+			if(listChildIncentive.size() == 0){
 				return "ERROR: No winning found for given ID and code.";
 			}
-			else if(chll.size() > 1){
+			else if(listChildIncentive.size() > 1){
 				return "ERROR: Multiple winnings found for given ID and code.";
 			}
 			
-			ChildLottery chl = chll.get(0);
-			if(chl.getAmount().intValue() != amount){
+			ChildIncentive childIncentive = listChildIncentive.get(0);
+			if(childIncentive.getAmount().intValue() != amount){
 				return "ERROR: Given amount not conform with actual winning for given ID and code.";
 			}
-			else if(!chl.getCodeStatus().equals(CodeStatus.AVAILABLE)){
-				return "ERROR: Given winning is "+chl.getCodeStatus()+".";
-			}
+			/*else if(!childIncentive.getCodeStatus().equals(CodeStatus.AVAILABLE)){
+				return "ERROR: Given winning is "+childIncentive.getCodeStatus()+".";
+			}*/
 			
-			if(!chl.getVaccination().getVaccinationStatus().equals(VACCINATION_STATUS.VACCINATED)){
+			if(!childIncentive.getVaccination().getVaccinationStatus().equals(VACCINATION_STATUS.VACCINATED)){
 				return "ERROR: No record found VACCINATED for given ID and lottery vaccine.";
 			}
 			
-			chl.setCodeStatus(CodeStatus.CONSUMED);
-			chl.setEditor(user.getUser());
-			chl.setConsumptionDate(new Date());
-			chl.setStorekeeperId(storekeeperId);
-			chl.setTransactionDate(transactionDate);
+			/*childIncentive.setCodeStatus(CodeStatus.CONSUMED);*/
+			childIncentive.setEditor(user.getUser());
+		//	childIncentive.setConsumptionDate(new Date());
+		//	childIncentive.setStorekeeperId(storekeeperId);
+			childIncentive.setTransactionDate(transactionDate);
 			
-			sc.getIncentiveService().updateChildLottery(chl);
+			sc.getIncentiveService().updateChildIncentive(childIncentive);
 			
-			EncounterUtil.createLotteryConsumerEncounter(ch, chl, DataEntrySource.WEB, new Date(), user.getUser(), sc);
+		//	EncounterUtil.createLotteryConsumerEncounter(ch, childIncentive, DataEntrySource.WEB, new Date(), user.getUser(), sc);
 			
-			List<ReminderSms> smsl = IMRUtils.createLotteryConsumedReminderSms(chl.getVaccinationRecordNum(), chl.getTransactionDate(), user.getUser(), null, sc);
+			List<ReminderSms> smsl = IMRUtils.createLotteryConsumedReminderSms(childIncentive.getVaccinationRecordNum(), childIncentive.getTransactionDate(), user.getUser(), null, sc);
 			
 			for (ReminderSms reminderSms : smsl) {
 				sc.getReminderService().addReminderSmsRecord(reminderSms);

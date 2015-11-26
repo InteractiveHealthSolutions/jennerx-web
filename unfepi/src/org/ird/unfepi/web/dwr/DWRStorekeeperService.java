@@ -136,7 +136,7 @@ public class DWRStorekeeperService {
 			}
 			Date prevfireTime = null;
 			try{
-				prevfireTime = sc.getIncentiveService().getAllStorekeeperIncentiveEvent(0, 1, true, null).get(0).getDataRangeDateUpper();
+		//		prevfireTime = sc.getIncentiveService().getAllStorekeeperIncentiveEvent(0, 1, true, null).get(0).getDataRangeDateUpper();
 				prevfireTime = new Date(prevfireTime.getTime() + 1000);//adding 1 sec to ensure date range dont coincide
 			}
 			catch (Exception e) {

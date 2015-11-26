@@ -5,11 +5,13 @@ import java.util.Date;
 import java.util.List;
 
 import org.ird.unfepi.model.ChildLotteryParams;
+import org.ird.unfepi.model.IncentiveParams;
 import org.ird.unfepi.model.StorekeeperIncentiveEvent;
 import org.ird.unfepi.model.StorekeeperIncentiveParams;
 import org.ird.unfepi.model.StorekeeperIncentiveParticipant;
 import org.ird.unfepi.model.StorekeeperIncentiveTransaction;
 import org.ird.unfepi.model.StorekeeperIncentiveWorkProgress;
+import org.ird.unfepi.model.VaccinatorIncentive;
 import org.ird.unfepi.model.Vaccination.VACCINATION_STATUS;
 import org.ird.unfepi.model.VaccinatorIncentiveEvent;
 import org.ird.unfepi.model.VaccinatorIncentiveParams;
@@ -17,8 +19,7 @@ import org.ird.unfepi.model.VaccinatorIncentiveParticipant;
 import org.ird.unfepi.model.VaccinatorIncentiveTransaction;
 import org.ird.unfepi.model.VaccinatorIncentiveTransaction.TranscationStatus;
 import org.ird.unfepi.model.VaccinatorIncentiveWorkProgress;
-import org.ird.unfepi.model.ChildLottery;
-import org.ird.unfepi.model.ChildLottery.CodeStatus;
+import org.ird.unfepi.model.ChildIncentive;
 import org.ird.unfepi.model.exception.VaccinationDataException;
 
 public interface IncentiveService {
@@ -222,22 +223,64 @@ public interface IncentiveService {
 
 	void updateChildLotteryParams(ChildLotteryParams objectinstance);
 	
-	ChildLottery findChildLotteryById(int childLotteryId, boolean readonly, String[] mappingsToJoin);
+	ChildIncentive findChildIncentiveById(int childIncentiveId, boolean readonly, String[] mappingsToJoin);
 	
-	List<ChildLottery> findChildLotteryByVaccination(int vaccinationRecordNum, boolean readonly, String[] mappingsToJoin);
+	List<ChildIncentive> findChildIncentiveByVaccination(int vaccinationRecordNum, boolean readonly, String[] mappingsToJoin);
 	
-	List<ChildLottery> findChildLotteryByVaccination(short vaccineId, int childId, VACCINATION_STATUS vaccinationStatus, boolean readonly, String[] mappingsToJoin) throws VaccinationDataException;
+	List<ChildIncentive> findChildIncentiveByArm(int armId, boolean readonly, String[] mappingsToJoin);
+	
+	List<ChildIncentive> findChildIncentiveByVaccination(short vaccineId, int childId, VACCINATION_STATUS vaccinationStatus, boolean readonly, String[] mappingsToJoin) throws VaccinationDataException;
 
-	List<ChildLottery> getAllChildLottery(int firstResult, int fetchsize, boolean readonly, String[] mappingsToJoin);
+	List<ChildIncentive> getAllChildIncentive(int firstResult, int fetchsize, boolean readonly, String[] mappingsToJoin);
 	
-	List<ChildLottery> findChildLotteryByCriteria(String code, Integer childId, Short vaccineId,  
-			Boolean hasWonLottery, Date lotteryDateFrom, Date lotteryDateTo, Date transactionDateFrom, Date transactionDateTo, 
-			Date consumptionDateFrom, Date consumptionDateTo, CodeStatus codeStatus, Integer storekeeperId, Integer amountFrom, Integer amountTo, 
+	List<ChildIncentive> findChildIncentiveByCriteria(/*String code,*/ Integer armId,Integer childId, Short vaccineId,  
+			Boolean hasWonIncentive, Date incentiveDateFrom, Date incentiveDateTo, Date transactionDateFrom, Date transactionDateTo, 
+			/*Date consumptionDateFrom, Date consumptionDateTo, CodeStatus codeStatus,*/ /*Integer storekeeperId,*/ Integer amountFrom, Integer amountTo, 
 			Integer areaLocationId, int firstResult, int fetchsize, boolean readonly, String[] mappingsToJoin);
 	
-	Serializable saveChildLottery(ChildLottery childLottery);
 	
-	void updateChildLottery(ChildLottery childLottery);
+	List<ChildIncentive> findChildIncentiveByCriteria(/*String code,*/Integer childId, Short vaccineId,  
+			Boolean hasWonIncentive, Date incentiveDateFrom, Date incentiveDateTo, Date transactionDateFrom, Date transactionDateTo, 
+			/*Date consumptionDateFrom, Date consumptionDateTo, CodeStatus codeStatus,*/ /*Integer storekeeperId,*/ Integer amountFrom, Integer amountTo, 
+			Integer areaLocationId, int firstResult, int fetchsize, boolean readonly, String[] mappingsToJoin);
 	
-	ChildLottery mergeChildLottery(ChildLottery childLottery);
+	Serializable saveChildIncentive(ChildIncentive childIncentive);
+	
+	void updateChildIncentive(ChildIncentive childIncentive);
+	
+	ChildIncentive mergeChildIncentive(ChildIncentive childIncentive);
+	
+	
+	Serializable saveIncentiveParams(IncentiveParams incentiveParams);
+	void updateIncentiveParams(IncentiveParams incentiveParams);
+	IncentiveParams mergeIncenvtiveParams(IncentiveParams incentiveParams);
+	IncentiveParams findIncentiveParamsById(short incentiveParamsId,
+			boolean readonly, String[] mappingsToJoin);
+	List<IncentiveParams> getAllIncentiveParams(int firstResult, int fetchsize,
+			boolean readonly, String[] mappingsToJoin);
+	List<IncentiveParams> findIncentiveParamsByCriteria(Short vaccineId, Integer armId,
+			Short roleId, Date createdDateLower, Date createdDateUpper,
+			Float criteriaRangeLower, Float criteriaRangeUpper,
+			int firstResult, int fetchsize, boolean readonly,
+			String[] mappingsToJoin);
+	
+	List<VaccinatorIncentive> findVaccinatorIncentiveByVaccination(int vaccinationRecordNum, boolean readonly, String[] mappingsToJoin);
+	
+	List<VaccinatorIncentive> getAllVaccinatorIncentive(int firstResult, int fetchsize, boolean readonly, String[] mappingsToJoin);
+	
+	List<VaccinatorIncentive> findVaccinatorIncentiveByCriteriaVaccinatorIncentivized(Integer vaccinatorId, Boolean isIncentivized, boolean readonly, String[] mappingsToJoin);
+	
+	List<VaccinatorIncentive> findVaccinatorIncentiveByCriteria(Integer armId, Integer vaccinator, Short vaccineId,  
+			Boolean isIncentivized, Date incentiveDateFrom, Date incentiveDateTo,
+			 Integer amountFrom, Integer amountTo, 
+			Integer areaLocationId, int firstResult, int fetchsize, boolean readonly, String[] mappingsToJoin);
+	
+	public List<VaccinatorIncentive> findVaccinatorIncentiveByCriteriaVaccinatorRecordNum(Integer vaccinatorRecordNum, boolean readonly, String[] mappingsToJoin);
+	
+	List<VaccinatorIncentive> findVaccinatorIncentiveByArm(int armId, boolean readonly, String[] mappingsToJoin);
+	Serializable saveVaccinatorIncentive(VaccinatorIncentive vaccinatorIncentive);
+	
+	void updateVaccinatorIncentive(VaccinatorIncentive vaccinatorIncentive);
+	
+	VaccinatorIncentive mergeVaccinatorIncentive(VaccinatorIncentive vaccinatorIncentive);
 }

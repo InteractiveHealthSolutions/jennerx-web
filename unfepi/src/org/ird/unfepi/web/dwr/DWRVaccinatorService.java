@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.ServletException;
 
 import org.directwebremoting.WebContextFactory;
+import org.ird.unfepi.IncentiveUtilsForTEST;
 import org.ird.unfepi.constants.SystemPermissions;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.LoggedInUser;
@@ -136,7 +137,7 @@ public class DWRVaccinatorService
 			Date prevfireTime = null;
 			try{
 				prevfireTime = sc.getIncentiveService().getAllVaccinatorIncentiveEvent(0, 1, true, null).get(0).getDataRangeDateUpper();
-				prevfireTime = new Date(prevfireTime.getTime() + 1000);//adding 1 sec to ensure date range dont coincide
+		//		prevfireTime = new Date(prevfireTime.getTime() + 1000);//adding 1 sec to ensure date range dont coincide
 			}
 			catch (Exception e) {
 				e.printStackTrace();
@@ -144,7 +145,7 @@ public class DWRVaccinatorService
 			prevfireTime = prevfireTime==null?new Date(new Date().getTime()-1000*60*60*24*60L):prevfireTime;
 			incentivizationDateUpper = DateUtils.roundoffDatetoDate(incentivizationDateUpper);
 			
-			if(incentivizationDateUpper.before(prevfireTime)){
+			/*if(incentivizationDateUpper.before(prevfireTime)){
 				return "Incentivization date upper range cannot be before last event`s date "+prevfireTime;
 			}
 			if(incentivizationDateUpper.after(new Date())){
@@ -153,15 +154,16 @@ public class DWRVaccinatorService
 			if(DateUtils.differenceBetweenIntervals(new Date(incentivizationDateUpper.getTime()), 
 					new Date(prevfireTime.getTime()), TIME_INTERVAL.DATE) < 14){
 				return "Incentivization date upper range must have minimum gap of 14 days from last event`s date."+prevfireTime;
-			}
+			}*/
 			
 			EncounterUtil.createVaccinatorIncentiveEncounter(new Date(), prevfireTime, incentivizationDateUpper, DataEntrySource.WEB, new Date(), user.getUser(), sc);
 			
 			sc.commitTransaction();
 			sc.closeSession();
+		
+		//	IncentiveUtils.doVaccinatorIncentivization(prevfireTime, incentivizationDateUpper, user.getUser());
+			IncentiveUtilsForTEST.doVaccinatorIncentivization(prevfireTime, incentivizationDateUpper, user.getUser());
 
-			IncentiveUtils.doVaccinatorIncentivization(prevfireTime, incentivizationDateUpper, user.getUser());
-			
 			return "Incentivization have taken place. Refresh page to view new records. A csv file is available in downloadable reports under category Incentives.";
 		}
 		catch (Exception e){

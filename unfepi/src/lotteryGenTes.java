@@ -17,7 +17,7 @@ import org.hibernate.ScrollMode;
 import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.ird.unfepi.ChildLotteryRunner;
+import org.ird.unfepi.ChildIncentivization;
 import org.ird.unfepi.GlobalParams;
 import org.ird.unfepi.GlobalParams.DownloadableType;
 import org.ird.unfepi.GlobalParams.LotteryType;

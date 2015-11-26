@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.ird.unfepi.ChildIncentivization;
 import org.ird.unfepi.DataEntryFormController;
 import org.ird.unfepi.GlobalParams;
 import org.ird.unfepi.beans.EnrollmentWrapper;
@@ -45,9 +46,11 @@ public class AddChildController extends DataEntryFormController
 		Address addr = ewr.getAddress();
 		ServiceContext sc = Context.getServices();
 		try{
+			@SuppressWarnings("unchecked")
 			List<VaccineSchedule> vaccineSchedule = (List<VaccineSchedule>) request.getSession().getAttribute(VaccinationCenterVisit.VACCINE_SCHEDULE_KEY+ewr.getCenterVisit().getUuid());
 
-			/*List<ChildLotteryRunner> lotteryRes = */ControllerUIHelper.doEnrollment(DataEntrySource.WEB, projectId, ewr.getChildNamed(), ch, 
+			@SuppressWarnings("unused")
+			List<ChildIncentivization> lotteryRes = ControllerUIHelper.doEnrollment(DataEntrySource.WEB, projectId, ewr.getChildNamed(), ch, 
 					ewr.getBirthdateOrAge(), ewr.getChildagey(), ewr.getChildagem(), ewr.getChildagew(), ewr.getChildaged(), 
 					addr, centerVisit, ewr.getCompleteCourseFromCenter(), vaccineSchedule, dateFormStart, user.getUser(), sc);
 			

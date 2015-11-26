@@ -15,8 +15,7 @@ import org.ird.unfepi.constants.WebGlobals;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.LoggedInUser;
 import org.ird.unfepi.context.ServiceContext;
-import org.ird.unfepi.model.ChildLottery;
-import org.ird.unfepi.model.ChildLottery.CodeStatus;
+import org.ird.unfepi.model.ChildIncentive;
 import org.ird.unfepi.model.IdMapper;
 import org.ird.unfepi.model.Reminder.ReminderType;
 import org.ird.unfepi.utils.EncounterUtil;
@@ -98,28 +97,30 @@ public class ViewChildIncentivesController extends DataDisplayController{
 				idm = sc.getIdMapperService().findIdMapper(programId);
 			}
 			
-			CodeStatus codeStatus = null;
-			String code = null;
-			Boolean hasWonLottery = null;
+		//	CodeStatus codeStatus = null;
+		//	String code = null;
+			Boolean hasWonIncentive = null;
 			if(type.equalsIgnoreCase(TabIncentive.WON.name())){
-				hasWonLottery = true;
+				hasWonIncentive = true;
 			}
 			else if(type.equalsIgnoreCase(TabIncentive.LOST.name())){
-				hasWonLottery = false;
-			}
-			List<ChildLottery> listchl = sc.getIncentiveService().findChildLotteryByCriteria(code, (idm == null?null:idm.getMappedId()), null, hasWonLottery , incentiveDatefrom, incentiveDateto, null, null, null, null, codeStatus, amounttransferredrangeL, amounttransferredrangeU, null, userLocation, startRecord, WebGlobals.DEFAULT_PAGING_MAX_PAGE_ITEMS, true, new String[]{"vaccination"});
-			
-			for (ChildLottery chl : listchl) {
-				Map<String, Object> lottmap = new HashMap<String, Object>();
-				lottmap.put("lottery", chl);
-				lottmap.put("reminder", sc.getReminderService().findReminderSmsRecordByCriteria(chl.getVaccination().getChildId(), null, new Short[]{chl.getVaccination().getVaccineId()}, new ReminderType[]{ReminderType.LOTTERY_WON_REMINDER}, null, null, null, null, null, null, false, 0, 10, true, null));
-				String vaccrElemName = EncounterUtil.getEncounterElementName(EncounterUtil.getLotteryEncounterPrefix(chl.getVaccination().getVaccine().getName(), chl.getVaccination().getVaccineId()), ElementVaccination.VACCINATION_RECORD_NUM);
-				lottmap.put("encounter", sc.getCustomQueryService().getDataBySQLMapResult("SELECT * FROM encounterresults er JOIN encounter e USING(encounterId,p1id,p2id) WHERE er.p1id="+chl.getVaccination().getChildId()+" AND element='"+vaccrElemName+"' AND value="+chl.getVaccinationRecordNum()));
-			
-				list.add(lottmap);
+				hasWonIncentive = false;
 			}
 			
-			Number r = sc.getIncentiveService().LAST_QUERY_TOTAL_ROW_COUNT(ChildLottery.class);
+					
+			List<ChildIncentive> listChildIncentive = sc.getIncentiveService().findChildIncentiveByCriteria(/*code,*/ (idm == null?null:idm.getMappedId()), null, hasWonIncentive , incentiveDatefrom, incentiveDateto, null, null, /*null, null,*/ /*codeStatus,*/ amounttransferredrangeL, amounttransferredrangeU, /*null, */userLocation, startRecord, WebGlobals.DEFAULT_PAGING_MAX_PAGE_ITEMS, true, new String[]{"vaccination"});
+			
+			for (ChildIncentive childIncentive : listChildIncentive) {
+				Map<String, Object> incentivemap = new HashMap<String, Object>();
+				incentivemap.put("lottery", childIncentive);
+				incentivemap.put("reminder", sc.getReminderService().findReminderSmsRecordByCriteria(childIncentive.getVaccination().getChildId(), null, new Short[]{childIncentive.getVaccination().getVaccineId()}, new ReminderType[]{ReminderType.LOTTERY_WON_REMINDER}, null, null, null, null, null, null, false, 0, 10, true, null));
+				String vaccrElemName = EncounterUtil.getEncounterElementName(EncounterUtil.getLotteryEncounterPrefix(childIncentive.getVaccination().getVaccine().getName(), childIncentive.getVaccination().getVaccineId()), ElementVaccination.VACCINATION_RECORD_NUM);
+				incentivemap.put("encounter", sc.getCustomQueryService().getDataBySQLMapResult("SELECT * FROM encounterresults er JOIN encounter e USING(encounterId,p1id,p2id) WHERE er.p1id="+childIncentive.getVaccination().getChildId()+" AND element='"+vaccrElemName+"' AND value="+childIncentive.getVaccinationRecordNum()));
+			
+				list.add(incentivemap);
+			}
+			
+			Number r = sc.getIncentiveService().LAST_QUERY_TOTAL_ROW_COUNT(ChildIncentive.class);
 			totalRows = r==null?list.size():r.intValue();
 			
 			addModelAttribute(model, SearchFilter.PROGRAM_ID.FILTER_NAME(), programId);

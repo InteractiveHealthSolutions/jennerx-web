@@ -7,14 +7,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.ird.unfepi.ChildLotteryRunner;
+import org.ird.unfepi.ChildIncentivization;
 import org.ird.unfepi.GlobalParams.LotteryType;
 import org.ird.unfepi.constants.EncounterType;
 import org.ird.unfepi.constants.WebGlobals;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Address;
 import org.ird.unfepi.model.Child;
-import org.ird.unfepi.model.ChildLottery;
+import org.ird.unfepi.model.ChildIncentive;
 import org.ird.unfepi.model.ContactNumber;
 import org.ird.unfepi.model.Encounter;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
@@ -245,7 +245,7 @@ public class EncounterUtil {
 	
 	public static void createFollowupPrivilegedEncounter(Vaccination currentVaccination, 
 			Vaccine currentVaccine, String nextVaccineName, String nextVaccineSystemCalculatedDate,
-			Boolean reminderApproved, String primaryMobileNumber, ChildLotteryRunner lotteryRes, Object lotteryCriteriaVal, 
+			Boolean reminderApproved, String primaryMobileNumber, ChildIncentivization lotteryRes, Object lotteryCriteriaVal, 
 			DataEntrySource dataEntrySource, Date formStartDate, User dataEntryUser, ServiceContext sc)
 	{
 		/*Encounter e = saveEncounter(currentVaccination.getChildId(), currentVaccination.getVaccinatorId(), currentVaccination.getVaccinationCenterId(), currentVaccination.getVaccinationDate(), formStartDate, null, dataEntryUser.getMappedId(), EncounterType.FOLLOWUP_ADMIN, dataEntrySource, sc);
@@ -396,7 +396,7 @@ public class EncounterUtil {
 	
 	public static Map<String, Object> createLotteryGeneratorEncounter(LotteryType lotteryType, String childProgramId, Child child, 
 			Vaccination curVactn, Vaccine vaccine, String justification, String requestedBy, String addNote, 
-			Date birthdate, Boolean isBirthdateEstimated, ChildLotteryRunner lotteryRes, Object criteriaValueTimeliness, 
+			Date birthdate, Boolean isBirthdateEstimated, ChildIncentivization lotteryRes, Object criteriaValueTimeliness, 
 			DataEntrySource dataEntrySource, Date formStartDate, User dataEntryUser, ServiceContext sc)
 	{
 		Encounter e = saveEncounter(child.getMappedId(), curVactn.getVaccinatorId(), curVactn.getVaccinationCenterId(), new Date(), formStartDate, (lotteryType.equals(LotteryType.EXISTING)?"NA":"PENDING"), dataEntryUser.getMappedId(), EncounterType.LOTTERY_GEN, dataEntrySource, sc);
@@ -413,7 +413,7 @@ public class EncounterUtil {
 		encr.add(createEncounterResult(e, ElementGeneral.REQUESTED_BY, requestedBy, null, null));
 		encr.add(createEncounterResult(e, ElementGeneral.ADDITIONAL_NOTE, addNote, null, null));
 
-		List<ChildLotteryRunner> lotteryResults = new ArrayList<ChildLotteryRunner>();
+		List<ChildIncentivization> lotteryResults = new ArrayList<ChildIncentivization>();
 		lotteryResults.add(lotteryRes);
 		
 		//populateLotteryEncounter(e, encr, lotteryResults , criteriaValueTimeliness);
@@ -429,26 +429,26 @@ public class EncounterUtil {
 		return encountermap;
 	}
 	
-	public static void createLotteryConsumerEncounter(Child child, ChildLottery chlott,  
+	/*public static void createLotteryConsumerEncounter(Child child, ChildIncentive childIncentive,  
 			DataEntrySource dataEntrySource, Date formStartDate, User dataEntryUser, ServiceContext sc)
 	{
-		Encounter e = saveEncounter(child.getMappedId(), chlott.getStorekeeperId(), null, chlott.getTransactionDate(), formStartDate, "", dataEntryUser.getMappedId(), EncounterType.LOTTERY_CONSUMP, dataEntrySource, sc);
+		Encounter e = saveEncounter(child.getMappedId(), childIncentive.getStorekeeperId(), null, childIncentive.getTransactionDate(), formStartDate, "", dataEntryUser.getMappedId(), EncounterType.LOTTERY_CONSUMP, dataEntrySource, sc);
 
 		List<EncounterResults> encr = new ArrayList<EncounterResults>();
 
-		encr.add(createEncounterResult(e, ElementVaccination.VACCINE_ID, chlott.getVaccination().getVaccineId(), null, null));
-		encr.add(createEncounterResult(e, ElementVaccination.VACCINE_NAME, sc.getVaccinationService().findVaccineById(chlott.getVaccination().getVaccineId()).getName(), null, null));
-		encr.add(createEncounterResult(e, ElementVaccination.VACCINATION_STATUS, chlott.getVaccination().getVaccinationStatus(), null, null));
-		encr.add(createEncounterResult(e, ElementVaccination.VACCINATION_RECORD_NUM, chlott.getVaccination().getVaccinationRecordNum(), null, null));
+		encr.add(createEncounterResult(e, ElementVaccination.VACCINE_ID, childIncentive.getVaccination().getVaccineId(), null, null));
+		encr.add(createEncounterResult(e, ElementVaccination.VACCINE_NAME, sc.getVaccinationService().findVaccineById(childIncentive.getVaccination().getVaccineId()).getName(), null, null));
+		encr.add(createEncounterResult(e, ElementVaccination.VACCINATION_STATUS, childIncentive.getVaccination().getVaccinationStatus(), null, null));
+		encr.add(createEncounterResult(e, ElementVaccination.VACCINATION_RECORD_NUM, childIncentive.getVaccination().getVaccinationRecordNum(), null, null));
 		
-		encr.add(createEncounterResult(e, ElementIncentive.WON_AMOUNT, chlott.getAmount(), null, null));
-		encr.add(createEncounterResult(e, ElementIncentive.VERIFICATION_CODE, chlott.getCode(), null, null));
+		encr.add(createEncounterResult(e, ElementIncentive.WON_AMOUNT, childIncentive.getAmount(), null, null));
+		encr.add(createEncounterResult(e, ElementIncentive.VERIFICATION_CODE, childIncentive.getCode(), null, null));
 		
-		encr.add(createEncounterResult(e, ElementIncentive.TRANSACTION_DATE, new SimpleDateFormat(WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA).format(chlott.getTransactionDate()), null, null));
-		encr.add(createEncounterResult(e, ElementIncentive.CONSUMPTION_DATE, new SimpleDateFormat(WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA).format(chlott.getConsumptionDate()), null, null));
+		encr.add(createEncounterResult(e, ElementIncentive.TRANSACTION_DATE, new SimpleDateFormat(WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA).format(childIncentive.getTransactionDate()), null, null));
+		encr.add(createEncounterResult(e, ElementIncentive.CONSUMPTION_DATE, new SimpleDateFormat(WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA).format(childIncentive.getConsumptionDate()), null, null));
 
 		saveEncounterResults(encr, sc);
-	}
+	}*/
 	
 	private static void populateIncentiveEncounter(Encounter e, List<EncounterResults> encr,User dataEntryUser, 
 			Date incentiveDateRangeFrom, Date incentiveDateRangeTo)

@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.management.InvalidAttributeValueException;
 
+import org.ird.unfepi.model.Arm;
 import org.ird.unfepi.model.Child;
 import org.ird.unfepi.model.Child.STATUS;
 import org.ird.unfepi.model.LotterySms;
@@ -116,4 +117,15 @@ public interface ChildService {
 	 * @throws ChildDataInconsistencyException 
 	 */
 	Child mergeUpdateChild(Child child) throws ChildDataInconsistencyException;
+	
+	Serializable saveArm(Arm arm);
+	void updateArm(Arm arm);
+	Arm mergeArm(Arm arm);
+	Arm findArmById(short armId,
+			boolean readonly, String[] mappingsToJoin);
+	List<Arm> getAllArm(int firstResult, int fetchsize,
+			boolean readonly, String[] mappingsToJoin);
+    List<Arm> getAllArm (boolean readonly, String[] mappingsToJoin,	String orderBySqlFormula);
+	
+	
 }

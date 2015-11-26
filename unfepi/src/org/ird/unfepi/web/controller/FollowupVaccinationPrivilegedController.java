@@ -11,7 +11,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.ird.unfepi.ChildLotteryRunner;
+import org.ird.unfepi.ChildIncentivization;
 import org.ird.unfepi.GlobalParams;
 import org.ird.unfepi.constants.FormType;
 import org.ird.unfepi.constants.WebGlobals;
@@ -49,12 +49,12 @@ public class FollowupVaccinationPrivilegedController extends SimpleFormControlle
 		LoggedInUser user=UserSessionUtils.getActiveUser(request);
 		ServiceContext sc = Context.getServices();
 		try{
-			List<ChildLotteryRunner> lotteryRes = null;//ControllerUIHelper.doFollowup(DataEntrySource.WEB, (VaccinationCenterVisit) command, dateFormStart, user.getUser(), sc);
+			List<ChildIncentivization> lotteryRes = null;//ControllerUIHelper.doFollowup(DataEntrySource.WEB, (VaccinationCenterVisit) command, dateFormStart, user.getUser(), sc);
 			
 			sc.commitTransaction();
 
 			String editmessage="Child Enrolled successfully. \n Lottery Runner information : ";
-			for (ChildLotteryRunner childLotteryRunner : lotteryRes) 
+			for (ChildIncentivization childLotteryRunner : lotteryRes) 
 			{
 				editmessage += "\n"+childLotteryRunner.VACCINE_NAME + " lottery ";
 				if(childLotteryRunner.HAS_WON==null){

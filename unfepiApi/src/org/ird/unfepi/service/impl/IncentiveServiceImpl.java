@@ -5,28 +5,31 @@ import java.util.Date;
 import java.util.List;
 
 import org.ird.unfepi.context.ServiceContext;
-import org.ird.unfepi.model.ChildLottery;
-import org.ird.unfepi.model.ChildLottery.CodeStatus;
+import org.ird.unfepi.model.ChildIncentive;
 import org.ird.unfepi.model.ChildLotteryParams;
+import org.ird.unfepi.model.IncentiveParams;
 import org.ird.unfepi.model.StorekeeperIncentiveEvent;
 import org.ird.unfepi.model.StorekeeperIncentiveParams;
 import org.ird.unfepi.model.StorekeeperIncentiveParticipant;
 import org.ird.unfepi.model.StorekeeperIncentiveTransaction;
 import org.ird.unfepi.model.StorekeeperIncentiveWorkProgress;
 import org.ird.unfepi.model.Vaccination.VACCINATION_STATUS;
+import org.ird.unfepi.model.VaccinatorIncentive;
 import org.ird.unfepi.model.VaccinatorIncentiveEvent;
 import org.ird.unfepi.model.VaccinatorIncentiveParams;
 import org.ird.unfepi.model.VaccinatorIncentiveParticipant;
 import org.ird.unfepi.model.VaccinatorIncentiveTransaction;
 import org.ird.unfepi.model.VaccinatorIncentiveTransaction.TranscationStatus;
 import org.ird.unfepi.model.VaccinatorIncentiveWorkProgress;
-import org.ird.unfepi.model.dao.DAOChildLottery;
+import org.ird.unfepi.model.dao.DAOChildIncentive;
 import org.ird.unfepi.model.dao.DAOChildLotteryParams;
+import org.ird.unfepi.model.dao.DAOIncentiveParams;
 import org.ird.unfepi.model.dao.DAOStorekeeperIncentiveEvent;
 import org.ird.unfepi.model.dao.DAOStorekeeperIncentiveParams;
 import org.ird.unfepi.model.dao.DAOStorekeeperIncentiveParticipant;
 import org.ird.unfepi.model.dao.DAOStorekeeperIncentiveTransaction;
 import org.ird.unfepi.model.dao.DAOStorekeeperIncentiveWorkProgress;
+import org.ird.unfepi.model.dao.DAOVaccinatorIncentive;
 import org.ird.unfepi.model.dao.DAOVaccinatorIncentiveEvent;
 import org.ird.unfepi.model.dao.DAOVaccinatorIncentiveParams;
 import org.ird.unfepi.model.dao.DAOVaccinatorIncentiveParticipant;
@@ -52,7 +55,10 @@ public class IncentiveServiceImpl implements IncentiveService{
 	private DAOStorekeeperIncentiveWorkProgress daosincentwinrcords;
 	
 	private DAOChildLotteryParams daoclottparams;
-	private DAOChildLottery daochildlott;
+	private DAOChildIncentive daochildincentive;
+	
+	private DAOIncentiveParams daoincentiveparams;
+	private DAOVaccinatorIncentive daovaccinatorincentive;
 
 	public IncentiveServiceImpl(DAOVaccinatorIncentiveEvent daovlottevent, DAOVaccinatorIncentiveParticipant daovlottparti
 			, DAOVaccinatorIncentiveParams daovlottparams, DAOVaccinatorIncentiveTransaction daovlotttrans
@@ -60,7 +66,7 @@ public class IncentiveServiceImpl implements IncentiveService{
 			DAOStorekeeperIncentiveEvent daosincentevent, DAOStorekeeperIncentiveParticipant daosincentparti
 			, DAOStorekeeperIncentiveParams daosincentparams, DAOStorekeeperIncentiveTransaction daosincenttrans
 			, DAOStorekeeperIncentiveWorkProgress daosincentwinrcords, 
-			DAOChildLotteryParams daoclottparams, DAOChildLottery daoverifcode, ServiceContext sc) {
+			DAOChildLotteryParams daoclottparams, DAOChildIncentive daochildincentive,DAOVaccinatorIncentive daovincentive, DAOIncentiveParams daoincentiveparams, ServiceContext sc) {
 		this.daovlottevent = daovlottevent;
 		this.daovlottparti = daovlottparti;
 		this.daovlottparams = daovlottparams;
@@ -75,7 +81,11 @@ public class IncentiveServiceImpl implements IncentiveService{
 		
 		this.daoclottparams = daoclottparams;
 		
-		this.daochildlott = daoverifcode;
+		this.daochildincentive = daochildincentive;
+		
+		this.daovaccinatorincentive = daovincentive;
+		
+		this.daoincentiveparams = daoincentiveparams;
 		
 		this.sc = sc;
 	}
@@ -116,8 +126,14 @@ public class IncentiveServiceImpl implements IncentiveService{
 		else if(clazz == ChildLotteryParams.class){
 			return daoclottparams.LAST_QUERY_TOTAL_ROW_COUNT();
 		}
-		else if(clazz == ChildLottery.class){
-			return daochildlott.LAST_QUERY_TOTAL_ROW_COUNT();
+		else if(clazz == ChildIncentive.class){
+			return daochildincentive.LAST_QUERY_TOTAL_ROW_COUNT();
+		}
+		else if(clazz == VaccinatorIncentive.class){
+			return daovaccinatorincentive.LAST_QUERY_TOTAL_ROW_COUNT();
+		}
+		else if(clazz == IncentiveParams.class){
+			return daoincentiveparams.LAST_QUERY_TOTAL_ROW_COUNT();
 		}
 		
 		return null;
@@ -543,20 +559,27 @@ public class IncentiveServiceImpl implements IncentiveService{
 	}
 
 	@Override
-	public ChildLottery findChildLotteryById(int childLotteryId, boolean readonly, String[] mappingsToJoin) {
-		ChildLottery obj = daochildlott.findById(childLotteryId, readonly, mappingsToJoin);
+	public ChildIncentive findChildIncentiveById(int childIncentiveId, boolean readonly, String[] mappingsToJoin) {
+		ChildIncentive obj = daochildincentive.findById(childIncentiveId, readonly, mappingsToJoin);
 		return obj;
+	}
+	
+	@Override
+	public List<ChildIncentive> findChildIncentiveByArm(int armId,
+			boolean readonly, String[] mappingsToJoin) {
+		List<ChildIncentive> objl = daochildincentive.findByArm(armId, readonly, mappingsToJoin);
+		return objl;
 	}
 
 	@Override
-	public List<ChildLottery> findChildLotteryByVaccination( int vaccinationRecordNum, boolean readonly, String[] mappingsToJoin) {
-		List<ChildLottery> objl = daochildlott.findByVaccination(vaccinationRecordNum, readonly, mappingsToJoin);
+	public List<ChildIncentive> findChildIncentiveByVaccination( int vaccinationRecordNum, boolean readonly, String[] mappingsToJoin) {
+		List<ChildIncentive> objl = daochildincentive.findByVaccination(vaccinationRecordNum, readonly, mappingsToJoin);
 		return objl;
 	}
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public List<ChildLottery> findChildLotteryByVaccination(short vaccineId, int childId, VACCINATION_STATUS vaccinationStatus, boolean readonly, String[] mappingsToJoin) throws VaccinationDataException {
+	public List<ChildIncentive> findChildIncentiveByVaccination(short vaccineId, int childId, VACCINATION_STATUS vaccinationStatus, boolean readonly, String[] mappingsToJoin) throws VaccinationDataException {
 		List vl = sc.getCustomQueryService().getDataBySQL("SELECT vaccinationRecordNum FROM vaccination WHERE childId="+childId+" AND vaccineId="+vaccineId+" AND vaccinationStatus='"+vaccinationStatus+"' ");
 		if(vl.size() > 1){
 			throw new VaccinationDataException(VaccinationDataException.MULITPLE_VACCINES_WITH_SAME_STATUS_FOR_CHILD);
@@ -564,38 +587,165 @@ public class IncentiveServiceImpl implements IncentiveService{
 		
 		int vRecNum = vl.size()==0?-99:Integer.parseInt(vl.get(0).toString());
 		
-		List<ChildLottery> objl = daochildlott.findByVaccination(vRecNum, readonly, mappingsToJoin);
+		List<ChildIncentive> objl = daochildincentive.findByVaccination(vRecNum, readonly, mappingsToJoin);
 
 		return objl;
 	}
 
 	@Override
-	public List<ChildLottery> getAllChildLottery(int firstResult, int fetchsize, boolean readonly, String[] mappingsToJoin) {
-		List<ChildLottery> vl = daochildlott.getAll(firstResult, fetchsize, readonly, mappingsToJoin);
+	public List<ChildIncentive> getAllChildIncentive(int firstResult, int fetchsize, boolean readonly, String[] mappingsToJoin) {
+		List<ChildIncentive> vl = daochildincentive.getAll(firstResult, fetchsize, readonly, mappingsToJoin);
 		return vl;
 	}
 
 	@Override
-	public List<ChildLottery> findChildLotteryByCriteria(String code, Integer childId, Short vaccineId,  
-			Boolean hasWonLottery, Date lotteryDateFrom, Date lotteryDateTo, Date transactionDateFrom, Date transactionDateTo, 
-			Date consumptionDateFrom, Date consumptionDateTo, CodeStatus codeStatus, Integer storekeeperId, Integer amountFrom, Integer amountTo, 
+	public List<ChildIncentive> findChildIncentiveByCriteria(/*String code,*/ Integer armId, Integer childId, Short vaccineId,  
+			Boolean hasWonIncentive, Date incentiveDateFrom, Date incentiveDateTo, Date transactionDateFrom, Date transactionDateTo, 
+			/*Date consumptionDateFrom, Date consumptionDateTo, CodeStatus codeStatus,*/ /*Integer storekeeperId,*/ Integer amountFrom, Integer amountTo, 
 			Integer areaLocationId, int firstResult, int fetchsize, boolean readonly, String[] mappingsToJoin) {
-		List<ChildLottery> vl = daochildlott.findByCriteria(code, childId, vaccineId, hasWonLottery, lotteryDateFrom, lotteryDateTo, transactionDateFrom, transactionDateTo, consumptionDateFrom, consumptionDateTo, codeStatus, storekeeperId, amountFrom, amountTo, areaLocationId, firstResult, fetchsize, readonly, mappingsToJoin);
+		List<ChildIncentive> vl = daochildincentive.findByCriteria(/*code,*/ armId, childId, vaccineId, hasWonIncentive, incentiveDateFrom, incentiveDateTo, transactionDateFrom, transactionDateTo, /*consumptionDateFrom, consumptionDateTo, codeStatus,*/ /*storekeeperId,*/ amountFrom, amountTo, areaLocationId, firstResult, fetchsize, readonly, mappingsToJoin);
+		return vl;
+	}
+	
+	@Override
+	public List<ChildIncentive> findChildIncentiveByCriteria(/*String code,*/ Integer childId, Short vaccineId,  
+			Boolean hasWonIncentive, Date incentiveDateFrom, Date incentiveDateTo, Date transactionDateFrom, Date transactionDateTo, 
+			/*Date consumptionDateFrom, Date consumptionDateTo, CodeStatus codeStatus,*//* Integer storekeeperId,*/ Integer amountFrom, Integer amountTo, 
+			Integer areaLocationId, int firstResult, int fetchsize, boolean readonly, String[] mappingsToJoin) {
+		List<ChildIncentive> vl = daochildincentive.findByCriteria(/*code,*/  childId, vaccineId, hasWonIncentive, incentiveDateFrom, incentiveDateTo, transactionDateFrom, transactionDateTo, /*consumptionDateFrom, consumptionDateTo, codeStatus,*/ /*storekeeperId,*/ amountFrom, amountTo, areaLocationId, firstResult, fetchsize, readonly, mappingsToJoin);
+		return vl;
+	}
+	
+	@Override
+	public Serializable saveChildIncentive(ChildIncentive childIncentive) {
+		return daochildincentive.save(childIncentive);
+	}
+
+	@Override
+	public void updateChildIncentive(ChildIncentive childIncentive) {
+		daochildincentive.update(childIncentive);
+	}
+
+	@Override
+	public ChildIncentive mergeChildIncentive(ChildIncentive childIncentive) {
+		return (ChildIncentive) daochildincentive.merge(childIncentive);
+	}
+	
+	
+	
+	/* Incentive Params */
+	
+	@Override
+	public Serializable saveIncentiveParams(IncentiveParams incentiveParams) {
+		return daoincentiveparams.save(incentiveParams);
+	}
+
+	@Override
+	public void updateIncentiveParams(IncentiveParams incentiveParams) {
+		daoincentiveparams.update(incentiveParams);
+	}
+
+	@Override
+	public IncentiveParams mergeIncenvtiveParams(IncentiveParams incentiveParams) {
+		return (IncentiveParams) daoincentiveparams.merge(incentiveParams);
+	}
+
+	@Override
+	public IncentiveParams findIncentiveParamsById(short incentiveParamsId,
+			boolean readonly, String[] mappingsToJoin) {
+		IncentiveParams obj = daoincentiveparams.findById(incentiveParamsId, readonly, mappingsToJoin);
+		return obj;
+	}
+
+	@Override
+	public List<IncentiveParams> getAllIncentiveParams(int firstResult,
+			int fetchsize, boolean readonly, String[] mappingsToJoin) {
+		List<IncentiveParams> vl = daoincentiveparams.getAll(firstResult, fetchsize, readonly, mappingsToJoin);
 		return vl;
 	}
 
 	@Override
-	public Serializable saveChildLottery(ChildLottery childLottery) {
-		return daochildlott.save(childLottery);
+	public List<IncentiveParams> findIncentiveParamsByCriteria(Short vaccineId,
+			Integer armId, Short roleId, Date createdDateLower,
+			Date createdDateUpper, Float criteriaRangeLower,
+			Float criteriaRangeUpper, int firstResult, int fetchsize,
+			boolean readonly, String[] mappingsToJoin) {
+		List<IncentiveParams> list = daoincentiveparams.findByCriteria(vaccineId, armId, roleId, createdDateLower, createdDateUpper, criteriaRangeLower, criteriaRangeUpper, firstResult, fetchsize, readonly, mappingsToJoin);
+		return list;
+	}
+	
+	/* VaccinatorIncentive */
+	
+	@Override
+	public List<VaccinatorIncentive> findVaccinatorIncentiveByVaccination(
+			int vaccinationRecordNum, boolean readonly, String[] mappingsToJoin) {
+		List<VaccinatorIncentive> objl = daovaccinatorincentive.findByVaccination(vaccinationRecordNum, readonly, mappingsToJoin);
+		return objl;
 	}
 
 	@Override
-	public void updateChildLottery(ChildLottery childLottery) {
-		daochildlott.update(childLottery);
+	public List<VaccinatorIncentive> getAllVaccinatorIncentive(int firstResult, int fetchsize,
+			boolean readonly, String[] mappingsToJoin) {
+		List<VaccinatorIncentive> vl = daovaccinatorincentive.getAll(firstResult, fetchsize, readonly, mappingsToJoin);
+		return vl;
+	
 	}
 
 	@Override
-	public ChildLottery mergeChildLottery(ChildLottery childLottery) {
-		return (ChildLottery) daochildlott.merge(childLottery);
+	public List<VaccinatorIncentive> findVaccinatorIncentiveByCriteriaVaccinatorIncentivized(
+			Integer vaccinatorId, Boolean isIncentivized, boolean readonly,
+			String[] mappingsToJoin) {
+		List<VaccinatorIncentive> vl = daovaccinatorincentive.findByCriteriaVaccinatorIncentivized(vaccinatorId,isIncentivized,readonly, mappingsToJoin);
+		return vl;
 	}
+
+	@Override
+	public List<VaccinatorIncentive> findVaccinatorIncentiveByCriteria(Integer armId,
+			Integer vaccinator, Short vaccineId, Boolean isIncentivized,
+			Date incentiveDateFrom, Date incentiveDateTo, Integer amountFrom,
+			Integer amountTo, Integer areaLocationId, int firstResult,
+			int fetchsize, boolean readonly, String[] mappingsToJoin) {
+		List<VaccinatorIncentive> vl = daovaccinatorincentive.findByCriteria(armId,vaccinator,vaccineId, isIncentivized, incentiveDateFrom, incentiveDateTo,amountFrom, amountTo, areaLocationId,firstResult,fetchsize, readonly,  mappingsToJoin);
+		return vl;
+	}
+	
+	@Override
+	public List<VaccinatorIncentive> findVaccinatorIncentiveByCriteriaVaccinatorRecordNum(
+			Integer vaccinatorRecordNum, boolean readonly,
+			String[] mappingsToJoin) {
+		List<VaccinatorIncentive> vl = daovaccinatorincentive.findByCriteriaVaccinatorRecordNum(vaccinatorRecordNum, readonly,  mappingsToJoin);
+		return vl;
+	}
+
+	@Override
+	public List<VaccinatorIncentive> findVaccinatorIncentiveByArm(int armId, boolean readonly,
+			String[] mappingsToJoin) {
+		List<VaccinatorIncentive> vl = daovaccinatorincentive.findByArm(armId, readonly, mappingsToJoin);
+
+		return vl;
+	}
+
+	@Override
+	public Serializable saveVaccinatorIncentive(
+			VaccinatorIncentive vaccinatorIncentive) {
+		return daovaccinatorincentive.save(vaccinatorIncentive);
+	}
+
+	@Override
+	public void updateVaccinatorIncentive(
+			VaccinatorIncentive vaccinatorIncentive) {
+		daovaccinatorincentive.update(vaccinatorIncentive);
+	}
+
+	@Override
+	public VaccinatorIncentive mergeVaccinatorIncentive(
+			VaccinatorIncentive vaccinatorIncentive) {
+		return (VaccinatorIncentive) daovaccinatorincentive.merge(vaccinatorIncentive);
+	}
+
+	
+
+	
+
+
 }

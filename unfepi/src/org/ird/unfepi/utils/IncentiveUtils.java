@@ -253,7 +253,9 @@ public class IncentiveUtils {
 					int[] vaccineIds = new int[]{1,2,3,4,5,6};
 					Map<Integer, Map<String, Object>> vimap = new HashMap<Integer, Map<String, Object>>();
 					for (int vid : vaccineIds) {
-						String sql = "SELECT * FROM vaccination WHERE vaccineId="+vid+" AND vaccinatorId="+vaccinator.getMappedId()+" AND vaccinationStatus = 'VACCINATED' AND DATE(vaccinationDate) BETWEEN '2014-10-01' AND '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeUpper)+"' "
+					//	String sql = "SELECT * FROM vaccination WHERE vaccineId="+vid+" AND vaccinatorId="+vaccinator.getMappedId()+" AND vaccinationStatus = 'VACCINATED' AND DATE(vaccinationDate) BETWEEN '2014-10-01' AND '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeUpper)+"' "
+					//			+ "AND vaccinationRecordNum NOT IN (SELECT vaccinationId FROM vaccinator_incentive_log) ORDER BY vaccinationDate";
+						String sql = "SELECT * FROM vaccination WHERE vaccineId="+vid+" AND vaccinatorId="+vaccinator.getMappedId()+" AND vaccinationStatus = 'VACCINATED' AND DATE(vaccinationDate) BETWEEN '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeLower)+"' AND '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeUpper)+"' "
 								+ "AND vaccinationRecordNum NOT IN (SELECT vaccinationId FROM vaccinator_incentive_log) ORDER BY vaccinationDate";
 						
 						System.out.println(sql);

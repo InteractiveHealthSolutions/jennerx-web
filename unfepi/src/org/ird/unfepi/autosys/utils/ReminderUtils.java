@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Child;
-import org.ird.unfepi.model.ChildLottery;
+import org.ird.unfepi.model.ChildIncentive;
 import org.ird.unfepi.model.Reminder.ReminderType;
 import org.ird.unfepi.model.ReminderSms;
 import org.ird.unfepi.model.Vaccination;
@@ -27,13 +27,14 @@ public class ReminderUtils {
 		rt.addAll(reminderSms.getReminder().getReminderText());
 
 		List<String> names=new ArrayList<String>();
-		ChildLottery vclott = null;
+		ChildIncentive vChildIncentive = null;
 		Vaccination vaccination = reminderSms.getVaccination();
 		Child child = Utils.initializeAndUnproxy(vaccination.getChild());
 		int num = Utils.getRandomNumber(rt.size());
 		
 		if(reminderSms.getReminder().getReminderType().equals(ReminderType.LOTTERY_WON_REMINDER)){
-			vclott = sc.getIncentiveService().findChildLotteryByVaccination(reminderSms.getVaccinationRecordNum(), true, null).get(0);
+			//TODO
+			vChildIncentive = (ChildIncentive) sc.getIncentiveService().findChildIncentiveByVaccination(reminderSms.getVaccinationRecordNum(), true, null).get(0);
 		}
 		
 		try{
@@ -88,9 +89,9 @@ public class ReminderUtils {
 					}
 				}
 				else if(nm.matches("\\[\\[VerificationCode\\.\\w+\\]\\]")){
-					Class<ChildLottery> pcls;
+					Class<ChildIncentive> pcls;
 					try {
-						pcls = (Class<ChildLottery>) Class.forName("org.ird.unfepi.model.ChildLottery");
+						pcls = (Class<ChildIncentive>) Class.forName("org.ird.unfepi.model.ChildLottery");
 						try {
 							String fieldname=nm.replace("[[VerificationCode.","");
 							fieldname=fieldname.replace("]]", "");
@@ -98,7 +99,7 @@ public class ReminderUtils {
 							for (Field field : aaa) {
 								if(field.getName().equalsIgnoreCase(fieldname)){
 									field.setAccessible(true);
-									textToSend=textToSend.replace(nm, field.get(vclott).toString());
+									textToSend=textToSend.replace(nm, field.get(vChildIncentive).toString());
 								}
 							}
 						} catch (Exception e) {

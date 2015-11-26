@@ -95,7 +95,11 @@ public class SecurityUtils {
     public static void main(String[] args) {//010005    	010003
 		try {
 			System.out.println(encrypt("Admin123", "administrator"));
-			System.out.println(decrypt("xpaCO5eMWQKdNaDC3jjVXqLcEJT+6eIMnuzxHpo9pfy6s5KzYavkzbOU9DwA/2n6TmHfL/ZX3cmEgSsOuOK0tA==", "administrator"));
+			
+			
+		//	System.out.println(decrypt("xpaCO5eMWQKdNaDC3jjVXqLcEJT+6eIMnuzxHpo9pfy6s5KzYavkzbOU9DwA/2n6TmHfL/ZX3cmEgSsOuOK0tA==", "administrator"));
+		
+			System.out.println(decrypt("xLgb+3JQ1G1ZlWstsLui4iUGWignm5QyH4QpdlEbJiceloMGXMXeuvUEdXgnMKgSfQJFpowJkd+M0sUG1vOQWA==","administrator"));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

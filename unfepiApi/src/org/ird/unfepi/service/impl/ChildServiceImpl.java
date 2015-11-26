@@ -5,11 +5,13 @@ import java.util.Date;
 import java.util.List;
 
 import org.ird.unfepi.context.ServiceContext;
+import org.ird.unfepi.model.Arm;
 import org.ird.unfepi.model.Child;
 import org.ird.unfepi.model.Child.STATUS;
 import org.ird.unfepi.model.LotterySms;
 import org.ird.unfepi.model.Model.Gender;
 import org.ird.unfepi.model.Screening;
+import org.ird.unfepi.model.dao.DAOArm;
 import org.ird.unfepi.model.dao.DAOChild;
 import org.ird.unfepi.model.dao.DAOLotterySms;
 import org.ird.unfepi.model.dao.DAOScreening;
@@ -27,11 +29,14 @@ public class ChildServiceImpl implements ChildService{
 	
 	private DAOScreening daoscr;
 	
-	public ChildServiceImpl(ServiceContext sc, DAOChild pat, DAOScreening daoscr, DAOLotterySms daolotsms/*,DAOReminder rem,DAOChildCell pcell*/){
+	private DAOArm daoarm;
+	
+	public ChildServiceImpl(ServiceContext sc, DAOChild pat, DAOScreening daoscr, DAOLotterySms daolotsms, DAOArm daoarm/*,DAOReminder rem,DAOChildCell pcell*/){
 		this.sc = sc;
 		this.chldao=pat;
 		this.daoscr = daoscr;
 		this.daolotsms = daolotsms;
+		this.daoarm = daoarm;
 	}
 	
 	public Number LAST_QUERY_TOTAL_ROW_COUNT(Class clazz) {
@@ -43,6 +48,9 @@ public class ChildServiceImpl implements ChildService{
 		}
 		else if(clazz == Screening.class){
 			return daoscr.LAST_QUERY_TOTAL_ROW_COUNT();
+		}
+		else if(clazz == Arm.class){
+			return daoarm.LAST_QUERY_TOTAL_ROW_COUNT();
 		}
 		
 		return null;
@@ -215,6 +223,44 @@ public class ChildServiceImpl implements ChildService{
 	@Override
 	public LotterySms mergeUpdateLotterySms(LotterySms lotterySms) {
 		return (LotterySms) daolotsms.merge(lotterySms);
+	}
+	
+	
+	/* Arm */
+	@Override
+	public Serializable saveArm(Arm arm) {
+		return daoarm.save(arm);
+	}
+
+	@Override
+	public void updateArm(Arm arm) {
+		daoarm.update(arm);
+	}
+
+	@Override
+	public Arm mergeArm(Arm arm) {
+		return (Arm) daoarm.merge(arm);
+	}
+
+	@Override
+	public Arm findArmById(short armId, boolean readonly,
+			String[] mappingsToJoin) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Arm> getAllArm(int firstResult, int fetchsize,
+			boolean readonly, String[] mappingsToJoin) {
+		List<Arm> list = daoarm.getAllArm(firstResult, fetchsize, readonly, mappingsToJoin);
+		return list;
+	}
+
+	@Override
+	public List<Arm> getAllArm(boolean readonly, String[] mappingsToJoin,
+			String orderBySqlFormula) {
+		List<Arm> list = daoarm.getAll(readonly, mappingsToJoin,orderBySqlFormula);
+		return list;
 	}
 
 }

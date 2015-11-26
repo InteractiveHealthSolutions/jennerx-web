@@ -7,13 +7,8 @@
 	<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
 		<!-- <property name="hibernate.connection.password">epiLinux</property>
 		<property name="hibernate.connection.url">jdbc:mysql://125.209.94.150:10080/unfepi</property> -->
- 		<!-- <property name="hibernate.connection.password">ypcr7Pqq</property>
-		<property name="hibernate.connection.url">jdbc:mysql://202.141.249.106:6828/unfepi</property> -->
-
-  		<!-- <property name="hibernate.connection.password">IHS4life</property>
-		<property name="hibernate.connection.url">jdbc:mysql://202.141.249.106:4306/unfepi</property>  -->
-		
- 		<!-- <property name="hibernate.connection.username">epiuser</property> -->
+ 		
+   		<!-- <property name="hibernate.connection.username">epiuser</property> -->
  		
  		<property name="hibernate.connection.password">VA1913wm</property>
 		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/unfepi</property> 
@@ -46,7 +41,7 @@
  	 	<mapping class="org.ird.unfepi.model.Address" />
  		<mapping class="org.ird.unfepi.model.CalendarDay" />
  		<mapping class="org.ird.unfepi.model.Child" />
- 		<mapping class="org.ird.unfepi.model.ChildLottery" />
+ 		<mapping class="org.ird.unfepi.model.ChildIncentive" />
  		<mapping class="org.ird.unfepi.model.ChildLotteryParams" />
 		<mapping class="org.ird.unfepi.model.City" />
 		<mapping class="org.ird.unfepi.model.CommunicationNote" />
@@ -96,6 +91,10 @@
 		<mapping class="org.ird.unfepi.model.VaccineGapType" />
 		<mapping class="org.ird.unfepi.model.VaccinePrerequisite" />
 		<mapping class="org.ird.unfepi.model.VariableSetting" />
+		
+		<mapping class="org.ird.unfepi.model.Arm"/>
+		<mapping class="org.ird.unfepi.model.IncentiveParams"/>
+		<mapping class="org.ird.unfepi.model.VaccinatorIncentive"/>
 		
     </session-factory>
 </hibernate-configuration>

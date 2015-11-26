@@ -40,15 +40,16 @@ public class ChildDashboardController extends DataDisplayController{
 							" ORDER BY IFNULL(vaccinationDate, 99999999999999) ASC, vaccinationDuedate ASC ";
 					List vaccinations = sc.getCustomQueryService().getDataByHQL(hqlvaccination );
 					
-					String hqlchildlottery = "FROM ChildLottery cl " +
+					String hqlchildlottery = "FROM ChildIncentive cl " +
+							" LEFT JOIN FETCH cl.arm ar " +
 							" LEFT JOIN FETCH cl.vaccination v " +
 							" LEFT JOIN FETCH v.vaccine vc " +
 							" LEFT JOIN FETCH v.vaccinationCenter center " +
 							" LEFT JOIN FETCH center.idMapper centerId " +
 							" LEFT JOIN FETCH v.vaccinator vctor " +
 							" LEFT JOIN FETCH vctor.idMapper vctorId " +
-							" LEFT JOIN FETCH cl.storekeeper stork " + 
-							" LEFT JOIN FETCH cl.storekeeper.idMapper storkId " + 
+						//	" LEFT JOIN FETCH cl.storekeeper stork " + 
+						//	" LEFT JOIN FETCH cl.storekeeper.idMapper storkId " + 
 							" WHERE v.childId = " + child.getMappedId() +
 							" ORDER BY v.vaccinationDate ASC";
 					List childlotteries = sc.getCustomQueryService().getDataByHQL(hqlchildlottery);

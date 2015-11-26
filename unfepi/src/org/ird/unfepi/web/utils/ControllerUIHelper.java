@@ -13,6 +13,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.ird.unfepi.ChildIncentivization;
 import org.ird.unfepi.GlobalParams;
 import org.ird.unfepi.beans.EnrollmentWrapper;
 import org.ird.unfepi.constants.WebGlobals;
@@ -182,14 +183,13 @@ public class ControllerUIHelper {
 	 * @param sc {@linkplain ServiceContext} Object that SHOULD be COMMITED and CLOSED after data is saved into session 
 	 * @throws ChildDataInconsistencyException
 	 */
-	public static void doEnrollment(DataEntrySource dataEntrySource, String projectId, Boolean childNamed, Child child, 
+	public static /*void*/ List<ChildIncentivization>  doEnrollment(DataEntrySource dataEntrySource, String projectId, Boolean childNamed, Child child, 
 			String birthdateOrAge, String ageYears, String ageMonths, String ageWeeks, String ageDays, Address address, 
 			VaccinationCenterVisit centerVisit, String completeCourseFromCenter, List<VaccineSchedule> vaccineSchedule, Date formStartDate, User user, ServiceContext sc) throws ChildDataInconsistencyException
 	{
 		handleEnrollmentChild(projectId, childNamed, child, getEnrollmentVaccine(vaccineSchedule, child.getBirthdate(), sc, centerVisit.getVisitDate()), centerVisit.getVaccinationCenterId(), user, sc);
 
-	//	List<ChildLotteryRunner> lotteryResults = handleEnrollmentVaccinations(dataEntrySource, centerVisit, vaccineSchedule, centerVisit.getPreference().getHasApprovedReminders(), child, user, sc);
-		handleEnrollmentVaccinations(dataEntrySource, centerVisit, vaccineSchedule, centerVisit.getPreference().getHasApprovedReminders(), child, user, sc);
+		List<ChildIncentivization> incentivesList = handleEnrollmentVaccinations(dataEntrySource, centerVisit, vaccineSchedule, centerVisit.getPreference().getHasApprovedReminders(), child, user, sc);
 
 		boolean measles2Given = IMRUtils.isMeasles2Given(vaccineSchedule, child.getDateEnrolled());
 		handlePreference(centerVisit.getPreference(), measles2Given , child, user, sc);
@@ -197,7 +197,7 @@ public class ControllerUIHelper {
 		handleEnrollmentContactInfo(centerVisit.getPreference().getHasApprovedReminders(), centerVisit.getContactPrimary(), centerVisit.getContactSecondary(), address, child, user, sc);
 		
 		EncounterUtil.createEnrollmentEncounter(dataEntrySource, projectId, childNamed, child, birthdateOrAge, ageYears, ageMonths, ageWeeks, ageDays, address, centerVisit, vaccineSchedule, completeCourseFromCenter, /*lotteryResults, */formStartDate, user, sc);
-		//return lotteryResults;
+		return incentivesList;
 	}
 	
 	/** Manipulates (populates required default info) and saves data for entities participating in 
@@ -531,14 +531,36 @@ public class ControllerUIHelper {
 		hasApprovedReminders = hasApprovedReminders==null?false:hasApprovedReminders;
 		
 		//List<ChildLotteryRunner> lotteriesRun = new ArrayList<ChildLotteryRunner>();
+		int armId = 0;
+		
+		String sql = "SELECT armId FROM childincentive c  LEFT JOIN unfepi.vaccination v on c.vaccinationRecordNum = v.vaccinationRecordNum where v.childId = " + vaccineSchedule.get(0).getChildId() ;
+		List arms = sc.getCustomQueryService().getDataBySQLMapResult(sql);
+		
+		if(arms.size() > 0 ) {
+			HashMap<String,Integer> testMap = (HashMap<String,Integer>) arms.get(0);
+			if(testMap.get("armId") != null ){
+				armId = testMap.get("armId");
+			}
+		}
+		
 		for (VaccineSchedule vsh : vaccineSchedule) {
-			if((vsh.getStatus() != null && 
+			if((vsh.getStatus() != null && vsh.getVaccine().getVaccineId() <=6 &&
 					!vsh.getStatus().equalsIgnoreCase(VaccineStatusType.VACCINATED_EARLIER.name())) 
 					&& (vsh.getAssigned_duedate() != null || 
 					vsh.getCenter() != null || 
 					!StringUtils.isEmptyOrWhitespaceOnly(vsh.getStatus()) 
 					|| vsh.getVaccination_date() != null)){
 				List<Vaccination> vtnl = sc.getVaccinationService().findByCriteria(centerVisit.getChildId(), vsh.getVaccine().getVaccineId(), null, 0, 10, false, null);
+				
+				/*Check existing Arm */
+			/*	if(armId == 0) {
+					String sql = " select armId from childincentive where vaccinationRecordNum=" + vtnl.get(0).getVaccinationRecordNum() ;
+					List arms = sc.getCustomQueryService().getDataBySQLMapResult(sql);
+					if(arms.size() > 0 ) {
+						armId = Integer.parseInt(arms.get(0).toString());
+					}
+				}
+*/				
 				if(vtnl!=null && vtnl.size() > 1){
 					throw new IllegalStateException(vtnl.size()+" vaccination records found for "+vsh.getVaccine().getName()+" for child "+centerVisit.getChildId());
 				}
@@ -571,9 +593,15 @@ public class ControllerUIHelper {
 					if(vtnl.size() > 0){
 						sc.getVaccinationService().updateVaccinationRecord(vtn);
 					}
-					else {
-						vtn.setVaccinationRecordNum(Integer.parseInt(sc.getVaccinationService().addVaccinationRecord(vtn).toString()));
+					else {					
+						Integer vaccNum = Integer.parseInt(sc.getVaccinationService().addVaccinationRecord(vtn).toString());
+						vtn.setVaccinationRecordNum(vaccNum);
+						if (!ChildIncentivization.vaccinationIncentiveExists(vaccNum,sc)) {
+							// Run Lottery with lottery criteria 0 as enrollment doesnt bother about timeliness
+							ChildIncentivization.runLottery(dataEntrySource, vtn, vsh.getVaccine(), 0, user, armId, sc);
+						}
 					}
+					
 
 					// Run Lottery with lottery criteria 0 as enrollment doesnt bother about timeliness
 					//ChildLotteryRunner lotteryRes = ChildLotteryRunner.runLottery(dataEntrySource, vtn, vsh.getVaccine(), 0, user, sc);
@@ -676,6 +704,34 @@ public class ControllerUIHelper {
 		sc.getDemographicDetailsService().saveAddress(address);
 	}
 	
+	
+	//TODO
+	/** NEW
+	 * Manipulate and save IdMapper for role CHILD and save child for ID assigned by IdMapper
+	 */
+	private static void handle(String projectId, Boolean childNamed, Child child, Vaccine enrollmentVaccine, Integer enrollmentCenter, User user, ServiceContext sc){
+		IdMapper idMapper = new IdMapper();
+		idMapper.setRoleId(sc.getUserService().getRole("child", false, null).getRoleId());
+		idMapper.setMappedId(Integer.parseInt(sc.getIdMapperService().saveIdMapper(idMapper).toString()));
+
+		Identifier ident = new Identifier();
+		ident.setIdentifier(projectId);
+		ident.setIdentifierType((IdentifierType)sc.getCustomQueryService().getDataByHQL("FROM IdentifierType WHERE name ='"+GlobalParams.IdentifierType.CHILD_PROJECT_ID+"'").get(0));
+		//ident.setLocationId(enrollmentCenter);
+		ident.setPreferred(true);
+		ident.setIdMapper(idMapper);
+		sc.getCustomQueryService().save(ident);
+
+		if(!childNamed){
+			child.setFirstName("NO NAME");
+		}
+		child.setCreator(user);
+		child.setStatus(STATUS.FOLLOW_UP);
+		child.setMappedId(idMapper.getMappedId());
+		child.setEnrollmentVaccineId(enrollmentVaccine.getVaccineId());
+		sc.getChildService().saveChild(child);
+	}
+	
 	/**
 	 * Manipulate and save Preference for child on given enrollment date, IFF current vaccine is not Measles2
 	 */
@@ -695,8 +751,8 @@ public class ControllerUIHelper {
 	 * i.e. nextVaccinationObject {@linkplain ControllerUIHelper#handleNewNextVaccination} if current vaccine is not Measles2
 	 * @param dataEntrySource 
 	 */
-	private static /*List<ChildLotteryRunner>*/ void handleEnrollmentVaccinations(DataEntrySource dataEntrySource, VaccinationCenterVisit centerVisit, List<VaccineSchedule> vaccineSchedule, Boolean hasApprovedReminders, Child child, User user, ServiceContext sc){
-		//List<ChildLotteryRunner> lotteriesRun = new ArrayList<ChildLotteryRunner>();
+	private static List<ChildIncentivization> /*void*/ handleEnrollmentVaccinations(DataEntrySource dataEntrySource, VaccinationCenterVisit centerVisit, List<VaccineSchedule> vaccineSchedule, Boolean hasApprovedReminders, Child child, User user, ServiceContext sc){
+		List<ChildIncentivization> incentivesResult = new ArrayList<ChildIncentivization>();
 		for (VaccineSchedule vsh : vaccineSchedule) {
 			if(!StringUtils.isEmptyOrWhitespaceOnly(vsh.getStatus()) 
 					&& (vsh.getAssigned_duedate() != null || vsh.getCenter() != null 
@@ -720,11 +776,15 @@ public class ControllerUIHelper {
 					vtn.setVaccinatorId(centerVisit.getVaccinatorId().intValue());
 					
 					// vaccination must be saved before running lottery
-					vtn.setVaccinationRecordNum(Integer.parseInt(sc.getVaccinationService().addVaccinationRecord(vtn).toString()));
-
-					// Run Lottery with lottery criteria 0 as enrollment doesnt bother about timeliness
-				//	ChildLotteryRunner lotteryRes = ChildLotteryRunner.runLottery(dataEntrySource, vtn, vsh.getVaccine(), 0, user, sc);
-				//	lotteriesRun.add(lotteryRes);
+					Integer vaccNum = Integer.parseInt(sc.getVaccinationService().addVaccinationRecord(vtn).toString());
+					vtn.setVaccinationRecordNum(vaccNum);
+					
+					if (!ChildIncentivization.vaccinationIncentiveExists(vaccNum,sc)) {
+						// Run Lottery with lottery criteria 0 as enrollment doesnt bother about timeliness
+						
+						ChildIncentivization lotteryRes = ChildIncentivization.runLottery(dataEntrySource, vtn, vsh.getVaccine(), 0, user, sc);
+						incentivesResult.add(lotteryRes);
+					}
 				}
 				// if retro
 				else if(vsh.getStatus().toLowerCase().startsWith("retro") 
@@ -751,7 +811,7 @@ public class ControllerUIHelper {
 			}
 		}
 		
-		//return lotteriesRun;
+		return incentivesResult;
 	}
 	/**
 	 * The nextVaccinationObject that would be scheduled first time is populated with respective dates, status, child, and vaccine. Next and previous vaccination trails are maintained. 

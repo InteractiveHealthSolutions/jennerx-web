@@ -25,9 +25,11 @@ import org.ird.unfepi.model.StorekeeperIncentiveParticipant;
 import org.ird.unfepi.model.StorekeeperIncentiveTransaction;
 import org.ird.unfepi.model.StorekeeperIncentiveTransaction.TranscationStatus;
 import org.ird.unfepi.model.DownloadableReport;
+import org.ird.unfepi.model.IncentiveParams;
 import org.ird.unfepi.model.StorekeeperIncentiveWorkProgress;
 import org.ird.unfepi.model.User;
 import org.ird.unfepi.model.Vaccinator;
+import org.ird.unfepi.model.VaccinatorIncentive;
 import org.ird.unfepi.model.VaccinatorIncentiveEvent;
 import org.ird.unfepi.model.VaccinatorIncentiveParams;
 import org.ird.unfepi.model.VaccinatorIncentiveParticipant;
@@ -214,6 +216,9 @@ public class IncentiveUtilsForTEST {
 		/////////////////////////////////////////////////////
 		Date dataDateRangeLower = dateIncentivizationRangeLower;
 		Date dataDateRangeUpper = dateIncentivizationRangeUpper;
+		
+		dataDateRangeLower = sc.getIncentiveService().getAllVaccinatorIncentiveEvent(0, 1, true, null).get(0).getDataRangeDateUpper();
+	
 		try{
 			GlobalParams.INCENTIVEJOBLOGGER.info("Running Job: VaccinatorIncentivizor"/*+jxc.getJobDetail().getFullName()*//*+";prev firetime:"+jxc.getPreviousFireTime()*/);
 
@@ -257,27 +262,65 @@ public class IncentiveUtilsForTEST {
 					int[] vaccineIds = new int[]{1,2,3,4,5,6};
 					Map<Integer, Map<String, Object>> vimap = new HashMap<Integer, Map<String, Object>>();
 					for (int vid : vaccineIds) {
-						String sql = "SELECT * FROM vaccination WHERE vaccineId="+vid+" AND vaccinatorId="+vaccinator.getMappedId()+" AND vaccinationStatus = 'VACCINATED' AND DATE(vaccinationDate) BETWEEN '2014-10-01' AND '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeUpper)+"' "
+						String sql = "SELECT * FROM vaccination WHERE vaccineId="+vid+" AND vaccinatorId="+vaccinator.getMappedId()+" AND vaccinationStatus = 'VACCINATED' AND DATE(vaccinationDate) BETWEEN '2015-11-19' AND '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeUpper)+"' "
 								////COMMITTED FOR GENERATING ALLLL DATA CSV
 								/*+ "AND vaccinationRecordNum NOT IN (SELECT vaccinationId FROM vaccinator_incentive_log) "*/
-								+ "ORDER BY vaccinationDate";
+							+ "ORDER BY vaccinationDate";
+					//	String sql = "SELECT * FROM vaccination WHERE vaccineId="+vid+" AND vaccinatorId="+vaccinator.getMappedId()+" AND vaccinationStatus = 'VACCINATED' AND DATE(vaccinationDate) BETWEEN '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeLower)+"' AND '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeUpper)+"' "
+					//			+ "AND vaccinationRecordNum NOT IN (SELECT vaccinationId FROM vaccinator_incentive_log) ORDER BY vaccinationDate";
 						
 						System.out.println(sql);
 
 						List vlist = sc.getCustomQueryService().getDataBySQLMapResult(sql);
+						
+						
+					//	String sqlForArm1 = "SELECT armId, v.vaccinationRecordNum , vaccinatorId FROM unfepi.childincentive c LEFT JOIN vaccination v  on v.vaccinationRecordNum = c.vaccinationRecordNum"
+					//			+ " Where armId = 1 AND v.vaccineId ="+vid + " and " +  " v.vaccinatorId = " + vaccinator.getMappedId()+ "  BETWEEN '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeLower)+"' AND '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeUpper)+"' "
+					//					+ " ORDER BY vaccinationDate";
+						
+						String sqlForArm1 = "SELECT armId, v.vaccinationRecordNum , vaccinatorId FROM unfepi.childincentive c LEFT JOIN vaccination v  on v.vaccinationRecordNum = c.vaccinationRecordNum"
+								+ " Where armId = 1 AND v.vaccineId ="+vid + " and " +  " v.vaccinatorId = " + vaccinator.getMappedId()+ " AND vaccinationStatus = 'VACCINATED' AND DATE(vaccinationDate) BETWEEN '2015-11-19' AND '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeUpper)+"' "
+										+ " ORDER BY vaccinationDate";
+						
+						System.out.println(sqlForArm1);
+						
+					//	String sqlForArm2 = "SELECT armId, v.vaccinationRecordNum , vaccinatorId FROM unfepi.childincentive c LEFT JOIN vaccination v  on v.vaccinationRecordNum = c.vaccinationRecordNum"
+					//			+ " Where armId = 1 AND v.vaccineId ="+vid + " and " +  " v.vaccinatorId = " + vaccinator.getMappedId()+ "  BETWEEN '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeLower)+"' AND '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeUpper)+"' "
+					//					+ " ORDER BY vaccinationDate";
+						String sqlForArm2 = "SELECT armId, v.vaccinationRecordNum , vaccinatorId FROM unfepi.childincentive c LEFT JOIN vaccination v  on v.vaccinationRecordNum = c.vaccinationRecordNum"
+								+ " Where armId = 2 AND v.vaccineId ="+vid + " and " +  " v.vaccinatorId = " + vaccinator.getMappedId()+ " AND vaccinationStatus = 'VACCINATED' AND DATE(vaccinationDate) BETWEEN '2014-11-19' AND '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeUpper)+"' "
+										+ " ORDER BY vaccinationDate";
+						System.out.println(sqlForArm2);
+						
+						List arm1list = sc.getCustomQueryService().getDataBySQLMapResult(sqlForArm1);
+						List arm2list = sc.getCustomQueryService().getDataBySQLMapResult(sqlForArm2);
+						
+						
+						
+					//	HashMap<String,String> testMap = (HashMap<String,String>) arm1list.get(0);
+					///	String test = testMap.get("armId");
+					//	System.out.println(testMap.get("armId"));
+					//	System.out.println(arm1list.get(1));
 						
 						if(vlist.size() % groupCount != 0){
 							vlist = vlist.subList(0, vlist.size()-(vlist.size()%groupCount));
 						}
 						
 						List<VaccinatorIncentiveParams> viparam = sc.getIncentiveService().findVaccinatorIncentiveParamsByCriteria(null, null, vid, vid, 0, 10, true, null);
-						
+						List<IncentiveParams>    incentiveParamslistArm1 = sc.getIncentiveService().findIncentiveParamsByCriteria((short) vid, 1, (short)2, null, null, null, null, 0, 1, true, null);
+						List<IncentiveParams>    incentiveParamslistArm2 = sc.getIncentiveService().findIncentiveParamsByCriteria((short) vid, 2, (short)2, null, null, null, null, 0, 1, true, null);
+
+						Float totalAmount =  (incentiveParamslistArm1.get(0).getAmount() * arm1list.size()) + (incentiveParamslistArm2.get(0).getAmount() * arm2list.size());
+								
 						HashMap<String, Object> vacmap = new HashMap<String, Object>();
 						vacmap.put("totalCount", vlist.size());
 						vacmap.put("vaccinations", vlist);
 						vacmap.put("groupCount", groupCount);
-						vacmap.put("amountPerTransactionGroup", viparam.get(0).getDenomination());
-						vacmap.put("totalDueAmount", (vlist.size()/groupCount)*viparam.get(0).getDenomination());
+					//	vacmap.put("amountPerTransactionGroup", viparam.get(0).getDenomination());
+					//	vacmap.put("amountPerTransactionGroup", totalAmount);
+						vacmap.put("totalDueAmount", totalAmount);
+					//	vacmap.put("totalDueAmount", (vlist.size()/groupCount)*totalAmount);
+					//	vacmap.put("totalDueAmount", (vlist.size()/groupCount)*viparam.get(0).getDenomination());
 						
 						vimap.put(vid, vacmap);
 					}
@@ -295,7 +338,8 @@ public class IncentiveUtilsForTEST {
 					String caluculationDescr = null;
 					Integer epcharges = null;
 					
-					isincentivized = totalTransactions > 0;
+				//	isincentivized = totalTransactions > 0;
+					isincentivized = true;
 					
 					List<VariableSetting> epchargesl = sc.getIRSettingService().findByCriteria(null, VariableSettingType.EP_CHARGES.name(), null, null, totalAmountDue, totalAmountDue, true, 0, 1);
 					
@@ -342,13 +386,17 @@ public class IncentiveUtilsForTEST {
 						
 						sc.getIncentiveService().saveVaccinatorIncentiveTransaction(sitrans);
 						
+						VaccinatorIncentive vaccinatorIncentive = new VaccinatorIncentive();
+				//		vaccinatorIncentive.set
+						//TODO
+						
 						for (Integer vid : vimap.keySet()) {
 							List<Map<String, Object>> vaccl = (List<Map<String, Object>>)vimap.get(vid).get("vaccinations");
 
 							if(vaccl.size() >0)
 							{//////////DONT WANT TO COMMIT IN log for now ////CHANGED TO TEST
-							Session ses = Context.getNewSession();
-							Transaction tx = ses.beginTransaction();
+					//		Session ses = Context.getNewSession();
+					//		Transaction tx = ses.beginTransaction();
 							String sql = "INSERT INTO _test_log (vaccinatorIncentiveParticipantId, vaccinationId, dateCreated) "
 									+ "VALUES ";
 							
@@ -361,9 +409,9 @@ public class IncentiveUtilsForTEST {
 							}
 							System.out.println(sql);
 							
-							ses.createSQLQuery(sql).executeUpdate();
-							tx.commit();
-							ses.close();
+					//		ses.createSQLQuery(sql).executeUpdate();
+					//		tx.commit();
+					//		ses.close();
 							}
 						}
 					}
@@ -448,12 +496,12 @@ System.out.println("all vaccinators processed:");
 					
 			System.out.println(sqlvcinAllTransactions);
 			
-			Session ss = Context.getNewSession();
-			ss.beginTransaction();
-			List listAllTransaction = ss.createSQLQuery(sqlvcinAllTransactions).list();
-			ss.close();
-System.out.println("listAllTransaction:"+listAllTransaction.size());			
-			csvAllTransactions.populateCsvFromList(listAllTransaction, true);
+		//	Session ss = Context.getNewSession();
+		//	ss.beginTransaction();
+		//	List listAllTransaction = ss.createSQLQuery(sqlvcinAllTransactions).list();
+		//	ss.close();
+//System.out.println("listAllTransaction:"+listAllTransaction.size());			
+//			csvAllTransactions.populateCsvFromList(listAllTransaction, true);
 			
 			///DONOT WANT TO SAVE DATA IN DOWNLOADABLES
 			/*FileUtils.saveDownloadable(csvProcess.getCsvStream(true), GlobalParams.VACCINATOR_INCENTIVE_DOWNLOADABLE_CSV_INITIALS+"_"+new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+".csv", GlobalParams.INCENTIVE_CSV_DIR, user, DownloadableType.INCENTIVE_REPORT);

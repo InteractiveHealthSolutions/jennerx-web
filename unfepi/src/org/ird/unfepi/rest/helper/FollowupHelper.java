@@ -11,7 +11,7 @@ import java.util.Map;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.ird.unfepi.ChildLotteryRunner;
+import org.ird.unfepi.ChildIncentivization;
 import org.ird.unfepi.GlobalParams;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
