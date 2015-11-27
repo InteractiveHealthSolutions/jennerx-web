@@ -97,6 +97,8 @@ import org.ird.unfepi.model.dao.hibernatedimpl.DAOVaccinatorIncentiveTransaction
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOVaccinatorIncentiveWorkProgressImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOVaccineImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOVariableSettingImpl;
+import org.ird.unfepi.model.dao.hibernatedimpl.DAOWomenImpl;
+import org.ird.unfepi.model.dao.hibernatedimpl.DAOWomenVaccinationImpl;
 import org.ird.unfepi.service.ChildService;
 import org.ird.unfepi.service.CommunicationService;
 import org.ird.unfepi.service.CustomQueryService;
@@ -111,6 +113,8 @@ import org.ird.unfepi.service.StorekeeperService;
 import org.ird.unfepi.service.UserService;
 import org.ird.unfepi.service.UserSmsService;
 import org.ird.unfepi.service.VaccinationService;
+import org.ird.unfepi.service.WomenService;
+import org.ird.unfepi.service.WomenVaccinationService;
 import org.ird.unfepi.service.impl.ChildServiceImpl;
 import org.ird.unfepi.service.impl.CommunicationServiceImpl;
 import org.ird.unfepi.service.impl.CustomQueryServiceImpl;
@@ -125,6 +129,8 @@ import org.ird.unfepi.service.impl.StorekeeperServiceImpl;
 import org.ird.unfepi.service.impl.UserServiceImpl;
 import org.ird.unfepi.service.impl.UserSmsServiceImpl;
 import org.ird.unfepi.service.impl.VaccinationServiceImpl;
+import org.ird.unfepi.service.impl.WomenServiceImpl;
+import org.ird.unfepi.service.impl.WomenVaccinationServiceImpl;
 
 public class ServiceContext {
 
@@ -163,6 +169,10 @@ public class ServiceContext {
 	private UserSmsService userSmsService;
 
 	private VaccinationService vaccinationService;
+	
+	private WomenService womenService;
+	
+	private WomenVaccinationService womenVaccinationService;
 
 	ServiceContext(SessionFactory sessionObj) 
 	{
@@ -182,7 +192,10 @@ public class ServiceContext {
 		DAOLotterySms daolotsms = new DAOLotterySmsImpl(session);
 		DAOArm	daoarm 	= new DAOArmImpl(session);
 		this.childService = new ChildServiceImpl(this, chldoa, scrdao, daolotsms,daoarm);
-
+		
+		DAOWomenImpl womendao = new DAOWomenImpl(session);
+		this.womenService = new WomenServiceImpl(this,womendao);
+		
 		DAODirectQuery dirqudao = new DAODirectQueryImpl(session);
 		DAO dao = new DAOHibernateImpl(session);
 		this.customQueryService = new CustomQueryServiceImpl(this, dirqudao, dao);
@@ -208,7 +221,11 @@ public class ServiceContext {
 		DAOVaccinationCenterVaccineDay daovcday = new DAOVaccinationCenterVaccineDayImpl(session);
 		this.vaccinationService = new VaccinationServiceImpl(this, vaccdao, pvdao,
 				vacccentdao, vaccinatordao, daocalendar, daovcday);
-
+		
+		DAOWomenVaccinationImpl womenvaccdao = new DAOWomenVaccinationImpl(session);
+		this.womenVaccinationService = new WomenVaccinationServiceImpl(this, vaccdao, womenvaccdao,
+				vacccentdao, vaccinatordao, daocalendar, daovcday);
+		
 		DAOReminderImpl remdao = new DAOReminderImpl(session);
 		DAOReminderSmsImpl remsmsdao = new DAOReminderSmsImpl(session);
 		this.reminderService = new ReminderServiceImpl(this, remdao, remsmsdao);
@@ -381,4 +398,13 @@ public class ServiceContext {
 		//if(!session.getTransaction().isActive()) beginTransaction();
 		return vaccinationService;
 	}
+	
+	public WomenService getWomenService() {
+		return womenService;
+	}
+	
+	public WomenVaccinationService getWomenVaccinationService() {
+		return womenVaccinationService;
+	}
+	
 }

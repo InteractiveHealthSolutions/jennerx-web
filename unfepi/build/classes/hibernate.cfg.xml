@@ -33,6 +33,9 @@
 		<property name="hibernate.c3p0.acquireRetryAttempts">3</property>
 		<property name="hibernate.c3p0.max_statements">50</property> -->
  
+ 	 	
+ 	 	
+ 	 	
  	 	<mapping class="org.ird.unfepi.model.Address" />
  		<mapping class="org.ird.unfepi.model.CalendarDay" />
  		<mapping class="org.ird.unfepi.model.Child" />
@@ -85,11 +88,17 @@
 		<mapping class="org.ird.unfepi.model.VaccineGap" />
 		<mapping class="org.ird.unfepi.model.VaccineGapType" />
 		<mapping class="org.ird.unfepi.model.VaccinePrerequisite" />
-		<mapping class="org.ird.unfepi.model.VariableSetting" />	
-			
+		<mapping class="org.ird.unfepi.model.VariableSetting" />
+		
+		<!-- Daniyal's Addition -->
 		<mapping class="org.ird.unfepi.model.Arm"/>
 		<mapping class="org.ird.unfepi.model.IncentiveParams"/> 
 		<mapping class="org.ird.unfepi.model.VaccinatorIncentive"/>
 		
+		<!-- Safwan's Addition -->
+		<mapping class="org.ird.unfepi.model.Women" />
+		<mapping class="org.ird.unfepi.model.WomenVaccination"/>
+		
     </session-factory>
 </hibernate-configuration>
+

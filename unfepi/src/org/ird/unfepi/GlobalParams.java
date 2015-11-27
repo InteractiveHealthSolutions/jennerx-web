@@ -106,6 +106,7 @@ public class GlobalParams
 	}
 	public enum IdentifierType {
 		CHILD_PROJECT_ID,
+		WOMEN_PROJECT_ID,
 		OLD_CHILD_PROJECT_ID,
 		VACCINATOR_PROJECT_ID,
 		CENTER_PROJECT_ID,

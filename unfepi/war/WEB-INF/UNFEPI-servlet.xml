@@ -87,6 +87,11 @@
 	<prop key="/addlocation.htm">AddLocationController</prop>
 	<prop key="/editlocation.htm">EditLocationController</prop>
 	<prop key="/viewLocations.htm">ViewLocationsController</prop>
+	
+	<!-- Women Controllers -->
+	<prop key="/viewWomen.htm">ViewWomenController</prop>
+	<prop key="/addWomen.htm">AddWomenController</prop>
+	
 		
 	<prop key="/viewUsers.htm">ViewUsersController</prop>
 	<prop key="/adduser.htm">AddUserController</prop>
@@ -759,6 +764,43 @@
     	</bean>
     </property>
 </bean>
+
+<bean name="ViewWomenController" class="org.ird.unfepi.web.controller.ViewWomenController">
+    <property name="formView" value="dataForm"/>
+	<property name="dataForm">
+	    <bean class="org.ird.unfepi.DataViewForm">
+	        <property name="formName" value="women" />
+        	<property name="formTitle" value="Women" />
+        	<property name="permission" value="VIEW_USERS" />
+        	<property name="isInsertable" value="false" />
+    	</bean>
+    </property>
+</bean>
+
+<bean name="AddWomenController" class="org.ird.unfepi.web.controller.AddWomenController">
+	<property name="sessionForm">
+		<value>true</value>
+	</property>
+	<property name="commandName">
+		<value>command</value>
+	</property>
+	<property name="commandClass">
+		<value>org.ird.unfepi.beans.EnrollmentWrapperWomen</value>
+	</property>
+	<!-- <property name="validator">
+		<ref bean="childValidator"/>
+	</property> -->
+	<property name="formView">
+		<value>dataForm</value>
+	</property>
+	<property name="dataEntryForm">
+	    <bean class="org.ird.unfepi.DataEntryForm">
+	        <property name="formName" value="women" />
+        	<property name="formTitle" value="Enrollment (New)" />
+        	<property name="permission" value="ADD_CHILDREN_DATA" />
+    	</bean>
+    </property>
+   </bean>
 
 <bean name="ViewUsersController" class="org.ird.unfepi.web.controller.ViewUsersController">
 	<property name="formView" value="dataForm"/>

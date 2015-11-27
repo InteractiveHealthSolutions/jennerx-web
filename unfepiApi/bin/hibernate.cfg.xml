@@ -92,9 +92,15 @@
 		<mapping class="org.ird.unfepi.model.VaccinePrerequisite" />
 		<mapping class="org.ird.unfepi.model.VariableSetting" />
 		
+		<!-- Daniyal's Addition -->
 		<mapping class="org.ird.unfepi.model.Arm"/>
 		<mapping class="org.ird.unfepi.model.IncentiveParams"/>
 		<mapping class="org.ird.unfepi.model.VaccinatorIncentive"/>
 		
+		<!-- Safwan's Addition -->
+		<mapping class="org.ird.unfepi.model.Women"/>
+		<mapping class="org.ird.unfepi.model.WomenVaccination"/>
+		
     </session-factory>
 </hibernate-configuration>
+
