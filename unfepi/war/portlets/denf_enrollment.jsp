@@ -94,19 +94,6 @@ function submitThisForm() {
 <form method="post" id="frm" name="frm" >
 <table class="denform-h">
 	<tr>
-		<td>Vaccinator ID <span class="mendatory-field">*</span></td>
-		<td><spring:bind path="command.centerVisit.vaccinatorId">
-            <select id="vaccinatorId" name="centerVisit.vaccinatorId" bind-value="${status.value}">
-                <option></option>
-                <c:forEach items="${vaccinators}" var="vaccinator"> 
-                <option value="${vaccinator.mappedId}">${vaccinator.idMapper.identifiers[0].identifier} : ${vaccinator.firstName}</option>
-            	</c:forEach> 
-            </select>
-            <span class="error-message"><c:out	value="${status.errorMessage}" /></span> 
-            </spring:bind>
-		</td>
-	</tr>
-	<tr>
     	<td>Enrollment ki Tareekh <span class="mendatory-field">*</span></td>
         <td>
         <spring:bind path="command.centerVisit.visitDate">
@@ -125,6 +112,20 @@ function centerVisitDateChanged() {
 </script>
     	</td>
     </tr>
+    	<td>Vaccinator ID <span class="mendatory-field">*</span></td>
+		<td><spring:bind path="command.centerVisit.vaccinatorId">
+            <select id="vaccinatorId" name="centerVisit.vaccinatorId" bind-value="${status.value}">
+                <option></option>
+                <c:forEach items="${vaccinators}" var="vaccinator"> 
+                <option value="${vaccinator.mappedId}">${vaccinator.idMapper.identifiers[0].identifier} : ${vaccinator.firstName}</option>
+            	</c:forEach> 
+            </select>
+            <span class="error-message"><c:out	value="${status.errorMessage}" /></span> 
+            </spring:bind>
+		</td>
+	</tr>
+	<tr>
+    
 	<tr>
 		<td>Vaccination Center <span class="mendatory-field">*</span></td>
 		<td>
