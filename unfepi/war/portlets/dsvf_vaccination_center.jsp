@@ -32,7 +32,7 @@ if(edit){
 <%
 if(edit){
 %>    	 
-			<td><a href="editVaccinationCenter.htm?rid=${centermap.center.mappedId}"  class="icon"><img alt="edit" src ="images/edit-icon.png" class="icon"></a></td>
+			<td><a href="editvaccinationCenter.htm?rid=${centermap.center.mappedId}"  class="icon"><img alt="edit" src ="images/edit-icon.png" class="icon"></a></td>
 <%
 }
 %> 
@@ -43,6 +43,7 @@ if(edit){
             <td><c:out value="${centermap.center.fullName}"></c:out></td>
             <td class="lowercase"><c:out value="${centermap.center.centerType}"></c:out></td>
             <td>
+            <a href="editvaccinationCenter.htm?rid=${centermap.center.mappedId}&editvaccinedays=true" class="anchorCustom">clear all and re-enter</a><br>
             <c:forEach items="${centermap.vaccdaymaplist}" var="vdml">
             	<span style="font-weight: bolder;">${vdml['vaccine'].name}: </span>${vdml['daylist']}<br>
             </c:forEach>
