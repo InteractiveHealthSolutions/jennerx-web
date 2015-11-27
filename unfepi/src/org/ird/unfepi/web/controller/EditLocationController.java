@@ -67,11 +67,11 @@ public class EditLocationController extends DataEditFormController
 	@Override
 	protected Object formBackingObject(HttpServletRequest request)
 			throws Exception {
-		Location loc = new Location();
-		String rec = request.getParameter("editRecord");
+		Location loc = null;
+		String rec = request.getParameter("rid");
 		ServiceContext sc = Context.getServices();
 		try{
-			loc = (Location) sc.getCustomQueryService().getDataByHQL("from Location where locationId="+rec).get(0);
+			loc = (Location) sc.getCustomQueryService().getDataByHQL("from Location l left join fetch l.parentLocation p left join fetch l.locationType lt where l.locationId="+rec).get(0);
 		}catch (Exception e) {
 			e.printStackTrace();
 			GlobalParams.FILELOGGER.error(formType.name(), e);

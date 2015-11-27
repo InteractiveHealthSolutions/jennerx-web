@@ -1,6 +1,5 @@
 package org.ird.unfepi.web.controller;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +14,7 @@ import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.LoggedInUser;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Location;
+import org.ird.unfepi.model.LocationType;
 import org.ird.unfepi.utils.IRUtils;
 import org.ird.unfepi.utils.LoggerUtils;
 import org.ird.unfepi.utils.LoggerUtils.LogType;
@@ -28,7 +28,6 @@ import org.springframework.web.servlet.view.RedirectView;
 public class AddLocationController  extends DataEntryFormController{
 
 	private static final FormType formType = FormType.LOCATION_ADD;
-	private Date dateFormStart = new Date();
 	
 	@Override
 	protected ModelAndView onSubmit(HttpServletRequest request,
@@ -46,7 +45,7 @@ public class AddLocationController  extends DataEntryFormController{
 			
 			GlobalParams.DBLOGGER.info(IRUtils.convertToString(loc), LoggerUtils.getLoggerParams(LogType.TRANSACTION_INSERT, formType, user.getUser().getUsername()));
 
-			return new ModelAndView(new RedirectView("viewLocations.htm?action=search&"+SearchFilter.PROGRAM_ID.FILTER_NAME()+"="+loc.getName()));
+			return new ModelAndView(new RedirectView("viewLocations.htm?action=search&"+SearchFilter.NAME_PART.FILTER_NAME()+"="+loc.getName()));
 		}
 		catch (Exception e) {
 			sc.rollbackTransaction();
@@ -63,16 +62,19 @@ public class AddLocationController  extends DataEntryFormController{
 	
 	@Override
 	protected Object formBackingObject(HttpServletRequest request)	throws Exception {
-		dateFormStart = new Date();
-		
-		return new Location();
+		Location l = new Location();
+		l.setParentLocation(new Location());
+		l.setLocationType(new LocationType());
+		return l;
 	}
-/*	@Override
+	
+	/*@Override
 	protected ModelAndView processFormSubmission(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)
-			throws Exception {
+			HttpServletResponse response, Object command, BindException errors) throws Exception {
+		LocationValidator v = (LocationValidator) getValidator();
+		v.validate(command, errors);
 		System.out.println(errors.getAllErrors());
-		return null;
+		return processFormSubmission(request, response, command, errors);
 	}*/
 	
 	@Override
