@@ -81,7 +81,7 @@
 	<prop key="/viewStorekeepers.htm">ViewStorekeepersController</prop>
 	<prop key="/storekeeperDetails.htm">ViewStorekeeperDetailsController</prop>
 	<prop key="/addvaccination_center.htm">AddVaccinationCenterController</prop>
-	<prop key="/editVaccinationCenter.htm">EditVaccinationCenterController</prop>
+	<prop key="/editvaccinationCenter.htm">EditVaccinationCenterController</prop>
 	<prop key="/viewVaccinationCenters.htm">ViewVaccinationCentersController</prop>
 	<prop key="/vaccinationCenterDetails.htm">ViewVaccinationCenterDetailsController</prop>
 	<prop key="/addlocation.htm">AddLocationController</prop>
@@ -672,8 +672,15 @@
 		<ref bean="vaccinationCenterValidator"/>
 	</property>
 	<property name="formView">
-		<value>editVaccinationCenter</value>
+		<value>dataForm</value>
 	</property>
+	<property name="dataEditForm">
+	    <bean class="org.ird.unfepi.DataEditForm">
+	        <property name="formName" value="vaccination_center" />
+        	<property name="formTitle" value="Vaccination Center (Edit)" />
+        	<property name="permission" value="CORRECT_VACCINATION_CENTERS" />
+    	</bean>
+    </property>
 </bean>
 <bean name="ViewVaccinationCentersController" class="org.ird.unfepi.web.controller.ViewVaccinationCentersController">
     <property name="formView" value="dataForm"/>
