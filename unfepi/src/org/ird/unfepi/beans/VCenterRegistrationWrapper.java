@@ -61,18 +61,20 @@ public class VCenterRegistrationWrapper {
 			List<Vaccine> vlist = sc.getVaccinationService().getAll(true, null, " name ");
 			for (Vaccine vaccine : vlist) 
 			{
-				Map<String,Object> vdmap = new HashMap<String, Object>();
-				vdmap.put("vaccine", vaccine);
-				String[] dayarr = new String[7];
-				
-				for (int i = 0; i < calendarDays.size(); i++) {
-					if(isDaySelected(vaccine.getVaccineId(), calendarDays.get(i).getDayNumber(), vcvd)){
-						dayarr[i] = calendarDays.get(i).getDayFullName();
+				if(vaccine.getVaccineGaps() != null && vaccine.getVaccineGaps().size() > 0){
+					Map<String,Object> vdmap = new HashMap<String, Object>();
+					vdmap.put("vaccine", vaccine);
+					String[] dayarr = new String[7];
+					
+					for (int i = 0; i < calendarDays.size(); i++) {
+						if(vcvd != null && isDaySelected(vaccine.getVaccineId(), calendarDays.get(i).getDayNumber(), vcvd)){
+							dayarr[i] = calendarDays.get(i).getDayFullName();
+						}
 					}
+					
+					vdmap.put("daylist", dayarr);
+					vaccineDayMapList.add(vdmap);
 				}
-				
-				vdmap.put("daylist", dayarr);
-				vaccineDayMapList.add(vdmap);
 			}
 		}
 		finally{
