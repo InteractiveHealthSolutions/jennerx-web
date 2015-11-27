@@ -1,3 +1,4 @@
+<%@page import="org.ird.unfepi.context.ServiceContext"%>
 <%@ include file="/WEB-INF/template/include.jsp"%>
 
 <%@page import="org.ird.unfepi.model.VaccinationCenter.CenterType"%>
@@ -5,37 +6,8 @@
 
 <script type="text/javascript">
 <!--
-function subfrm(){
-	var vacccenter=document.getElementById("cityId").value;
-	if(vacccenter==null ||vacccenter==''){
-		alert('Please select the City vaccination Center is located in');
-		return;
-	}
-	
-/* 	var programId;
-	var asgnsno = document.getElementById("vaccinationCenterIdAssigned").value;
-	var reg = /^[0-9]+/;
-	if(reg.test(asgnsno)!=true || asgnsno.length < 3){
-		alert('Please specify a valid numeric and 3 digits serial number part of programId assigned to vaccination center');
-		return;
-	}
 
-	programId = document.getElementById("autogenIdPart").value+""+document.getElementById("vaccinationCenterIdAssigned").value;
-				
-	DWRVaccinationCenterService.isIdExists(programId,{
-		async: false,
-		callback: function (res2) {
-			if(res2){
-				alert('Cannot submit registration for id. Check if another center have been submitted with same id');
-				return;
-			}
-			
-			doconfirmunload = false;
-			if(confirm("Are you sure you want to submit data ?")){
-				submitThisForm();
-			}
-	}}); */
-	
+function subfrm(){
 	submitThisForm();
 }
 
@@ -46,53 +18,17 @@ function submitThisForm() {
 //-->
 </script>
 <form method="post" id="frm" name="frm" >
+<!-- DONOT REMOVE -->
+<input type="hidden" value="${editvaccinedays}"/>
 <table class="denform-h">
 	<tr>
-		<td>City<span class="mendatory-field">*</span></td>
-		<td>
-            <select id="cityId" name="cityId" onchange="treeDataLoaderLocations(this.value);" bind-value="${cityIdselected}">
-                  <option></option>
-            </select>
-    <script><!--
-        $(document).ready(function() {
-            DWREntityService.getLocationList(["city"],null,{
-                 async: false,
-                 callback: function (resl) {
-                         $('#cityId').empty().append('<option></option>');
-                         for ( var i = 0; i < resl.length; i++) {
-                                 $('#cityId').append('<option value="'+resl[i].locationId+'">'+resl[i].fullname+'</option>');
-                         }
-                         $('#cityId').val($('#cityId').attr('bind-value'));
-            }});
-        });
-    //--></script>
-
-		</td>
-	</tr>
-	<tr>
-		<td>Area</td>
-        <td>
-       <input name="centerLocation" id="cc" class="easyui-combotree" style="width:250px;"/>
-<script type="text/javascript">
-$( document ).ready(function() {
-$('#cc').combotree({
-    required: true,
-    loader: treeDataLoaderLocations
-    });
-    
-});
-
-function treeDataLoaderLocations(parentId){
-	//alert(JSON.stringify(parentId));
-	DWREntityService.getLocationHierarchy({"parentId": (isNaN(parentId)?"":parentId)}, 
-			{callback: function(result) {
-				$('#cc').combotree('clear');
-				$('#cc').combotree('loadData' ,result);
-			}, async: false, timeout: 5000});
-}
-</script>
-    	</td>
-	</tr>
+		<td>Center Location<span class="mendatory-field">*</span></td>
+        <td>${command.vaccinationCenter.idMapper.identifiers[0].location.parentLocation.name} 
+        (${command.vaccinationCenter.idMapper.identifiers[0].location.parentLocation.locationType.typeName})
+        >> 
+        ${command.vaccinationCenter.idMapper.identifiers[0].location.name} 
+        (${command.vaccinationCenter.idMapper.identifiers[0].location.locationType.typeName})</td>
+	</tr>	
     <tr>
 		<td>Date Registered<span class="mendatory-field">*</span></td>
         <td>
@@ -103,10 +39,15 @@ function treeDataLoaderLocations(parentId){
     	</td>
 	</tr>
     <tr>
+    	<td>Project ID (Program Id) : </td>
+        <td><div id="idContainerDiv" class="hltext1">${command.vaccinationCenter.idMapper.identifiers[0].identifier}</div>
+        </td>
+    </tr>
+    <tr>
 		<td>Center Type :<span class="mendatory-field">*</span></td>
 		<td><spring:bind path="command.vaccinationCenter.centerType">
 			<select id="centerType" name="vaccinationCenter.centerType" bind-value="${status.value}">
-				<c:forEach items="<%=CenterType.values()%>" var="centerType_value"  >
+				<c:forEach items="<%=CenterType.values()%>" var="centerType_value">
 					<option>${centerType_value}</option>
 				</c:forEach>
 			</select>
@@ -130,6 +71,7 @@ function treeDataLoaderLocations(parentId){
              </spring:bind>
 		</td>
     </tr>
+<c:if test="${not empty editvaccinedays && editvaccinedays == true}">
     <tr>
         <td colspan="2" class="separator-heading">VACCINE DAYS</td>
     </tr>
@@ -167,19 +109,22 @@ function treeDataLoaderLocations(parentId){
    	    </table>
     	</td>
     </tr>
+</c:if>
 	<tr>
 		<td>Additional Note</td>
 		<td><spring:bind path="command.vaccinationCenter.description">
-			<textarea name="description" maxlength="255"></textarea>
+			<textarea name="description" maxlength="255">${status.value}</textarea>
 			<br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
 		</td>
 	</tr>
+	<% ServiceContext sc = (ServiceContext)request.getAttribute("sc");
+ 	//must close session here; or do it in finally of respective controller else can create memory leak
+ 	if(sc!=null)sc.closeSession();%>
     <tr>
+        <td></td>
         <td>
-        <input type="button"  id="submitBtn" value="Submit Data" onclick="subfrm();" align="right" style="width: 300px;">
-        </td>
-        <td>
+        <input type="button" id="submitBtn" value="Submit Data" onclick="subfrm();">
         </td>
     </tr>
 </table>

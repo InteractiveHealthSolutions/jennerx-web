@@ -23,7 +23,22 @@ public class LocationValidator implements Validator{
 		}
 
 		if(!DataValidation.validate(REG_EX.NO_SPECIAL_CHAR, loc.getFullName())){
-			error.rejectValue("vaccinationCenter.fullName" , "" , ErrorMessages.LOCATION_FULLNAME_INVALID);
+			error.rejectValue("fullName" , "" , ErrorMessages.LOCATION_FULLNAME_INVALID);
+		}
+		
+		// if location is city and other id is null then reject
+		if(loc.getLocationType().getLocationTypeId() == 1 && !DataValidation.validate(REG_EX.NUMERIC, loc.getOtherIdentifier())){
+			error.rejectValue("otherIdentifier" , "" , "A valid numeric ID must be specified for Cities. This is appended with Center ID");
+		}
+		
+		if(loc.getLocationType() == null || 
+				loc.getLocationType().getLocationTypeId() == null 
+				|| loc.getLocationType().getLocationTypeId() <= 0){
+			error.rejectValue("locationType.locationTypeId" , "" , "A location type must be specified");
+		}
+		if(loc.getParentLocation() == null || 
+				loc.getParentLocation().getLocationId() == null || loc.getParentLocation().getLocationId() <= 0){
+			error.rejectValue("parentLocation.locationId" , "" , "A parent location must be specified");
 		}
 	}
 }

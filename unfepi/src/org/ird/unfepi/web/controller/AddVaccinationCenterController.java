@@ -25,6 +25,7 @@ import org.ird.unfepi.utils.LoggerUtils.LogType;
 import org.ird.unfepi.utils.StringUtils;
 import org.ird.unfepi.utils.UserSessionUtils;
 import org.ird.unfepi.web.utils.ControllerUIHelper;
+import org.ird.unfepi.web.validator.VaccinationCenterValidator;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
@@ -45,8 +46,9 @@ public class AddVaccinationCenterController  extends DataEntryFormController{
 		
 		ServiceContext sc = Context.getServices();
 		try{
-			String cityId = request.getParameter("cityId");
+			String cityIdParam = request.getParameter("cityId");
 			String centerLocation = request.getParameter("centerLocation");
+			String cityId = sc.getCustomQueryService().getDataByHQL("SELECT otherIdentifier FROM Location WHERE locationId="+cityIdParam).get(0).toString();
 
 			String sql = "SELECT IFNULL(MAX(SUBSTRING(i.identifier, "+(cityId.length()+1)+",LENGTH(i.identifier)-"+(cityId.length()-1)+")),0) FROM vaccinationcenter v JOIN idmapper id ON v.mappedId=id.mappedId JOIN identifier i ON id.mappedId=i.mappedId WHERE name NOT LIKE 'other%' AND i.identifier NOT LIKE '%999' AND i.identifier LIKE '"+cityId+"%'";
 			int maxidstk = Integer.parseInt(sc.getCustomQueryService().getDataBySQL(sql ).get(0).toString());
@@ -88,13 +90,18 @@ public class AddVaccinationCenterController  extends DataEntryFormController{
 		
 		return new VCenterRegistrationWrapper();
 	}
-/*	@Override
+	
+	@Override
 	protected ModelAndView processFormSubmission(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)
-			throws Exception {
-		System.out.println(errors.getAllErrors());
-		return null;
-	}*/
+			HttpServletResponse response, Object command, BindException errors) throws Exception {
+		VaccinationCenterValidator v = (VaccinationCenterValidator) getValidator();
+		v.validate(command, errors);
+		
+		if(request.getParameter("cityId") == null ||request.getParameter("centerLocation") == null){
+			errors.reject("", "City and Area MUST be specified for center");
+		}
+		return super.processFormSubmission(request, response, command, errors);
+	}
 	
 	@Override
 	protected Map referenceData(HttpServletRequest request, Object command,	Errors errors) throws Exception 
