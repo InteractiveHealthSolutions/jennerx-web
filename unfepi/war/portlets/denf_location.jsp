@@ -17,7 +17,10 @@ function submitThisForm() {
 	<tr>
 		<td>Parent Location</td>
         <td>
-       <input name="parentLocation" id="cc" class="easyui-combotree" style="width:250px;"/>
+<spring:bind path="command.parentLocation.locationId">
+    <input name="${status.expression}" id="cc" class="easyui-combotree" style="width:250px;"/>
+	<br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
+</spring:bind>
 <script type="text/javascript">
 $( document ).ready(function() {
 $('#cc').combotree({
@@ -40,16 +43,25 @@ function treeDataLoaderLocations(parentId){
 	</tr>
     <tr>
 		<td>Location Type :<span class="mendatory-field">*</span></td>
-		<td><spring:bind path="command.locationType">
-			<select id="locationType" name="locationType" bind-value="${status.value}">
-				<c:forEach items="locationTypes" var="locationType_value"  >
-					<option>${locationType_value}</option>
-				</c:forEach>
-			</select>
-			<br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
-			</spring:bind>
+		
+		<td><spring:bind path="command.locationType.locationTypeId">
+            <select id="locationTypeId" name="${status.expression}" bind-value="${status.value}">
+                    <c:forEach items="${locationTypes}" var="locationT_val"  >
+                            <option value="${locationT_val.locationTypeId}">${locationT_val.typeName}</option>
+                    </c:forEach>
+            </select>
+            <br><span class="error-message"><c:out  value="${status.errorMessage}" /></span>
+            </spring:bind>
 		</td>
 	</tr>
+	<tr>
+        <td>Location Program ID (mandatory incase of city)</td>
+        <td><spring:bind path="command.otherIdentifier">
+             <input type="text" id="otherIdentifier" name="otherIdentifier" maxlength="2" value="${status.value}"/>
+             <br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
+             </spring:bind>
+		</td>
+    </tr>
     <tr>
         <td>Name(unique and identifiable): <span class="mendatory-field">*</span></td>
         <td><spring:bind path="command.name">

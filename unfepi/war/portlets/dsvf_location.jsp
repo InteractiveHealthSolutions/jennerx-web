@@ -19,6 +19,7 @@ if(edit){
 			<th>Name</th>
             <th>Full Name</th>
 			<th>Type</th>
+			<th>Identifier</th>
 			<th>Parent Location</th>
         </tr>
     </thead>
@@ -35,6 +36,7 @@ if(edit){
             <td>${loc.name}</td>
             <td><c:out value="${loc.fullName}"></c:out></td>
             <td class="lowercase"><c:out value="${loc.locationType.typeName}"></c:out></td>
+            <td>${loc.otherIdentifier}</td>
             <td>${loc.parentLocation.name}</td>
         </tr>
   </c:forEach>
