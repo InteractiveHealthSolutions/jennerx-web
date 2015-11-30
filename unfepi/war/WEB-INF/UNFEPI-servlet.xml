@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
 
+
+<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" 
        xmlns:context="http://www.springframework.org/schema/context" 
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -677,8 +678,15 @@
 		<ref bean="vaccinationCenterValidator"/>
 	</property>
 	<property name="formView">
-		<value>editVaccinationCenter</value>
+		<value>dataForm</value>
 	</property>
+	   <property name="dataEditForm">
+678	            <bean class="org.ird.unfepi.DataEditForm">
+679	                <property name="formName" value="vaccination_center" />
+680	                <property name="formTitle" value="Vaccination Center (Edit)" />
+681	                <property name="permission" value="CORRECT_VACCINATION_CENTERS" />
+682	            </bean>
+683	    </property>
 </bean>
 <bean name="ViewVaccinationCentersController" class="org.ird.unfepi.web.controller.ViewVaccinationCentersController">
     <property name="formView" value="dataForm"/>
@@ -1106,4 +1114,4 @@
         <property name="prefix" value="/jsp/"></property>
         <property name="suffix" value=".jsp"></property>
     </bean>
-</beans>
+   </beans>

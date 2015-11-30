@@ -1,3 +1,4 @@
+
 <%@ include file="/WEB-INF/template/include.jsp"%>
 
 <%@page import="org.ird.unfepi.utils.UserSessionUtils"%>
@@ -10,6 +11,7 @@
 <%
 boolean edit=UserSessionUtils.hasActiveUserPermission(SystemPermissions.CORRECT_LOCATIONS, request);
 
+
 if(edit){
 %>
         	<th>edit</th>
@@ -19,6 +21,7 @@ if(edit){
 			<th>Name</th>
             <th>Full Name</th>
 			<th>Type</th>
+			<th>Identifier</th>
 			<th>Parent Location</th>
         </tr>
     </thead>
@@ -35,6 +38,7 @@ if(edit){
             <td>${loc.name}</td>
             <td><c:out value="${loc.fullName}"></c:out></td>
             <td class="lowercase"><c:out value="${loc.locationType.typeName}"></c:out></td>
+            <td>${loc.otherIdentifier}</td>
             <td>${loc.parentLocation.name}</td>
         </tr>
   </c:forEach>

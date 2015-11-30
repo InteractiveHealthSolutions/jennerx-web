@@ -1,34 +1,12 @@
+
+<%@page import="org.ird.unfepi.context.ServiceContext"%>
+<%@ include file="/WEB-INF/template/include.jsp"%>
+
 <%@page import="org.ird.unfepi.model.VaccinationCenter.CenterType"%>
 <%@page import="org.ird.unfepi.constants.WebGlobals"%>
 
 <script type="text/javascript">
 <!--
-window.onbeforeunload = function (e) {
-	  var e = e || window.event;
-	  // For IE and Firefox
-	  if (e) {
-	    e.returnValue = '';
-	  }
-	  // For Safari
-	  return '';
-	};
-
-var globalDTf="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>";
-var globalDOf="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>";
-
-function convertToDate(stringDate) {
-	try{
-		var datec=Date.parseExact(stringDate,globalDTf);
-		if(datec == null){
-			datec=Date.parseExact(stringDate,globalDOf);
-		}
-		
-		return datec;
-	}
-	catch (e) {
-		return null;
-	}
-}
 
 function subfrm(){
 	submitThisForm();
@@ -41,28 +19,22 @@ function submitThisForm() {
 //-->
 </script>
 <form method="post" id="frm" name="frm" >
-<span id="pageHeadingTextDiv" style="color: #FF7A7A">Vaccination Center <span style="font-size: medium;">(New)</span></span>
-
-<p id="vaccinationCenterCountDisplayp" style="color: maroon;width: 100%;text-align: right;padding: 0; margin: 0"></p>
-<table class = "mobileForms" style="outline-color : #FF7A7A">
-		
-		<%@ include file="plt_global_errors.jsp" %>
-		
+<!-- DONOT REMOVE -->
+<input type="hidden" value="${editvaccinedays}"/>
+<table class="denform-h">
+	<tr>
+		<td>Center Location<span class="mendatory-field">*</span></td>
+        <td>${command.vaccinationCenter.idMapper.identifiers[0].location.parentLocation.name} 
+        (${command.vaccinationCenter.idMapper.identifiers[0].location.parentLocation.locationType.typeName})
+        >> 
+        ${command.vaccinationCenter.idMapper.identifiers[0].location.name} 
+        (${command.vaccinationCenter.idMapper.identifiers[0].location.locationType.typeName})</td>
+	</tr>	
     <tr>
 		<td>Date Registered<span class="mendatory-field">*</span></td>
         <td>
         <spring:bind path="command.vaccinationCenter.dateRegistered">
-        <input id="dateRegistered" name="vaccinationCenter.dateRegistered" value="${status.value}" class="calendarbox" readonly="readonly"/>
-		<script>
-			$(function() {
-			    $('#dateRegistered').datepicker({
-			    	duration: '',
-			        constrainInput: false,
-			        maxDate: '+0d',
-			        dateFormat: '<%=WebGlobals.GLOBAL_DATE_FORMAT_JS%>',
-			     });
-			});
-		</script>
+        <input id="dateRegistered" name="vaccinationCenter.dateRegistered" value="${status.value}" maxDate="+0d" class="calendarbox"/>
       	<br><span class="error-message"><c:out value="${status.errorMessage}"/></span>
 		</spring:bind>
     	</td>
@@ -75,20 +47,13 @@ function submitThisForm() {
     <tr>
 		<td>Center Type :<span class="mendatory-field">*</span></td>
 		<td><spring:bind path="command.vaccinationCenter.centerType">
-			<input type="hidden" value="${status.value}" id="centerTypeVal"/>
-			<select id="centerType" name="vaccinationCenter.centerType">
+			<select id="centerType" name="vaccinationCenter.centerType" bind-value="${status.value}">
 				<c:forEach items="<%=CenterType.values()%>" var="centerType_value">
 					<option>${centerType_value}</option>
 				</c:forEach>
 			</select>
 			<br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
-			<script><!--
-              sel = document.getElementById("centerType");
-              val=document.getElementById("centerTypeVal").value;
-              makeTextSelectedInDD(sel,val);
-              //-->
-             </script> 
 		</td>
 	</tr>
     <tr>
@@ -107,23 +72,25 @@ function submitThisForm() {
              </spring:bind>
 		</td>
     </tr>
+<c:if test="${not empty editvaccinedays && editvaccinedays == true}">
     <tr>
         <td colspan="2" class="separator-heading">VACCINE DAYS</td>
     </tr>
     <tr>
     	<td colspan="2">
-	    <c:forEach items="${command.vaccineDayMapList}" var="vdm" varStatus="vdmlistvarsta">
 	    <table class="previousDataDisplay">
+	    <c:forEach items="${command.vaccineDayMapList}" var="vdm" varStatus="vdmlistvarsta">
 	    	<tr>
-	    		<td>${vdm['vaccine'].name}<%-- :${vdmlistvarsta.index} --%>
+	    		<td colspan="12" class="headerrow">
+	    		<input type="checkbox" 
+	    			onclick='var checkBoxes = $(".${vdm["vaccine"].name} input");checkBoxes.attr("checked", !checkBoxes.attr("checked"));'> ${vdm['vaccine'].name}<%-- :${vdmlistvarsta.index} --%>
 	    		<%-- <input type="hidden" name="command.vaccineDayMapList[${vdmlistvarsta.index}]['vaccine'].name"> --%>
     			</td>
-	    		<td>
-	    		<spring:bind path="command.calendarDays[${vdmlistvarsta.index}]">
-    			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
-	    		<br>
-	    		</spring:bind>
+    		</tr>
+    		<tr class="${vdm['vaccine'].name}">
+	    		<td class="columnHeadingDiv">
 	    		<c:forEach items="${command.calendarDays}" var="calday" varStatus="caldayvarsta">
+	    		<div class="columnHeadingDiv">
 	    			<spring:bind path="command.vaccineDayMapList[${vdmlistvarsta.index}]['daylist'][${caldayvarsta.index}]">
 	    				<c:choose>
 	    				<c:when test="${not empty status.value}">
@@ -133,28 +100,32 @@ function submitThisForm() {
 		    				<input type="checkbox" name="${status.expression}" value="${calday.dayFullName}" >${calday.dayFullName}<%-- :${caldayvarsta.index} --%>
 	    				</c:otherwise>
 	    				</c:choose>
-	    				<br>
 	    			</spring:bind>
+	    		</div>
+    			<c:if test="${caldayvarsta.index %2 ==0}"><br></c:if>
 	    		</c:forEach> 
 	    		</td>
 	    	</tr>
-	    </table>
 	    </c:forEach>
+   	    </table>
     	</td>
     </tr>
+</c:if>
 	<tr>
 		<td>Additional Note</td>
 		<td><spring:bind path="command.vaccinationCenter.description">
-			<textarea name="description" maxlength="255"></textarea>
+			<textarea name="description" maxlength="255">${status.value}</textarea>
 			<br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
 		</td>
 	</tr>
+	<% ServiceContext sc = (ServiceContext)request.getAttribute("sc");
+ 	//must close session here; or do it in finally of respective controller else can create memory leak
+ 	if(sc!=null)sc.closeSession();%>
     <tr>
+        <td></td>
         <td>
-        <input type="button"  id="submitBtn" value="Submit Data" onclick="subfrm();" align="right" style="width: 300px;">
-        </td>
-        <td>
+        <input type="button" id="submitBtn" value="Submit Data" onclick="subfrm();">
         </td>
     </tr>
 </table>

@@ -1,3 +1,4 @@
+
 <%@ include file="/WEB-INF/template/include.jsp"%>
 
 <%@page import="org.ird.unfepi.model.VaccinationCenter.CenterType"%>
@@ -51,12 +52,22 @@ function submitThisForm() {
 		<td>City<span class="mendatory-field">*</span></td>
 		<td>
             <select id="cityId" name="cityId" onchange="treeDataLoaderLocations(this.value);" bind-value="${cityIdselected}">
-               	<option></option>
-            	<option value="01">Karachi</option>
-            	<option value="328">Hafizabad</option>
-            	<option value="405">Muzaffargarh</option>
+                  <option></option>
             </select>
-            <br><span class="error-message"><c:out	value="${status.errorMessage}" /></span> 
+    <script><!--
+        $(document).ready(function() {
+            DWREntityService.getLocationList(["city"],null,{
+                 async: false,
+                 callback: function (resl) {
+                         $('#cityId').empty().append('<option></option>');
+                         for ( var i = 0; i < resl.length; i++) {
+                                 $('#cityId').append('<option value="'+resl[i].locationId+'">'+resl[i].fullname+'</option>');
+                         }
+                         $('#cityId').val($('#cityId').attr('bind-value'));
+            }});
+        });
+    //--></script>
+
 		</td>
 	</tr>
 	<tr>
@@ -174,3 +185,4 @@ function treeDataLoaderLocations(parentId){
     </tr>
 </table>
 </form>
+>>>>>>> 9abab0f2ed8742def5ef19f793fb1ecb718ac177

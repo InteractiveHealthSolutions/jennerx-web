@@ -1,3 +1,4 @@
+
 <%@page import="org.directwebremoting.json.types.JsonArray"%>
 <%@page import="java.util.List"%>
 <%@page import="org.ird.unfepi.beans.EnrollmentWrapper"%>
@@ -66,7 +67,7 @@ function subfrm(){
 		return;
 	}
 	
-DWRVaccineService.validateVaccineScheduleDates(vaccineSchedule, function(result) {
+	DWRVaccineService.validateVaccineScheduleDates(vaccineSchedule, function(result) {
 		//alert(JSON.stringify(result));
 		if(result.SUCCESS != null){
 			DWRVaccineService.overrideSchedule(vaccineSchedule, '${command.centerVisit.uuid}', function(result) {
@@ -112,6 +113,20 @@ function centerVisitDateChanged() {
 </script>
     	</td>
     </tr>
+    	<td>Vaccinator ID <span class="mendatory-field">*</span></td>
+		<td><spring:bind path="command.centerVisit.vaccinatorId">
+            <select id="vaccinatorId" name="centerVisit.vaccinatorId" bind-value="${status.value}">
+                <option></option>
+                <c:forEach items="${vaccinators}" var="vaccinator"> 
+                <option value="${vaccinator.mappedId}">${vaccinator.idMapper.identifiers[0].identifier} : ${vaccinator.firstName}</option>
+            	</c:forEach> 
+            </select>
+            <span class="error-message"><c:out	value="${status.errorMessage}" /></span> 
+            </spring:bind>
+		</td>
+	</tr>
+	<tr>
+    
 	<tr>
 		<td>Vaccination Center <span class="mendatory-field">*</span></td>
 		<td>
@@ -249,3 +264,4 @@ function centerChanged() {
     </tr>
 </table>
 </form>
+
