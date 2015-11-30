@@ -680,12 +680,12 @@
 		<value>dataForm</value>
 	</property>
 	   <property name="dataEditForm">
-678	            <bean class="org.ird.unfepi.DataEditForm">
-679	                <property name="formName" value="vaccination_center" />
-680	                <property name="formTitle" value="Vaccination Center (Edit)" />
-681	                <property name="permission" value="CORRECT_VACCINATION_CENTERS" />
-682	            </bean>
-683	    </property>
+	            <bean class="org.ird.unfepi.DataEditForm">
+	                <property name="formName" value="vaccination_center" />
+	                <property name="formTitle" value="Vaccination Center (Edit)" />
+	                <property name="permission" value="CORRECT_VACCINATION_CENTERS" />
+	            </bean>
+	    </property>
 </bean>
 <bean name="ViewVaccinationCentersController" class="org.ird.unfepi.web.controller.ViewVaccinationCentersController">
     <property name="formView" value="dataForm"/>
