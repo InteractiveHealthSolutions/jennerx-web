@@ -264,7 +264,7 @@ public class IncentiveUtilsForTEST {
 					for (int vid : vaccineIds) {
 						String sql = "SELECT * FROM vaccination WHERE vaccineId="+vid+" AND vaccinatorId="+vaccinator.getMappedId()+" AND vaccinationStatus = 'VACCINATED' AND DATE(vaccinationDate) BETWEEN '2015-11-19' AND '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeUpper)+"' "
 								////COMMITTED FOR GENERATING ALLLL DATA CSV
-								/*+ "AND vaccinationRecordNum NOT IN (SELECT vaccinationId FROM vaccinator_incentive_log) "*/
+								+ "AND vaccinationRecordNum NOT IN (SELECT vaccinationId FROM vaccinator_incentive_log) "
 							+ "ORDER BY vaccinationDate";
 					//	String sql = "SELECT * FROM vaccination WHERE vaccineId="+vid+" AND vaccinatorId="+vaccinator.getMappedId()+" AND vaccinationStatus = 'VACCINATED' AND DATE(vaccinationDate) BETWEEN '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeLower)+"' AND '"+GlobalParams.SQL_DATE_FORMAT.format(dataDateRangeUpper)+"' "
 					//			+ "AND vaccinationRecordNum NOT IN (SELECT vaccinationId FROM vaccinator_incentive_log) ORDER BY vaccinationDate";

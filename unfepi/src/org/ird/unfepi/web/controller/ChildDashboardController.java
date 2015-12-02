@@ -45,7 +45,7 @@ public class ChildDashboardController extends DataDisplayController{
 							" LEFT JOIN FETCH cl.vaccination v " +
 							" LEFT JOIN FETCH v.vaccine vc " +
 							" LEFT JOIN FETCH v.vaccinationCenter center " +
-							" LEFT JOIN FETCH center.idMapper centerId " +
+						//	" LEFT JOIN FETCH center.idMapper centerId " +
 							" LEFT JOIN FETCH v.vaccinator vctor " +
 							" LEFT JOIN FETCH vctor.idMapper vctorId " +
 						//	" LEFT JOIN FETCH cl.storekeeper stork " + 

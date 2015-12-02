@@ -216,6 +216,10 @@ public class ValidatorUtils {
 		else if(dataEntrySource.equals(DataEntrySource.MOBILE) && !DateUtils.datesEqual(child.getDateEnrolled(), new Date())){
 			putError(dataEntrySource, ErrorMessages.ENROLLMENT_MOBILE_BACKDATED_ENTRY, mobileErrors, null, null, useFieldPrefix);
 		}
+		if(child.getNic() != null && !child.getNic().trim().equals("") && child.getNic().length() != 13 ){
+			putError(dataEntrySource, ErrorMessages.NIC_INVALID, mobileErrors, webErrors,DataField.CHILD_NIC,useFieldPrefix);
+		}
+		
 		
 		if(StringUtils.isEmptyOrWhitespaceOnly(completeCourseFromCenter)){
 			putError(dataEntrySource, ErrorMessages.COMPLETE_COURSE_FROM_CENTER_MISSING, mobileErrors, webErrors, DataField.CHILD_COMPLETE_COURSE_FROM_CENTER, useFieldPrefix);

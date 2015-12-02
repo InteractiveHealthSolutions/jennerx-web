@@ -46,6 +46,14 @@
              </spring:bind>
 		</td>
     </tr>
+    <tr>
+        <td>NIC Number</td>
+        <td><spring:bind path="command.${commandAdditionalPathStr}nic">
+             <input type="text" id="childnic" name="${commandAdditionalPathStr}nic" maxlength="13"  class="numbersOnly" value="<c:out value="${status.value}" />"/>
+             <br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
+             </spring:bind>
+		</td>
+    </tr>
 	<tr>
 		<td>Bache ka Jins <span class="mendatory-field">*</span></td>
 		<td><spring:bind path="command.${commandAdditionalPathStr}gender">

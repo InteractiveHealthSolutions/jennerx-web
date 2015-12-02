@@ -20,6 +20,7 @@ public class locationtest {
 		//GlobalParams.UNFEPI_PROPERTIES = prop;
 		
 		ServiceContext sc = Context.getServices();	
+		List<ChildIncentive> chilist = 	sc.getIncentiveService().findChildIncentiveByArm(2, true, null);
 	//	List<ChildLottery> chll = sc.getIncentiveService().findChildLotteryByCriteria(null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, 0, 10, true, new String[]{"vaccination"});
 	//	VaccinationCenter vl = sc.getVaccinationService().findVaccinationCenterById("01001", true, null);
 	//	List<Location> ll = sc.getCustomQueryService().getDataByHQL("FROM Location");

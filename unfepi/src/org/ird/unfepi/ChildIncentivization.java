@@ -128,7 +128,8 @@ public class ChildIncentivization
 				childIncentive.setCreator(user);
 				//TODO 
 				childIncentive.setHasWonIncentive(true);
-				childIncentive.setIncentiveDate(currentDate);
+				//childIncentive.setIncentiveDate(currentDate);
+				childIncentive.setIncentiveDate(lotteryVaccination.getVaccinationDate());
 				childIncentive.setVaccinationRecordNum(lotteryVaccination.getVaccinationRecordNum());
 //				childIncentive.setDescription("");
 				//TODO
@@ -166,7 +167,8 @@ public class ChildIncentivization
 				vaccinatorIncentive.setAmount(incentiveParams.getAmount());
 				vaccinatorIncentive.setCreator(user);
 				vaccinatorIncentive.setIsIncentivized(false);
-				vaccinatorIncentive.setIncentiveDate(currentDate);
+			//	vaccinatorIncentive.setIncentiveDate(currentDate);
+				vaccinatorIncentive.setIncentiveDate(lotteryVaccination.getVaccinationDate());
 				vaccinatorIncentive.setVaccinationRecordNum(lotteryVaccination.getVaccinationRecordNum());
 				vaccinatorIncentive.setVaccinatorId(lotteryVaccination.getVaccinatorId());
 				vaccinatorIncentive.setCreator(user);
@@ -224,7 +226,8 @@ public class ChildIncentivization
 					childIncentive.setCreator(user);
 					//TODO 
 					childIncentive.setHasWonIncentive(true);
-					childIncentive.setIncentiveDate(currentDate);
+				//	childIncentive.setIncentiveDate(currentDate);
+					childIncentive.setIncentiveDate(lotteryVaccination.getVaccinationDate());
 					childIncentive.setVaccinationRecordNum(lotteryVaccination.getVaccinationRecordNum());
 //					childIncentive.setDescription("");
 					//TODO
@@ -262,7 +265,8 @@ public class ChildIncentivization
 					vaccinatorIncentive.setAmount(incentiveParams.getAmount());
 					vaccinatorIncentive.setCreator(user);
 					vaccinatorIncentive.setIsIncentivized(false);
-					vaccinatorIncentive.setIncentiveDate(currentDate);
+					//vaccinatorIncentive.setIncentiveDate(currentDate);
+					vaccinatorIncentive.setIncentiveDate(lotteryVaccination.getVaccinationDate());
 					vaccinatorIncentive.setVaccinationRecordNum(lotteryVaccination.getVaccinationRecordNum());
 					vaccinatorIncentive.setVaccinatorId(lotteryVaccination.getVaccinatorId());
 					vaccinatorIncentive.setCreator(user);

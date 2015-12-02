@@ -105,6 +105,16 @@ function doIncentivize(){
 %>
     </td>
     </tr>
+   <!--   <tr>
+            <th>Vaccinator Id</th>
+            <th>Incentive Date</th>
+            <th>Transactions Done</th>
+            <th>Amount Due (Vaccinator)</th>
+            <th>Transaction Status</th>
+            
+        </tr>
+     -->
+    
         <tr>
             <th>Vaccinator Id</th>
             <th>Incentivization Event Date</th>

@@ -17,7 +17,7 @@ public class ErrorMessages
 	public static final String LASTNAME_INVALID = "Last name should have valid characters";
 	public static final String VACCINATION_CENTER_MISSING = "Vaccination center must be specified";
 	public static final String VACCINATOR_MISSING = "Vaccinator must be specified";
-	public static final String NIC_INVALID = "NIC should only be 13 digits numeric sequence";
+	public static final String NIC_INVALID = "NIC should be 13 digits numeric sequence";
 	public static final String EP_WALLET_INVALID = "EP wallet number should only be 12 digits numeric sequence";
 	public static final String GENDER_INVALID = "Gender not specified";
 	public static final String CHILD_ID_INVALID = "A valid, numeric and "+GlobalParams.CHILD_PROGRAMID_LENGTH+" digit ID starting with 1 is required for child.";

@@ -607,7 +607,7 @@ public class ControllerUIHelper {
 		}
 		
 		for (VaccineSchedule vsh : vaccineSchedule) {
-			if((vsh.getStatus() != null && vsh.getVaccine().getVaccineId() <=6 &&
+			if((vsh.getStatus() != null && 
 					!vsh.getStatus().equalsIgnoreCase(VaccineStatusType.VACCINATED_EARLIER.name())) 
 					&& (vsh.getAssigned_duedate() != null || 
 					vsh.getCenter() != null || 
@@ -655,15 +655,20 @@ public class ControllerUIHelper {
 					// vaccination must be saved before running lottery
 					if(vtnl.size() > 0){
 						sc.getVaccinationService().updateVaccinationRecord(vtn);
-					}
-					else {					
-						Integer vaccNum = Integer.parseInt(sc.getVaccinationService().addVaccinationRecord(vtn).toString());
-						vtn.setVaccinationRecordNum(vaccNum);
-						if (!ChildIncentivization.vaccinationIncentiveExists(vaccNum,sc)) {
+						Integer vaccNum = vtn.getVaccinationRecordNum();
+						if (vsh.getVaccine().getVaccineId() <=6 && !ChildIncentivization.vaccinationIncentiveExists(vaccNum,sc)) {
 							// Run Lottery with lottery criteria 0 as enrollment doesnt bother about timeliness
 							ChildIncentivization.runLottery(dataEntrySource, vtn, vsh.getVaccine(), 0, user, armId, sc);
 						}
 					}
+				/*	else {					
+						Integer vaccNum = Integer.parseInt(sc.getVaccinationService().addVaccinationRecord(vtn).toString());
+						vtn.setVaccinationRecordNum(vaccNum);
+						if (vsh.getVaccine().getVaccineId() <=6 && !ChildIncentivization.vaccinationIncentiveExists(vaccNum,sc)) {
+							// Run Lottery with lottery criteria 0 as enrollment doesnt bother about timeliness
+							ChildIncentivization.runLottery(dataEntrySource, vtn, vsh.getVaccine(), 0, user, armId, sc);
+						}
+					}*/
 					
 
 					// Run Lottery with lottery criteria 0 as enrollment doesnt bother about timeliness

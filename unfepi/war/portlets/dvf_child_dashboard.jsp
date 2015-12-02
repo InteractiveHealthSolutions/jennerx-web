@@ -83,21 +83,21 @@ ${fn:substring(cont.numberType,0,3)}- ${cont.number}<br>
 <c:if test="${not empty model.datalist.childLotteries}">
 <table class="right">
 <tr>
-    <td colspan="20" class="headerrow-light left">Lottery Data</td>
+    <td colspan="20" class="headerrow-light left">Incentive Details</td>
 </tr>
         <tr>
        		<th class="center">Vaccine</th>
        		<th class="center">Arm</th>
-       		<th class="center">Lottery Participation</th>
-            <th class="center">Lottery Generated Date</th>
-            <th class="center">Lottery Status</th>
+       		<!-- <th class="center">Lottery Participation</th> -->
+            <th class="center">Incentivization Date</th>
+            <th class="center">Has Won Incentive</th>
             <th class="center">Amount</th>
          <!--    <th class="center">Verification Code</th> -->
             <!-- <th class="center">Transaction Status</th> -->
         <!--     <th class="center">Consumption Date</th>
             <th class="center">Transaction Date</th> -->
             <th class="center">Center ID</th>
-            <!-- <th class="center">Vaccinator</th> -->
+            <th class="center">Vaccinator</th> 
        <!--      <th class="center">Store</th>
             <th class="center">Storekeeper ID</th> -->
         </tr>
@@ -105,7 +105,7 @@ ${fn:substring(cont.numberType,0,3)}- ${cont.number}<br>
    		<tr>	
    	 		<td class="left">${lott.vaccination.vaccine.name}</td>
    	 		<td>${lott.arm.armName}</td>
-            <td>${lott.vaccination.hasApprovedLottery}</td>
+           <%--  <td>${lott.vaccination.hasApprovedLottery}</td> --%>
             <td><fmt:formatDate value="${lott.incentiveDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>
             <td>${lott.hasWonIncentive}</td>
             <td>${lott.amount}</td>
@@ -113,8 +113,11 @@ ${fn:substring(cont.numberType,0,3)}- ${cont.number}<br>
             <%-- <td class="lowercase">${lott.codeStatus}</td> --%>
      <%--        <td><fmt:formatDate value="${lott.consumptionDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>
             <td><fmt:formatDate value="${lott.transactionDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td> --%>
-            <td>${vacc.vaccinationCenter.idMapper.identifiers[0].identifier}</td>
+            <td>${lott.vaccination.vaccinationCenter.name}</td>
+           <%--  <td>${vacc.vaccinationCenter.idMapper.identifiers[0].identifier}</td> --%>
+            <td>${lott.vaccination.vaccinator.firstName} ${lott.vaccination.vaccinator.lastName}</td>
             <%-- <td>${vacc.vaccinator.idMapper.identifiers[0].identifier}</td> --%>
+            
          <%--    <td>${lott.storekeeper.storeName}</td>
             <td>${lott.storekeeper.idMapper.identifiers[0].identifier}</td> --%>
         </tr>

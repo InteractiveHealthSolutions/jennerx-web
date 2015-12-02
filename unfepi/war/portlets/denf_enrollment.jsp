@@ -57,7 +57,7 @@ function subfrm(){
 	<%-- if(!vaccinationCommonValidations(document,/^<%=REG_EX.CELL_NUMBER%>$/)){
 		return;
 	} --%>
-	
+
 	if($('#centerVisitDate').val() == ''){
 		alert('Pehlay Enrollment ki Tareekh ka indraj karen');
 		return;
@@ -65,7 +65,9 @@ function subfrm(){
 	else if(convertToDate($('#birthdate').val()) == null){
 		alert('Pehlay Tareekh Pedaish ya Umr ka indraj karen');
 		return;
+		 
 	}
+	
 	
 	DWRVaccineService.validateVaccineScheduleDates(vaccineSchedule, function(result) {
 		//alert(JSON.stringify(result));
@@ -162,7 +164,7 @@ function centerChanged() {
 		<td>EPI Register Number <span class="mendatory-field">*</span></td>
 		<td>
 			<spring:bind path="command.centerVisit.epiNumber">
-				<input type="number" id="epiNumber" name="centerVisit.epiNumber" maxlength="8" class="numbersOnly" 
+				<input type="text" id="epiNumber" name="centerVisit.epiNumber" maxlength="8" class="numbersOnly" 
 						value="<c:out value="${status.value}"/>" <%if(lotteryGeneratorForm){%>readonly="readonly"<%}%>/>
 				<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>

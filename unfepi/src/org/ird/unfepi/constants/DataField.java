@@ -13,6 +13,7 @@ public class DataField {
 	public static final String CHILD_LAST_NAME = "child.lastName";
 	public static final String CHILD_FATHER_FIRST_NAME = "child.fatherFirstName";
 	public static final String CHILD_FATHER_LAST_NAME = "child.fatherLastName";
+	public static final String CHILD_NIC = "child.nic";
 	public static final String CHILD_GENDER = "child.gender";
 	public static final String CHILD_BIRTHDATE = "child.birthdate";
 	public static final String CHILD_TERMINATION_DATE = "child.terminationDate";
