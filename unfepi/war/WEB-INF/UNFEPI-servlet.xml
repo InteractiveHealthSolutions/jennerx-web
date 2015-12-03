@@ -34,6 +34,7 @@
 <props>
     <!-- STATIC PAGES W/O CONTROLLER -->
 	<prop key="/s_home_incentive.htm">urlFilenameViewController</prop>
+	<prop key="/s_export_unconsumed_incentive.htm">urlFilenameViewController</prop>
 	<prop key="/s_home_reminder.htm">urlFilenameViewController</prop>
 	<prop key="/s_gallery.htm">urlFilenameViewController</prop>
 	<prop key="/s_location_tree.htm">urlFilenameViewController</prop>
@@ -81,7 +82,7 @@
 	<prop key="/viewStorekeepers.htm">ViewStorekeepersController</prop>
 	<prop key="/storekeeperDetails.htm">ViewStorekeeperDetailsController</prop>
 	<prop key="/addvaccination_center.htm">AddVaccinationCenterController</prop>
-	<prop key="/editVaccinationCenter.htm">EditVaccinationCenterController</prop>
+	<prop key="/editvaccinationCenter.htm">EditVaccinationCenterController</prop>
 	<prop key="/viewVaccinationCenters.htm">ViewVaccinationCentersController</prop>
 	<prop key="/vaccinationCenterDetails.htm">ViewVaccinationCenterDetailsController</prop>
 	<prop key="/addlocation.htm">AddLocationController</prop>

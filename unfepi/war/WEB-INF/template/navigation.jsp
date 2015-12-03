@@ -17,11 +17,10 @@
 					<%@ include file="linklistcommunication.jsp" %>
 				</ul>
 			</li>
-			</li>
-			<li><a href="viewDownloadables.htm">Data</a>
-				<%-- <ul>
+			<li><a href="#">Data</a>
+				<ul>
 					<%@ include file="linklistreporting.jsp" %>
-				</ul> --%>
+				</ul>
 			</li>
 			<li><a href="#">Admin</a>
 				<ul>
