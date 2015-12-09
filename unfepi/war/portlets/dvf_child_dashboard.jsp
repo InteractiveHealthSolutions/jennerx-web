@@ -8,7 +8,6 @@
 <table >
 <tr>
 <td colspan="2"><input class="easyui-searchbox" data-options="prompt:'Enter Child ID',searcher:doSearch" value="${param.childId}"/>
-<span class="error-message">${model.errorMessage}</span>
 	<script>
 		function doSearch(value){
 			window.location="childDashboard.htm?childId="+value;
@@ -24,7 +23,9 @@
 <div class="dvwform">
 <table>
 <tr>
-<td colspan="100"><a href="followupVaccination.htm?child_id=${model.datalist.child.mappedId}" class="easyui-linkbutton" data-options="iconCls:'icon-save'" style="float: right;"> Follow up </a></td>
+<td><span class="error-message">${model.errorMessage}${param.editOrUpdateMessage}</span></td>
+<td colspan="100">
+<a href="followupVaccination.htm?child_id=${model.datalist.child.mappedId}" class="easyui-linkbutton" data-options="iconCls:'icon-save'" style="float: right;"> Follow up </a></td>
 </tr>
 <tr>
     <td colspan="3" class="headerrow">

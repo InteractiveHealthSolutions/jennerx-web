@@ -1151,7 +1151,7 @@ public class ValidatorUtils {
 			putError(dataEntrySource, ErrorMessages.NAME_AVAILABLE, mobileErrors, webErrors, DataField.CHILD_NAMED, useFieldPrefix);
 		}
 		else if(childNamed && (StringUtils.isEmptyOrWhitespaceOnly(child.getFirstName()) 
-				|| !DataValidation.validate(REG_EX.NAME_CHARACTERS, child.getFirstName()))){
+				|| !DataValidation.validate(REG_EX.NAME_CHARACTERS, child.getFirstName(), 3, 40))){
 			putError(dataEntrySource, "Child`s "+ErrorMessages.NAME_INVALID, mobileErrors, webErrors, DataField.CHILD_FIRST_NAME, useFieldPrefix);
 		}
 	
@@ -1160,7 +1160,7 @@ public class ValidatorUtils {
 			putError(dataEntrySource, ErrorMessages.LASTNAME_INVALID, mobileErrors, webErrors, DataField.CHILD_LAST_NAME, useFieldPrefix);
 		}*/
 		
-		if(StringUtils.isEmptyOrWhitespaceOnly(child.getFatherFirstName()) || !DataValidation.validate(REG_EX.NAME_CHARACTERS, child.getFatherFirstName())){
+		if(StringUtils.isEmptyOrWhitespaceOnly(child.getFatherFirstName()) || !DataValidation.validate(REG_EX.NAME_CHARACTERS, child.getFatherFirstName(), 3, 40)){
 			putError(dataEntrySource, "Father`s " + ErrorMessages.NAME_INVALID, mobileErrors, webErrors, DataField.CHILD_FATHER_FIRST_NAME, useFieldPrefix);
 		}
 	
