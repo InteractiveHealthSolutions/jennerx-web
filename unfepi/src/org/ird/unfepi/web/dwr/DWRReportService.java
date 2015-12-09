@@ -52,7 +52,7 @@ public class DWRReportService {
 
 			int pageSize = params.get("rows") == null ? WebGlobals.PAGER_PAGE_SIZE : Integer.parseInt(params.get("rows"));
 
-			items = sc.getCustomQueryService().getDataBySQLMapResult("CALL SummaryEnrByCenterCohort2('"+(center==null?"":center.trim())+"', "+d1f+", "+d1t+" , "+(pageNumber*pageSize)+", "+pageSize+", '"+(sort==null?"":sort)+"', '"+(order==null?"":order)+"')");
+			items = sc.getCustomQueryService().getDataBySQLMapResult("CALL SummaryEnrByCenterCohort('"+(center==null?"":center.trim())+"', "+d1f+", "+d1t+" , "+(pageNumber*pageSize)+", "+pageSize+", '"+(sort==null?"":sort)+"', '"+(order==null?"":order)+"')");
 		
 			int totalRows = StringUtils.isEmptyOrWhitespaceOnly(center)?sc.getVaccinationService().getAllVaccinationCenter(true, null).size():center.split(",").length;
 			map.put("rows", items);
