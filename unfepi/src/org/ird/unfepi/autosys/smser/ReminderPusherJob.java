@@ -31,6 +31,8 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.SchedulerException;
 
+import com.mysql.jdbc.StringUtils;
+
 public class ReminderPusherJob implements Job
 {
 	@Override
@@ -91,6 +93,19 @@ public class ReminderPusherJob implements Job
 							
 							validityPeriod = 52;
 							vp = PeriodType.WEEK;
+						}
+						else if(StringUtils.isEmptyOrWhitespaceOnly(recipient) || recipient.length() < 9){
+							createReminder = false;
+							rem.setRecipient(recipient);
+							rem.setReminderStatus(REMINDER_STATUS.MISSED);
+							rem.setSmsCancelReason((rem.getSmsCancelReason()==null?"":rem.getSmsCancelReason())+"Invalid Cell Num;");
+						}
+						else if(StringUtils.isEmptyOrWhitespaceOnly(rem.getVaccination().getChild().getNic()) 
+								|| rem.getVaccination().getChild().getNic().length() < 12){
+							createReminder = false;
+							rem.setRecipient(recipient);
+							rem.setReminderStatus(REMINDER_STATUS.MISSED);
+							rem.setSmsCancelReason((rem.getSmsCancelReason()==null?"":rem.getSmsCancelReason())+"Invalid CNIC;");
 						}
 					}
 					// VACCINATION REMINDERS
