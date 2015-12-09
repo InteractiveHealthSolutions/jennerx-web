@@ -1,14 +1,18 @@
 package org.ird.unfepi.web.servlet;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -20,6 +24,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.jmatrix.eproperties.EProperties;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.input.BOMInputStream;
 import org.hibernate.Query;
 import org.hibernate.ScrollMode;
 import org.hibernate.ScrollableResults;
@@ -37,13 +46,14 @@ import org.ird.unfepi.constants.WebGlobals.DWRParamsGeneral;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.LoggedInUser;
 import org.ird.unfepi.context.ServiceContext;
+import org.ird.unfepi.model.Child;
+import org.ird.unfepi.model.ChildIncentive;
 import org.ird.unfepi.model.DailySummary;
 import org.ird.unfepi.model.IdMapper;
-import org.ird.unfepi.model.Location;
+import org.ird.unfepi.model.IncentiveStatus;
 import org.ird.unfepi.model.Model.Gender;
 import org.ird.unfepi.model.Model.SmsStatus;
 import org.ird.unfepi.model.ReminderSms.REMINDER_STATUS;
-import org.ird.unfepi.model.Screening;
 import org.ird.unfepi.model.StorekeeperIncentiveParticipant;
 import org.ird.unfepi.model.StorekeeperIncentiveTransaction;
 import org.ird.unfepi.model.StorekeeperIncentiveWorkProgress;
@@ -51,8 +61,6 @@ import org.ird.unfepi.model.UserSms;
 import org.ird.unfepi.model.Vaccination;
 import org.ird.unfepi.model.Vaccination.TimelinessStatus;
 import org.ird.unfepi.model.Vaccination.VACCINATION_STATUS;
-import org.ird.unfepi.model.VaccinationCenter;
-import org.ird.unfepi.model.Vaccinator;
 import org.ird.unfepi.model.VaccinatorIncentiveParticipant;
 import org.ird.unfepi.model.VaccinatorIncentiveTransaction;
 import org.ird.unfepi.model.VaccinatorIncentiveWorkProgress;
@@ -66,6 +74,9 @@ import org.ird.unfepi.utils.UnfepiUtils;
 import org.ird.unfepi.utils.UserSessionUtils;
 import org.ird.unfepi.utils.date.DateUtils;
 import org.ird.unfepi.utils.date.DateUtils.TIME_INTERVAL;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.mysql.jdbc.StringUtils;
 @SuppressWarnings({"unchecked", "rawtypes"})
@@ -98,10 +109,6 @@ public class ExporterServlet extends HttpServlet
 		{
 			 exportVaccination(req, response);
 		}
-		else if(extype.equalsIgnoreCase(SystemPermissions.DOWNLOAD_SCREENING_CSV.name()))
-		{
-			exportScreening(req, response);
-		}
 		/*else if(extype.equalsIgnoreCase(SystemPermissions.DOWNLOAD_SUMMARY_PROJECT_CSV.name()))
 		{
 			exportSummaryEnrollment(req, response);
@@ -125,6 +132,14 @@ public class ExporterServlet extends HttpServlet
 		else if(extype.equalsIgnoreCase(SystemPermissions.DOWNLOAD_SUMMARY_IMMUNIZATION_BY_CENTER_CSV.name()))
 		{
 			exportSummaryImmunizationByCenter(req, response);
+		}
+		else if(extype.equalsIgnoreCase(SystemPermissions.DOWNLOAD_CHILD_UNCONSUMED_INCENTIVE_CSV.name()))
+		{
+			exportUnconsumedChildIncentive(req, response);
+		}
+		else if(extype.equalsIgnoreCase(SystemPermissions.UPLOAD_CHILD_PROCESSED_INCENTIVE_CSV.name()))
+		{
+			importProcessedChildIncentive(req, response);
 		}
 		else if(extype.equalsIgnoreCase(SystemPermissions.DOWNLOAD_CHILD_CSV.name()))
 		{
@@ -419,38 +434,17 @@ public class ExporterServlet extends HttpServlet
 	private void exportChildLottery(HttpServletRequest req,	HttpServletResponse response) {
 		Session ses = Context.getNewSession();
 		try{
-			Location userLocation = UserSessionUtils.getActiveUser(req).getUser().getIdMapper().getIdentifiers().get(0).getLocation();
-			Integer locId = userLocation == null? null:userLocation.getLocationId();
-			String locName = userLocation == null?"":userLocation.getName();
-			ScrollableResults results = ses.createSQLQuery("CALL ExportChildIncentive("+locId+")")
+			ScrollableResults results = ses.createSQLQuery(DataQuery.EXPORT_CHILD_INCENTIVE_QUERY)
 		            .setReadOnly(true).setCacheable(false).scroll(ScrollMode.FORWARD_ONLY);
 			
-			String fileName = "ChildLottery_"+locName+"_"+GlobalParams.CSV_FILENAME_DATE_FORMAT.format(new Date());
+			String fileName = "ChildIncentive_"+GlobalParams.CSV_FILENAME_DATE_FORMAT.format(new Date());
 			
 			response.setContentType("application/zip"); 
-			response.setHeader("Content-Disposition", "attachment; filename=Exporter_childlottery_"+locName+"_"+GlobalParams.CSV_FILENAME_DATE_FORMAT.format(new Date())+".zip"); 
+			response.setHeader("Content-Disposition", "attachment; filename=Exporter_childincentive_"+GlobalParams.CSV_FILENAME_DATE_FORMAT.format(new Date())+".zip"); 
 
 			ZipOutputStream zip = new ZipOutputStream(response.getOutputStream());
 
 			zip.putNextEntry(new ZipEntry(fileName+".csv"));
-			
-			Csvee csv = new Csvee();
-
-			String[] headerColNames = ("MappedId,ChildId,VaccineId,VaccineName,ApprovedLottery,LotteryDate,WonLottery,"
-					+ "VerificationCode,CodeStatus,Amount,StorekeeperId,ConsumptionDate,TransactionDate,VaccinationRecordNumber,"
-					//+ "LotteryWonReminderStatus,LotteryWonReminderDuedate,LotteryWonReminderSentDate,LotteryWonReminderCreatedDate,"
-					//+ "LotteryWonReminderCancelReason,LotteryWonReminderText,LotteryWonReminderReferenceNumber,LotteryWonReminderRecipientNumber,"
-					//+ "LotteryConsumedReminderStatus,LotteryConsumedReminderDuedate,LotteryConsumedReminderSentDate,LotteryConsumedReminderCreatedDate,"
-					//+ "LotteryConsumedReminderCancelReason,LotteryConsumedReminderText,LotteryConsumedReminderReferenceNumber,LotteryConsumedReminderRecipientNumber,"
-					+ "DataEntrySource,FormFilled").split(",", -1);
-			CsveeRow headerRow = new CsveeRow();
-			for (String n : headerColNames) {
-				headerRow.addRowElement(n);
-			}
-			
-			csv.addHeader(headerRow );
-			
-			zip.write(headerRow.getRowAsSB().toString().getBytes());
 			
 			while(results.next()){
 				Object[] row = results.get();
@@ -537,6 +531,146 @@ public class ExporterServlet extends HttpServlet
 		}
 	}
 	
+	private void importProcessedChildIncentive(HttpServletRequest req, HttpServletResponse response) throws IOException, ServletException{
+		boolean isMultipart = ServletFileUpload.isMultipartContent( req );
+		// Create a factory for disk-based file items
+		DiskFileItemFactory factory = new DiskFileItemFactory();
+		// Set factory constraints
+		factory.setSizeThreshold( 2097152 );// 2MB
+
+		String dataFilePath = System.getProperty("user.home");
+		if(!dataFilePath.endsWith(System.getProperty("file.separator"))){
+			dataFilePath += System.getProperty("file.separator");
+		}
+		
+		String finalpath = dataFilePath+"epitemp";
+		
+		File fileTempRep = new File(finalpath);
+
+		if (fileTempRep.exists()) {
+			fileTempRep.mkdirs();
+		}
+		factory.setRepository( fileTempRep );
+		// Create a new file upload handler
+		ServletFileUpload upload = new ServletFileUpload( factory );
+
+		List items = null;
+		try {
+			items = upload.parseRequest( req );
+		} catch (FileUploadException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		// Process the uploaded items
+		Iterator iter = items.iterator();
+		FileItem fileInputItem = null;
+		while ( iter.hasNext() ) {
+			FileItem item = (FileItem) iter.next();
+
+			if (!item.isFormField()) {
+				fileInputItem = item;
+			}
+		}
+		
+		response.setContentType("text/csv"); 
+		response.setHeader("Content-Disposition", "attachment; filename=Importer_childincentive_"+GlobalParams.CSV_FILENAME_DATE_FORMAT.format(new Date())+".csv"); 
+
+		ServiceContext sc = Context.getServices();
+		try{
+		if (fileInputItem != null) {
+			BOMInputStream bomIn = new BOMInputStream(fileInputItem.getInputStream(), false);
+			Scanner snr = new Scanner(bomIn, "UTF8");
+
+			JSONArray json = UnfepiUtils.getCSVToJson(snr);
+			
+			List<String[]> updates= new ArrayList<String[]>();
+			updates.add(new String[] {"CNIC", "AMOUNT", "LAST_UPDATE", "MSISDN", "REASON", "EPI_RESULT"});
+			for (int i = 0; i < json.length(); i++) {
+				String[] rowres = new String[6];
+				JSONObject jo = json.getJSONObject(i);
+				String cnic = jo.getString("CNIC");
+				Integer amount = Integer.parseInt(jo.getString("AMOUNT"));
+				String dt = jo.getString("LAST_UPDATE");
+				String phone = jo.getString("MSISDN");
+				String reason = jo.has("REASON")?jo.getString("REASON"):"";
+				
+				rowres[0] = cnic;
+				rowres[1] = amount.toString();
+				rowres[2] = dt;
+				rowres[3] = phone;
+				rowres[4] = reason;
+				
+				List<Child> chl = sc.getChildService().findChildByCriteria(null, null, null, null, cnic, null, null, null, null, null, false, null, null, null, true, 0, 10, null);
+				if(chl.size() == 0){
+					rowres[5] = "NO Child found on CNIC";
+				}
+				if(chl.size() > 1){
+					rowres[5] = chl.size()+" Children found on CNIC";
+				}
+				
+				if(dt.length() > 18){
+					dt = dt.substring(0, 18);
+				}
+				
+				if(chl.size() == 1){
+					Child ch = chl.get(0);
+					Date disdate = new SimpleDateFormat("dd-MMM-yy HH.mm.ss").parse(dt);
+					List<ChildIncentive> incent = sc.getIncentiveService().findChildIncentiveByCriteria(null, ch.getMappedId(), null, null, IncentiveStatus.AVAILABLE, null, null, null, null, amount, amount, null, 0, 2, false, null);
+					if(incent.size() == 0){
+						rowres[5] = "NO Available incentive found";
+					}
+					else if(!jo.has("REASON") || StringUtils.isEmptyOrWhitespaceOnly(jo.getString("REASON"))){
+						incent.get(0).setIncentiveStatus(IncentiveStatus.CONSUMED);
+						incent.get(0).setConsumptionDate(disdate);
+						incent.get(0).setTransactionDate(disdate);
+						incent.get(0).setLastEditedDate(new Date());
+						
+						
+						rowres[5] = "SUCCESS: FOUND "+incent.size()+"records. MARKED record # "+incent.get(0).getChildIncentiveId()+" CONSUMED";
+					}
+					else {
+						incent.get(0).setIncentiveStatus(IncentiveStatus.WAITING);
+						incent.get(0).setTransactionDate(disdate);
+						incent.get(0).setDescription(jo.getString("REASON"));
+						incent.get(0).setLastEditedDate(new Date());
+						
+						rowres[5] = "ERROR: FOUND "+incent.size()+"records. MARKED record # "+incent.get(0).getChildIncentiveId()+" WAITING for correction";
+					}
+					sc.getIncentiveService().updateChildIncentive(incent.get(0));
+				}
+				updates.add(rowres);
+			}
+			snr.close();
+
+			Csvee csv = new Csvee();
+			for (String[] data : updates) {
+				CsveeRow datarow = new CsveeRow();
+				for (int ind = 0; ind < data.length; ind++) {
+					datarow.addRowElement(data[ind]);
+				}
+				
+				csv.addData(datarow);
+			}
+			response.getOutputStream().write(csv.getCsv(true));
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+		}
+		else {
+			req.setAttribute("message", "No file found");
+			req.getRequestDispatcher("s_upload_processed_child_incentive.htm").forward(req, response);
+		}
+		} catch (JSONException e) {
+			e.printStackTrace();
+			response.getOutputStream().write(("CSV Parsing threw error"+e.getMessage()).getBytes());
+		} catch (ParseException e) {
+			e.printStackTrace();
+			response.getOutputStream().write(("Unrecognized date format").getBytes());
+		}
+		finally{
+			sc.closeSession();
+		}
+	}
+	
 	private void exportVaccinatorIncentive(HttpServletRequest req, HttpServletResponse response) {
 		ServiceContext sc = Context.getServices();
 		try{
@@ -588,7 +722,7 @@ public class ExporterServlet extends HttpServlet
 				datarow.addRowElement(workdonetat.size()>0?workdonetat.get(0).getWorkValue():null);
 
 				if(parti.getVaccinatorIncentiveParams() != null){
-				datarow.addRowElement(parti.getVaccinatorIncentiveParams().getCommission());
+				datarow.addRowElement(parti.getVaccinatorIncentiveParams().getAmount());
 				}
 				else{
 					datarow.addRowElement(null);
@@ -679,7 +813,7 @@ public class ExporterServlet extends HttpServlet
 				datarow.addRowElement(workdone.size()>0?workdone.get(0).getTotalTransactionsAmount():null);
 
 				if(parti.getStorekeeperIncentiveParams() != null){
-				datarow.addRowElement(parti.getStorekeeperIncentiveParams().getCommission());
+				datarow.addRowElement(parti.getStorekeeperIncentiveParams().getAmount());
 				}
 				else{
 					datarow.addRowElement(null);
@@ -1330,6 +1464,68 @@ public class ExporterServlet extends HttpServlet
 				}
 				csv.addData(datarow);
 			}*/
+			
+			response.getOutputStream().write(csv.getCsv(true));
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally{
+			sc.closeSession();
+		}
+	}
+	private void exportUnconsumedChildIncentive(HttpServletRequest req, HttpServletResponse response) {
+		ServiceContext sc = Context.getServices();
+		try{
+			response.setContentType("application/csv"); 
+			response.setHeader("Content-Disposition", "attachment; filename=Export_CaregiverIncentivesUnconsumed_"+GlobalParams.CSV_FILENAME_DATE_FORMAT.format(new Date())+".csv"); 
+
+			String date1from = GlobalParams.SQL_DATE_FORMAT.format(UnfepiUtils.getDateFilter(SearchFilter.DATE1_FROM, req));
+			String date1to = GlobalParams.SQL_DATE_FORMAT.format(UnfepiUtils.getDateFilter(SearchFilter.DATE1_TO, req));
+			
+			Csvee csv = new Csvee();
+			
+			CsveeRow datarow1 = new CsveeRow();
+			datarow1.addRowElement("Caregiver Incentives Still Unconsumed");
+			csv.addData(datarow1);
+			
+			CsveeRow datarow2 = new CsveeRow();
+			datarow2.addRowElement("Scheme");
+			datarow2.addRowElement("AmountWon");
+			datarow2.addRowElement("EPCharges");
+			datarow2.addRowElement("AmountDue");
+			datarow2.addRowElement("CNIC");
+			datarow2.addRowElement("CellNumber");
+			datarow2.addRowElement("IncentiveRealizedDate");
+			datarow2.addRowElement("ConsumptionDate");
+			datarow2.addRowElement("TransactionDate");
+			datarow2.addRowElement("ProgramId");
+			datarow2.addRowElement("ChildName");
+			datarow2.addRowElement("CenterId");
+			datarow2.addRowElement("Center");
+			datarow2.addRowElement("IncentiveRecordCreatedDate");
+			datarow2.addRowElement("IncentiveStatus");
+			datarow2.addRowElement("IncentiveRecordId");
+			datarow2.addRowElement("Vaccine");
+			datarow2.addRowElement("VaccineDate");
+			datarow2.addRowElement("VaccineStatus");
+			datarow2.addRowElement("VaccinatorId");
+			datarow2.addRowElement("Vaccinator");
+			csv.addData(datarow2);
+			
+			List rssummaryFupByCohorttotal = sc.getCustomQueryService().getDataBySQL("CALL ChildIncentiveRealizedCalculate('"+date1from+"', '"+date1to+"');");
+			
+			for (Object object : rssummaryFupByCohorttotal) {
+				CsveeRow datarow = new CsveeRow();
+
+				Object[] objarr = (Object[])object;
+				for (Object object2 : objarr) {
+					datarow.addRowElement(object2);
+				}
+				csv.addData(datarow);
+			}
 			
 			response.getOutputStream().write(csv.getCsv(true));
 			response.getOutputStream().flush();
@@ -2190,105 +2386,6 @@ public class ExporterServlet extends HttpServlet
 		finally{
 			sc.closeSession();
 			ses.close();
-		}
-	}
-		
-	private void exportScreening(HttpServletRequest req, HttpServletResponse response) throws IOException{
-		List<Screening> list =new ArrayList<Screening>();
-
-		ServiceContext sc = Context.getServices();
-		
-		try{
-			String childIdName = (StringUtils.isEmptyOrWhitespaceOnly(req.getParameter("childidname"))) ? null : req.getParameter("childidname");
-			//String epiNum = (StringUtils.isEmptyOrWhitespaceOnly(req.getParameter("epinumber"))) ? null : req.getParameter("epinumber");		
-			Integer vaccCenter = (StringUtils.isEmptyOrWhitespaceOnly(req.getParameter("vaccinationCenterddp"))) ? null : Integer.parseInt(req.getParameter("vaccinationCenterddp"));
-			Integer vaccinator = (StringUtils.isEmptyOrWhitespaceOnly(req.getParameter("vaccinatorddp"))) ? null : Integer.parseInt(req.getParameter("vaccinatorddp"));	
-			Date screeningDatefrom = (StringUtils.isEmptyOrWhitespaceOnly(req.getParameter("screeningDatefrom"))) ? null : WebGlobals.GLOBAL_JAVA_DATE_FORMAT.parse(req.getParameter("screeningDatefrom"));	
-			Date screeningDateto = (StringUtils.isEmptyOrWhitespaceOnly(req.getParameter("screeningDateto"))) ? null : WebGlobals.GLOBAL_JAVA_DATE_FORMAT.parse(req.getParameter("screeningDateto"));	
-
-			if(childIdName != null){
-				list = sc.getChildService().findScreeningByProgramId(childIdName, true, new String[]{"idMapper", "broughtByRelationship"});
-			}
-			else {
-				list = sc.getChildService().findScreeningByCriteria(vaccinator, vaccCenter, screeningDatefrom, screeningDateto, true, 0, Integer.MAX_VALUE, new String[]{"idMapper", "broughtByRelationship"});
-			}
-			response.setContentType("application/zip"); 
-			response.setHeader("Content-Disposition", "attachment; filename=Exporter_screening_"+GlobalParams.CSV_FILENAME_DATE_FORMAT.format(new Date())+".zip"); 
-
-			Csvee csv = new Csvee();
-			
-			CsveeRow headerrow = new CsveeRow();
-			headerrow.addRowElement("S. no.");
-			headerrow.addRowElement("Child ID");
-			headerrow.addRowElement("Center");
-			headerrow.addRowElement("Vaccinator");
-			headerrow.addRowElement("Screening Date");
-			headerrow.addRowElement("Is Child Healthy");
-			headerrow.addRowElement("Brought By Relationship ID");
-			headerrow.addRowElement("Brought By");
-			headerrow.addRowElement("Other Brought By");
-			headerrow.addRowElement("Description");
-
-			csv.addHeader(headerrow );
-			
-			int i=1;
-			for(Screening rec:list){
-				CsveeRow datarow = new CsveeRow();
-				
-				datarow.addRowElement(i);
-				
-				if(rec.getMappedId() != null){
-					datarow.addRowElement(rec.getIdMapper().getIdentifiers().get(0).getIdentifier());
-				}
-				else{
-					datarow.addRowElement("");
-				}
-				
-				if(rec.getVaccinationCenterId() != null){
-					VaccinationCenter vc = sc.getVaccinationService().findVaccinationCenterById(rec.getVaccinationCenterId(), true, new String[]{"idMapper"});
-					datarow.addRowElement(vc.getIdMapper().getIdentifiers().get(0).getIdentifier());
-				}
-				else{
-					datarow.addRowElement("");
-				}
-
-				if(rec.getVaccinatorId() != null){
-					Vaccinator v = sc.getVaccinationService().findVaccinatorById(rec.getVaccinatorId(), true, new String[]{"idMapper"});
-					datarow.addRowElement(v.getIdMapper().getIdentifiers().get(0).getIdentifier());
-				}
-				else{
-					datarow.addRowElement("");
-				}
-				
-				datarow.addRowElement(rec.getScreeningDate());
-				datarow.addRowElement(rec.getIsChildHealthy());
-				datarow.addRowElement(rec.getBroughtByRelationshipId());
-				if(rec.getBroughtByRelationshipId() != null){
-					datarow.addRowElement(rec.getBroughtByRelationship().getRelationName());
-				}
-				else{
-					datarow.addRowElement("");
-				}
-				
-				datarow.addRowElement(rec.getOtherBroughtByRelationship());
-				datarow.addRowElement(StringUtils.isEmptyOrWhitespaceOnly(rec.getDescription())?"":rec.getDescription().replace(",",",,").replace("\"", "'").trim());
-				
-				csv.addData(datarow);
-
-				i++;
-			}
-			 
-			ZipOutputStream zip = new ZipOutputStream(response.getOutputStream());
-			zip.putNextEntry(new ZipEntry("screenings.csv"));
-			zip.write(csv.getCsv(true));
-			zip.closeEntry();
-			zip.close();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		finally{
-			sc.closeSession();
 		}
 	}
 	
