@@ -11,11 +11,9 @@ import javax.management.InstanceAlreadyExistsException;
 import net.jmatrix.eproperties.EProperties;
 
 import org.ird.unfepi.GlobalParams;
-import org.ird.unfepi.autosys.utils.ReminderUtils;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Location;
-import org.ird.unfepi.model.ReminderSms;
 import org.ird.unfepi.utils.IRUtils;
 
 
