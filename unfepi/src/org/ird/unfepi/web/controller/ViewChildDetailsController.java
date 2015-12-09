@@ -42,18 +42,14 @@ public class ViewChildDetailsController extends DataDisplayController{
 			addModelAttribute(model, "addresses", sc.getDemographicDetailsService().getAddress(child.getMappedId(), true, new String[]{"city"}));
 			addModelAttribute(model, "preferences", sc.getChildService().findLotterySmsByChild(child.getMappedId(), true, 0, 50, null));
 
-			//int enrVacId = Integer.parseInt(sc.getCustomQueryService().getDataBySQL("SELECT vaccinationRecordNum FROM vaccination where vaccinationdate is not null and childId="+child.getMappedId()+" having min(vaccinationdate)").get(0).toString());
-
 			String hql="from Vaccination v " +
 					" left join fetch v.vaccine vacci " +
-					" left join fetch v.broughtByRelationship relat " +
 					" left join fetch v.createdByUserId creat " +
 					" left join fetch v.lastEditedByUserId edito " +
 					" where v.childId="+child.getMappedId()+" and "+GlobalParams.HQL_ENROLLMENT_FILTER_v;
 			
 			List vl = sc.getCustomQueryService().getDataByHQL(hql);
 			Vaccination enrVaccination = vl.size() == 0 ? null : (Vaccination) vl.get(0);
-			//Vaccination pv= sc.getVaccinationService().getVaccinationRecord(enrVacId, true, new String[]{"vaccine", "broughtByRelationship", "createdByUserId", "lastEditedByUserId"}, null);
 
 			addModelAttribute(model, "vacc", enrVaccination);
 			VaccinationCenter vc = null;
@@ -67,22 +63,7 @@ public class ViewChildDetailsController extends DataDisplayController{
 			}
 			addModelAttribute(model, "vaccinator", vaccinator);
 			
-			String hqlchildlottery = "FROM ChildLottery cl " +
-					" LEFT JOIN FETCH cl.vaccination v " +
-					" LEFT JOIN FETCH v.vaccine vc " +
-					" LEFT JOIN FETCH v.vaccinationCenter center " +
-					" LEFT JOIN FETCH center.idMapper centerId " +
-					" LEFT JOIN FETCH v.vaccinator vctor " +
-					" LEFT JOIN FETCH vctor.idMapper vctorId " +
-					" LEFT JOIN FETCH cl.storekeeper stork " + 
-					" LEFT JOIN FETCH cl.storekeeper.idMapper storkId " +
-					" LEFT JOIN FETCH cl.createdByUserId creator" +
-					" LEFT JOIN FETCH cl.lastEditedByUserId editor" + 
-					" WHERE v.childId = " + child.getMappedId() +
-					" ORDER BY v.vaccinationDate ASC";
-			List childlotteries = sc.getCustomQueryService().getDataByHQL(hqlchildlottery);
-			
-			addModelAttribute(model, "lottery", childlotteries);
+			addModelAttribute(model, "incentives", sc.getIncentiveService().findChildIncentiveByCriteria(child.getMappedId(), null, null, null, null, null, null, null, null, null, 0, 100, true, null));
 
 			return showForm(model);
 		}catch (Exception e) {

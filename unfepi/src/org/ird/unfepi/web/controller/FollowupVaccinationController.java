@@ -48,7 +48,7 @@ public class FollowupVaccinationController extends DataEntryFormController
 			
 			sc.commitTransaction();
 
-			String editmessage="Child Enrolled successfully. ";//\n Lottery Runner information : ";
+			String editmessage="Child Followed up successfully. ";//\n Lottery Runner information : ";
 			/*for (ChildLotteryRunner childLotteryRunner : lotteryRes) 
 			{
 				editmessage += "\n"+childLotteryRunner.VACCINE_NAME + " lottery ";

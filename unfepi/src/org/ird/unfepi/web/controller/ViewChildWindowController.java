@@ -36,7 +36,7 @@ public class ViewChildWindowController implements Controller{
 		String programId = request.getParameter("programId");
 		Map<String, Object> model = new HashMap<String, Object>();
 		try{
-			Child child = sc.getChildService().findChildById(programId, true, new String[]{"idMapper", "guardianRelation", "nicOwnerRelation", "religion", "language", "createdByUserId", "lastEditedByUserId"});
+			Child child = sc.getChildService().findChildById(programId, true, new String[]{"idMapper", "createdByUserId", "lastEditedByUserId"});
 			model.put("programId", programId);
 			model.put("child", child);
 			String epiNumber = request.getParameter("epiNumber");
@@ -46,22 +46,20 @@ public class ViewChildWindowController implements Controller{
 			}
 			model.put("epiNumber", epiNumber);
 			model.put("vaccinations", IRUtils.addRecord(child));
-			model.put("contacts", sc.getDemographicDetailsService().getContactNumber(child.getMappedId(), true, new String[]{"ownerRelation"}));
-			model.put("addresses", sc.getDemographicDetailsService().getAddress(child.getMappedId(), true, new String[]{"city"}));
+			model.put("contacts", sc.getDemographicDetailsService().getContactNumber(child.getMappedId(), true, null));
+			model.put("addresses", sc.getDemographicDetailsService().getAddress(child.getMappedId(), true, null));
 			model.put("preferences", sc.getChildService().findLotterySmsByChild(child.getMappedId(), true, 0, 50, null));
 
 			//int enrVacId = Integer.parseInt(sc.getCustomQueryService().getDataBySQL("SELECT vaccinationRecordNum FROM vaccination where vaccinationdate is not null and childId="+child.getMappedId()+" having min(vaccinationdate)").get(0).toString());
 
 			String hql="from Vaccination v " +
 					" left join fetch v.vaccine vacci " +
-					" left join fetch v.broughtByRelationship relat " +
 					" left join fetch v.createdByUserId creat " +
 					" left join fetch v.lastEditedByUserId edito " +
 					" where v.childId="+child.getMappedId()+" and "+GlobalParams.HQL_ENROLLMENT_FILTER_v;
 			
 			List vl = sc.getCustomQueryService().getDataByHQL(hql);
 			Vaccination enrVaccination = vl.size() == 0 ? null : (Vaccination) vl.get(0);
-			//Vaccination pv= sc.getVaccinationService().getVaccinationRecord(enrVacId, true, new String[]{"vaccine", "broughtByRelationship", "createdByUserId", "lastEditedByUserId"}, null);
 
 			model.put("vacc", enrVaccination);
 			VaccinationCenter vc = null;
@@ -75,18 +73,7 @@ public class ViewChildWindowController implements Controller{
 			}
 			model.put("vaccinator", vaccinator);
 			
-			List list = sc.getCustomQueryService().getDataBySQL(DataQuery.CHILD_INCENTIVE_QUERY + " WHERE v.childid="+child.getMappedId());
-			
-			ArrayList<Object[]> arrlivt = new ArrayList<Object[]>();
-			
-			Object[] heatvt = new Object[]{"Vaccine", "Lottery Won?", "Lottery Date", "Verification Code", "Status", "Amount","Storekeeper","Comsumption Date","Transction Date", "Vaccination Record Num"};
-			for (Object object : list) {
-				Object[] coldata = (Object[]) object;
-				
-				arrlivt.add(coldata);
-			}
-			model.put("lotteryhead", heatvt);
-			model.put("lottery", arrlivt);
+			model.put("incentive", sc.getIncentiveService().findChildIncentiveByCriteria(child.getMappedId(), null, null, null, null, null, null, null, null, null, 0, 100, true, null));
 
 			
 			return new ModelAndView("viewChildwindow","model",model);	

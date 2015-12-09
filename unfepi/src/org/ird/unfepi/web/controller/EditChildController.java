@@ -80,6 +80,7 @@ public class EditChildController extends DataEditFormController {
 
 					STATUS uneditedChildStatus = (STATUS) request.getSession().getAttribute("uneditedChildStatus"+child.getMappedId());
 					Boolean uneditedChildReminderPreference = (Boolean) request.getSession().getAttribute("uneditedChildReminderPreference"+child.getMappedId());
+					Boolean uneditedChildIncentivePreference = (Boolean) request.getSession().getAttribute("uneditedChildIncentivePreference"+child.getMappedId());
 
 					child.setEditor(user.getUser());
 					
@@ -238,6 +239,8 @@ public class EditChildController extends DataEditFormController {
 		
 			request.getSession().setAttribute("uneditedChildStatus"+ew.getChild().getMappedId(), ew.getChild().getStatus());
 			request.getSession().setAttribute("uneditedChildReminderPreference"+ew.getChild().getMappedId(), ew.getPreference().getHasApprovedReminders());
+			request.getSession().setAttribute("uneditedChildIncentivePreference"+ew.getChild().getMappedId(), ew.getPreference().getHasApprovedLottery());
+			
 		}
 
 		return ew;

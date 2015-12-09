@@ -17,11 +17,12 @@ import org.ird.unfepi.context.LoggedInUser;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.ChildIncentive;
 import org.ird.unfepi.model.IdMapper;
+import org.ird.unfepi.model.IncentiveStatus;
 import org.ird.unfepi.model.Reminder.ReminderType;
 import org.ird.unfepi.utils.EncounterUtil;
-import org.ird.unfepi.utils.UserSessionUtils;
 import org.ird.unfepi.utils.EncounterUtil.ElementVaccination;
 import org.ird.unfepi.utils.UnfepiUtils;
+import org.ird.unfepi.utils.UserSessionUtils;
 import org.ird.unfepi.utils.date.DateUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -33,6 +34,8 @@ public class ViewChildIncentivesController extends DataDisplayController{
 	public enum TabIncentive{
 		WON("won","won"),
 		LOST("lost","lost"),
+		ACTIVE("active","active"),
+		INACTIVE("inactive","inactive"),
 		ALL("all","all"),;
 		
 		private String type;
@@ -77,7 +80,7 @@ public class ViewChildIncentivesController extends DataDisplayController{
 				type = UnfepiUtils.getStringFilter(SearchFilter.TYPE, req);
 			}
 			if(StringUtils.isEmptyOrWhitespaceOnly(type)){
-				type = TabIncentive.WON.TITLE();
+				type = TabIncentive.ACTIVE.TITLE();
 			}
 			String action = req.getParameter("action");
 			String pagerOffset = req.getParameter("pager.offset");
@@ -97,24 +100,22 @@ public class ViewChildIncentivesController extends DataDisplayController{
 				idm = sc.getIdMapperService().findIdMapper(programId);
 			}
 			
-		//	CodeStatus codeStatus = null;
+			IncentiveStatus status = null;
 		//	String code = null;
-			Boolean hasWonIncentive = null;
-			if(type.equalsIgnoreCase(TabIncentive.WON.name())){
-				hasWonIncentive = true;
+			if(type.equalsIgnoreCase(TabIncentive.ACTIVE.name())){
+				status = IncentiveStatus.AVAILABLE;
 			}
-			else if(type.equalsIgnoreCase(TabIncentive.LOST.name())){
-				hasWonIncentive = false;
+			else if(type.equalsIgnoreCase(TabIncentive.INACTIVE.name())){
+				status = IncentiveStatus.WAITING;
 			}
-			
 					
-			List<ChildIncentive> listChildIncentive = sc.getIncentiveService().findChildIncentiveByCriteria(/*code,*/ (idm == null?null:idm.getMappedId()), null, hasWonIncentive , incentiveDatefrom, incentiveDateto, null, null, /*null, null,*/ /*codeStatus,*/ amounttransferredrangeL, amounttransferredrangeU, /*null, */userLocation, startRecord, WebGlobals.DEFAULT_PAGING_MAX_PAGE_ITEMS, true, new String[]{"vaccination"});
+			List<ChildIncentive> listChildIncentive = sc.getIncentiveService().findChildIncentiveByCriteria(null, (idm == null?null:idm.getMappedId()), null, null ,status, incentiveDatefrom, incentiveDateto, null, null, amounttransferredrangeL, amounttransferredrangeU, /*null, */userLocation, startRecord, WebGlobals.DEFAULT_PAGING_MAX_PAGE_ITEMS, true, new String[]{"vaccination"});
 			
 			for (ChildIncentive childIncentive : listChildIncentive) {
 				Map<String, Object> incentivemap = new HashMap<String, Object>();
-				incentivemap.put("lottery", childIncentive);
+				incentivemap.put("incentive", childIncentive);
 				incentivemap.put("reminder", sc.getReminderService().findReminderSmsRecordByCriteria(childIncentive.getVaccination().getChildId(), null, new Short[]{childIncentive.getVaccination().getVaccineId()}, new ReminderType[]{ReminderType.LOTTERY_WON_REMINDER}, null, null, null, null, null, null, false, 0, 10, true, null));
-				String vaccrElemName = EncounterUtil.getEncounterElementName(EncounterUtil.getLotteryEncounterPrefix(childIncentive.getVaccination().getVaccine().getName(), childIncentive.getVaccination().getVaccineId()), ElementVaccination.VACCINATION_RECORD_NUM);
+				String vaccrElemName = EncounterUtil.getEncounterElementName(EncounterUtil.getIncentiveEncounterPrefix(childIncentive.getVaccination().getVaccine().getName(), childIncentive.getVaccination().getVaccineId()), ElementVaccination.VACCINATION_RECORD_NUM);
 				incentivemap.put("encounter", sc.getCustomQueryService().getDataBySQLMapResult("SELECT * FROM encounterresults er JOIN encounter e USING(encounterId,p1id,p2id) WHERE er.p1id="+childIncentive.getVaccination().getChildId()+" AND element='"+vaccrElemName+"' AND value="+childIncentive.getVaccinationRecordNum()));
 			
 				list.add(incentivemap);

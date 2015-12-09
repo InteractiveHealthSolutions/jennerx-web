@@ -19,7 +19,7 @@ public class ViewVaccinesController extends DataDisplayController{
 
 		ServiceContext sc = Context.getServices();
 		try{
-			addModelAttribute(model, "datalist", sc.getVaccinationService().getAll(true, null, " vaccineId "));
+			addModelAttribute(model, "datalist", sc.getVaccinationService().getAll(true, new String[]{"prerequisites", "vaccineGaps"}, " vaccineId "));
 			
 			return showForm(model);
 		}
