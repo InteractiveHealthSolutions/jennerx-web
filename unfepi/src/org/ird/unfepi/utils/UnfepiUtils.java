@@ -1,7 +1,10 @@
 package org.ird.unfepi.utils;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Scanner;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -10,6 +13,9 @@ import org.hibernate.Transaction;
 import org.ird.unfepi.GlobalParams.SearchFilter;
 import org.ird.unfepi.constants.WebGlobals;
 import org.ird.unfepi.context.Context;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.mysql.jdbc.StringUtils;
 
@@ -65,5 +71,45 @@ public class UnfepiUtils {
 	
 	public static String setDateFilter(Date date) throws ParseException{
 		return date==null?null:WebGlobals.GLOBAL_JAVA_DATE_FORMAT.format(date);	
+	}
+	
+	public static JSONArray getCSVToJson(Scanner path) throws JSONException {
+    	String[] hr = getHeaderRowNum(path);
+	    // Start constructing JSON.
+	    JSONArray jarr = new JSONArray();
+
+	    while (true) {
+			List<String> rc = getNextRowContent(path);
+			if(rc.isEmpty()){
+				break;
+			}
+			JSONObject row = new JSONObject();
+			for (int j = 0; j < hr.length; j++) {
+				row.put(hr[j], rc.get(j));
+			}
+			jarr.put(row);
+		}
+
+    	return jarr;
+	}
+
+	private static String[] getHeaderRowNum(Scanner scanner) {
+		while (scanner.hasNextLine()) {
+			String[] r = scanner.nextLine().replace("\"", "").split(",");
+			for (String c : r) {
+				if(!StringUtils.isEmptyOrWhitespaceOnly(c)){
+					return r;
+				}
+			}
+		}
+		return null;
+	}
+	private static List<String> getNextRowContent(Scanner scanner) {
+		List<String> hc = new ArrayList<String>();
+		if(scanner.hasNextLine())
+		for (String c : scanner.nextLine().replace("\"", "").split(",", -1)) {
+			hc.add(c);
+		}
+		return hc;
 	}
 }
