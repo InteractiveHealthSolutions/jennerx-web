@@ -28,6 +28,7 @@ public class EnrollmentWrapperWomen {
 	private Vaccine vaccine;
 	
 	public EnrollmentWrapperWomen() {
+		super();
 		women = new Women();
 		address = new Address();
 		centerVisit = new WomenVaccinationCenterVisit();
