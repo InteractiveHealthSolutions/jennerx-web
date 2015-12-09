@@ -38,9 +38,9 @@ public class VaccinatorIncentiveParticipant {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "vaccinatorIncentiveParamsId", insertable = false, updatable = false)
-	@ForeignKey(name = "vaccinatorincentiveparticipant_vaccinatorIncentiveParamsId_vaccinatorincentiveparams_vaccinatorIncentiveParamsId_FK")
+	@ForeignKey(name = "vaccinatorincentiveparticipant_vaccinatorIncentiveParamsId_incentiveparams_incentiveParamsId_FK")
 
-	private VaccinatorIncentiveParams vaccinatorIncentiveParams;
+	private IncentiveParams vaccinatorIncentiveParams;
 	
 	private Boolean isIncentivised;
 	
@@ -100,11 +100,11 @@ public class VaccinatorIncentiveParticipant {
 		this.vaccinatorIncentiveParamsId = vaccinatorIncentiveParamsId;
 	}
 
-	public VaccinatorIncentiveParams getVaccinatorIncentiveParams() {
+	public IncentiveParams getVaccinatorIncentiveParams() {
 		return vaccinatorIncentiveParams;
 	}
 
-	void setVaccinatorIncentiveParams(VaccinatorIncentiveParams vaccinatorIncentiveParams) {
+	void setVaccinatorIncentiveParams(IncentiveParams vaccinatorIncentiveParams) {
 		this.vaccinatorIncentiveParams = vaccinatorIncentiveParams;
 	}
 

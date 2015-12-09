@@ -38,8 +38,8 @@ public class StorekeeperIncentiveParticipant {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "storekeeperIncentiveParamsId", insertable = false, updatable = false)
-	@ForeignKey(name = "stkIncntparti_stkIncentParamsId_stkincntparams_stkIncntParamsId_FK")
-	private StorekeeperIncentiveParams storekeeperIncentiveParams;
+	@ForeignKey(name = "stkIncntparti_stkIncentParamsId_incntparams_incntParamsId_FK")
+	private IncentiveParams storekeeperIncentiveParams;
 	
 	private Boolean isIncentivised;
 	
@@ -99,11 +99,11 @@ public class StorekeeperIncentiveParticipant {
 		this.storekeeperIncentiveParamsId = storekeeperIncentiveParamsId;
 	}
 
-	public StorekeeperIncentiveParams getStorekeeperIncentiveParams() {
+	public IncentiveParams getStorekeeperIncentiveParams() {
 		return storekeeperIncentiveParams;
 	}
 
-	void setStorekeeperIncentiveParams(StorekeeperIncentiveParams storekeeperIncentiveParams) {
+	void setStorekeeperIncentiveParams(IncentiveParams storekeeperIncentiveParams) {
 		this.storekeeperIncentiveParams = storekeeperIncentiveParams;
 	}
 
