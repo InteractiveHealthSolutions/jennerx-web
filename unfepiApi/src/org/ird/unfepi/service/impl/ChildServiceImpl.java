@@ -10,14 +10,11 @@ import org.ird.unfepi.model.Child;
 import org.ird.unfepi.model.Child.STATUS;
 import org.ird.unfepi.model.LotterySms;
 import org.ird.unfepi.model.Model.Gender;
-import org.ird.unfepi.model.Screening;
 import org.ird.unfepi.model.dao.DAOArm;
 import org.ird.unfepi.model.dao.DAOChild;
 import org.ird.unfepi.model.dao.DAOLotterySms;
-import org.ird.unfepi.model.dao.DAOScreening;
 import org.ird.unfepi.service.ChildService;
 import org.ird.unfepi.service.exception.ChildDataInconsistencyException;
-import org.ird.unfepi.utils.date.DateUtils;
 
 public class ChildServiceImpl implements ChildService{
 	
@@ -27,14 +24,11 @@ public class ChildServiceImpl implements ChildService{
 	
 	private DAOLotterySms daolotsms;
 	
-	private DAOScreening daoscr;
-	
 	private DAOArm daoarm;
 	
-	public ChildServiceImpl(ServiceContext sc, DAOChild pat, DAOScreening daoscr, DAOLotterySms daolotsms, DAOArm daoarm/*,DAOReminder rem,DAOChildCell pcell*/){
+	public ChildServiceImpl(ServiceContext sc, DAOChild pat, DAOLotterySms daolotsms, DAOArm daoarm/*,DAOReminder rem,DAOChildCell pcell*/){
 		this.sc = sc;
 		this.chldao=pat;
-		this.daoscr = daoscr;
 		this.daolotsms = daolotsms;
 		this.daoarm = daoarm;
 	}
@@ -45,9 +39,6 @@ public class ChildServiceImpl implements ChildService{
 		}
 		else if(clazz == LotterySms.class){
 			return daolotsms.LAST_QUERY_TOTAL_ROW_COUNT();
-		}
-		else if(clazz == Screening.class){
-			return daoscr.LAST_QUERY_TOTAL_ROW_COUNT();
 		}
 		else if(clazz == Arm.class){
 			return daoarm.LAST_QUERY_TOTAL_ROW_COUNT();
@@ -148,67 +139,6 @@ public class ChildServiceImpl implements ChildService{
 		return (Child) chldao.merge(child);
 	}
 	
-	@Override
-	public Screening findScreeningById(int screeningid, boolean isreadonly, String[] mappingsToJoin ){
-		Screening obj = daoscr.findById(screeningid, isreadonly, mappingsToJoin);
-		return obj;
-	}
-	
-	@Override
-	public List<Screening> getAllScreening(boolean isreadonly, int firstResult,
-			int fetchsize, String[] mappingsToJoin) {
-		List<Screening> list = daoscr.getAll(isreadonly, firstResult, fetchsize, mappingsToJoin);
-		return list;
-	}
-
-	@Override
-	public List<Screening> findScreeningByMappedId(int mappedId, boolean isreadonly, String[] mappingsToJoin) 
-	{
-		List<Screening> obj = daoscr.findByMappedId(mappedId, isreadonly, mappingsToJoin);
-		return obj;
-	}
-
-	@Override
-	public List<Screening> findScreeningByProgramId(String programId,
-			boolean isreadonly, String[] mappingsToJoin) 
-	{
-		List<Screening> obj = daoscr.findByProgramId(programId, isreadonly, mappingsToJoin);
-		return obj;
-	}
-
-	@Override
-	public List<Screening> findScreeningByCriteria(Integer vaccinatorId,
-			Integer vaccinationCenterId, /*String epiNumber,*/
-			Date screeningDatelower, Date screeningDateupper,
-			boolean isreadonly, int firstResult, int fetchsize, String[] mappingsToJoin) 
-	{
-		if (screeningDatelower != null) {
-			screeningDatelower=DateUtils.truncateDatetoDate(screeningDatelower);
-		}
-		if (screeningDateupper != null) {
-			screeningDateupper=DateUtils.roundoffDatetoDate(screeningDateupper);
-		}
-		List<Screening> list = daoscr.findByCriteria(vaccinatorId, vaccinationCenterId/*, epiNumber*/, screeningDatelower, screeningDateupper, isreadonly, firstResult, fetchsize, mappingsToJoin);
-		return list;
-	}
-
-	@Override
-	public Serializable saveScreening(Screening screening) throws ChildDataInconsistencyException {
-		/*if(!DataValidation.validate(REG_EX.NUMERIC, Long.toString(screening.getScreeningId()), Globals.CHILD_ID_LEN,  Globals.CHILD_ID_LEN)){
-			throw new ChildDataInconsistencyException(ChildDataInconsistencyException.CHILD_ID_LEN_INVALID, ChildDataInconsistencyException.CHILD_ID_LEN_INVALID);
-		}*/
-		return daoscr.save(screening);
-	}
-	
-	@Override
-	public void updateScreening(Screening screening) {
-		daoscr.update(screening);
-	}
-	
-	@Override
-	public Screening mergeUpdateScreening(Screening screening) {
-		return (Screening) daoscr.merge(screening);
-	}
 
 	@Override
 	public Serializable saveLotterySms(LotterySms lotterySms){

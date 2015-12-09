@@ -3,7 +3,7 @@ package org.ird.unfepi.model.dao;
 import java.util.Date;
 import java.util.List;
 
-import org.ird.unfepi.model.ChildIncentive;
+import org.ird.unfepi.model.IncentiveStatus;
 import org.ird.unfepi.model.VaccinatorIncentive;
 
 public interface DAOVaccinatorIncentive extends DAO{
@@ -16,12 +16,12 @@ public interface DAOVaccinatorIncentive extends DAO{
 	
 	List<VaccinatorIncentive> getAll(int firstResult, int fetchsize, boolean readonly, String[] mappingsToJoin);
 	
-	List<VaccinatorIncentive> findByCriteriaVaccinatorIncentivized(Integer vaccinatorId, Boolean isIncentivized, boolean readonly, String[] mappingsToJoin);
+	List<VaccinatorIncentive> findByCriteriaVaccinatorIncentivized(Integer vaccinatorId, Boolean isIncentivized, IncentiveStatus incentiveStatus, boolean readonly, String[] mappingsToJoin);
 	
 	List<VaccinatorIncentive> findByCriteriaVaccinatorRecordNum(Integer vaccinatorRecordNum,boolean readonly, String[] mappingsToJoin);
 	
 	List<VaccinatorIncentive> findByCriteria(Integer armId, Integer vaccinator, Short vaccineId,  
-			Boolean isIncentivized, Date incentiveDateFrom, Date incentiveDateTo,
+			Boolean isIncentivized, IncentiveStatus incentiveStatus, Date incentiveDateFrom, Date incentiveDateTo,
 			 Integer amountFrom, Integer amountTo, 
 			Integer areaLocationId, int firstResult, int fetchsize, boolean readonly, String[] mappingsToJoin);
 	

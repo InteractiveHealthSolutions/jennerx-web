@@ -10,7 +10,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.ird.unfepi.model.ChildIncentive;
-
+import org.ird.unfepi.model.IncentiveStatus;
 import org.ird.unfepi.model.dao.DAOChildIncentive;
 
 import com.sun.java_cup.internal.runtime.virtual_parse_stack;
@@ -86,7 +86,7 @@ public class DAOChildIncentiveImpl extends DAOHibernateImpl implements DAOChildI
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ChildIncentive> findByCriteria(/*String code,*/ Integer armId, Integer childId, Short vaccineId,  
-			Boolean hasWonIncentive, Date incentiveDateFrom, Date incentiveDateTo, Date transactionDateFrom, Date transactionDateTo, 
+			Boolean hasWonIncentive, IncentiveStatus incentiveStatus, Date incentiveDateFrom, Date incentiveDateTo, Date transactionDateFrom, Date transactionDateTo, 
 			/*Date consumptionDateFrom, Date consumptionDateTo, CodeStatus codeStatus,*//* Integer storekeeperId,*/ Integer amountFrom, Integer amountTo, 
 			Integer areaLocationId, int firstResult, int fetchsize, boolean readonly, String[] mappingsToJoin) {
 		Criteria cri = session.createCriteria(ChildIncentive.class).setReadOnly(readonly);
@@ -96,6 +96,9 @@ public class DAOChildIncentiveImpl extends DAOHibernateImpl implements DAOChildI
 			cri.add(Restrictions.eq("code", code));
 		}*/
 		
+		if(incentiveStatus != null){
+			cri.add(Restrictions.eq("incentiveStatus", incentiveStatus));
+		}
 		if(armId != null) {
 			cri.add(Restrictions.eq("armId",armId));
 		}

@@ -4,22 +4,20 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import org.ird.unfepi.model.ChildLotteryParams;
+import org.ird.unfepi.model.ChildIncentive;
 import org.ird.unfepi.model.IncentiveParams;
+import org.ird.unfepi.model.IncentiveStatus;
 import org.ird.unfepi.model.StorekeeperIncentiveEvent;
-import org.ird.unfepi.model.StorekeeperIncentiveParams;
 import org.ird.unfepi.model.StorekeeperIncentiveParticipant;
 import org.ird.unfepi.model.StorekeeperIncentiveTransaction;
 import org.ird.unfepi.model.StorekeeperIncentiveWorkProgress;
-import org.ird.unfepi.model.VaccinatorIncentive;
 import org.ird.unfepi.model.Vaccination.VACCINATION_STATUS;
+import org.ird.unfepi.model.VaccinatorIncentive;
 import org.ird.unfepi.model.VaccinatorIncentiveEvent;
-import org.ird.unfepi.model.VaccinatorIncentiveParams;
 import org.ird.unfepi.model.VaccinatorIncentiveParticipant;
 import org.ird.unfepi.model.VaccinatorIncentiveTransaction;
 import org.ird.unfepi.model.VaccinatorIncentiveTransaction.TranscationStatus;
 import org.ird.unfepi.model.VaccinatorIncentiveWorkProgress;
-import org.ird.unfepi.model.ChildIncentive;
 import org.ird.unfepi.model.exception.VaccinationDataException;
 
 public interface IncentiveService {
@@ -78,23 +76,6 @@ public interface IncentiveService {
 	VaccinatorIncentiveWorkProgress mergeVaccinatorIncentiveWorkProgress(VaccinatorIncentiveWorkProgress objectinstance);
 
 	void updateVaccinatorIncentiveWorkProgress(VaccinatorIncentiveWorkProgress objectinstance);
-	
-	VaccinatorIncentiveParams findVaccinatorIncentiveParamsById(short vaccinatorIncentiveParamsId,
-			boolean readonly, String[] mappingsToJoin);
-
-	List<VaccinatorIncentiveParams> getAllVaccinatorIncentiveParams(int firstResult, int fetchsize,
-			boolean readonly, String[] mappingsToJoin);
-
-	List<VaccinatorIncentiveParams> findVaccinatorIncentiveParamsByCriteria(Date createdDateLower,
-			Date createdDateUpper, Integer criteriaRangeLower,
-			Integer criteriaRangeUpper, int firstResult, int fetchsize,
-			boolean readonly, String[] mappingsToJoin);
-	
-	Serializable saveVaccinatorIncentiveParams(VaccinatorIncentiveParams objectinstance);
-
-	VaccinatorIncentiveParams mergeVaccinatorIncentiveParams(VaccinatorIncentiveParams objectinstance);
-
-	void updateVaccinatorIncentiveParams(VaccinatorIncentiveParams objectinstance);
 	
 	VaccinatorIncentiveTransaction findVaccinatorIncentiveTransactionById(int VaccinatorIncentiveTransactionId,
 			boolean readonly, String[] mappingsToJoin);
@@ -170,23 +151,6 @@ public interface IncentiveService {
 
 	void updateStorekeeperIncentiveWorkProgress(StorekeeperIncentiveWorkProgress objectinstance);
 	
-	StorekeeperIncentiveParams findStorekeeperIncentiveParamsById(short storekeeperIncentiveParamsId,
-			boolean readonly, String[] mappingsToJoin);
-
-	List<StorekeeperIncentiveParams> getAllStorekeeperIncentiveParams(int firstResult, int fetchsize,
-			boolean readonly, String[] mappingsToJoin);
-
-	List<StorekeeperIncentiveParams> findStorekeeperIncentiveParamsByCriteria(Date createdDateLower,
-			Date createdDateUpper, Integer criteriaRangeLower,
-			Integer criteriaRangeUpper, int firstResult, int fetchsize,
-			boolean readonly, String[] mappingsToJoin);
-	
-	Serializable saveStorekeeperIncentiveParams(StorekeeperIncentiveParams objectinstance);
-
-	StorekeeperIncentiveParams mergeStorekeeperIncentiveParams(StorekeeperIncentiveParams objectinstance);
-
-	void updateStorekeeperIncentiveParams(StorekeeperIncentiveParams objectinstance);
-	
 	StorekeeperIncentiveTransaction findStorekeeperIncentiveTransactionById(int StorekeeperIncentiveTransactionId,
 			boolean readonly, String[] mappingsToJoin);
 
@@ -206,23 +170,6 @@ public interface IncentiveService {
 
 	void updateStorekeeperIncentiveTransaction(StorekeeperIncentiveTransaction objectinstance);
 	
-	ChildLotteryParams findChildLotteryParamsById(short childLotteryParamsId,
-			boolean readonly, String[] mappingsToJoin);
-
-	List<ChildLotteryParams> getAllChildLotteryParams(int firstResult, int fetchsize,
-			boolean readonly, String[] mappingsToJoin);
-
-	List<ChildLotteryParams> findChildLotteryParamsByCriteria(Short enrollmentVaccine, Short receivedVaccine, 
-			Date createdDateLower,	Date createdDateUpper, Float criteriaRangeLower,
-			Float criteriaRangeUpper, int firstResult, int fetchsize,
-			boolean readonly, String[] mappingsToJoin);
-	
-	Serializable saveChildLotteryParams(ChildLotteryParams objectinstance);
-
-	ChildLotteryParams mergeChildLotteryParams(ChildLotteryParams objectinstance);
-
-	void updateChildLotteryParams(ChildLotteryParams objectinstance);
-	
 	ChildIncentive findChildIncentiveById(int childIncentiveId, boolean readonly, String[] mappingsToJoin);
 	
 	List<ChildIncentive> findChildIncentiveByVaccination(int vaccinationRecordNum, boolean readonly, String[] mappingsToJoin);
@@ -234,7 +181,7 @@ public interface IncentiveService {
 	List<ChildIncentive> getAllChildIncentive(int firstResult, int fetchsize, boolean readonly, String[] mappingsToJoin);
 	
 	List<ChildIncentive> findChildIncentiveByCriteria(/*String code,*/ Integer armId,Integer childId, Short vaccineId,  
-			Boolean hasWonIncentive, Date incentiveDateFrom, Date incentiveDateTo, Date transactionDateFrom, Date transactionDateTo, 
+			Boolean hasWonIncentive, IncentiveStatus incentiveStatus, Date incentiveDateFrom, Date incentiveDateTo, Date transactionDateFrom, Date transactionDateTo, 
 			/*Date consumptionDateFrom, Date consumptionDateTo, CodeStatus codeStatus,*/ /*Integer storekeeperId,*/ Integer amountFrom, Integer amountTo, 
 			Integer areaLocationId, int firstResult, int fetchsize, boolean readonly, String[] mappingsToJoin);
 	
@@ -268,10 +215,10 @@ public interface IncentiveService {
 	
 	List<VaccinatorIncentive> getAllVaccinatorIncentive(int firstResult, int fetchsize, boolean readonly, String[] mappingsToJoin);
 	
-	List<VaccinatorIncentive> findVaccinatorIncentiveByCriteriaVaccinatorIncentivized(Integer vaccinatorId, Boolean isIncentivized, boolean readonly, String[] mappingsToJoin);
+	List<VaccinatorIncentive> findVaccinatorIncentiveByCriteriaVaccinatorIncentivized(Integer vaccinatorId, Boolean isIncentivized, IncentiveStatus incentiveStatus, boolean readonly, String[] mappingsToJoin);
 	
 	List<VaccinatorIncentive> findVaccinatorIncentiveByCriteria(Integer armId, Integer vaccinator, Short vaccineId,  
-			Boolean isIncentivized, Date incentiveDateFrom, Date incentiveDateTo,
+			Boolean isIncentivized, IncentiveStatus incentiveStatus, Date incentiveDateFrom, Date incentiveDateTo,
 			 Integer amountFrom, Integer amountTo, 
 			Integer areaLocationId, int firstResult, int fetchsize, boolean readonly, String[] mappingsToJoin);
 	

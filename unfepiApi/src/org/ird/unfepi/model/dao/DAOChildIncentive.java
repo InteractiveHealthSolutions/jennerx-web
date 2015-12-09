@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.ird.unfepi.model.ChildIncentive;
+import org.ird.unfepi.model.IncentiveStatus;
 
 
 public interface DAOChildIncentive extends DAO{
@@ -17,7 +18,7 @@ public interface DAOChildIncentive extends DAO{
 	List<ChildIncentive> getAll(int firstResult, int fetchsize, boolean readonly, String[] mappingsToJoin);
 	
 	List<ChildIncentive> findByCriteria(/*String code,*/ Integer armId, Integer childId, Short vaccineId,  
-			Boolean hasWonIncentive, Date incentiveDateFrom, Date incentiveDateTo, Date transactionDateFrom, Date transactionDateTo, 
+			Boolean hasWonIncentive, IncentiveStatus incentiveStatus, Date incentiveDateFrom, Date incentiveDateTo, Date transactionDateFrom, Date transactionDateTo, 
 			/*Date consumptionDateFrom, Date consumptionDateTo, CodeStatus codeStatus,*/ /*Integer storekeeperId,*/ Integer amountFrom, Integer amountTo, 
 			Integer areaLocationId, int firstResult, int fetchsize, boolean readonly, String[] mappingsToJoin);
 	

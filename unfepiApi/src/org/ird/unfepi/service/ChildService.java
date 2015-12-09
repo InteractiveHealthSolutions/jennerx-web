@@ -11,31 +11,12 @@ import org.ird.unfepi.model.Child;
 import org.ird.unfepi.model.Child.STATUS;
 import org.ird.unfepi.model.LotterySms;
 import org.ird.unfepi.model.Model.Gender;
-import org.ird.unfepi.model.Screening;
 import org.ird.unfepi.model.exception.ChildDataException;
 import org.ird.unfepi.service.exception.ChildDataInconsistencyException;
 
 public interface ChildService {
 	
 	Number LAST_QUERY_TOTAL_ROW_COUNT(Class clazz);
-
-	Screening findScreeningById(int screeningid, boolean isreadonly, String[] mappingsToJoin);
-	
-	List<Screening> getAllScreening(boolean isreadonly, int firstResult, int fetchsize, String[] mappingsToJoin);
-	
-	List<Screening> findScreeningByMappedId(int mappedId, boolean isreadonly, String[] mappingsToJoin);
-	
-	List<Screening> findScreeningByProgramId(String programId, boolean isreadonly, String[] mappingsToJoin);
-
-	List<Screening> findScreeningByCriteria(Integer vaccinatorId, Integer vaccinationCenterId/*, String epiNumber*/
-			, Date screeningDatelower, Date screeningDateupper, boolean isreadonly, int firstResult, int fetchsize
-			, String[] mappingsToJoin);
-	
-	Serializable saveScreening(Screening screening) throws ChildDataInconsistencyException;
-
-	void updateScreening(Screening screening);
-	
-	Screening mergeUpdateScreening(Screening screening);
 
 	LotterySms findLotterySmsBySerialNumber(int serialNumber, boolean isreadonly, String[] mappingsToJoin);
 
