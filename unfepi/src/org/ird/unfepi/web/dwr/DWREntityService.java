@@ -54,6 +54,42 @@ public class DWREntityService {
 		}		
 		return locations;
 	}
+	
+	public List<Map<String, String>> getLocationListByParentName (String[] locationTypes, String parentName) {
+		HttpServletRequest req = WebContextFactory.get().getHttpServletRequest();
+		LoggedInUser user=UserSessionUtils.getActiveUser(req);
+		if(user==null){
+			try {
+				WebContextFactory.get().forwardToString("login.htm");
+			} catch (ServletException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		ServiceContext sc = Context.getServices();
+		
+		String qry ="SELECT l.locationId, l.name, l.fullName FROM location l "
+				+ "JOIN locationtype lt ON l.locationType=lt.locationTypeId "
+				+ "LEFT JOIN location pl ON pl.locationId=l.parentLocation "
+				+ "WHERE lt.typeName IN ("+IRUtils.getArrayAsString(locationTypes, ",", "'")+", null)"
+				+(parentName==null?"":" AND (l.parentLocation IS NULL || pl.name='"+parentName+"')")
+				+" ORDER BY lt.locationTypeId,l.fullname";
+		System.out.println(qry);
+		List list = sc.getCustomQueryService().getDataBySQL(qry);
+		
+		List<Map<String, String>> locations = new ArrayList<Map<String,String>>();
+
+		for (Object object : list) {
+			HashMap<String, String> loc = new HashMap<String, String>();
+			Object[] oar = (Object[]) object;
+			loc.put("locationId", oar[0].toString());
+			loc.put("name", oar[1].toString());
+			loc.put("fullname", oar[2].toString());
+			locations.add(loc);
+		}		
+		return locations;
+	}
 
 	public List<Map<String, Object>> getLocationHierarchy (Map<String, String> params) {
 		String parentId = params.get("parentId");
