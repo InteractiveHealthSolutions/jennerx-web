@@ -11,7 +11,6 @@ import org.ird.unfepi.model.dao.DAOAddress;
 import org.ird.unfepi.model.dao.DAOArm;
 import org.ird.unfepi.model.dao.DAOCalendarDay;
 import org.ird.unfepi.model.dao.DAOChildIncentive;
-import org.ird.unfepi.model.dao.DAOChildLotteryParams;
 import org.ird.unfepi.model.dao.DAOCommunicationNote;
 import org.ird.unfepi.model.dao.DAOContactNumber;
 import org.ird.unfepi.model.dao.DAODailySummary;
@@ -20,19 +19,13 @@ import org.ird.unfepi.model.dao.DAODirectQuery;
 import org.ird.unfepi.model.dao.DAODownloadableReport;
 import org.ird.unfepi.model.dao.DAOEncounter;
 import org.ird.unfepi.model.dao.DAOEncounterResults;
-import org.ird.unfepi.model.dao.DAOEthnicity;
 import org.ird.unfepi.model.dao.DAOIdMapper;
 import org.ird.unfepi.model.dao.DAOIncentiveParams;
-import org.ird.unfepi.model.dao.DAOLanguage;
 import org.ird.unfepi.model.dao.DAOLotterySms;
 import org.ird.unfepi.model.dao.DAONotifier;
-import org.ird.unfepi.model.dao.DAORelationship;
-import org.ird.unfepi.model.dao.DAOReligion;
 import org.ird.unfepi.model.dao.DAOResponse;
-import org.ird.unfepi.model.dao.DAOScreening;
 import org.ird.unfepi.model.dao.DAOStorekeeper;
 import org.ird.unfepi.model.dao.DAOStorekeeperIncentiveEvent;
-import org.ird.unfepi.model.dao.DAOStorekeeperIncentiveParams;
 import org.ird.unfepi.model.dao.DAOStorekeeperIncentiveParticipant;
 import org.ird.unfepi.model.dao.DAOStorekeeperIncentiveTransaction;
 import org.ird.unfepi.model.dao.DAOStorekeeperIncentiveWorkProgress;
@@ -42,7 +35,6 @@ import org.ird.unfepi.model.dao.DAOVaccinationCenterVaccineDay;
 import org.ird.unfepi.model.dao.DAOVaccinator;
 import org.ird.unfepi.model.dao.DAOVaccinatorIncentive;
 import org.ird.unfepi.model.dao.DAOVaccinatorIncentiveEvent;
-import org.ird.unfepi.model.dao.DAOVaccinatorIncentiveParams;
 import org.ird.unfepi.model.dao.DAOVaccinatorIncentiveParticipant;
 import org.ird.unfepi.model.dao.DAOVaccinatorIncentiveTransaction;
 import org.ird.unfepi.model.dao.DAOVaccinatorIncentiveWorkProgress;
@@ -52,7 +44,6 @@ import org.ird.unfepi.model.dao.hibernatedimpl.DAOArmImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOCalendarDayImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOChildImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOChildIncentiveImpl;
-import org.ird.unfepi.model.dao.hibernatedimpl.DAOChildLotteryParamsImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOCommunicationNoteImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOContactNumberImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAODailySummaryImpl;
@@ -61,25 +52,19 @@ import org.ird.unfepi.model.dao.hibernatedimpl.DAODirectQueryImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAODownloadableReportImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOEncounterImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOEncounterResultsImpl;
-import org.ird.unfepi.model.dao.hibernatedimpl.DAOEthnicityImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOHibernateImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOIdMapperImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOIncentiveParamsImpl;
-import org.ird.unfepi.model.dao.hibernatedimpl.DAOLanguageImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOLotterySmsImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAONotifierImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOPermissionImpl;
-import org.ird.unfepi.model.dao.hibernatedimpl.DAORelationshipImpl;
-import org.ird.unfepi.model.dao.hibernatedimpl.DAOReligionImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOReminderImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOReminderSmsImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOResponseImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAORoleImpl;
-import org.ird.unfepi.model.dao.hibernatedimpl.DAOScreeningImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOSettingImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOStorekeeperImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOStorekeeperIncentiveEventImpl;
-import org.ird.unfepi.model.dao.hibernatedimpl.DAOStorekeeperIncentiveParamsImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOStorekeeperIncentiveParticipantImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOStorekeeperIncentiveTransactionImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOStorekeeperIncentiveWorkProgressImpl;
@@ -91,7 +76,6 @@ import org.ird.unfepi.model.dao.hibernatedimpl.DAOVaccinationImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOVaccinatorImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOVaccinatorIncentiveEventImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOVaccinatorIncentiveImpl;
-import org.ird.unfepi.model.dao.hibernatedimpl.DAOVaccinatorIncentiveParamsImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOVaccinatorIncentiveParticipantImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOVaccinatorIncentiveTransactionImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOVaccinatorIncentiveWorkProgressImpl;
@@ -188,10 +172,9 @@ public class ServiceContext {
 		this.idMapperService = new IdMapperServiceImpl(idmapperDao);
 
 		DAOChildImpl chldoa = new DAOChildImpl(session);
-		DAOScreening scrdao = new DAOScreeningImpl(session);
 		DAOLotterySms daolotsms = new DAOLotterySmsImpl(session);
 		DAOArm	daoarm 	= new DAOArmImpl(session);
-		this.childService = new ChildServiceImpl(this, chldoa, scrdao, daolotsms,daoarm);
+		this.childService = new ChildServiceImpl(this, chldoa, daolotsms,daoarm);
 		
 		DAOWomenImpl womendao = new DAOWomenImpl(session);
 		this.womenService = new WomenServiceImpl(this,womendao);
@@ -203,12 +186,8 @@ public class ServiceContext {
 		/*DAOPerson daoper = new DAOPersonImpl(session);*/
 		DAOAddress daoaddr = new DAOAddressImpl(session);
 		DAOContactNumber daocont = new DAOContactNumberImpl(session);
-		DAOEthnicity daoethn = new DAOEthnicityImpl(session);
-		DAORelationship daorelation = new DAORelationshipImpl(session);
-		DAOReligion daoreligion = new DAOReligionImpl(session);
-		DAOLanguage daolang = new DAOLanguageImpl(session);
 		this.demographicDetailsService = new DemographicDetailsServiceImpl(this, 
-				/*daoper,*/ daoaddr, daocont, daoethn, daorelation, daoreligion, daolang);
+				/*daoper,*/ daoaddr, daocont);
 
 		DAOStorekeeper daoStorkeep = new DAOStorekeeperImpl(session);
 		this.storekeeperService = new StorekeeperServiceImpl(this, daoStorkeep);
@@ -261,21 +240,20 @@ public class ServiceContext {
 		
 		DAOVaccinatorIncentiveEvent daovlottevent = new DAOVaccinatorIncentiveEventImpl(session);
 		DAOVaccinatorIncentiveParticipant daovlottparti = new DAOVaccinatorIncentiveParticipantImpl(session);
-		DAOVaccinatorIncentiveParams daovlottparams = new DAOVaccinatorIncentiveParamsImpl(session);
 		DAOVaccinatorIncentiveTransaction daovlotttrans = new DAOVaccinatorIncentiveTransactionImpl(session);
 		DAOVaccinatorIncentiveWorkProgress daovlottwinrcords = new DAOVaccinatorIncentiveWorkProgressImpl(session);
 		
 		DAOStorekeeperIncentiveEvent daoincentevent = new DAOStorekeeperIncentiveEventImpl(session);
 		DAOStorekeeperIncentiveParticipant daoincentparti = new DAOStorekeeperIncentiveParticipantImpl(session);
-		DAOStorekeeperIncentiveParams daoincentparams = new DAOStorekeeperIncentiveParamsImpl(session);
 		DAOStorekeeperIncentiveTransaction daoincenttrans = new DAOStorekeeperIncentiveTransactionImpl(session);
 		DAOStorekeeperIncentiveWorkProgress daoincentwinrcords = new DAOStorekeeperIncentiveWorkProgressImpl(session);
 
-		DAOChildLotteryParams daoclottparams = new DAOChildLotteryParamsImpl(session);
 		DAOChildIncentive daochildincentive = new DAOChildIncentiveImpl(session);
 		DAOVaccinatorIncentive daovincentive = new DAOVaccinatorIncentiveImpl(session);
 		DAOIncentiveParams daoincentiveparams = new DAOIncentiveParamsImpl(session);
-		this.incentiveService = new IncentiveServiceImpl(daovlottevent, daovlottparti, daovlottparams, daovlotttrans, daovlottwinrcords, daoincentevent, daoincentparti, daoincentparams, daoincenttrans, daoincentwinrcords, daoclottparams, daochildincentive, daovincentive, daoincentiveparams, this);
+		this.incentiveService = new IncentiveServiceImpl(daovlottevent, daovlottparti, daovlotttrans, 
+				daovlottwinrcords, daoincentevent, daoincentparti, daoincenttrans, daoincentwinrcords,
+				daochildincentive, daovincentive, daoincentiveparams, this);
 		
 		DAOUserSms daousms = new DAOUserSmsImpl(session);
 		
