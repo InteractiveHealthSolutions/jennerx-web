@@ -88,28 +88,6 @@ public class ReminderUtils {
 						e1.printStackTrace();
 					}
 				}
-				else if(nm.matches("\\[\\[VerificationCode\\.\\w+\\]\\]")){
-					Class<ChildIncentive> pcls;
-					try {
-						pcls = (Class<ChildIncentive>) Class.forName("org.ird.unfepi.model.ChildLottery");
-						try {
-							String fieldname=nm.replace("[[VerificationCode.","");
-							fieldname=fieldname.replace("]]", "");
-							Field[] aaa = pcls.getDeclaredFields();
-							for (Field field : aaa) {
-								if(field.getName().equalsIgnoreCase(fieldname)){
-									field.setAccessible(true);
-									textToSend=textToSend.replace(nm, field.get(vChildIncentive).toString());
-								}
-							}
-						} catch (Exception e) {
-							e.printStackTrace();
-							textToSend=textToSend.replace(nm, "-----");
-						} 
-					} catch (ClassNotFoundException e1) {
-						e1.printStackTrace();
-					}
-				}
 				else if(nm.matches("\\[\\[ReminderSms\\.\\w+\\]\\]")){
 					Class<ReminderSms> pcls;
 					try {
@@ -141,6 +119,14 @@ public class ReminderUtils {
 				  Calendar c=Calendar.getInstance();
 				  c.setTime(vaccination.getVaccinationDuedate());
 				  textToSend=textToSend.replace("[[Vaccination.Date]]", c.getTime().toString());
+			  }
+			  else if(nm.matches("\\[\\[Vaccination.Vaccine]\\]")){
+				  Calendar c=Calendar.getInstance();
+				  c.setTime(vaccination.getVaccinationDuedate());
+				  textToSend=textToSend.replace("[[Vaccination.Vaccine]]", vaccination.getVaccine().getName());
+			  }
+			  else if(nm.matches("\\[\\[Incentive.Amount]\\]")){
+				  textToSend=textToSend.replace("[[Incentive.Amount]]", vChildIncentive.getAmount().toString());
 			  }
 		  }
 		}
