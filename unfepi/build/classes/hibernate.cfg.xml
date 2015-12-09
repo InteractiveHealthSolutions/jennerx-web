@@ -8,11 +8,9 @@
 		<!-- <property name="hibernate.format_sql">true</property>
 		<property name="hibernate.use_sql_comments">true</property> -->
 		
-		
 <property name="hibernate.connection.useUnicode">true</property>
 <property name="hibernate.connection.characterEncoding">UTF-8</property>
 <property name="hibernate.connection.charSet">UTF-8</property> 
-		
 
 <!-- 		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
  		<property name="hibernate.connection.password">VA1913wm</property>
@@ -33,15 +31,10 @@
 		<property name="hibernate.c3p0.acquireRetryAttempts">3</property>
 		<property name="hibernate.c3p0.max_statements">50</property> -->
  
- 	 	
- 	 	
- 	 	
  	 	<mapping class="org.ird.unfepi.model.Address" />
  		<mapping class="org.ird.unfepi.model.CalendarDay" />
  		<mapping class="org.ird.unfepi.model.Child" />
  		<mapping class="org.ird.unfepi.model.ChildIncentive" />
- 		<mapping class="org.ird.unfepi.model.ChildLotteryParams" />
-		<mapping class="org.ird.unfepi.model.City" />
 		<mapping class="org.ird.unfepi.model.CommunicationNote" />
 		<mapping class="org.ird.unfepi.model.ContactNumber" />
 		<mapping class="org.ird.unfepi.model.DailySummary" />
@@ -49,27 +42,21 @@
 		<mapping class="org.ird.unfepi.model.DownloadableReport" />
 		<mapping class="org.ird.unfepi.model.Encounter" />
 		<mapping class="org.ird.unfepi.model.EncounterResults" />
-		<mapping class="org.ird.unfepi.model.Ethnicity" />
 		<mapping class="org.ird.unfepi.model.IdMapper" />
 		<mapping class="org.ird.unfepi.model.Identifier" />
 		<mapping class="org.ird.unfepi.model.IdentifierType" />
-		<mapping class="org.ird.unfepi.model.Language" />
 		<mapping class="org.ird.unfepi.model.LotterySms" />
 		<mapping class="org.ird.unfepi.model.Location" />
 		<mapping class="org.ird.unfepi.model.LocationType" />
 		<mapping class="org.ird.unfepi.model.Notifier" />
 		<mapping class="org.ird.unfepi.model.Permission" />
-		<mapping class="org.ird.unfepi.model.Relationship" />
-		<mapping class="org.ird.unfepi.model.Religion" />
 		<mapping class="org.ird.unfepi.model.Reminder" />
 		<mapping class="org.ird.unfepi.model.ReminderSms" />
 		<mapping class="org.ird.unfepi.model.Role" />
 		<mapping class="org.ird.unfepi.model.Response" />
-		<mapping class="org.ird.unfepi.model.Screening" />
 		<mapping class="org.ird.unfepi.model.Setting" />
 		<mapping class="org.ird.unfepi.model.Storekeeper" />
 		<mapping class="org.ird.unfepi.model.StorekeeperIncentiveEvent" />
-		<mapping class="org.ird.unfepi.model.StorekeeperIncentiveParams" />
 		<mapping class="org.ird.unfepi.model.StorekeeperIncentiveParticipant" />
 		<mapping class="org.ird.unfepi.model.StorekeeperIncentiveTransaction" />
 		<mapping class="org.ird.unfepi.model.StorekeeperIncentiveWorkProgress" />
@@ -80,7 +67,6 @@
 		<mapping class="org.ird.unfepi.model.VaccinationCenterVaccineDay" />
 		<mapping class="org.ird.unfepi.model.Vaccinator" />
 		<mapping class="org.ird.unfepi.model.VaccinatorIncentiveEvent" />
-		<mapping class="org.ird.unfepi.model.VaccinatorIncentiveParams" />
 		<mapping class="org.ird.unfepi.model.VaccinatorIncentiveParticipant" />
 		<mapping class="org.ird.unfepi.model.VaccinatorIncentiveTransaction" />
 		<mapping class="org.ird.unfepi.model.VaccinatorIncentiveWorkProgress" />
@@ -92,11 +78,11 @@
 		
 		<!-- Daniyal's Addition -->
 		<mapping class="org.ird.unfepi.model.Arm"/>
-		<mapping class="org.ird.unfepi.model.IncentiveParams"/> 
+		<mapping class="org.ird.unfepi.model.IncentiveParams"/>
 		<mapping class="org.ird.unfepi.model.VaccinatorIncentive"/>
 		
 		<!-- Safwan's Addition -->
-		<mapping class="org.ird.unfepi.model.Women" />
+		<mapping class="org.ird.unfepi.model.Women"/>
 		<mapping class="org.ird.unfepi.model.WomenVaccination"/>
 		
     </session-factory>
