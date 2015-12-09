@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,8 +33,6 @@ public class VaccinatorIncentive {
 	@JoinColumn(name = "vaccinatorId", insertable = false, updatable = false)
 	@ForeignKey(name = "vincent_vaccinatorId_vaccinator_vaccinatorId_FK")
 	private Vaccinator	vaccinator;
-	
-	
 
 	private Integer armId;
 	
@@ -41,6 +41,12 @@ public class VaccinatorIncentive {
 	@ForeignKey(name = "vincent_armId_arm_armId_FK")
 	private Arm arm;
 	
+	private Short incentiveParamId;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "incentiveParamId", insertable = false, updatable = false)
+	@ForeignKey(name = "vincent_incentiveParamId_incentiveparam_incentiveParamId_FK")
+	private IncentiveParams incentiveParams;
 	
 	@Column(unique = true, nullable = false)
 	private Integer vaccinationRecordNum;
@@ -55,7 +61,19 @@ public class VaccinatorIncentive {
 	
 	private Boolean isIncentivized;
 	
+	private String code;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(length=30, nullable = false)
+	private IncentiveStatus incentiveStatus;
+	
 	private Float amount;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date	consumptionDate;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date	transactionDate;
 	
 	private String description;
 	
@@ -104,6 +122,22 @@ public class VaccinatorIncentive {
 		this.arm = arm;
 	}
 
+	public Short getIncentiveParamId() {
+		return incentiveParamId;
+	}
+
+	public void setIncentiveParamId(Short incentiveParamId) {
+		this.incentiveParamId = incentiveParamId;
+	}
+
+	public IncentiveParams getIncentiveParams() {
+		return incentiveParams;
+	}
+
+	public void setIncentiveParams(IncentiveParams incentiveParams) {
+		this.incentiveParams = incentiveParams;
+	}
+
 	public Integer getVaccinationRecordNum () {
 		return vaccinationRecordNum;
 	}
@@ -143,6 +177,42 @@ public class VaccinatorIncentive {
 		this.isIncentivized = isIncentivized;
 	}
 
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public IncentiveStatus getIncentiveStatus() {
+		return incentiveStatus;
+	}
+
+	public void setIncentiveStatus(IncentiveStatus incentiveStatus) {
+		this.incentiveStatus = incentiveStatus;
+	}
+
+	public Date getConsumptionDate() {
+		return consumptionDate;
+	}
+
+	public void setConsumptionDate(Date consumptionDate) {
+		this.consumptionDate = consumptionDate;
+	}
+
+	public Date getTransactionDate() {
+		return transactionDate;
+	}
+
+	public void setTransactionDate(Date transactionDate) {
+		this.transactionDate = transactionDate;
+	}
+
+	public void setArmId(Integer armId) {
+		this.armId = armId;
+	}
 
 	public Float getAmount () {
 		return amount;

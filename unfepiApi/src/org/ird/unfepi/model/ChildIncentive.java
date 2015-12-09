@@ -23,24 +23,16 @@ import org.hibernate.annotations.ForeignKey;
 @Table(name = "childincentive")
 public class ChildIncentive {
 
-	/*public enum CodeStatus {
-		AVAILABLE, CONSUMED, EXPIRED, LOTTERY_LOST
-	}*/
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int childIncentiveId;
 	
 	private Integer armId;
 	
-
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "armId", insertable = false, updatable = false)
 	@ForeignKey(name = "clott_armId_arm_armId_FK")
 	private Arm arm;
-	
-	
 
 	@Column(unique = true, nullable = false)
 	private Integer vaccinationRecordNum;
@@ -49,32 +41,32 @@ public class ChildIncentive {
 	@JoinColumn(name = "vaccinationRecordNum", insertable = false, updatable = false)
 	@ForeignKey(name = "clott_vaccRecordNum_vaccination_vaccinationRecordNum_FK")
 	private Vaccination vaccination;
+
+	private Short incentiveParamId;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "incentiveParamId", insertable = false, updatable = false)
+	@ForeignKey(name = "clott_incentiveParamId_incentiveparam_incentiveParamId_FK")
+	private IncentiveParams incentiveParams;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date incentiveDate;
 	
 	private Boolean hasWonIncentive;
 	
-	/*private String code;
+	private String code;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(length=30, nullable = false)
-	private CodeStatus codeStatus;*/
+	private IncentiveStatus incentiveStatus;
 
 	private Float amount;
 	
-	/*private Integer storekeeperId;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "storekeeperId", insertable = false, updatable = false)
-	@ForeignKey(name = "clott_storekeeperId_storekeeper_mappedId_FK")
-	private Storekeeper storekeeper;*/
-	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date	consumptionDate;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date	transactionDate;
-	
-/*	@Temporal(TemporalType.TIMESTAMP)
-	private Date	consumptionDate;*/
 	
 	private String description;
 	
@@ -122,6 +114,22 @@ public class ChildIncentive {
 		this.arm = arm;
 	}
 
+	public Short getIncentiveParamId() {
+		return incentiveParamId;
+	}
+
+	public void setIncentiveParamId(Short incentiveParamId) {
+		this.incentiveParamId = incentiveParamId;
+	}
+
+	public IncentiveParams getIncentiveParams() {
+		return incentiveParams;
+	}
+
+	public void setIncentiveParams(IncentiveParams incentiveParams) {
+		this.incentiveParams = incentiveParams;
+	}
+
 	public Integer getVaccinationRecordNum () {
 		return vaccinationRecordNum;
 	}
@@ -161,52 +169,29 @@ public class ChildIncentive {
 		this.hasWonIncentive = hasWonIncentive;
 	}
 
-
-	/*public String getCode () {
+	public String getCode () {
 		return code;
 	}
-
 
 	public void setCode (String code) {
 		this.code = code;
 	}
 
-
-	public CodeStatus getCodeStatus () {
-		return codeStatus;
+	public IncentiveStatus getIncentiveStatus () {
+		return incentiveStatus;
 	}
 
-
-	public void setCodeStatus (CodeStatus codeStatus) {
-		this.codeStatus = codeStatus;
-	}*/
-
+	public void setIncentiveStatus (IncentiveStatus incentiveStatus) {
+		this.incentiveStatus = incentiveStatus;
+	}
 
 	public Float getAmount () {
 		return amount;
 	}
 
-
 	public void setAmount (Float amount) {
 		this.amount = amount;
 	}
-
-
-	/*public Integer getStorekeeperId () {
-		return storekeeperId;
-	}
-
-	public void setStorekeeperId (Integer storekeeperId) {
-		this.storekeeperId = storekeeperId;
-	}
-
-	public Storekeeper getStorekeeper () {
-		return storekeeper;
-	}
-
-	void setStorekeeper (Storekeeper storekeeper) {
-		this.storekeeper = storekeeper;
-	}*/
 
 	public Date getTransactionDate () {
 		return transactionDate;
@@ -216,13 +201,13 @@ public class ChildIncentive {
 		this.transactionDate = transactionDate;
 	}
 
-/*	public Date getConsumptionDate () {
+	public Date getConsumptionDate () {
 		return consumptionDate;
 	}
 
 	public void setConsumptionDate (Date consumptionDate) {
 		this.consumptionDate = consumptionDate;
-	}*/
+	}
 
 	public String getDescription () {
 		return description;
