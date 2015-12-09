@@ -1,12 +1,8 @@
 package org.ird.unfepi.web.validator;
 
-import java.util.List;
-
 import org.ird.unfepi.beans.ChildDataBean;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
-import org.ird.unfepi.model.Vaccination;
-import org.ird.unfepi.model.Vaccination.VACCINATION_STATUS;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 

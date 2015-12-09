@@ -31,6 +31,7 @@ import org.ird.unfepi.model.Vaccination.VACCINATION_STATUS;
 import org.ird.unfepi.model.VaccinationCenter.CenterType;
 import org.ird.unfepi.model.Vaccinator;
 import org.ird.unfepi.model.Vaccine;
+import org.ird.unfepi.model.Women;
 import org.ird.unfepi.utils.Utils;
 import org.ird.unfepi.utils.date.DateUtils;
 import org.ird.unfepi.utils.date.DateUtils.TIME_INTERVAL;
@@ -40,6 +41,7 @@ import org.ird.unfepi.web.utils.IMRUtils;
 import org.ird.unfepi.web.utils.VaccinationCenterVisit;
 import org.ird.unfepi.web.utils.VaccineSchedule;
 import org.ird.unfepi.web.utils.VaccineSchedule.VaccineStatusType;
+import org.ird.unfepi.web.utils.WomenVaccinationCenterVisit;
 import org.ird.unfepi.web.validator.ValidatorOutput.ValidatorStatus;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -140,12 +142,26 @@ public class ValidatorUtils {
 			return new ValidatorOutput(ValidatorStatus.ERROR, ErrorMessages.CHILD_ID_INVALID);
 		}
 		
-//		if(isNew){
-//			String q = "select count(*) from idmapper i join role r on i.roleId = r.roleId where programId = '"+programId+"' and r.roleName='"+GlobalParams.CHILD_ROLE_NAME+"'";
-//			if(Integer.parseInt(sc.getCustomQueryService().getDataBySQL(q).get(0).toString()) > 0){
-//				return new ValidatorOutput(ValidatorStatus.ERROR, ErrorMessages.CHILD_ALREADY_EXISTS);
-//			}
-//		}
+		if(isNew){
+			String q = "select count(*) from identifier i where identifier = '"+programId+"' ";
+			if(Integer.parseInt(sc.getCustomQueryService().getDataBySQL(q).get(0).toString()) > 0){
+				return new ValidatorOutput(ValidatorStatus.ERROR, ErrorMessages.CHILD_ALREADY_EXISTS);
+			}
+		}
+		return new ValidatorOutput(ValidatorStatus.OK, "");
+	}
+	
+	public static ValidatorOutput validateNIC(String nic, boolean unique, ServiceContext sc){
+		if(nic != null && !nic.trim().equals("") && nic.length() != 13 ){
+			return new ValidatorOutput(ValidatorStatus.ERROR, ErrorMessages.NIC_INVALID);
+		}
+		
+		if(unique){
+			String q = "select count(*) from child where nic = '"+nic+"' ";
+			if(Integer.parseInt(sc.getCustomQueryService().getDataBySQL(q).get(0).toString()) > 0){
+				return new ValidatorOutput(ValidatorStatus.ERROR, ErrorMessages.NIC_ALREADY_EXISTS);
+			}
+		}
 		return new ValidatorOutput(ValidatorStatus.OK, "");
 	}
 	
@@ -209,17 +225,15 @@ public class ValidatorUtils {
 		if(!vidop.STATUS().equals(ValidatorStatus.OK)){
 			putError(dataEntrySource, vidop.MESSAGE(), mobileErrors, webErrors, DataField.PROGRAM_ID, useFieldPrefix);
 		}
+		
+		ValidatorOutput vnicop = validateNIC(child.getNic(), true, sc);
+		if(!vnicop.STATUS().equals(ValidatorStatus.OK)){
+			putError(dataEntrySource, vnicop.MESSAGE(), mobileErrors, webErrors, null, false);
+		}
 
 		if(child.getDateEnrolled() == null || DateUtils.afterTodaysDate(child.getDateEnrolled())){
 			putError(dataEntrySource, ErrorMessages.CHILD_DATE_ENROLLED_INVALID, mobileErrors, webErrors, DataField.CHILD_DATE_ENROLLED, useFieldPrefix);
-		}// for mobile entries enrollment/vaccination date should be equal to current date time
-		else if(dataEntrySource.equals(DataEntrySource.MOBILE) && !DateUtils.datesEqual(child.getDateEnrolled(), new Date())){
-			putError(dataEntrySource, ErrorMessages.ENROLLMENT_MOBILE_BACKDATED_ENTRY, mobileErrors, null, null, useFieldPrefix);
 		}
-		if(child.getNic() != null && !child.getNic().trim().equals("") && child.getNic().length() != 13 ){
-			putError(dataEntrySource, ErrorMessages.NIC_INVALID, mobileErrors, webErrors,DataField.CHILD_NIC,useFieldPrefix);
-		}
-		
 		
 		if(StringUtils.isEmptyOrWhitespaceOnly(completeCourseFromCenter)){
 			putError(dataEntrySource, ErrorMessages.COMPLETE_COURSE_FROM_CENTER_MISSING, mobileErrors, webErrors, DataField.CHILD_COMPLETE_COURSE_FROM_CENTER, useFieldPrefix);
@@ -234,6 +248,40 @@ public class ValidatorUtils {
 		validateAddress(dataEntrySource, address, mobileErrors, webErrors, useFieldPrefix);
 		
 		validateReminderAndContactInfo(dataEntrySource, centerVisit.getPreference(), centerVisit.getContactPrimary(), centerVisit.getContactSecondary(), mobileErrors, webErrors, sc, useFieldPrefix);
+	}
+	
+	
+	
+	
+	public static void validateWomenEnrollmentForm(DataEntrySource dataEntrySource, String projectId, Women women, 
+			String birthdateOrAge, String ageYears, String ageMonths, String ageWeeks, String ageDays, Address address, 
+			WomenVaccinationCenterVisit centerVisit, HashMap<String, String> mobileErrors, Errors webErrors, ServiceContext sc)
+	{
+		boolean useFieldPrefix = true; // We know for enrollment we have encapsulated entities
+		
+		/*ValidatorOutput vidop = validateChildProgramId(projectId, true, sc);
+		if(!vidop.STATUS().equals(ValidatorStatus.OK)){
+			putError(dataEntrySource, vidop.MESSAGE(), mobileErrors, webErrors, DataField.PROGRAM_ID, useFieldPrefix);
+		}*/
+
+		if(women.getDateEnrolled() == null || DateUtils.afterTodaysDate(women.getDateEnrolled())){
+			putError(dataEntrySource, ErrorMessages.CHILD_DATE_ENROLLED_INVALID, mobileErrors, webErrors, DataField.CHILD_DATE_ENROLLED, useFieldPrefix);
+		}// for mobile entries enrollment/vaccination date should be equal to current date time
+		else if(dataEntrySource.equals(DataEntrySource.MOBILE) && !DateUtils.datesEqual(women.getDateEnrolled(), new Date())){
+			putError(dataEntrySource, ErrorMessages.ENROLLMENT_MOBILE_BACKDATED_ENTRY, mobileErrors, null, null, useFieldPrefix);
+		}
+		
+	
+		
+		//boolean measles2Given = IMRUtils.isMeasles2Given(vaccineSchedule, child.getDateEnrolled());
+
+		validateWomenBiographics(dataEntrySource, women, birthdateOrAge, ageYears, ageMonths, ageWeeks, ageDays, mobileErrors, webErrors, sc, useFieldPrefix);
+		
+		validateWomenVaccinationSchedule(dataEntrySource, women, true, centerVisit, false, mobileErrors, webErrors, sc, useFieldPrefix);
+
+		validateAddress(dataEntrySource, address, mobileErrors, webErrors, useFieldPrefix);
+		
+		//validateReminderAndContactInfo(dataEntrySource, centerVisit.getPreference(), centerVisit.getContactPrimary(), centerVisit.getContactSecondary(), mobileErrors, webErrors, sc, useFieldPrefix);
 	}
 	
 	/**
@@ -290,6 +338,10 @@ public class ValidatorUtils {
 		if(!StringUtils.isEmptyOrWhitespaceOnly(contactPrimary) && !StringUtils.isEmptyOrWhitespaceOnly(contactSecondary)
 				&& contactPrimary.equalsIgnoreCase(contactSecondary)){
 			putError(dataEntrySource, ErrorMessages.CONTACT_NUMBER_ALREADY_ASSIGNED, mobileErrors, webErrors, DataField.CENTER_VISIT_CONTACT_SECONDARY, useFieldPrefix);
+		}
+		
+		if(preferences == null || preferences.getHasApprovedLottery() == null){
+			putError(dataEntrySource, ErrorMessages.VACCINATION_LOTTERY_MISSING, mobileErrors, webErrors, DataField.CENTER_VISIT_HAS_APPROVED_LOTTERY, useFieldPrefix);
 		}
 	}
 	
@@ -1122,6 +1174,86 @@ public class ValidatorUtils {
 		}
 	}
 	
+	
+	/**
+	 * @param dataEntrySource : MUST be specified
+	 * @param women : 
+	 * <ul><li>dateEnrolled-  MUST be Non-null PAST date.
+	 * <li>firstName- If <code>childNamed</code> is true, it MUST be specified with valid name characters
+	 * <li>fatherFirstName- MUST be specified with valid name characters
+	 * <li>birthdate- MUST be a Non-null PAST date. Birthdate should be BEFORE(LESS THAN) dateEnrolled
+	 * <li>estimatedBirthdate- MUST be specified
+	 * </ul>	
+	 * @param birthdateOrAge: MUST be specified and should only be AGE or BIRTHDATE
+	 * @param ageYears : MUST be a valid number between 0 - {@linkplain ValidatorUtils#MAX_AGE_YEARS} , optional otherwise
+	 * @param ageMonths : MUST be a valid number between 0 - {@linkplain ValidatorUtils#MAX_AGE_MONTHS} , optional otherwise
+	 * @param ageWeeks : MUST be a valid number between 0 - {@linkplain ValidatorUtils#MAX_AGE_WEEKS} , optional otherwise
+	 * @param ageDays : MUST be a valid number between 0 - {@linkplain ValidatorUtils#MAX_AGE_DAYS} , optional otherwise
+	 * @param mobileErrors : List object that would contain mobile error messages (Must be provided if dataEntrySource is Mobile) <br>
+	 * @param webErrors : {@link Errors} object of spring (web) {@link Validator} that called the function <br>
+	 * @param sc {@linkplain ServiceContext} Object that SHOULD be CLOSED after validation
+	 * @param useFieldPrefix : if would be used for spring (web) {@link Validator} , ignored otherwise <br>
+	 * 
+	 * All errors occurred during validation would be populated into mobileErrors or webErrors w.r.t to dataEntrySource provided
+	 */
+	public static void validateWomenBiographics(DataEntrySource dataEntrySource,  Women women,
+			String birthdateOrAge, String ageYears, String ageMonths, String ageWeeks, String ageDays,	
+			HashMap<String, String> mobileErrors, Errors webErrors, ServiceContext sc, boolean useFieldPrefix)
+	{
+		if(women.getDateEnrolled() == null || DateUtils.afterTodaysDate(women.getDateEnrolled())){
+			putError(dataEntrySource, ErrorMessages.WOMEN_DATE_ENROLLED_INVALID, mobileErrors, webErrors, DataField.WOMEN_DATE_ENROLLED, useFieldPrefix);
+		}
+		else if(women.getBirthdate() == null || DateUtils.afterTodaysDate(women.getBirthdate())){
+			putError(dataEntrySource, ErrorMessages.BIRTHDATE_INVALID, mobileErrors, webErrors, DataField.WOMEN_BIRTHDATE, useFieldPrefix);
+		}
+		else if(DateUtils.differenceBetweenIntervals(women.getDateEnrolled(), women.getBirthdate(), TIME_INTERVAL.DATE) < 0){
+			putError(dataEntrySource, ErrorMessages.BIRTHDATE_INVALID, mobileErrors, webErrors, DataField.WOMEN_BIRTHDATE, useFieldPrefix);
+		}
+
+		
+		if(women.getEstimatedBirthdate() == null){
+			putError(dataEntrySource, ErrorMessages.IS_ESTIMATED_BIRTHDATE_MISSING, mobileErrors, webErrors, DataField.WOMEN_BIRTHDATE, useFieldPrefix);
+		}
+		
+		/*if(StringUtils.isEmptyOrWhitespaceOnly(birthdateOrAge)){//TODO remove this. it is redundant.
+			putError(dataEntrySource, ErrorMessages.BIRTHDATE_OR_AGE_PARAM_MISSING, mobileErrors, webErrors, DataField.WOMEN_BIRTHDATE_OR_AGE, useFieldPrefix);
+		}
+		else if(!birthdateOrAge.equalsIgnoreCase("age") && !birthdateOrAge.equalsIgnoreCase("birthdate")){
+			putError(dataEntrySource, ErrorMessages.BIRTHDATE_OR_AGE_PARAM_MISSING, mobileErrors, webErrors,  DataField.WOMEN_BIRTHDATE_OR_AGE, useFieldPrefix);
+		}*/
+		else if(birthdateOrAge.toLowerCase().contains("age")){
+			if(StringUtils.isEmptyOrWhitespaceOnly(ageYears) || !Utils.isNumberBetween(ageYears, 0, MAX_AGE_YEARS)){
+				putError(dataEntrySource, ErrorMessages.INVALID_YEARS_OF_AGE, mobileErrors, webErrors, DataField.WOMEN_WOMEN_AGE_YEARS, useFieldPrefix);
+			}
+			if(StringUtils.isEmptyOrWhitespaceOnly(ageMonths) || !Utils.isNumberBetween(ageMonths, 0, MAX_AGE_MONTHS)){
+				putError(dataEntrySource, ErrorMessages.INVALID_MONTHS_OF_AGE, mobileErrors, webErrors, DataField.WOMEN_WOMEN_AGE_MONTHS, useFieldPrefix);
+			}
+			if(StringUtils.isEmptyOrWhitespaceOnly(ageWeeks) || !Utils.isNumberBetween(ageWeeks, 0, MAX_AGE_WEEKS)){
+				putError(dataEntrySource, ErrorMessages.INVALID_WEEKS_OF_AGE, mobileErrors, webErrors, DataField.WOMEN_WOMEN_AGE_WEEKS, useFieldPrefix);
+			}
+			if(StringUtils.isEmptyOrWhitespaceOnly(ageDays) || !Utils.isNumberBetween(ageDays, 0, MAX_AGE_DAYS)){
+				putError(dataEntrySource, ErrorMessages.INVALID_DAYS_OF_AGE, mobileErrors, webErrors, DataField.WOMEN_WOMEN_AGE_DAYS, useFieldPrefix);
+			}
+		}
+		
+		if(women.getFirstName().length() < 3){
+			putError(dataEntrySource, ErrorMessages.WOMEN_NAME_LENGTH, mobileErrors, webErrors, DataField.WOMEN_FIRST_NAME, useFieldPrefix);
+		}
+		
+		if(women.getFatherFirstName().length() < 3){
+			putError(dataEntrySource, ErrorMessages.WOMEN_NAME_LENGTH, mobileErrors, webErrors, DataField.WOMEN_FATHER_FIRST_NAME, useFieldPrefix);
+		}
+		
+		if(women.getHusbandFirstName().length() < 3){
+			putError(dataEntrySource, ErrorMessages.WOMEN_NAME_LENGTH, mobileErrors, webErrors, DataField.WOMEN_HUSBAND_FIRST_NAME, useFieldPrefix);
+		}
+				
+		if(StringUtils.isEmptyOrWhitespaceOnly(women.getFatherFirstName()) || !DataValidation.validate(REG_EX.NAME_CHARACTERS, women.getFatherFirstName())){
+			putError(dataEntrySource, "Father`s " + ErrorMessages.NAME_INVALID, mobileErrors, webErrors, DataField.WOMEN_FATHER_FIRST_NAME, useFieldPrefix);
+		}
+	
+	}
+	
 	/**
 	 * 
 	 * @param dataEntrySource : MUST be specified
@@ -1405,8 +1537,7 @@ public class ValidatorUtils {
 				putError(dataEntrySource, ErrorMessages.VACCINATION_LOTTERY_APPROVAL_SHOULD_NOT_BE_SPECIFIED, mobileErrors, error, DataField.CENTER_VISIT_HAS_APPROVED_LOTTERY, useFieldPrefix);
 			}
 		}
-		else if(dataEntrySource.equals(DataEntrySource.MOBILE) 
-    				&& centerVisit.getHasApprovedLottery() == null){
+		else if(centerVisit.getHasApprovedLottery() == null){
 			putError(dataEntrySource, ErrorMessages.VACCINATION_LOTTERY_MISSING, mobileErrors, error, DataField.CENTER_VISIT_HAS_APPROVED_LOTTERY, useFieldPrefix);
 		}*/
 		
@@ -1425,6 +1556,124 @@ public class ValidatorUtils {
 			}
 		}
 	}
+	
+	
+	private static void validateWomenVaccinationSchedule(DataEntrySource dataEntrySource, Women women, boolean isNewEnrollment, WomenVaccinationCenterVisit centerVisit, 
+			 Boolean ignoreNextVaccineIfNull, HashMap<String, String> mobileErrors, Errors error, ServiceContext sc, boolean useFieldPrefix)
+	{
+		if(!isNewEnrollment && centerVisit.getWomenId() == null){
+			putError(dataEntrySource, ErrorMessages.VACCINATION_WOMEN_ID_MISSING, mobileErrors, error, DataField.CENTER_VISIT_WOMEN_ID, useFieldPrefix);
+			return;
+		}
+		
+		if(centerVisit.getVaccinationCenterId() == null){
+			putError(dataEntrySource, ErrorMessages.VACCINATION_CENTER_MISSING, mobileErrors, error, DataField.CENTER_VISIT_VACCINATION_CENTER_ID, useFieldPrefix);
+			return;
+		}
+    	
+		if(women.getBirthdate() == null){
+			putError(dataEntrySource, "Can not proceed without women`s birthdate", mobileErrors, error, null, useFieldPrefix);
+			return;
+		}
+		
+		
+		
+    	// check if user nullable dates are provided
+    	// Program assumes that dateEnrolled, vacinationDate, vaccinationDuedate should be equal for enrollment 
+		// as all fields are for event information of same datetime
+    	if(isNewEnrollment && women.getDateEnrolled() != null 
+				&& (!DateUtils.datesEqual(women.getDateEnrolled(), centerVisit.getVisitDate()))){
+			putError(dataEntrySource, ErrorMessages.ENROLLMENT_EQUAL_DATES_REQUIRED, mobileErrors, error, DataField.CHILD_DATE_ENROLLED, useFieldPrefix);
+			return;
+    	}
+    	
+    	/*for(WomenVaccination wv : womenVaccination){
+    		if(!wv.getVaccinationStatus().getREPRESENTATION().equals("RETRO (date missing)") && (wv.getVaccinationDate() == null)){
+        		putError(dataEntrySource, ErrorMessages.WOMEN_VACCINATION_DATE, mobileErrors, error, DataField.WOMEN_VACCINE_DATE, useFieldPrefix);
+        	}
+    	}*/
+    	
+    	
+		
+		/*ArrayList<VaccineSchedule> defSch = VaccineSchedule.generateDefaultSchedule(women.getBirthdate(), centerVisit.getVisitDate(), centerVisit.getWomenId(), centerVisit.getVaccinationCenterId(), true);
+		
+		for (VaccineSchedule dfvsh : defSch) {
+			VaccineSchedule vsobj = null;
+			for (VaccineSchedule vs : vaccineSchedule) {
+				if(dfvsh.getVaccine().getName().equalsIgnoreCase(vs.getVaccine().getName())){
+					vsobj = vs;
+					break;
+				}
+				
+			}
+			
+			if(dfvsh.getStatus() == null || !dfvsh.getStatus().equalsIgnoreCase(VaccineStatusType.VACCINATED_EARLIER.name())){
+				// vaccine was retro or should have been vaccinated yet its status must be provided.
+				// or if vaccine has to be scheduled then a next date must be provided. it cant be left blank
+				if(dfvsh.getSchedule_duedate() != null  
+						&& (dfvsh.getIs_retro_suspect() || dfvsh.getIs_current_suspect()) 
+					&& IMRUtils.passVaccinePrerequisiteCheck(vsobj==null?dfvsh:vsobj, vaccineSchedule) 
+					&& (dfvsh.getExpiry_date() != null && dfvsh.getExpiry_date().after(new Date()))
+					&& (vsobj == null || StringUtils.isEmptyOrWhitespaceOnly(vsobj.getStatus())) 
+					&& !dfvsh.getStatus().equalsIgnoreCase(VaccineStatusType.NOT_ALLOWED.name())){
+					putError(dataEntrySource, dfvsh.getVaccine().getName()+" info and status must be provided. It cannot be left blank", mobileErrors, error, null, useFieldPrefix);
+				}
+				else if(vsobj != null){
+					if(!StringUtils.isEmptyOrWhitespaceOnly(vsobj.getStatus())
+							&& !dfvsh.getStatus().equalsIgnoreCase(VaccineStatusType.NOT_ALLOWED.name())){
+						if(!vsobj.getStatus().equalsIgnoreCase(VaccineStatusType.SCHEDULED.name())
+								&& vsobj.getCenter() == null){
+							putError(dataEntrySource, dfvsh.getVaccine().getName()+" vaccination center must be provided", mobileErrors, error, null, useFieldPrefix);
+						}
+						else if(!(vsobj.getStatus().equalsIgnoreCase(VaccineStatusType.SCHEDULED.name()) 
+								|| vsobj.getStatus().equalsIgnoreCase(VaccineStatusType.RETRO_DATE_MISSING.name()))
+								&& vsobj.getVaccination_date() == null){
+							putError(dataEntrySource, dfvsh.getVaccine().getName()+" vaccination date must be provided", mobileErrors, error, null, useFieldPrefix);
+						}
+						else if(vsobj.getStatus().equalsIgnoreCase(VaccineStatusType.SCHEDULED.name())
+								&& vsobj.getAssigned_duedate() == null){
+							putError(dataEntrySource, dfvsh.getVaccine().getName()+" assigned duedate must be specified", mobileErrors, error, null, useFieldPrefix);
+						}
+						else if(vsobj.getStatus().equalsIgnoreCase(VaccineStatusType.VACCINATED.name())
+								&& (vsobj.getVaccination_date() == null || !DateUtils.datesEqual(vsobj.getVaccination_date(),centerVisit.getVisitDate()))){
+							putError(dataEntrySource, dfvsh.getVaccine().getName()+" vaccination date must be equal to center visit date", mobileErrors, error, null, useFieldPrefix);
+						}
+						else if(vsobj.getStatus().equalsIgnoreCase(VaccineStatusType.SCHEDULED.name())
+								&& !isNewEnrollment && sc.getVaccinationService().findByCriteria(centerVisit.getWomenId().intValue(), vsobj.getVaccine().getVaccineId(), VACCINATION_STATUS.VACCINATED, 0, 2, true, null).size()>0){
+							putError(dataEntrySource, dfvsh.getVaccine().getName()+" already has been given. Can not duplicate records", mobileErrors, error, null, useFieldPrefix);
+						}
+					}
+					
+					if(vsobj.getVaccination_date() != null 
+							&& (vsobj.getVaccination_date().before(women.getBirthdate())
+									|| DateUtils.differenceBetweenIntervals(vsobj.getVaccination_date(), centerVisit.getVisitDate(), TIME_INTERVAL.DATE) >= 1)){
+						putError(dataEntrySource, dfvsh.getVaccine().getName()+" vaccination date can not be before birthdate or after enrollment date", mobileErrors, error, null, useFieldPrefix);
+					}		
+				}
+			}
+		}*/
+    	
+    	if(centerVisit.getVaccinatorId() == null){
+			putError(dataEntrySource, ErrorMessages.VACCINATOR_MISSING, mobileErrors, error, DataField.CENTER_VISIT_VACCINATOR_ID, useFieldPrefix);
+    	}
+    	
+		if(centerVisit.getVaccinationCenterId() != null){
+			ValidatorOutput vepi = null;
+			if(isNewEnrollment)
+			{
+				vepi = ValidatorUtils.validateNewEpiNumber(centerVisit.getEpiNumber(), centerVisit.getVaccinationCenterId(), false, sc);
+			}
+			else if(!isNewEnrollment && centerVisit.getWomenId() != null){
+				vepi = ValidatorUtils.validateEpiNumber(centerVisit.getEpiNumber(), centerVisit.getVaccinationCenterId(), centerVisit.getWomenId(), false, false/*dataEntrySource.equals(DataEntrySource.MOBILE)*/);
+			}
+			
+			if(!vepi.STATUS().equals(ValidatorStatus.OK)){
+				putError(dataEntrySource, vepi.MESSAGE(), mobileErrors, error, DataField.CENTER_VISIT_EPI_NUMBER, useFieldPrefix);
+			}
+		}
+	}
+	
+	
 /*	
 	*/
 	/** Validates vaccination for edits only validates missing params. No validation of schedule is done
