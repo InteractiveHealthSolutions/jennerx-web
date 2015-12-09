@@ -4,8 +4,6 @@
 package org.ird.unfepi.model;
 
 import javax.persistence.Embeddable;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 
 /**
  * The Class EncounterResultsId.
