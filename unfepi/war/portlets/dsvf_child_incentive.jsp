@@ -85,19 +85,19 @@ function expandD(className, eventId){
 <c:set var="typeSearchFieldName" value="<%=SearchFilter.TYPE.FILTER_NAME()%>"></c:set>
 <c:set var="tabType" value="${model[typeSearchFieldName]}"></c:set>
 <div id="tt" class="easyui-tabs" plain="true" border="false">
-	<div title="<%= TabIncentive.WON.TITLE()%>" >
+	<div title="<%= TabIncentive.ACTIVE.TITLE()%>" >
 		<%String tabtype = (String)pageContext.getAttribute("tabType");
 		if(!StringUtils.isEmptyOrWhitespaceOnly(tabtype)
-				&& tabtype.equalsIgnoreCase(TabIncentive.WON.TITLE())){
+				&& tabtype.equalsIgnoreCase(TabIncentive.ACTIVE.TITLE())){
 		%>
 			<%@ include file="dg_child_incentive.jsp" %>
 		<%
 		}
 		%>
 	</div>
-	<div title="<%= TabIncentive.LOST.TITLE()%>" >
+	<div title="<%= TabIncentive.INACTIVE.TITLE()%>" >
 		<%if(!StringUtils.isEmptyOrWhitespaceOnly(tabtype)
-				&& tabtype.equalsIgnoreCase(TabIncentive.LOST.TITLE())){
+				&& tabtype.equalsIgnoreCase(TabIncentive.INACTIVE.TITLE())){
 		%>
 			<%@ include file="dg_child_incentive.jsp" %>
 		<%

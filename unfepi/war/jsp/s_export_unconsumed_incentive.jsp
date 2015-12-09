@@ -4,8 +4,20 @@
 
 <%@ include file="/WEB-INF/template/header.jsp" %>
 
+<script type="text/javascript">
+function exportdata(containerForm, exportType){
+	if(document.getElementById("incentiveDatefrom").value == ''
+			|| document.getElementById("incentiveDateto").value == ''){
+		alert('Date range must be specified');
+		return;
+	}
+	containerForm.action = "exportdata?extype="+exportType;
+	containerForm.submit();
+}
+</script>
 <div class="dvwform centerdivh" style="width: 600px">
 <div class="formheadingWRule">Export Unconsumed Incentives</div>
+<form class="searchpalette" id="searchfrm" name="searchfrm" method="post" >
 <table>
 	<tr>
     <td>Incentive generated date<br>
@@ -32,6 +44,7 @@
     <td><a onclick="exportdata(document.searchfrm, '<%=SystemPermissions.DOWNLOAD_CHILD_UNCONSUMED_INCENTIVE_CSV%>');" class="linkiconM iconcsv"></a></td>
 	</tr>
 		</table>
+</form>
 </div>
 
 <%@ include file="/WEB-INF/template/footer.jsp" %>

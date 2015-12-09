@@ -134,8 +134,8 @@ function doIncentivize(){
 			<td><fmt:formatDate value="${map.parti.vaccinatorIncentiveEvent.dateOfEvent}" pattern="dd-MM-yyyy HH:mm:ss"/></td>
 			<td><fmt:formatDate value="${map.parti.vaccinatorIncentiveEvent.dataRangeDateLower}" pattern="dd-MM-yyyy HH:mm:ss"/>
 			--<fmt:formatDate value="${map.parti.vaccinatorIncentiveEvent.dataRangeDateUpper}" pattern="dd-MM-yyyy HH:mm:ss"/>
-			<td>${map.CHILD_LOTTERY_WINNINGS}${map.TOTAL_TRANSACTIONS}</td>
-			<td>${map.CHILD_LOTTERY_WON_AMOUNT}${map.TOTAL_AMOUNT_DUE}</td>
+			<td>${map.TOTAL_VACCINATIONS}</td>
+			<td>${map.TOTAL_AMOUNT_DUE}</td>
 			<td><c:out value="${map.parti.vaccinatorIncentiveParams.commission}"></c:out></td>
 			<td><c:out value="${map.transac.amountDue}"></c:out></td>
 			<td>

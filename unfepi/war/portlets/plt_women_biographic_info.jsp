@@ -1,6 +1,10 @@
 <%@page import="org.ird.unfepi.constants.WebGlobals"%>
 
-<script type="text/javascript">
+	<script type="text/javascript">
+	 $(document).ready(function(){
+		document.getElementById("estimatedBirthdate").value = 'false';
+	}); 
+
 
 	function marriage() {
 		if(document.getElementById("maritalStatus").value == "Married" || document.getElementById("maritalStatus").value == "Widowed"){
@@ -29,7 +33,7 @@
              </spring:bind>
 		</td>
     </tr>
-	<tr>
+	<%-- <tr>
         <td>Tareekh pedaish ya umr <span class="mendatory-field">*</span></td>
         <td><spring:bind path="command.birthdateOrAge">
 			<select id="birthdateOrAge" name="birthdateOrAge" onchange="birthdateOrAgeChanged(this);" bind-value="${status.value}">
@@ -73,17 +77,23 @@
 		//-->
 		</script>
 		</td>
-    </tr>
-	<tr id="birthdatetr" <c:if test="${command.birthdateOrAge != 'birthdate'}">style="display: none"</c:if> >
+    </tr> --%>
+	<tr id="birthdatetr" <%-- <c:if test="${command.birthdateOrAge != 'birthdate'}">style="display: none"</c:if> --%> >
 		<td>Tareekh Pedaish <span class="mendatory-field">*</span></td>
         <td>
         <spring:bind path="command.${commandAdditionalPathStr}birthdate">
         <input id="birthdate" name="${commandAdditionalPathStr}birthdate" maxDate="+0d" value="${status.value}" class="calendarbox"/>
         <span class="error-message"><c:out	value="${status.errorMessage}" /></span>
         </spring:bind>
+        <spring:bind path="command.${commandAdditionalPathStr}estimatedBirthdate">
+		<input type="hidden" id ="estimatedBirthdate" name="${commandAdditionalPathStr}estimatedBirthdate" value="${status.value}" class="numbersOnly">
+		</spring:bind>
+		<spring:bind path="command.birthdateOrAge">
+		<input type="hidden" id ="birthdateOrAge" name="${status.expression}" value="${status.value}" class="numbersOnly">
+		</spring:bind>
         </td>
     </tr>
-    <tr id="agetr" <c:if test="${command.birthdateOrAge != 'age'}">style="display: none"</c:if> >
+   <%--  <tr id="agetr" <c:if test="${command.birthdateOrAge != 'age'}">style="display: none"</c:if> >
         <td>Umr (insert 0 if not applicable)<span class="mendatory-field">*</span></td>
         <td>
         <spring:bind path="command.womenagey">
@@ -148,10 +158,11 @@
 			}
 		</script>
     	</td>
-	</tr>
+	</tr> --%>
 	<tr>
 			<td>Kya aap shaadi shuda hain?</td>
-			<td><select id="maritalStatus" onchange="marriage();">
+			<td><spring:bind path="command.${commandAdditionalPathStr}maritalStatus">
+			<select id="maritalStatus" name="${status.expression}" onchange="marriage();">
 				<option></option>
 				<option value="Single">Single</option>
 				<option value="Married">Married</option>
@@ -159,7 +170,9 @@
 				<option value="Divorced">Divorced</option>
 				<option value="Engaged">Engaged</option>
 				<option value="Refused">Refused</option>
-			</select></td>
+			</select>
+			<br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
+			</spring:bind></td>
 		</tr>
 		
 	<tr id="husbandName" style="display:none">

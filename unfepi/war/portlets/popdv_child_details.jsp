@@ -38,6 +38,9 @@ if(UserSessionUtils.getActiveUser(request).isDefaultAdministrator()){%>
             <td>Father`s last name</td><td><c:out value="${model.child.fatherLastName}"></c:out></td>
 </tr>
 <tr>
+            <td>CNIC</td><td><c:out value="${model.child.nic}"></c:out></td>
+</tr>
+<tr>
             <td>Date of birth</td><td><fmt:formatDate value="${model.child.birthdate}"  type="date"/> 
             , ${model.child.age} W <c:if test="${model.child.age >= 20}">(<fmt:formatNumber value="${model.child.age/4.34}" maxFractionDigits="1"></fmt:formatNumber> M)</c:if>
             </td>
@@ -231,21 +234,15 @@ if(permed){
 <tr>            
         	<td>EPI number at enrollment</td><td><c:out value="${model.vacc.epiNumber}"></c:out></td>
 </tr>
-<tr>
-          	<td>Is polio vaccine given ?</td> <td><c:out value="${model.vacc.polioVaccineGiven}"></c:out></td>
-</tr>
-<tr>
-          	<td>Is PCV given ?</td> <td><c:out value="${model.vacc.pcvGiven}"></c:out></td>
-</tr>
 </table>
 <table>
 <tr>
-        <td colspan="2" class="headerrow">Lotteries</td>
+        <td colspan="2" class="headerrow">Incentives</td>
 </tr>
 <tr><td colspan="2">
 <table class="dvwform">
     <tbody class="rows">
-        <c:forEach items="${model.lottery}" var="lott">
+        <c:forEach items="${model.incentives}" var="lott">
      	<tr><td class="headerrow-light" colspan="2"><c:out value="${lott.vaccination.vaccine.name}"></c:out></td></tr>
     	<tr>
        		<td>Vaccine</td><td>${lott.vaccination.vaccine.name}</td>
@@ -254,19 +251,19 @@ if(permed){
        		<td>Approved</td><td>${lott.vaccination.hasApprovedLottery}</td>
        	</tr>
        	<tr>
-            <td>Lottery date</td><td><fmt:formatDate value="${lott.lotteryDate}" pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>"/></td>
+            <td>Incentive date</td><td><fmt:formatDate value="${lott.incentiveDate}" pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>"/></td>
        	</tr>
        	<tr>
-            <td>Is won</td><td>${lott.hasWonLottery}</td>
+            <td>Is won</td><td>${lott.hasWonIncentive}</td>
        	</tr>
        	<tr>
             <td>Amount</td><td>${lott.amount}</td>
        	</tr>
-       	<tr>
+       	<%-- <tr>
             <td>Verification code</td><td>${lott.code}</td>
-       	</tr>
+       	</tr> --%>
        	<tr>
-            <td>Consumption status</td><td>${lott.codeStatus}</td>
+            <td>Consumption status</td><td>${lott.incentiveStatus}</td>
        	</tr>
        	<tr>
             <td>Consumption date</td><td><fmt:formatDate value="${lott.consumptionDate}" pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>"/></td>
@@ -274,12 +271,6 @@ if(permed){
        	<tr>
             <td>Transaction date</td><td><fmt:formatDate value="${lott.transactionDate}" pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>"/></td>
        	</tr>
-       	<tr>
-            <td>Store</td><td>${lott.storekeeper.storeName}</td>
-       	</tr>
-       	<tr>
-            <td>Storekeeper ID</td><td>${lott.storekeeper.idMapper.identifiers[0].identifier}</td>
-        </tr>
 <tr><td></td><td><a onclick="showHide(this)" hideshow="hideshow1" class="anchorCustom" ><< less</a></td></tr>
     <%
 	if(permcr){ 
@@ -326,7 +317,7 @@ if(permed){
      <tr><td>Vaccination status</td><td><c:out value="${rec.vaccination.vaccinationStatus}"></c:out></td></tr>
      <tr><td>Vaccination due date</td><td><fmt:formatDate value="${rec.vaccination.vaccinationDuedate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td></tr>
      <tr><td>Vaccination date</td><td><fmt:formatDate value="${rec.vaccination.vaccinationDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td></tr>
-	 <tr><td>Approved lottery</td><td><c:out value="${rec.vaccination.hasApprovedLottery}"></c:out></td></tr>
+	 <tr><td>Approved incentive</td><td><c:out value="${rec.vaccination.hasApprovedLottery}"></c:out></td></tr>
      <tr><td>Reminders pending</td><td><c:out value="${rec.remindersPending}"></c:out></td></tr>
      <tr><td>Reminder late?/ Max days</td><td><c:out value="${rec.anyReminderLate}"/><c:out value="${rec.maxDaysLate}"/></td></tr>
    	 <tr><td>Vaccination center</td><td><c:out value="${rec.center.idMapper.identifiers[0].identifier} : ${rec.center.name}"></c:out></td></tr> 
@@ -335,12 +326,6 @@ if(permed){
      <tr><td>Timeliness</td><td><c:out value="${rec.vaccination.timelinessStatus}"/><c:if test="${not empty rec.vaccination.timelinessFactor}">(${rec.vaccination.timelinessFactor})</c:if></td></tr>
 <%-- <tr><td>Reason untimely vaccination</td> <td><c:out value="${rec.vaccination.reasonNotTimelyVaccination}"></c:out></td></tr>
      <tr><td>Other reason untimely vaccination</td> <td><c:out value="${rec.vaccination.reasonNotTimelyVaccinationOther}"></c:out></td></tr> --%>
-     <c:if test="${not empty rec.vaccination.polioVaccineGiven}">
-     <tr><td>Is polio vaccine given ?</td><td><c:out value="${rec.vaccination.polioVaccineGiven}"></c:out></td></tr>
-     </c:if>
-     <c:if test="${not empty rec.vaccination.pcvGiven}">
-     <tr><td>Is PCV given ?</td><td><c:out value="${rec.vaccination.pcvGiven}"></c:out></td></tr>
-     </c:if>
      <%-- <tr><td>Weight</td> <td><c:out value="${rec.vaccination.weight}"></c:out></td></tr>
      <tr><td>Height</td> <td><c:out value="${rec.vaccination.height}"></c:out></td></tr>
      <tr><td>Brought by</td><td><c:out value="${rec.vaccination.broughtByRelationship.relationName}"></c:out></td></tr>

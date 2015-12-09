@@ -1,33 +1,16 @@
 <%@page import="org.ird.unfepi.constants.WebGlobals"%>
+<%@page import="org.ird.unfepi.model.WomenVaccination.WOMEN_VACCINATION_STATUS"%>
 
 <script type="text/javascript">
 
  	$( document ).ready(function(){
-		document.getElementById("tt1Date").style.display = "none";
+		/*document.getElementById("tt1Date").style.display = "none";
 		document.getElementById("tt2Date").style.display = "none";
 		document.getElementById("tt3Date").style.display = "none";
 		document.getElementById("tt4Date").style.display = "none";
-		document.getElementById("tt5Date").style.display = "none";
+		document.getElementById("tt5Date").style.display = "none";*/
 	});
-/*
-	function ttVaccine() {
-		//alert(document.getElementById("isVaccinated").value);
-		if(document.getElementById("isVaccinated").value == "Yes"){
-			document.getElementById("ttInfo").style.display = "block";
-			document.getElementById("tt1").style.display = "block";
-			document.getElementById("tt2").style.display = "block";
-			document.getElementById("tt3").style.display = "block";
-			document.getElementById("tt4").style.display = "block";
-			document.getElementById("tt5").style.display = "block";
-		} else {
-			document.getElementById("ttInfo").style.display = "none";
-			document.getElementById("tt1").style.display = "none";
-			document.getElementById("tt2").style.display = "none";
-			document.getElementById("tt3").style.display = "none";
-			document.getElementById("tt4").style.display = "none";
-			document.getElementById("tt5").style.display = "none";
-		}
-	}*/
+
 	
 	function vaccineStatus(object){
 		var today = new Date();
@@ -46,8 +29,7 @@
 		today = dd +'-'+ mm +'-'+ yyyy;
 		var id = object.id.substring(0,3);
 		var value = object.options[object.selectedIndex].value;
-		//alert(value);
-		//alert(today);
+
 		if(value == "VACCINATED"){
 			var dateId = id + "Date";
 			document.getElementById(dateId).classList.remove("calendarbox");
@@ -59,122 +41,232 @@
 		if(value != "RETRO (date missing)"){
 			document.getElementById( id + "Date").style.display = "block";
 		}
-		
+		if(value == "PENDING"){
+			$('#'+id+"Date").datepicker( "option", "maxDate", null);
+		}
 	}
 
 </script>
 
-		<!-- <tr>
-			<td id="vaccinated">Kya pehlay koi TT kay teekay lagay hain?</td>
-			<td><select id="isVaccinated" onChange="ttVaccine();">
-				<option></option>
-				<option value="Yes">Yes</option>
-				<option value="No">No</option>
-			</select></td>
-		</tr>
-
-		<tr id="ttInfo">
-			<td>Pehlay lagwaey gaey TT k teekay</td>
-			<td><select multiple>
-				<option value="TT1">TT1</option>
-				<option value="TT2">TT2</option>
-				<option value="TT3">TT3</option>
-				<option value="TT4">TT4</option>
-				<option value="TT5">TT5</option>
-			</select></td>
-		</tr> -->
-
 		<tr id="tt1">
 			<td>TT1 ki tareekh</td>
-			<td><select id="tt1Status" name="tt1Status" onChange="vaccineStatus(this);">
-					<option></option>
+			<spring:bind path="command.${commandAdditionalPathStr}tt1.vaccinationStatus">
+			<c:set var="tt1_status" value="${status.value}" />
+			
+			<c:if test="${tt1_status == 'PENDING' || tt1_status == null}">
+			<td>
+			<select id="tt1Status" name="${status.expression}" bind-value="${status.value}"  onChange="vaccineStatus(this);">
+					<option value="NOT_VACCINATED"></option>
 					<option value="RETRO">RETRO</option>
-					<option value="RETRO(date missing)">RETRO (date missing)</option>
+					<option value="RETRO_NO_DATE">RETRO (date missing)</option>
 					<option value="VACCINATED">VACCINATED</option>
-					<option value="SCHEDULED">SCHEDULED</option>
-			</select></td>
-			<td><input id="tt1Date" name="tt1Date" maxDate="+0d" value="${status.value}" class="calendarbox"/></td>
+					<option value="PENDING">SCHEDULED</option>
+			</select>
+			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
+			</td>
+			
+			</c:if>
+			<c:if test="${tt1_status != 'PENDING' &&  not empty tt1_status}">
+			<td><input name="${status.expression}" value="${status.value}" readonly/></td>
+			</c:if>
+			</spring:bind>
+			
+			<c:if test="${tt1_status == 'PENDING' && tt1_status == null}">
+			<td><spring:bind path="command.${commandAdditionalPathStr}tt1.vaccinationDuedate">
+			<input id="tt1DueDate" name="${status.expression}" maxDate="+0d" value="${status.value}" class="calendarbox"/>
+			</spring:bind></td>
+			</c:if>
+			<c:if test="${tt1_status == 'PENDING' && tt1_status != null}">
+			<td><spring:bind path="command.${commandAdditionalPathStr}tt1.vaccinationDuedate">
+			<input id="tt1DueDate" name="${status.expression}" maxDate="+0d" value="${status.value}" class="calendarbox"/>
+			</spring:bind></td>
+			</c:if>
+			<c:if test="${tt1_status != 'PENDING' && tt1_status == null}">
+			<td><spring:bind path="command.${commandAdditionalPathStr}tt1.vaccinationDate">
+			<input id="tt1Date" name="${status.expression}" maxDate="+0d" value="${status.value}" class="calendarbox" readonly/>
+			</spring:bind></td>
+			</c:if>
+			<c:if test="${tt1_status != 'PENDING' && tt1_status != null}">
+			<td><spring:bind path="command.${commandAdditionalPathStr}tt1.vaccinationDate">
+			<input id="tt1Date" name="${status.expression}"  value="${status.value}"  readonly/>
+			</spring:bind></td>
+			</c:if>
+			
 		</tr>
 
 		<tr id="tt2">
 			<td>TT2 ki tareekh</td>
-			<td><select id="tt2Status" name="tt2Status" onChange="vaccineStatus(this);">
-					<option></option>
+			<spring:bind path="command.${commandAdditionalPathStr}tt2.vaccinationStatus">
+			<c:set var="tt2_status" value="${status.value}" />
+			
+			<c:if test="${tt2_status == 'PENDING' || tt2_status == null}">
+			<td>
+			<select id="tt2Status" name="${status.expression}" bind-value="${status.value}" onChange="vaccineStatus(this);">
+					<option value="NOT_VACCINATED"></option>
 					<option value="RETRO">RETRO</option>
-					<option value="RETRO (date missing)">RETRO (date missing)</option>
+					<option value="RETRO_NO_DATE">RETRO (date missing)</option>
 					<option value="VACCINATED">VACCINATED</option>
-					<option value="SCHEDULED">SCHEDULED</option>
-			</select></td>
-			<td><input id="tt2Date" name="tt2Date" maxDate="+0d" value="${status.value}" class="calendarbox"/></td>
+					<option value="PENDING">SCHEDULED</option>
+			</select>
+			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
+			</td>
+			</c:if>
+			<c:if test="${tt2_status != 'PENDING' &&  not empty tt2_status}">
+			<td><input name="${status.expression}" value="${status.value}" readonly/></td>
+			</c:if>
+			</spring:bind>
+			
+			<c:if test="${tt2_status == 'PENDING' && tt2_status == null}">
+			<td><spring:bind path="command.${commandAdditionalPathStr}tt2.vaccinationDuedate">
+			<input id="tt2DueDate" name="${status.expression}" maxDate="+0d" value="${status.value}" class="calendarbox"/>
+			</spring:bind></td>
+			</c:if>
+			<c:if test="${tt2_status == 'PENDING' && tt2_status != null}">
+			<td><spring:bind path="command.${commandAdditionalPathStr}tt2.vaccinationDuedate">
+			<input id="tt2DueDate" name="${status.expression}" maxDate="+0d" value="${status.value}" class="calendarbox"/>
+			</spring:bind></td>
+			</c:if>
+			<c:if test="${tt2_status != 'PENDING' && tt2_status == null}">
+			<td><spring:bind path="command.${commandAdditionalPathStr}tt2.vaccinationDate">
+			<input id="tt2Date" name="${status.expression}" maxDate="+0d" value="${status.value}" class="calendarbox"/>
+			</spring:bind></td>
+			</c:if>
+			<c:if test="${tt2_status != 'PENDING' && tt2_status != null}">
+			<td><spring:bind path="command.${commandAdditionalPathStr}tt2.vaccinationDate">
+			<input id="tt2Date" name="${status.expression}"  value="${status.value}" readonly/>
+			</spring:bind></td>
+			</c:if>
 		</tr>
-
+	
 		<tr id="tt3">
 			<td>TT3 ki tareekh</td>
-			<td><select id="tt3Status" name="tt3Status" onChange="vaccineStatus(this);">
-					<option></option>
+			<spring:bind path="command.${commandAdditionalPathStr}tt3.vaccinationStatus">
+			<c:set var="tt3_status" value="${status.value}" />
+			
+			<c:if test="${tt3_status == 'PENDING' || tt3_status == null}">
+			<td>
+			<select id="tt3Status" name="${status.expression}" bind-value="${status.value}" onChange="vaccineStatus(this);">
+					<option value="NOT_VACCINATED"></option>
 					<option value="RETRO">RETRO</option>
-					<option value="RETRO (date missing)">RETRO (date missing)</option>
+					<option value="RETRO_NO_DATE">RETRO (date missing)</option>
 					<option value="VACCINATED">VACCINATED</option>
-					<option value="SCHEDULED">SCHEDULED</option>
-			</select></td>
-			<td><input id="tt3Date" name="tt3Date" maxDate="+0d" value="${status.value}" class="calendarbox"/></td>
+					<option value="PENDING">SCHEDULED</option>
+			</select>
+			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
+			</td>
+			</c:if>
+			<c:if test="${tt3_status != 'PENDING' &&  not empty tt3_status}">
+			<td><input name="${status.expression}" value="${status.value}" readonly/></td>
+			</c:if>
+			</spring:bind>
+			<c:if test="${tt3_status == 'PENDING' && tt3_status == null}">
+			<td><spring:bind path="command.${commandAdditionalPathStr}tt3.vaccinationDuedate">
+			<input id="tt3DueDate" name="${status.expression}" maxDate="+0d" value="${status.value}" class="calendarbox"/>
+			</spring:bind></td>
+			</c:if>
+			<c:if test="${tt3_status == 'PENDING' && tt3_status != null}">
+			<td><spring:bind path="command.${commandAdditionalPathStr}tt3.vaccinationDuedate">
+			<input id="tt3DueDate" name="${status.expression}" maxDate="+0d" value="${status.value}" class="calendarbox"/>
+			</spring:bind></td>
+			</c:if>
+			<c:if test="${tt3_status != 'PENDING' && tt3_status == null}">
+			<td><spring:bind path="command.${commandAdditionalPathStr}tt3.vaccinationDate">
+			<input id="tt3Date" name="${status.expression}" maxDate="+0d" value="${status.value}" class="calendarbox"/>
+			</spring:bind></td>
+			</c:if>
+			<c:if test="${tt3_status != 'PENDING' && tt3_status != null}">
+			<td><spring:bind path="command.${commandAdditionalPathStr}tt3.vaccinationDate">
+			<input id="tt3Date" name="${status.expression}" value="${status.value}" readonly/>
+			</spring:bind></td>
+			</c:if>
 		</tr>
+	
 
 		<tr id="tt4">
 			<td>TT4 ki tareekh</td>
-			<td><select id="tt4Status" name="tt4Status" onChange="vaccineStatus(this);">
-					<option></option>
+			<spring:bind path="command.${commandAdditionalPathStr}tt4.vaccinationStatus">
+			<c:set var="tt4_status" value="${status.value}" />
+			
+			<c:if test="${tt4_status == 'PENDING' || tt4_status == null}">
+			<td>
+			<select id="tt4Status" name="${status.expression}" bind-value="${status.value}" onChange="vaccineStatus(this);">
+					<option value="NOT_VACCINATED"></option>
 					<option value="RETRO">RETRO</option>
-					<option value="RETRO (date missing)">RETRO (date missing)</option>
+					<option value="RETRO_NO_DATE">RETRO (date missing)</option>
 					<option value="VACCINATED">VACCINATED</option>
-					<option value="SCHEDULED">SCHEDULED</option>
-			</select></td>
-			<td><input id="tt4Date" name="tt4Date" maxDate="+0d" value="${status.value}" class="calendarbox"/></td>
+					<option value="PENDING">SCHEDULED</option>
+			</select>
+			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
+			</td>
+			</c:if>
+			<c:if test="${tt4_status != 'PENDING' &&  not empty tt4_status}">
+			<td><input name="${status.expression}" value="${status.value}" readonly/></td>
+			</c:if>
+			</spring:bind>
+			<c:if test="${tt4_status == 'PENDING' && tt4_status == null}">
+			<td><spring:bind path="command.${commandAdditionalPathStr}tt4.vaccinationDuedate">
+			<input id="tt4DueDate" name="${status.expression}" maxDate="+0d" value="${status.value}" class="calendarbox"/>
+			</spring:bind></td>
+			</c:if>
+			<c:if test="${tt4_status == 'PENDING' && tt4_status != null}">
+			<td><spring:bind path="command.${commandAdditionalPathStr}tt4.vaccinationDuedate">
+			<input id="tt4DueDate" name="${status.expression}" maxDate="+0d" value="${status.value}" class="calendarbox"/>
+			</spring:bind></td>
+			</c:if>
+			<c:if test="${tt4_status != 'PENDING' && tt4_status == null}">
+			<td><spring:bind path="command.${commandAdditionalPathStr}tt4.vaccinationDate">
+			<input id="tt4Date" name="${status.expression}" maxDate="+0d" value="${status.value}" class="calendarbox"/>
+			</spring:bind></td>
+			</c:if>
+			<c:if test="${tt4_status != 'PENDING' && tt4_status != null}">
+			<td><spring:bind path="command.${commandAdditionalPathStr}tt4.vaccinationDate">
+			<input id="tt4Date" name="${status.expression}" value="${status.value}" readonly/>
+			</spring:bind></td>
+			</c:if>
 		</tr>
+
 
 		<tr id="tt5">
 			<td>TT5 ki tareekh</td>
-			<td><select id="tt5Status" name="tt5Status" onChange="vaccineStatus(this);">
-					<option></option>
+			<spring:bind path="command.${commandAdditionalPathStr}tt5.vaccinationStatus">
+			<c:set var="tt5_status" value="${status.value}" />
+			
+			<c:if test="${tt5_status == 'PENDING' || tt5_status == null}">
+			<td>
+			<select id="tt5Status" name="${status.expression}" bind-value="${status.value}" onChange="vaccineStatus(this);">
+					<option value="NOT_VACCINATED"></option>
 					<option value="RETRO">RETRO</option>
-					<option value="RETRO (date missing)">RETRO (date missing)</option>
+					<option value="RETRO_NO_DATE">RETRO (date missing)</option>
 					<option value="VACCINATED">VACCINATED</option>
-					<option value="SCHEDULED">SCHEDULED</option>
-			</select></td>
-			<td><input id="tt5Date" name="tt5Date" maxDate="+0d" value="${status.value}" class="calendarbox"/></td>
+					<option value="PENDING">SCHEDULED</option>
+			</select>
+			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
+			</td>
+			</c:if>
+			<c:if test="${tt5_status != 'PENDING' &&  not empty tt5_status}">
+			<td><input name="${status.expression}" value="${status.value}" readonly/></td>
+			</c:if>
+			</spring:bind>
+			<c:if test="${tt5_status == 'PENDING' && tt5_status == null}">
+			<td><spring:bind path="command.${commandAdditionalPathStr}tt5.vaccinationDuedate">
+			<input id="tt5DueDate" name="${status.expression}" maxDate="+0d" value="${status.value}" class="calendarbox"/>
+			</spring:bind></td>
+			</c:if>
+			<c:if test="${tt5_status == 'PENDING' && tt5_status != null}">
+			<td><spring:bind path="command.${commandAdditionalPathStr}tt5.vaccinationDuedate">
+			<input id="tt5DueDate" name="${status.expression}" maxDate="+0d" value="${status.value}" class="calendarbox"/>
+			</spring:bind></td>
+			</c:if>
+			<c:if test="${tt5_status != 'PENDING' && tt5_status == null}">
+			<td><spring:bind path="command.${commandAdditionalPathStr}tt5.vaccinationDate">
+			<input id="tt5Date" name="${status.expression}" maxDate="+0d" value="${status.value}" class="calendarbox"/>
+			</spring:bind></td>
+			</c:if>
+			<c:if test="${tt5_status != 'PENDING' && tt5_status != null}">
+			<td><spring:bind path="command.${commandAdditionalPathStr}tt5.vaccinationDate">
+			<input id="tt5Date" name="${status.expression}" value="${status.value}" readonly/>
+			</spring:bind></td>
+			</c:if>
 		</tr>
 
-		<%-- <tr>
-			<td>Aaj lagnay waala teeka</td>
-			<td><spring:bind path="command.${commandAdditionalPathStr}shortName">
-			<select id="shortName" name="shortName">
-				<option></option>
-				<option value="TT1">TT1</option>
-				<option value="TT2">TT2</option>
-				<option value="TT3">TT3</option>
-				<option value="TT4">TT4</option>
-				<option value="TT5">TT5</option>
-			</select></spring:bind></td>
-		</tr>
 
-		<tr>
-			<td>Aaj ki taareekh</td>
-			<td><input id="currDate" name="${commandAdditionalPathStr}currDate" maxDate="+0d" value="${status.value}" class="calendarbox"/></td>
-		</tr>
-
-		<tr>
-			<td>Agla teeka</td>
-			<td><select>
-				<option></option>
-				<option value="TT1">TT1</option>
-				<option value="TT2">TT2</option>
-				<option value="TT3">TT3</option>
-				<option value="TT4">TT4</option>
-				<option value="TT5">TT5</option>
-			</select></td>
-		</tr>
-
-		<tr>
-			<td>Aglay teekay ki tareekh</td>
-			<td><input id="dueDate" name="${commandAdditionalPathStr}dueDate" maxDate="+0d" value="${status.value}" class="calendarbox"/></td>
-		</tr> --%>

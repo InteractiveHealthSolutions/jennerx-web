@@ -33,7 +33,7 @@ function onloadSettingOfControls()
 	
 	DWRVaccineService.getSchedule('${command.centerVisit.uuid}', function(result) {
 		//alert(result);
-		vaccineScheduleGenerator(convertToDate($('#birthdate').val()), convertToDate($('#centerVisitDate').val()), '${command.centerVisit.childId}', result, '${command.centerVisit.uuid}');
+		vaccineScheduleGenerator(convertToDate($('#birthdate').val()), convertToDate($('#centerVisitDate').val()), '${command.centerVisit.childId}', result, '${command.centerVisit.uuid}',true);
 	});
 }
 
@@ -46,7 +46,7 @@ function birthChanged(jqControl){
 		alert('Tareekh pedaish say pehlay Enrollment ki tareekh aur Center ka indraj zaroori hy.');
 	}
 	else{
-		vaccineScheduleGenerator(convertToDate(jqControl.val()), convertToDate($('#centerVisitDate').val()), '${command.centerVisit.childId}', null,'${command.centerVisit.uuid}');
+		vaccineScheduleGenerator(convertToDate(jqControl.val()), convertToDate($('#centerVisitDate').val()), '${command.centerVisit.childId}', null,'${command.centerVisit.uuid}',true);
 	}
 }
 //reset schedule
@@ -115,6 +115,7 @@ function centerVisitDateChanged() {
 </script>
     	</td>
     </tr>
+    <tr>
     	<td>Vaccinator ID <span class="mendatory-field">*</span></td>
 		<td><spring:bind path="command.centerVisit.vaccinatorId">
             <select id="vaccinatorId" name="centerVisit.vaccinatorId" bind-value="${status.value}">
@@ -127,8 +128,6 @@ function centerVisitDateChanged() {
             </spring:bind>
 		</td>
 	</tr>
-	<tr>
-    
 	<tr>
 		<td>Vaccination Center <span class="mendatory-field">*</span></td>
 		<td>
@@ -221,7 +220,7 @@ function centerChanged() {
 	<tr>
 		<td>SMS reminder ke liye Mobile Number</td>
 		<td><spring:bind path="command.centerVisit.contactPrimary">
-			<input type="text" id="contactPrimary" name="centerVisit.contactPrimary" maxlength="15" value="${status.value}" class="numbersOnly" />
+			<input type="text" id="contactPrimary" name="centerVisit.contactPrimary" maxlength="13" value="${status.value}" class="numbersOnly" />
 			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
 		</td>
@@ -229,35 +228,29 @@ function centerChanged() {
 	<tr>
 		<td>Raabtay ke liye koi aur number</td>
 		<td><spring:bind path="command.centerVisit.contactSecondary">
-			<input type="text" id="contactSecondary" name="centerVisit.contactSecondary" maxlength="15" value="${status.value}" class="numbersOnly" />
+			<input type="text" id="contactSecondary" name="centerVisit.contactSecondary" maxlength="13" value="${status.value}" class="numbersOnly" />
 			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
 		</td>
 	</tr>
-<%-- 	<tr>
-		<td>Kya aap kurandazi mein hisa lena chahtay hen? <span class="mendatory-field">*</span></td>
+	<tr>
+		<td>Kya aap targheebi inaami scheme mein hisa lena chahtay hen? <span class="mendatory-field">*</span></td>
 		<td>
-			<spring:bind path="command.centerVisit.hasApprovedLottery">
-			<input type="hidden" id="hasApprovedLotteryinh" name="hasApprovedLotteryinh"/> 
-			<select id="hasApprovedLottery" name="centerVisit.hasApprovedLottery" bind-text="${hasApprovedLotteryinh}" onchange="hasApprovedLotteryChanged(this);">
-				<option></option>
-				<option value="<%=WebGlobals.BOOLEAN_CONVERTER_TRUE_STRING%>">Yes</option>
-<%if(!lotteryGeneratorForm){%>
-				<option value="<%=WebGlobals.BOOLEAN_CONVERTER_FALSE_STRING%>">No</option>
-				<option value="">Don`t Know</option>
-<%}%>
-			</select>
-			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
-		</spring:bind>
-		<script type="text/javascript">
-			<!--
-            function hasApprovedLotteryChanged(sel) {
-				document.getElementById("hasApprovedLotteryinh").value = getTextSelectedInDD(sel);
-			}
-		//-->
-		</script>
+			<spring:bind path="command.centerVisit.preference.hasApprovedLottery">
+				<input type="radio" name="centerVisit.preference.hasApprovedLottery" <c:if test='${not empty status.value && status.value == true}'>checked = "checked"</c:if> value="<%=WebGlobals.BOOLEAN_CONVERTER_TRUE_STRING%>"/>Yes<br>
+				<input type="radio" name="centerVisit.preference.hasApprovedLottery" <c:if test='${not empty status.value && status.value == false}'>checked = "checked"</c:if> value="<%=WebGlobals.BOOLEAN_CONVERTER_FALSE_STRING%>"/>No
+				<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
+			</spring:bind>
 		</td>
-	</tr> --%>
+	</tr> 
+	<tr>
+        <td>NIC Number</td>
+        <td><spring:bind path="command.child.nic">
+             <input type="text" id="childnic" name="child.nic" maxlength="13"  class="numbersOnly" value="<c:out value="${status.value}" />"/>
+             <br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
+             </spring:bind>
+		</td>
+    </tr>
     <tr>
         <td></td>
         <td>

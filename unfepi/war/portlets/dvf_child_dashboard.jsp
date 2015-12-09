@@ -52,6 +52,9 @@ ${add.addHouseNumber} ${add.addStreet} ${add.addSector} ${add.addArea} ${add.add
 ${fn:substring(cont.numberType,0,3)}- ${cont.number}<br>
 </c:forEach>
 </td>
+<tr>
+<td colspan="2">Incentive Scheme : ${model.datalist.childLotteries[0].arm.armName}</td>
+<td>CNIC : ${model.datalist.child.nic}</td>
 </tr>
 </table>
 <table class="right">

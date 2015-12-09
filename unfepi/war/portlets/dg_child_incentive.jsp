@@ -11,12 +11,10 @@
        		<th></th>
        		<th>Child Id</th>
        		<th>Vaccine</th>
-       		<th>Lottery Approved</th>
-            <th>Lottery Date</th>
-            <th>Lottery Won</th>
-            <th>Transaction Status</th>
+            <th>Incentive Scheme</th>
+            <th>Incentive Date</th>
+            <th>Status</th>
             <th>Amount</th>
-            <th>Verification Code</th>
             <th>Sms Date</th>
             <th>Sms Status</th>
             <th>Consumption Date</th>
@@ -31,30 +29,28 @@
    <tbody class="rows">
    <c:forEach items="${model.datalist}" var="lott">
    		<tr>
-	   		<td style="width: 40px !important;"><a id="${lott.lottery.childLotteryId}anc" class="linkiconS iconexpand" title="Expand and show details" onclick="expandD('${lott.lottery.class.name}', ${lott.lottery.childLotteryId});" value="+"></a>
-			<a class="linkiconS iconnote" title="Add note" onclick="openNoteWindow('${lott.lottery.class.name}', ${lott.lottery.childLotteryId})"></a></td>
-   			<td><a onclick="viewChildDetails(this.text);" class="anchorCustom">${lott.lottery.vaccination.child.idMapper.identifiers[0].identifier}</a></td>
-   	 		<td class="left">${lott.lottery.vaccination.vaccine.name}</td>
-            <td>${lott.lottery.vaccination.hasApprovedLottery}</td>
-            <td><fmt:formatDate value="${lott.lottery.lotteryDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>
-            <td>${lott.lottery.hasWonLottery}</td>
-            <td class="lowercase">${lott.lottery.codeStatus}</td>
-            <td>${lott.lottery.amount}</td>
-            <td>${lott.lottery.code}</td>
+	   		<td style="width: 40px !important;"><a id="${lott.incentive.childIncentiveId}anc" class="linkiconS iconexpand" title="Expand and show details" onclick="expandD('${lott.incentive.class.name}', ${lott.incentive.childIncentiveId});" value="+"></a>
+			<a class="linkiconS iconnote" title="Add note" onclick="openNoteWindow('${lott.incentive.class.name}', ${lott.incentive.childIncentiveId})"></a></td>
+   			<td><a onclick="viewChildDetails(this.text);" class="anchorCustom">${lott.incentive.vaccination.child.idMapper.identifiers[0].identifier}</a></td>
+   	 		<td class="left">${lott.incentive.vaccination.vaccine.name}</td>
+   	 		<td class="left">${lott.incentive.arm.armName}</td>
+            <td><fmt:formatDate value="${lott.incentive.incentiveDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>
+            <td class="lowercase">${lott.incentive.incentiveStatus}</td>
+            <td>${lott.incentive.amount}</td>
             <td><fmt:formatDate value="${lott.reminder[0].dueDate}" pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>"/></td>
             <td class="lowercase">${lott.reminder[0].reminderStatus}</td>
-            <td><fmt:formatDate value="${lott.lottery.consumptionDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>
-            <td><fmt:formatDate value="${lott.lottery.transactionDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>
-            <td>${vacc.vaccinationCenter.idMapper.identifiers[0].identifier}</td>
+            <td><fmt:formatDate value="${lott.incentive.consumptionDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>
+            <td><fmt:formatDate value="${lott.incentive.transactionDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>
+            <td>${lott.incentive.vaccination.vaccinationCenter.idMapper.identifiers[0].identifier}</td>
             <td class="lowercase">${lott.encounter[0].dataEntrySource} (${lott.encounter[0].encounterType})</td>
             <%-- <td>${vacc.vaccinator.idMapper.identifiers[0].identifier}</td> --%>
-            <%-- <td>${lott.lottery.storekeeper.storeName}</td>
-            <td>${lott.lottery.storekeeper.idMapper.identifiers[0].identifier}</td> --%>
+            <%-- <td>${lott.incentive.storekeeper.storeName}</td>
+            <td>${lott.incentive.storekeeper.idMapper.identifiers[0].identifier}</td> --%>
         </tr>
-        <tr id="${lott.lottery.childLotteryId}r" style="display: none;" >
+        <tr id="${lott.incentive.childIncentiveId}r" style="display: none;" >
        	<td colspan="80" class="dvwinner">
        	<div>
-			<table id="${lott.lottery.childLotteryId}tbl">
+			<table id="${lott.incentive.childIncentiveId}tbl">
 			</table>
 		</div>
 		</td>

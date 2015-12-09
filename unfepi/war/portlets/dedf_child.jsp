@@ -278,6 +278,14 @@ function submitFrm() {
 		</td>
 	</tr>
 	<tr>
+		<td>CNIC</td>
+		<td><spring:bind path="command.child.nic">
+			<input type="text" id="nic" name="child.nic" maxlength="15" value="${status.value}" class="numbersOnly" />
+			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
+			</spring:bind>
+		</td>
+	</tr>
+	<tr>
 		<td>Additional Note</td>
 		<td><spring:bind path="command.child.description">
 			<textarea id="childDescription" name="child.description" maxlength="255">${status.value}</textarea>

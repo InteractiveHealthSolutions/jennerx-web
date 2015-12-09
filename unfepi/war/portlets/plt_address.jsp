@@ -46,22 +46,29 @@
 		<td>City <span class="mendatory-field">*</span></td>
 		<td><spring:bind path="command.${commandAdditionalPathStr}cityId">
 			<select id="cityId" name="${commandAdditionalPathStr}cityId" onchange="loadTown();" bind-value="${status.value}">
-				<option></option>
-				<c:forEach items="${cities}" var="ci">
-					<option value="${ci.cityId}">${ci.cityId}:${ci.cityName}</option>
-				</c:forEach>
-				<option value="66">Other</option>
+				<option value="${status.value}"></option>
 			</select>
 			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
-			<script><!--
+<script>
+  $(document).ready(function() {
+      DWREntityService.getLocationList(["city", "other"],null,{
+           async: false,
+           callback: function (resl) {
+                   $('#cityId').empty().append('<option></option>');
+                   for ( var i = 0; i < resl.length; i++) {
+                           $('#cityId').append('<option value="'+resl[i].locationId+'">'+resl[i].fullname+'</option>');
+                   }
+                   $('#cityId').val($('#cityId').attr('bind-value'));
+      }});
+  });
               function loadTown() {
 				DWREntityService.getLocationList(["town","na",'DONOT KNOW'],$('#cityId').val(),{
 						async: false,
 						callback: function (resl) {
 							$('#townlist').empty().append('<option></option>');
 							for ( var i = 0; i < resl.length; i++) {
-								$('#townlist').append('<option value="'+resl[i].locationId+'">'+resl[i].name+'</option>');
+								$('#townlist').append('<option value="'+resl[i].name+'">'+resl[i].name+'</option>');
 							}
 							
 							var v = document.getElementById("cityId").value;
@@ -86,9 +93,7 @@
 					loadTown();
 				}
 			});
-
-              //-->
-             </script> 
+</script> 
 		</td>
 	</tr>
 	<tr>
@@ -101,6 +106,7 @@
 		</td>
 	</tr>
 	<tr>
+	<tr>
         <td>Town <span class="mendatory-field">*</span></td>
         <td>
             <spring:bind path="command.${commandAdditionalPathStr}addtown">
@@ -111,12 +117,12 @@
 			</spring:bind>
 			<script><!-- 
               function loadUC() {
-  				DWREntityService.getLocationList(["uc","na",'DONOT KNOW'],$('#townlist').val(),{
+  				DWREntityService.getLocationListByParentName(["uc","na",'DONOT KNOW'],$('#townlist').val(),{
   						async: false,
   						callback: function (resl) {
   							$('#uclist').empty().append('<option></option>');
   							for ( var i = 0; i < resl.length; i++) {
-  								$('#uclist').append('<option value="'+resl[i].locationId+'">'+resl[i].fullname+'</option>');
+  								$('#uclist').append('<option value="'+resl[i].name+'">'+resl[i].fullname+'</option>');
   							}
   							$('#uclist').val($('#uclist').attr('bind-value'));
   				}});

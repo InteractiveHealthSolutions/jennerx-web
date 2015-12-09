@@ -10,7 +10,11 @@
 <script type="text/javascript"> 
 <!--
 var vaccineSchedule;
-
+var updateScheduleAfterLoad = true;
+function vaccineScheduleGeneratorAndReset (birthdate, centerVisitDate, childId, vaccinerules,uuid,resetSchedule) {
+	updateScheduleAfterLoad = resetSchedule;
+	vaccineScheduleGenerator (birthdate, centerVisitDate, childId, vaccinerules,uuid);
+}
 function vaccineScheduleGenerator (birthdate, centerVisitDate, childId, vaccinerules,uuid) {
 	
 	$('#vaccineScheduleContainerTbl').find("tr").remove();
@@ -244,6 +248,15 @@ function vaccineScheduleGenerator (birthdate, centerVisitDate, childId, vacciner
 		catch (e) {
 			alert(e);
 		}
+		
+	}
+	// when everything is setup update schedule again to reset defaults
+	if(updateScheduleAfterLoad){
+		DWRVaccineService.updateSchedule(vaccineSchedule, uuid, function(result) {
+			//alert(result);
+			updateScheduleAfterLoad = false;
+			vaccineScheduleGenerator(birthdate, centerVisitDate, childId, result, uuid);
+		});
 	}
 	}
 	// if followup childid is null in centervisit

@@ -12,13 +12,13 @@ window.onload = onloadSettingOfControls;
 
 function onloadSettingOfControls() 
 {
-	loadSchedule();
+	loadSchedule(false);
 }
 
-function loadSchedule(){
+function loadSchedule(resetall){
 	DWRVaccineService.getSchedule('${command.uuid}', function(result) {
 		//alert(result);
-		vaccineScheduleGenerator(convertToDate($('#birthdateinh').val()), convertToDate($('#centerVisitDate').val()), '${command.childId}', result, '${command.uuid}');
+		vaccineScheduleGeneratorAndReset(convertToDate($('#birthdateinh').val()), convertToDate($('#centerVisitDate').val()), '${command.childId}', resetall?null:result, '${command.uuid}', true);
 	});
 }
 function subfrm()
@@ -89,7 +89,7 @@ function submitThisForm() {
 		</spring:bind>
 <script type="text/javascript">
 function centerVisitDateChanged() {
-	loadSchedule();
+	loadSchedule(true);
 }
 </script>
     	</td>
@@ -121,7 +121,7 @@ function centerVisitDateChanged() {
             </spring:bind>
 <script type="text/javascript">
 function centerChanged() {
-	loadSchedule();
+	loadSchedule(false);
 }
 </script>
 		</td>
@@ -158,7 +158,7 @@ function centerChanged() {
 	<tr>
 		<td>SMS reminder ke liye Mobile Number</td>
 		<td><spring:bind path="command.contactPrimary">
-			<input type="number" id="contactPrimary" name="contactPrimary" maxlength="15" value="${status.value}" class="numbersOnly" />
+			<input type="number" id="contactPrimary" name="contactPrimary" maxlength="13" value="${status.value}" class="numbersOnly" />
 			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
 		</td>
@@ -166,31 +166,11 @@ function centerChanged() {
 	<tr>
 		<td>Raabtay ke liye koi aur number</td>
 		<td><spring:bind path="command.contactSecondary">
-			<input type="number" id="contactSecondary" name="contactSecondary" maxlength="15" value="${status.value}" class="numbersOnly" />
+			<input type="number" id="contactSecondary" name="contactSecondary" maxlength="13" value="${status.value}" class="numbersOnly" />
 			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
 		</td>
 	</tr>
-	<%-- <tr>
-		<td>Kya aap kurandazi mein hisa lena chahtay hen? <span class="mendatory-field">*</span></td>
-		<td>
-			<spring:bind path="command.hasApprovedLottery">
-			<input type="hidden" id="hasApprovedLotteryinh" name="hasApprovedLotteryinh"/> 
-			<select id="hasApprovedLottery" name="hasApprovedLottery" bind-text="${hasApprovedLotteryinh}" onchange="hasApprovedLotteryChanged(this);">
-				<option></option>
-				<option value="<%=WebGlobals.BOOLEAN_CONVERTER_TRUE_STRING%>">Yes</option>
-				<option value="<%=WebGlobals.BOOLEAN_CONVERTER_FALSE_STRING%>">No</option>
-				<option value="">Don`t Know</option>
-			</select>
-			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
-		</spring:bind>
-		<script type="text/javascript">
-            function hasApprovedLotteryChanged(sel) {
-				document.getElementById("hasApprovedLotteryinh").value = getTextSelectedInDD(sel);
-			}
-		</script>
-		</td>
-	</tr> --%>
 	<tr>
         <td></td>
         <td>
