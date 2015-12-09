@@ -1,20 +1,16 @@
 package org.ird.unfepi.utils;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.ird.unfepi.ChildIncentivization;
-import org.ird.unfepi.GlobalParams.LotteryType;
 import org.ird.unfepi.constants.EncounterType;
 import org.ird.unfepi.constants.WebGlobals;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Address;
 import org.ird.unfepi.model.Child;
-import org.ird.unfepi.model.ChildIncentive;
 import org.ird.unfepi.model.ContactNumber;
 import org.ird.unfepi.model.Encounter;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
@@ -100,11 +96,11 @@ public class EncounterUtil {
 	}
 	
 	public enum ElementIncentive {
-		INCENTIVE_DATE_START,
-		INCENTIVE_DATE_END, LOTTERY_STATUS, LOTTERY_ID, WON, WON_AMOUNT, VERIFICATION_CODE, PROBABILITY, CRITERIA_VALUE,
+		INCENTIVE_DATE_START,INCENTIVE_PARAMS,
+		INCENTIVE_DATE_END, INCENTIVE_STATUS, INCENTIVE_ID, WON, WON_AMOUNT, VERIFICATION_CODE, PROBABILITY, CRITERIA_VALUE,
 		TRANSACTION_DATE,
 		CONSUMPTION_DATE,
-		LOTTERY_TYPE,
+		INCENTIVE_TYPE,
 	}
 	
 	public enum ElementVaccination{
@@ -114,7 +110,7 @@ public class EncounterUtil {
 		EPI_NUMBER, 
 		VACCINATION_CENTER, 
 		VACCINATION_CENTER_ID, 
-		LOTTERY_APPROVED, 
+		INCENTIVE_APPROVED, 
 		VACCINATION_DATE, 
 		VISIT_DATE, 
 		VACCINATION_STATUS, VACCINATION_DUE_DATE, SYSTEM_CALCULATED_DATE, VACCINATION_TYPE, 
@@ -194,7 +190,7 @@ public class EncounterUtil {
 	
 	public static void createEnrollmentEncounter(DataEntrySource dataEntrySource, String projectId, Boolean childNamed, Child child, 
 			String birthdateOrAge, String ageYears, String ageMonths, String ageWeeks, String ageDays, Address address, 
-			VaccinationCenterVisit centerVisit, List<VaccineSchedule> vaccineSchedule, String completeCourseFromCenter, /*List<ChildLotteryRunner> lotteryRes,*/ 
+			VaccinationCenterVisit centerVisit, List<VaccineSchedule> vaccineSchedule, String completeCourseFromCenter, List<ChildIncentivization> incentiveRes, 
 			Date formStartDate, User dataEntryUser, ServiceContext sc)
 	{
 		Encounter e = saveEncounter(child.getMappedId(), centerVisit.getVaccinatorId(), centerVisit.getVaccinationCenterId(), child.getDateEnrolled(), formStartDate, null, dataEntryUser.getMappedId(), EncounterType.ENROLLMENT, dataEntrySource, sc);
@@ -226,7 +222,7 @@ public class EncounterUtil {
 		
 		populateVaccinationEncounter(e, encr, centerVisit, vaccineSchedule, sc);
 		
-	//	populateLotteryEncounter(e, encr, lotteryRes, null);
+		populateIncentiveEncounter(e, encr, incentiveRes);
 	
 		saveEncounterResults(encr, sc);
 	}
@@ -261,13 +257,13 @@ public class EncounterUtil {
 		
 		populateWomenVaccinationEncounter(e, encr, centerVisit, sc);
 		
-	//	populateLotteryEncounter(e, encr, lotteryRes, null);
+	//	populateIncentiveEncounter(e, encr, incentiveRes, null);
 	
 		saveEncounterResults(encr, sc);
 	}
 	
 	public static void createFollowupEncounter(VaccinationCenterVisit centerVisit, List<VaccineSchedule> vaccineSchedule, 
-			/*List<ChildLotteryRunner> lotteryResults,*/ Object lotteryCriteriaValue, DataEntrySource dataEntrySource, Date formStartDate, User dataEntryUser, ServiceContext sc)
+			List<ChildIncentivization> incentiveResults, DataEntrySource dataEntrySource, Date formStartDate, User dataEntryUser, ServiceContext sc)
 	{
 		Encounter e = saveEncounter(centerVisit.getChildId(), centerVisit.getVaccinatorId(), centerVisit.getVaccinationCenterId(), centerVisit.getVisitDate(), formStartDate, null, dataEntryUser.getMappedId(), EncounterType.FOLLOWUP, dataEntrySource, sc);
 
@@ -279,6 +275,23 @@ public class EncounterUtil {
 		
 		populateVaccinationEncounter(e, encr, centerVisit, vaccineSchedule, sc);
 		
+		populateIncentiveEncounter(e, encr, incentiveResults);
+	
+		saveEncounterResults(encr, sc);
+	}
+	
+	public static void createWomenFollowupEncounter(WomenVaccinationCenterVisit centerVisit, 
+			/*List<ChildLotteryRunner> lotteryResults,*/  DataEntrySource dataEntrySource, Date formStartDate, User dataEntryUser, ServiceContext sc)
+	{
+		Encounter e = saveEncounter(centerVisit.getWomenId(), centerVisit.getVaccinatorId(), centerVisit.getVaccinationCenterId(), centerVisit.getVisitDate(), formStartDate, null, dataEntryUser.getMappedId(), EncounterType.FOLLOWUP, dataEntrySource, sc);
+
+		List<EncounterResults> encr = new ArrayList<EncounterResults>();
+		
+		encr.add(createEncounterResult(e, ElementContact.PRIMARY_CONTACT_NUMBER, centerVisit.getContactPrimary(), null, null));
+		encr.add(createEncounterResult(e, ElementContact.SECONDARY_CONTACT_NUMBER, centerVisit.getContactSecondary(), null, null));
+		
+		populateWomenVaccinationEncounter(e, encr, centerVisit, sc);
+		
 		// populateLotteryEncounter(e, encr, lotteryResults, lotteryCriteriaValue);
 	
 		saveEncounterResults(encr, sc);
@@ -286,7 +299,7 @@ public class EncounterUtil {
 	
 	public static void createFollowupPrivilegedEncounter(Vaccination currentVaccination, 
 			Vaccine currentVaccine, String nextVaccineName, String nextVaccineSystemCalculatedDate,
-			Boolean reminderApproved, String primaryMobileNumber, ChildIncentivization lotteryRes, Object lotteryCriteriaVal, 
+			Boolean reminderApproved, String primaryMobileNumber, ChildIncentivization incentiveRes, Object incentiveCriteriaVal, 
 			DataEntrySource dataEntrySource, Date formStartDate, User dataEntryUser, ServiceContext sc)
 	{
 		/*Encounter e = saveEncounter(currentVaccination.getChildId(), currentVaccination.getVaccinatorId(), currentVaccination.getVaccinationCenterId(), currentVaccination.getVaccinationDate(), formStartDate, null, dataEntryUser.getMappedId(), EncounterType.FOLLOWUP_ADMIN, dataEntrySource, sc);
@@ -298,7 +311,7 @@ public class EncounterUtil {
 
 		populateVaccinationEncounter(e, encr, currentVaccination, currentVaccine, nextVaccineName, nextVaccineSystemCalculatedDate, sc);
 		
-		populateLotteryEncounter(e, encr, currentVaccination.getHasApprovedLottery(), lotteryRes.LOTTERY_STATUS_ERRORS, (lotteryRes.HAS_WON != null && lotteryRes.HAS_WON ), lotteryRes.AMOUNT, lotteryRes.VERIFICATION_CODE, lotteryRes.LOTTERY_PARAMS == null ? null : lotteryRes.LOTTERY_PARAMS.getProbability(), lotteryCriteriaVal);
+		populateIncentiveEncounter(e, encr, currentVaccination.getHasApprovedIncentive(), incentiveRes.INCENTIVE_STATUS_ERRORS, (incentiveRes.HAS_WON != null && incentiveRes.HAS_WON ), incentiveRes.AMOUNT, incentiveRes.VERIFICATION_CODE, incentiveRes.INCENTIVE_PARAMS == null ? null : incentiveRes.INCENTIVE_PARAMS.getProbability(), incentiveCriteriaVal);
 		
 		saveEncounterResults(encr, sc);*/
 	}
@@ -435,12 +448,12 @@ public class EncounterUtil {
 		saveEncounterResults(encr, sc);
 	}
 	
-	public static Map<String, Object> createLotteryGeneratorEncounter(LotteryType lotteryType, String childProgramId, Child child, 
+	/*public static Map<String, Object> createIncentiveGeneratorEncounter( incentiveType, String childProgramId, Child child, 
 			Vaccination curVactn, Vaccine vaccine, String justification, String requestedBy, String addNote, 
-			Date birthdate, Boolean isBirthdateEstimated, ChildIncentivization lotteryRes, Object criteriaValueTimeliness, 
+			Date birthdate, Boolean isBirthdateEstimated, ChildIncentivization incentiveRes, Object criteriaValueTimeliness, 
 			DataEntrySource dataEntrySource, Date formStartDate, User dataEntryUser, ServiceContext sc)
 	{
-		Encounter e = saveEncounter(child.getMappedId(), curVactn.getVaccinatorId(), curVactn.getVaccinationCenterId(), new Date(), formStartDate, (lotteryType.equals(LotteryType.EXISTING)?"NA":"PENDING"), dataEntryUser.getMappedId(), EncounterType.LOTTERY_GEN, dataEntrySource, sc);
+		Encounter e = saveEncounter(child.getMappedId(), curVactn.getVaccinatorId(), curVactn.getVaccinationCenterId(), new Date(), formStartDate, (incentiveType.equals(IncentiveType.EXISTING)?"NA":"PENDING"), dataEntryUser.getMappedId(), EncounterType.INCENTIVE_GEN, dataEntrySource, sc);
 
 		List<EncounterResults> encr = new ArrayList<EncounterResults>();
 
@@ -449,17 +462,17 @@ public class EncounterUtil {
 		encr.add(createEncounterResult(e, ElementGeneral.BIRTHDATE, WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.format(child.getBirthdate()), null, null));
 		encr.add(createEncounterResult(e, ElementGeneral.BIRTHDATE_ESTIMATED, child.getEstimatedBirthdate(), null, null));
 		
-		encr.add(createEncounterResult(e, ElementIncentive.LOTTERY_TYPE, lotteryType, null, null));
+		encr.add(createEncounterResult(e, ElementIncentive.INCENTIVE_TYPE, incentiveType, null, null));
 		encr.add(createEncounterResult(e, ElementGeneral.JUSTIFICATION, justification, null, null));
 		encr.add(createEncounterResult(e, ElementGeneral.REQUESTED_BY, requestedBy, null, null));
 		encr.add(createEncounterResult(e, ElementGeneral.ADDITIONAL_NOTE, addNote, null, null));
 
-		List<ChildIncentivization> lotteryResults = new ArrayList<ChildIncentivization>();
-		lotteryResults.add(lotteryRes);
+		List<ChildIncentivization> incentiveResults = new ArrayList<ChildIncentivization>();
+		incentiveResults.add(incentiveRes);
 		
-		//populateLotteryEncounter(e, encr, lotteryResults , criteriaValueTimeliness);
+		//populateIncentiveEncounter(e, encr, incentiveResults , criteriaValueTimeliness);
 
-		encr.add(createEncounterResult(e, ElementGeneral.FORM_STATUS, lotteryType.equals(LotteryType.EXISTING)?"NA":"PENDING", null, null));
+		encr.add(createEncounterResult(e, ElementGeneral.FORM_STATUS, incentiveType.equals(IncentiveType.EXISTING)?"NA":"PENDING", null, null));
 
 		saveEncounterResults(encr, sc);
 		
@@ -468,12 +481,12 @@ public class EncounterUtil {
 		encountermap.put("encounterresults", encr);
 		
 		return encountermap;
-	}
+	}*/
 	
-	/*public static void createLotteryConsumerEncounter(Child child, ChildIncentive childIncentive,  
+	/*public static void createIncentiveConsumerEncounter(Child child, ChildIncentive childIncentive,  
 			DataEntrySource dataEntrySource, Date formStartDate, User dataEntryUser, ServiceContext sc)
 	{
-		Encounter e = saveEncounter(child.getMappedId(), childIncentive.getStorekeeperId(), null, childIncentive.getTransactionDate(), formStartDate, "", dataEntryUser.getMappedId(), EncounterType.LOTTERY_CONSUMP, dataEntrySource, sc);
+		Encounter e = saveEncounter(child.getMappedId(), childIncentive.getStorekeeperId(), null, childIncentive.getTransactionDate(), formStartDate, "", dataEntryUser.getMappedId(), EncounterType.INCENTIVE_CONSUMP, dataEntrySource, sc);
 
 		List<EncounterResults> encr = new ArrayList<EncounterResults>();
 
@@ -503,27 +516,27 @@ public class EncounterUtil {
 
 	}
 	
-	/*private static void populateLotteryEncounter(Encounter e , List<EncounterResults> encr, List<ChildLotteryRunner> lotteryResults, Object lotteryCriteriaValue)
+	private static void populateIncentiveEncounter(Encounter e , List<EncounterResults> encr, List<ChildIncentivization> incentiveResults)
 	{
-		for (ChildLotteryRunner childLotteryRunner : lotteryResults) {
-			String lotteryVariableIDPrefix = getLotteryEncounterPrefix(childLotteryRunner.VACCINE_NAME, childLotteryRunner.VACCINE_ID);
-			String group = "LOTTERY_"+childLotteryRunner.VACCINE_NAME;
-			encr.add(createRepeatedGroupEncounterResult(e, lotteryVariableIDPrefix, ElementVaccination.VACCINE_ID, childLotteryRunner.VACCINE_ID, group));
-			encr.add(createRepeatedGroupEncounterResult(e, lotteryVariableIDPrefix, ElementVaccination.VACCINE_NAME, childLotteryRunner.VACCINE_NAME, group));
-			encr.add(createRepeatedGroupEncounterResult(e, lotteryVariableIDPrefix, ElementVaccination.VACCINATION_RECORD_NUM, childLotteryRunner.VACCINATION_RECORD_NUMBER, group));
-			encr.add(createRepeatedGroupEncounterResult(e, lotteryVariableIDPrefix, ElementIncentive.LOTTERY_ID, childLotteryRunner.LOTTERY_RECORD_NUMBER, group));
-			encr.add(createRepeatedGroupEncounterResult(e, lotteryVariableIDPrefix, ElementIncentive.LOTTERY_STATUS, (StringUtils.isEmptyOrWhitespaceOnly(childLotteryRunner.LOTTERY_STATUS_ERRORS)?"OK":childLotteryRunner.LOTTERY_STATUS_ERRORS), group));
-			encr.add(createRepeatedGroupEncounterResult(e, lotteryVariableIDPrefix, ElementIncentive.WON, childLotteryRunner.HAS_WON, group));
-			encr.add(createRepeatedGroupEncounterResult(e, lotteryVariableIDPrefix, ElementIncentive.WON_AMOUNT, childLotteryRunner.AMOUNT, group));
-			encr.add(createRepeatedGroupEncounterResult(e, lotteryVariableIDPrefix, ElementIncentive.VERIFICATION_CODE, childLotteryRunner.VERIFICATION_CODE, group));
-			encr.add(createRepeatedGroupEncounterResult(e, lotteryVariableIDPrefix, ElementIncentive.PROBABILITY, childLotteryRunner.LOTTERY_PARAMS!=null?childLotteryRunner.LOTTERY_PARAMS.getProbability():null, group));
-			encr.add(createRepeatedGroupEncounterResult(e, lotteryVariableIDPrefix, ElementIncentive.CRITERIA_VALUE, lotteryCriteriaValue, group));
+		for (ChildIncentivization childIncentiveRunner : incentiveResults) {
+			String incentiveVariableIDPrefix = getIncentiveEncounterPrefix(childIncentiveRunner.VACCINE_NAME, childIncentiveRunner.VACCINE_ID);
+			String group = "INCENTIVE_"+childIncentiveRunner.VACCINE_NAME;
+			encr.add(createRepeatedGroupEncounterResult(e, incentiveVariableIDPrefix, ElementVaccination.VACCINE_ID, childIncentiveRunner.VACCINE_ID, group));
+			encr.add(createRepeatedGroupEncounterResult(e, incentiveVariableIDPrefix, ElementVaccination.VACCINE_NAME, childIncentiveRunner.VACCINE_NAME, group));
+			encr.add(createRepeatedGroupEncounterResult(e, incentiveVariableIDPrefix, ElementVaccination.VACCINATION_RECORD_NUM, childIncentiveRunner.VACCINATION_RECORD_NUMBER, group));
+			encr.add(createRepeatedGroupEncounterResult(e, incentiveVariableIDPrefix, ElementIncentive.INCENTIVE_PARAMS, childIncentiveRunner.INCENTIVE_PARAMS, group));
+			encr.add(createRepeatedGroupEncounterResult(e, incentiveVariableIDPrefix, ElementIncentive.INCENTIVE_ID, childIncentiveRunner.INCENTIVE_RECORD_NUMBER, group));
+			encr.add(createRepeatedGroupEncounterResult(e, incentiveVariableIDPrefix, ElementIncentive.INCENTIVE_STATUS, (StringUtils.isEmptyOrWhitespaceOnly(childIncentiveRunner.INCENTIVE_STATUS_ERRORS)?"OK":childIncentiveRunner.INCENTIVE_STATUS_ERRORS), group));
+			encr.add(createRepeatedGroupEncounterResult(e, incentiveVariableIDPrefix, ElementIncentive.WON, childIncentiveRunner.HAS_WON, group));
+			encr.add(createRepeatedGroupEncounterResult(e, incentiveVariableIDPrefix, ElementIncentive.WON_AMOUNT, childIncentiveRunner.AMOUNT, group));
+			//encr.add(createRepeatedGroupEncounterResult(e, incentiveVariableIDPrefix, ElementIncentive.VERIFICATION_CODE, childIncentiveRunner.VERIFICATION_CODE, group));
+			//encr.add(createRepeatedGroupEncounterResult(e, incentiveVariableIDPrefix, ElementIncentive.PROBABILITY, childIncentiveRunner.INCENTIVE_PARAMS!=null?childIncentiveRunner.INCENTIVE_PARAMS.getProbability():null, group));
 		}
-	}*/
+	}
 	
-	public static String getLotteryEncounterPrefix(String vaccineName, short vaccineId){
-		String lotteryVariableIDPrefix = "LOTTERY_"+vaccineName+"_"+vaccineId;
-		return lotteryVariableIDPrefix;
+	public static String getIncentiveEncounterPrefix(String vaccineName, short vaccineId){
+		String incentiveVariableIDPrefix = "INCENTIVE_"+vaccineName+"_"+vaccineId;
+		return incentiveVariableIDPrefix;
 	}
 	
 	private static void populateVaccinationEncounter(Encounter e , List<EncounterResults> encr, VaccinationCenterVisit centerVisit, 
@@ -533,7 +546,7 @@ public class EncounterUtil {
 		encr.add(createEncounterResult(e, ElementVaccination.VISIT_DATE, WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.format(centerVisit.getVisitDate()), null, null));
 		encr.add(createEncounterResult(e, ElementVaccination.VACCINATION_CENTER, centerVisit.getVaccinationCenterId(), null, null));
 		encr.add(createEncounterResult(e, ElementVaccination.VACCINATION_CENTER_ID, sc.getVaccinationService().findVaccinationCenterById(centerVisit.getVaccinationCenterId(), true, new String[]{"idMapper"}).getIdMapper().getIdentifiers().get(0).getIdentifier(), null, null));
-		encr.add(createEncounterResult(e, ElementVaccination.LOTTERY_APPROVED, centerVisit.getHasApprovedLottery(), null, null));
+		encr.add(createEncounterResult(e, ElementVaccination.INCENTIVE_APPROVED, centerVisit.getHasApprovedLottery(), null, null));
 
 		for (VaccineSchedule vsh : vaccineSchedule) {
 			String vaccineVariablePrefix = null;
@@ -619,22 +632,15 @@ public class EncounterUtil {
 	private static void populateAddressEncounters(Encounter e , List<EncounterResults> encr, Address address, ServiceContext sc)
 	{
 		List c = sc.getCustomQueryService().getDataBySQL("select otherIdentifier, name from location where locationId="+address.getCityId());
-		List t = sc.getCustomQueryService().getDataBySQL("select otherIdentifier, name from location where locationId="+address.getAddtown());
-		List u = sc.getCustomQueryService().getDataBySQL("select otherIdentifier, name from location where locationId="+address.getAddUc());
 		
 		encr.add(createEncounterResult(e, ElementAddress.HOUSE_NUMBER, address.getAddHouseNumber(), null, null));
 		encr.add(createEncounterResult(e, ElementAddress.STREET, address.getAddStreet(), null, null));
 		encr.add(createEncounterResult(e, ElementAddress.SECTOR, address.getAddSector(), null, null));
 		encr.add(createEncounterResult(e, ElementAddress.COLONY, address.getAddColony(), null, null));
 		encr.add(createEncounterResult(e, ElementAddress.TOWN, address.getAddtown(), null, null));
-		encr.add(createEncounterResult(e, ElementAddress.TOWN_ID, ((Object[])t.get(0))[0], null, null));
-		encr.add(createEncounterResult(e, ElementAddress.TOWN_NAME, ((Object[])t.get(0))[1], null, null));
 		encr.add(createEncounterResult(e, ElementAddress.UC, address.getAddUc(), null, null));
-		encr.add(createEncounterResult(e, ElementAddress.UC_ID, ((Object[])u.get(0))[0], null, null));
-		encr.add(createEncounterResult(e, ElementAddress.UC_NAME, ((Object[])u.get(0))[1], null, null));
 		encr.add(createEncounterResult(e, ElementAddress.LANDMARK, address.getAddLandmark(), null, null));
 		encr.add(createEncounterResult(e, ElementAddress.CITY, address.getCityId(), null, null));
-		encr.add(createEncounterResult(e, ElementAddress.CITY_ID, ((Object[])c.get(0))[0], null, null));
 		encr.add(createEncounterResult(e, ElementAddress.CITY_NAME, ((Object[])c.get(0))[1], null, null));
 		encr.add(createEncounterResult(e, ElementAddress.CITY_OTHER, address.getCityName(), null, null));
 	}
