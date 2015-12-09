@@ -22,7 +22,6 @@ import org.ird.unfepi.utils.IRUtils;
 import org.ird.unfepi.utils.LoggerUtils;
 import org.ird.unfepi.utils.LoggerUtils.LogType;
 import org.ird.unfepi.utils.UserSessionUtils;
-import org.ird.unfepi.web.utils.ControllerUIHelper;
 import org.springframework.beans.propertyeditors.CustomBooleanEditor;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;

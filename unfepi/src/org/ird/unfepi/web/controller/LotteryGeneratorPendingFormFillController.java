@@ -18,23 +18,14 @@ import org.ird.unfepi.constants.WebGlobals;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.LoggedInUser;
 import org.ird.unfepi.context.ServiceContext;
-import org.ird.unfepi.model.Address;
-import org.ird.unfepi.model.Child;
-import org.ird.unfepi.model.ContactNumber;
 import org.ird.unfepi.model.Encounter;
-import org.ird.unfepi.model.Encounter.DataEntrySource;
 import org.ird.unfepi.model.EncounterResults;
-import org.ird.unfepi.model.IdMapper;
-import org.ird.unfepi.model.LotterySms;
 import org.ird.unfepi.model.Vaccination;
 import org.ird.unfepi.model.Vaccination.VACCINATION_STATUS;
 import org.ird.unfepi.model.VaccinationCenter;
 import org.ird.unfepi.model.Vaccinator;
 import org.ird.unfepi.model.Vaccine;
 import org.ird.unfepi.utils.EncounterUtil;
-import org.ird.unfepi.utils.IRUtils;
-import org.ird.unfepi.utils.LoggerUtils;
-import org.ird.unfepi.utils.LoggerUtils.LogType;
 import org.ird.unfepi.utils.UserSessionUtils;
 import org.ird.unfepi.web.utils.ControllerUIHelper;
 import org.ird.unfepi.web.validator.ChildValidator;
@@ -47,7 +38,6 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
-import org.springframework.web.servlet.view.RedirectView;
 
 public class LotteryGeneratorPendingFormFillController extends SimpleFormController 
 {

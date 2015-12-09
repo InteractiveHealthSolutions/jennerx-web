@@ -23,7 +23,6 @@ import org.ird.unfepi.model.Encounter;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
 import org.ird.unfepi.model.EncounterId;
 import org.ird.unfepi.model.EncounterResults;
-import org.ird.unfepi.utils.EncounterUtil;
 import org.ird.unfepi.utils.IRUtils;
 import org.ird.unfepi.utils.LoggerUtils;
 import org.ird.unfepi.utils.LoggerUtils.LogType;
