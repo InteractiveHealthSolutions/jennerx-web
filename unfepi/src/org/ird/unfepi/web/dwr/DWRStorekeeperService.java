@@ -11,14 +11,9 @@ import org.ird.unfepi.constants.SystemPermissions;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.LoggedInUser;
 import org.ird.unfepi.context.ServiceContext;
-import org.ird.unfepi.model.Encounter.DataEntrySource;
 import org.ird.unfepi.model.StorekeeperIncentiveTransaction;
 import org.ird.unfepi.model.StorekeeperIncentiveTransaction.TranscationStatus;
-import org.ird.unfepi.utils.EncounterUtil;
-import org.ird.unfepi.utils.IncentiveUtils;
 import org.ird.unfepi.utils.UserSessionUtils;
-import org.ird.unfepi.utils.date.DateUtils;
-import org.ird.unfepi.utils.date.DateUtils.TIME_INTERVAL;
 
 import com.mysql.jdbc.StringUtils;
 
@@ -118,58 +113,6 @@ public class DWRStorekeeperService {
 	}
 	
 	public String doIncentivizeStorekeepers(Date incentivizationDateUpper){
-		LoggedInUser user=UserSessionUtils.getActiveUser(WebContextFactory.get().getHttpServletRequest());
-		if(user==null){
-			//return "Session expired. Logout from application and login again";
-			try {
-				WebContextFactory.get().forwardToString("login.htm");
-			} catch (ServletException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		ServiceContext sc = Context.getServices();
-		try {
-			if(!UserSessionUtils.hasActiveUserPermission(SystemPermissions.DO_STOREKEEPER_INCENTIVIZATION, WebContextFactory.get().getHttpServletRequest())){
-				return "You donot have permissions to incentivize storekeepers";
-			}
-			Date prevfireTime = null;
-			try{
-		//		prevfireTime = sc.getIncentiveService().getAllStorekeeperIncentiveEvent(0, 1, true, null).get(0).getDataRangeDateUpper();
-				prevfireTime = new Date(prevfireTime.getTime() + 1000);//adding 1 sec to ensure date range dont coincide
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-			prevfireTime = prevfireTime==null?new Date(new Date().getTime()-1000*60*60*24*60L):prevfireTime;
-			incentivizationDateUpper = DateUtils.roundoffDatetoDate(incentivizationDateUpper);
-			
-			if(incentivizationDateUpper.before(prevfireTime)){
-				return "Incentivization date upper range cannot be before last event`s date "+prevfireTime;
-			}
-			if(incentivizationDateUpper.after(new Date())){
-				return "Incentivization date upper range cannot be after todays date";
-			}
-			if(DateUtils.differenceBetweenIntervals(new Date(incentivizationDateUpper.getTime()), 
-					new Date(prevfireTime.getTime()), TIME_INTERVAL.DATE) < 14){
-				return "Incentivization date upper range must have minimum gap of 14 days from last event`s date."+prevfireTime;
-			}
-			
-			EncounterUtil.createStorekeeperIncentiveEncounter(new Date(), prevfireTime, incentivizationDateUpper, DataEntrySource.WEB, new Date(), user.getUser(), sc);
-			
-			sc.commitTransaction();
-			sc.closeSession();
-
-			IncentiveUtils.doStorekeeperIncentivization(prevfireTime, incentivizationDateUpper, user.getUser());
-			
-			return "Incentivization have taken place. Refresh page to view new records. A csv file is available in downloadable reports under category Incentives.";
-		}
-		catch (Exception e){
-			return "Error while incentivization :"+e.getMessage();
-		}
-		finally {
-			sc.closeSession();
-		}
+		throw new UnsupportedOperationException("Storkeepers are not given incentives");
 	}
 }
