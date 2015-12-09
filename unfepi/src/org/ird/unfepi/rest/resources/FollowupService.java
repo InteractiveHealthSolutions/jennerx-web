@@ -11,7 +11,6 @@ import javax.ws.rs.core.MediaType;
 import org.ird.unfepi.GlobalParams;
 import org.ird.unfepi.rest.elements.RequestElements;
 import org.ird.unfepi.rest.elements.ResponseStatus;
-import org.ird.unfepi.rest.helper.EnrollmentServiceHelper;
 import org.ird.unfepi.rest.helper.FollowupHelper;
 import org.ird.unfepi.rest.helper.ResponseBuilder;
 import org.json.simple.JSONObject;

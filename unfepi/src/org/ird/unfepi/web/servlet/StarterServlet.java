@@ -12,17 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.jmatrix.eproperties.EProperties;
 
-import org.ird.unfepi.EmailEngine;
 import org.ird.unfepi.GlobalParams;
-import org.ird.unfepi.autosys.ReportingSystem;
-import org.ird.unfepi.autosys.SmserSystem;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.utils.IRUtils;
-import org.irdresearch.smstarseel.context.TarseelContext;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import org.quartz.SchedulerFactory;
-import org.quartz.impl.StdSchedulerFactory;
 
 public class StarterServlet extends HttpServlet
 {

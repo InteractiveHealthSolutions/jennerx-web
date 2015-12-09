@@ -1,7 +1,5 @@
 package org.ird.unfepi.rest.helper;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.DriverManager;
@@ -9,10 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Properties;
 
-import org.ird.unfepi.model.Child;
 import org.ird.unfepi.rest.elements.RequestElements;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

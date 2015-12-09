@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.ird.unfepi.GlobalParams;
-import org.ird.unfepi.rest.resources.MobileResponder;
 
 public class RestUtils 
 {

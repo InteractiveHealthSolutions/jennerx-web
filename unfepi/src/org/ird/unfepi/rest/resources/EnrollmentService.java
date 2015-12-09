@@ -8,14 +8,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.ird.unfepi.context.Context;
-import org.ird.unfepi.context.ServiceContext;
-import org.ird.unfepi.model.IdMapper;
 import org.ird.unfepi.rest.elements.ResponseStatus;
 import org.ird.unfepi.rest.helper.EnrollmentServiceHelper;
 import org.ird.unfepi.rest.helper.ResponseBuilder;
-
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
