@@ -21,8 +21,6 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.ForeignKey;
-import org.ird.unfepi.model.Women.WOMENSTATUS;
-import org.ird.unfepi.model.Model.Gender;
 import org.ird.unfepi.utils.date.DateUtils;
 import org.ird.unfepi.utils.date.DateUtils.TIME_INTERVAL;
 
@@ -108,15 +106,6 @@ public enum WOMENSTATUS {
 	private String fatherLastName;
 	
 	@Column(length = 30)
-	private String motherFirstName;
-	
-	@Column(length = 30)
-	private String motherMiddleName;
-	
-	@Column(length = 30)
-	private String motherLastName;
-	
-	@Column(length = 30)
 	private String husbandFirstName;
 	
 	@Column(length = 30)
@@ -134,48 +123,11 @@ public enum WOMENSTATUS {
 	@Column(length = 30)
 	private String nicOwnerLastName;
 	
-	private Short nicOwnerRelationId;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "nicOwnerRelationId", insertable = false, updatable = false)
-	@ForeignKey(name = "women_nicOwnerRelation_relationship_relationshipId_FK")
-	private Relationship nicOwnerRelation;
-	
-	@Column(length = 30)
-	private String otherNicOwnerRelation;
+	@Column(length = 50)
+	private String nicOwnerRelation;
 	
 	@Column(length = 30)
 	private String domicile;
-	
-	private Short religionId;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "religionId", insertable = false, updatable = false)
-	@ForeignKey(name = "women_religion_religion_religionId_FK")
-	private Religion religion;
-	
-	@Column(length = 30)
-	private String otherReligion;
-	
-	private Short ethnicityId;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ethnicityId", insertable = false, updatable = false)
-	@ForeignKey(name = "women_ethnicity_ethnicity_ethnicityId_FK")
-	private Ethnicity ethnicity;
-
-	@Column(length = 30)
-	private String otherEthnicity;
-	
-	private Short languageId;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "languageId", insertable = false, updatable = false)
-	@ForeignKey(name = "women_language_language_languageId_FK")
-	private Language language;
-
-	@Column(length = 30)
-	private String otherLanguage;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date	dateEnrolled;
@@ -187,8 +139,6 @@ public enum WOMENSTATUS {
 	private Date	terminationDate;
 	
 	private String	terminationReason;
-	
-	private String terminationReasonOther;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(length = 20)
@@ -351,30 +301,6 @@ public enum WOMENSTATUS {
 		this.estimatedBirthdate = estimatedBirthdate;
 	}
 	
-	public Short getNicOwnerRelationId() {
-		return nicOwnerRelationId;
-	}
-
-	public void setNicOwnerRelationId(Short nicOwnerRelationId) {
-		this.nicOwnerRelationId = nicOwnerRelationId;
-	}
-
-	public Short getReligionId() {
-		return religionId;
-	}
-
-	public void setReligionId(Short religionId) {
-		this.religionId = religionId;
-	}
-
-	public Short getEthnicityId() {
-		return ethnicityId;
-	}
-
-	public void setEthnicityId(Short ethnicityId) {
-		this.ethnicityId = ethnicityId;
-	}
-
 	/**
 	 * Gets the domicile.
 	 *
@@ -393,79 +319,6 @@ public enum WOMENSTATUS {
 		this.domicile = domicile;
 	}
 
-	/**
-	 * Gets the religion.
-	 *
-	 * @return the religion
-	 */
-	public Religion getReligion() {
-		return religion;
-	}
-
-	/**
-	 * Sets the religion.
-	 *
-	 * @param religion the new religion
-	 */
-	void setReligion(Religion religion) {
-		this.religion = religion;
-	}
-
-	public String getOtherReligion() {
-		return otherReligion;
-	}
-	public void setOtherReligion(String otherReligion) {
-		this.otherReligion = otherReligion;
-	}
-	/**
-	 * Gets the ethnicity.
-	 *
-	 * @return the ethnicity
-	 */
-	public Ethnicity getEthnicity() {
-		return ethnicity;
-	}
-
-	/**
-	 * Sets the ethnicity.
-	 *
-	 * @param ethnicity the new ethnicity
-	 */
-	void setEthnicity(Ethnicity ethnicity) {
-		this.ethnicity = ethnicity;
-	}
-
-	public String getOtherEthnicity() {
-		return otherEthnicity;
-	}
-	public void setOtherEthnicity(String otherEthnicity) {
-		this.otherEthnicity = otherEthnicity;
-	}
-	
-	public Short getLanguageId() {
-		return languageId;
-	}
-
-	public void setLanguageId(Short languageId) {
-		this.languageId = languageId;
-	}
-
-	public Language getLanguage() {
-		return language;
-	}
-
-	void setLanguage(Language language) {
-		this.language = language;
-	}
-
-	public String getOtherLanguage() {
-		return otherLanguage;
-	}
-
-	public void setOtherLanguage(String otherLanguage) {
-		this.otherLanguage = otherLanguage;
-	}
-	
 	/**
 	 * Gets the father first name.
 	 *
@@ -518,43 +371,6 @@ public enum WOMENSTATUS {
 	 */
 	public void setFatherLastName(String fatherLastName) {
 		this.fatherLastName = fatherLastName;
-	}
-
-	/**
-	 * @return the motherFirstName
-	 */
-	public String getMotherFirstName() {
-		return motherFirstName;
-	}
-	/**
-	 * @param motherFirstName the motherFirstName to set
-	 */
-	public void setMotherFirstName(String motherFirstName) {
-		this.motherFirstName = motherFirstName;
-	}
-	/**
-	 * @return the motherMiddleName
-	 */
-	public String getMotherMiddleName() {
-		return motherMiddleName;
-	}
-	/**
-	 * @param motherMiddleName the motherMiddleName to set
-	 */
-	public void setMotherMiddleName(String motherMiddleName) {
-		this.motherMiddleName = motherMiddleName;
-	}
-	/**
-	 * @return the motherLastName
-	 */
-	public String getMotherLastName() {
-		return motherLastName;
-	}
-	/**
-	 * @param motherLastName the motherLastName to set
-	 */
-	public void setMotherLastName(String motherLastName) {
-		this.motherLastName = motherLastName;
 	}
 	
 	public String getHusbandFirstName() {
@@ -620,26 +436,14 @@ public enum WOMENSTATUS {
 	/**
 	 * @return the nicOwnerRelation
 	 */
-	public Relationship getNicOwnerRelation() {
+	public String getNicOwnerRelation() {
 		return nicOwnerRelation;
 	}
 	/**
 	 * @param nicOwnerRelation the nicOwnerRelation to set
 	 */
-	void setNicOwnerRelation(Relationship nicOwnerRelation) {
+	void setNicOwnerRelation(String nicOwnerRelation) {
 		this.nicOwnerRelation = nicOwnerRelation;
-	}
-	/**
-	 * @return the otherNicOwnerRelation
-	 */
-	public String getOtherNicOwnerRelation() {
-		return otherNicOwnerRelation;
-	}
-	/**
-	 * @param otherNicOwnerRelation the otherNicOwnerRelation to set
-	 */
-	public void setOtherNicOwnerRelation(String otherNicOwnerRelation) {
-		this.otherNicOwnerRelation = otherNicOwnerRelation;
 	}
 
 	/**
@@ -714,14 +518,6 @@ public enum WOMENSTATUS {
 		this.terminationReason = terminationReason;
 	}
 	
-	public String getTerminationReasonOther() {
-		return terminationReasonOther;
-	}
-
-	public void setTerminationReasonOther(String terminationReasonOther) {
-		this.terminationReasonOther = terminationReasonOther;
-	}
-
 	/**
 	 * Gets the status.
 	 *

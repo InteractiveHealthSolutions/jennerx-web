@@ -94,13 +94,7 @@ public class Vaccination implements java.io.Serializable {
 	@ForeignKey(name = "vaccination_vaccineId_vaccine_vaccineId_FK")
 	private Vaccine	vaccine;
 	
-	private Boolean polioVaccineGiven;
-	
-	private String reasonPolioVaccineNotGiven;
-
-	private String reasonPolioVaccineNotGivenOther;
-
-	private Boolean pcvGiven;
+	private String reasonVaccineNotGiven;
 
 	private Boolean hasApprovedLottery;
 	
@@ -120,10 +114,6 @@ public class Vaccination implements java.io.Serializable {
 	@ForeignKey(name = "vaccination_vaccinatorId_vaccinator_mappedId_FK")
 	private Vaccinator	vaccinator;
 	
-	/** The dose. */
-	@Column(length = 30)
-	private String	dose;
-
 	/** The vaccination date. */
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date	vaccinationDate;
@@ -140,29 +130,11 @@ public class Vaccination implements java.io.Serializable {
 	
 	private TimelinessStatus timelinessStatus;
 	
-	/** The next vaccination record num. */
-	private Integer	nextVaccinationRecordNum;
-
-	/** The previous vaccination record num. */
-	private Integer	previousVaccinationRecordNum;
-	
 	private String preferredReminderTiming;
-	/** The weight. */
 	private Float weight;
 	
-	/** The height. */
 	private Float height;
 
-	private Short broughtByRelationshipId;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "broughtByRelationshipId", insertable = false, updatable = false)
-	@ForeignKey(name = "vaccination_broughtByRelationship_relationship_relationshipId_FK")
-	private Relationship broughtByRelationship;
-	
-	@Column(length = 30)
-	private String otherBroughtByRelationship;
-	
 	/** The epi number. */
 	private String	epiNumber;
 
@@ -173,14 +145,6 @@ public class Vaccination implements java.io.Serializable {
 	
 	/** The reason not timely vaccination. */
 	private String	reasonNotTimelyVaccination;
-	
-	private String	reasonNotTimelyVaccinationOther;
-
-	/** The next assigned date. */
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date	nextAssignedDate;
-	
-	/** The description. */
 	
 	private String description;
 	
@@ -278,14 +242,6 @@ public class Vaccination implements java.io.Serializable {
 		this.vaccinatorId = vaccinatorId;
 	}
 
-	public Short getBroughtByRelationshipId() {
-		return broughtByRelationshipId;
-	}
-
-	public void setBroughtByRelationshipId(Short broughtByRelationshipId) {
-		this.broughtByRelationshipId = broughtByRelationshipId;
-	}
-
 	public Vaccine getVaccine() {
 		return vaccine;
 	}
@@ -294,37 +250,8 @@ public class Vaccination implements java.io.Serializable {
 		this.vaccine = vaccine;
 	}
 
-	public Boolean getPolioVaccineGiven() {
-		return polioVaccineGiven;
-	}
-
-	public void setPolioVaccineGiven(Boolean polioVaccineGiven) {
-		this.polioVaccineGiven = polioVaccineGiven;
-	}
-
-	public String getReasonPolioVaccineNotGiven() {
-		return reasonPolioVaccineNotGiven;
-	}
-
-	public void setReasonPolioVaccineNotGiven(String reasonPolioVaccineNotGiven) {
-		this.reasonPolioVaccineNotGiven = reasonPolioVaccineNotGiven;
-	}
-
-	public String getReasonPolioVaccineNotGivenOther() {
-		return reasonPolioVaccineNotGivenOther;
-	}
-
-	public void setReasonPolioVaccineNotGivenOther(
-			String reasonPolioVaccineNotGivenOther) {
-		this.reasonPolioVaccineNotGivenOther = reasonPolioVaccineNotGivenOther;
-	}
-
-	public Boolean getPcvGiven() {
-		return pcvGiven;
-	}
-
-	public void setPcvGiven(Boolean pcvGiven) {
-		this.pcvGiven = pcvGiven;
+	public String getReasonVaccineNotGiven() {
+		return reasonVaccineNotGiven;
 	}
 
 	public Boolean getHasApprovedLottery() {
@@ -349,14 +276,6 @@ public class Vaccination implements java.io.Serializable {
 
 	void setVaccinator(Vaccinator vaccinator) {
 		this.vaccinator = vaccinator;
-	}
-
-	public String getDose() {
-		return dose;
-	}
-
-	public void setDose(String dose) {
-		this.dose = dose;
 	}
 
 	public Date getVaccinationDate() {
@@ -407,32 +326,6 @@ public class Vaccination implements java.io.Serializable {
 		this.timelinessStatus = timelinessStatus;
 	}
 
-	public Integer getNextVaccinationRecordNum() {
-		return nextVaccinationRecordNum;
-	}
-
-	public void setNextVaccinationRecordNum(Integer nextVaccinationRecordNum) {
-		this.nextVaccinationRecordNum = nextVaccinationRecordNum;
-	}
-
-	/**
-	 * Gets the previous vaccination record num.
-	 *
-	 * @return the previous vaccination record num
-	 */
-	public Integer getPreviousVaccinationRecordNum() {
-		return previousVaccinationRecordNum;
-	}
-
-	/**
-	 * Sets the previous vaccination record num.
-	 *
-	 * @param previousVaccinationRecordNum the new previous vaccination record num
-	 */
-	public void setPreviousVaccinationRecordNum(Integer previousVaccinationRecordNum) {
-		this.previousVaccinationRecordNum = previousVaccinationRecordNum;
-	}
-
 	public String getPreferredReminderTiming() {
 		return preferredReminderTiming;
 	}
@@ -475,34 +368,6 @@ public class Vaccination implements java.io.Serializable {
 	 */
 	public void setHeight(Float height) {
 		this.height = height;
-	}
-
-	/**
-	 * @return the broughtByRelationship
-	 */
-	public Relationship getBroughtByRelationship() {
-		return broughtByRelationship;
-	}
-
-	/**
-	 * @param broughtByRelationship the broughtByRelationship to set
-	 */
-	void setBroughtByRelationship(Relationship broughtByRelationship) {
-		this.broughtByRelationship = broughtByRelationship;
-	}
-
-	/**
-	 * @return the otherBroughtByRelationship
-	 */
-	public String getOtherBroughtByRelationship() {
-		return otherBroughtByRelationship;
-	}
-
-	/**
-	 * @param otherBroughtByRelationship the otherBroughtByRelationship to set
-	 */
-	public void setOtherBroughtByRelationship(String otherBroughtByRelationship) {
-		this.otherBroughtByRelationship = otherBroughtByRelationship;
 	}
 
 	/**
@@ -557,33 +422,6 @@ public class Vaccination implements java.io.Serializable {
 	 */
 	public void setReasonNotTimelyVaccination(String reasonNotTimelyVaccination) {
 		this.reasonNotTimelyVaccination = reasonNotTimelyVaccination;
-	}
-
-	public String getReasonNotTimelyVaccinationOther() {
-		return reasonNotTimelyVaccinationOther;
-	}
-
-	public void setReasonNotTimelyVaccinationOther(
-			String reasonNotTimelyVaccinationOther) {
-		this.reasonNotTimelyVaccinationOther = reasonNotTimelyVaccinationOther;
-	}
-
-	/**
-	 * Gets the next assigned date.
-	 *
-	 * @return the next assigned date
-	 */
-	public Date getNextAssignedDate() {
-		return nextAssignedDate;
-	}
-
-	/**
-	 * Sets the next assigned date.
-	 *
-	 * @param nextAssignedDate the new next assigned date
-	 */
-	public void setNextAssignedDate(Date nextAssignedDate) {
-		this.nextAssignedDate = nextAssignedDate;
 	}
 
 	/**

@@ -92,16 +92,7 @@ public class Storekeeper implements Serializable{
 	@Column(length = 30)
 	private String nicOwnerLastName;
 	
-	private Short nicOwnerRelationId;
-	
-	/** The NIC owner relation. */
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "nicOwnerRelationId", insertable = false, updatable = false)
-	@ForeignKey(name = "storekeeper_NICOwnerRelation_relationship_relationshipId_FK")
-	private Relationship nicOwnerRelation;
-	
-	@Column(length = 30)
-	private String otherNicOwnerRelation;
+	private String nicOwnerRelation;
 	
 	/** The domicile. */
 	@Column(length = 30)
@@ -338,35 +329,17 @@ public class Storekeeper implements Serializable{
 	public void setNicOwnerLastName(String nicOwnerLastName) {
 		this.nicOwnerLastName = nicOwnerLastName;
 	}
-	public Short getNicOwnerRelationId() {
-		return nicOwnerRelationId;
-	}
-	public void setNicOwnerRelationId(Short nicOwnerRelationId) {
-		this.nicOwnerRelationId = nicOwnerRelationId;
-	}
 	/**
 	 * @return the nicOwnerRelation
 	 */
-	public Relationship getNicOwnerRelation() {
+	public String getNicOwnerRelation() {
 		return nicOwnerRelation;
 	}
 	/**
 	 * @param nicOwnerRelation the nicOwnerRelation to set
 	 */
-	void setNicOwnerRelation(Relationship nicOwnerRelation) {
+	void setNicOwnerRelation(String nicOwnerRelation) {
 		this.nicOwnerRelation = nicOwnerRelation;
-	}
-	/**
-	 * @return the otherNicOwnerRelation
-	 */
-	public String getOtherNicOwnerRelation() {
-		return otherNicOwnerRelation;
-	}
-	/**
-	 * @param otherNicOwnerRelation the otherNicOwnerRelation to set
-	 */
-	public void setOtherNicOwnerRelation(String otherNicOwnerRelation) {
-		this.otherNicOwnerRelation = otherNicOwnerRelation;
 	}
 	
 	/**

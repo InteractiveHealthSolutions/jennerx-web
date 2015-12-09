@@ -89,25 +89,6 @@ public class Child implements java.io.Serializable {
 	private Boolean	estimatedBirthdate;
 	
 	@Column(length = 30)
-	private String guardianFirstName;
-	
-	@Column(length = 30)
-	private String guardianMiddleName;
-	
-	@Column(length = 20)
-	private String guardianLastName;
-	
-	private Short guardianRelationId;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "guardianRelationId", insertable = false, updatable = false)
-	@ForeignKey(name = "child_guardianRelation_relationship_relationshipId_FK")
-	private Relationship guardianRelation;
-
-	@Column(length = 30)
-	private String otherGuardianRelation;
-	
-	@Column(length = 30)
 	private String fatherFirstName;
 	
 	@Column(length = 30)
@@ -134,15 +115,7 @@ public class Child implements java.io.Serializable {
 	@Column(length = 30)
 	private String nicOwnerLastName;
 	
-	private Short nicOwnerRelationId;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "nicOwnerRelationId", insertable = false, updatable = false)
-	@ForeignKey(name = "child_nicOwnerRelation_relationship_relationshipId_FK")
-	private Relationship nicOwnerRelation;
-	
-	@Column(length = 30)
-	private String otherNicOwnerRelation;
+	private String nicOwnerRelation;
 	
 	@Column(length = 30)
 	private String domicile;
@@ -150,36 +123,6 @@ public class Child implements java.io.Serializable {
 	@Enumerated(EnumType.STRING)
 	@Column(length = 15)
 	private Gender gender;
-	
-	private Short religionId;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "religionId", insertable = false, updatable = false)
-	@ForeignKey(name = "child_religion_religion_religionId_FK")
-	private Religion religion;
-	
-	@Column(length = 30)
-	private String otherReligion;
-	
-	private Short ethnicityId;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ethnicityId", insertable = false, updatable = false)
-	@ForeignKey(name = "child_ethnicity_ethnicity_ethnicityId_FK")
-	private Ethnicity ethnicity;
-
-	@Column(length = 30)
-	private String otherEthnicity;
-	
-	private Short languageId;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "languageId", insertable = false, updatable = false)
-	@ForeignKey(name = "child_language_language_languageId_FK")
-	private Language language;
-
-	@Column(length = 30)
-	private String otherLanguage;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date	dateEnrolled;
@@ -191,8 +134,6 @@ public class Child implements java.io.Serializable {
 	private Date	terminationDate;
 	
 	private String	terminationReason;
-	
-	private String terminationReasonOther;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(length = 20)
@@ -354,61 +295,6 @@ public class Child implements java.io.Serializable {
 	public void setEstimatedBirthdate(Boolean estimatedBirthdate) {
 		this.estimatedBirthdate = estimatedBirthdate;
 	}
-	/**
-	 * Gets the guardian relation.
-	 *
-	 * @return the guardian relation
-	 */
-	public Relationship getGuardianRelation() {
-		return guardianRelation;
-	}
-
-	/**
-	 * Sets the guardian relation.
-	 *
-	 * @param guardianRelation the new guardian relation
-	 */
-	void setGuardianRelation(Relationship guardianRelation) {
-		this.guardianRelation = guardianRelation;
-	}
-
-	public String getOtherGuardianRelation() {
-		return otherGuardianRelation;
-	}
-	public void setOtherGuardianRelation(String otherGuardianRelation) {
-		this.otherGuardianRelation = otherGuardianRelation;
-	}
-	public Short getGuardianRelationId() {
-		return guardianRelationId;
-	}
-
-	public void setGuardianRelationId(Short guardianRelationId) {
-		this.guardianRelationId = guardianRelationId;
-	}
-
-	public Short getNicOwnerRelationId() {
-		return nicOwnerRelationId;
-	}
-
-	public void setNicOwnerRelationId(Short nicOwnerRelationId) {
-		this.nicOwnerRelationId = nicOwnerRelationId;
-	}
-
-	public Short getReligionId() {
-		return religionId;
-	}
-
-	public void setReligionId(Short religionId) {
-		this.religionId = religionId;
-	}
-
-	public Short getEthnicityId() {
-		return ethnicityId;
-	}
-
-	public void setEthnicityId(Short ethnicityId) {
-		this.ethnicityId = ethnicityId;
-	}
 
 	/**
 	 * Gets the domicile.
@@ -446,132 +332,6 @@ public class Child implements java.io.Serializable {
 		this.gender = gender;
 	}
 
-	/**
-	 * Gets the religion.
-	 *
-	 * @return the religion
-	 */
-	public Religion getReligion() {
-		return religion;
-	}
-
-	/**
-	 * Sets the religion.
-	 *
-	 * @param religion the new religion
-	 */
-	void setReligion(Religion religion) {
-		this.religion = religion;
-	}
-
-	public String getOtherReligion() {
-		return otherReligion;
-	}
-	public void setOtherReligion(String otherReligion) {
-		this.otherReligion = otherReligion;
-	}
-	/**
-	 * Gets the ethnicity.
-	 *
-	 * @return the ethnicity
-	 */
-	public Ethnicity getEthnicity() {
-		return ethnicity;
-	}
-
-	/**
-	 * Sets the ethnicity.
-	 *
-	 * @param ethnicity the new ethnicity
-	 */
-	void setEthnicity(Ethnicity ethnicity) {
-		this.ethnicity = ethnicity;
-	}
-
-	public String getOtherEthnicity() {
-		return otherEthnicity;
-	}
-	public void setOtherEthnicity(String otherEthnicity) {
-		this.otherEthnicity = otherEthnicity;
-	}
-	
-	public Short getLanguageId() {
-		return languageId;
-	}
-
-	public void setLanguageId(Short languageId) {
-		this.languageId = languageId;
-	}
-
-	public Language getLanguage() {
-		return language;
-	}
-
-	void setLanguage(Language language) {
-		this.language = language;
-	}
-
-	public String getOtherLanguage() {
-		return otherLanguage;
-	}
-
-	public void setOtherLanguage(String otherLanguage) {
-		this.otherLanguage = otherLanguage;
-	}
-
-	/**
-	 * Gets the guardian first name.
-	 *
-	 * @return the guardian first name
-	 */
-	public String getGuardianFirstName() {
-		return guardianFirstName;
-	}
-
-	/**
-	 * Sets the guardian first name.
-	 *
-	 * @param guardianFirstName the new guardian first name
-	 */
-	public void setGuardianFirstName(String guardianFirstName) {
-		this.guardianFirstName = guardianFirstName;
-	}
-
-	/**
-	 * Gets the guardian middle name.
-	 *
-	 * @return the guardian middle name
-	 */
-	public String getGuardianMiddleName() {
-		return guardianMiddleName;
-	}
-
-	/**
-	 * Sets the guardian middle name.
-	 *
-	 * @param guardianMiddleName the new guardian middle name
-	 */
-	public void setGuardianMiddleName(String guardianMiddleName) {
-		this.guardianMiddleName = guardianMiddleName;
-	}
-
-	/**
-	 * Gets the guardian last name.
-	 *
-	 * @return the guardian last name
-	 */
-	public String getGuardianLastName() {
-		return guardianLastName;
-	}
-
-	/**
-	 * Sets the guardian last name.
-	 *
-	 * @param guardianLastName the new guardian last name
-	 */
-	public void setGuardianLastName(String guardianLastName) {
-		this.guardianLastName = guardianLastName;
-	}
 
 	/**
 	 * Gets the father first name.
@@ -703,26 +463,14 @@ public class Child implements java.io.Serializable {
 	/**
 	 * @return the nicOwnerRelation
 	 */
-	public Relationship getNicOwnerRelation() {
+	public String getNicOwnerRelation() {
 		return nicOwnerRelation;
 	}
 	/**
 	 * @param nicOwnerRelation the nicOwnerRelation to set
 	 */
-	void setNicOwnerRelation(Relationship nicOwnerRelation) {
+	void setNicOwnerRelation(String nicOwnerRelation) {
 		this.nicOwnerRelation = nicOwnerRelation;
-	}
-	/**
-	 * @return the otherNicOwnerRelation
-	 */
-	public String getOtherNicOwnerRelation() {
-		return otherNicOwnerRelation;
-	}
-	/**
-	 * @param otherNicOwnerRelation the otherNicOwnerRelation to set
-	 */
-	public void setOtherNicOwnerRelation(String otherNicOwnerRelation) {
-		this.otherNicOwnerRelation = otherNicOwnerRelation;
 	}
 
 	/**
@@ -797,14 +545,6 @@ public class Child implements java.io.Serializable {
 		this.terminationReason = terminationReason;
 	}
 	
-	public String getTerminationReasonOther() {
-		return terminationReasonOther;
-	}
-
-	public void setTerminationReasonOther(String terminationReasonOther) {
-		this.terminationReasonOther = terminationReasonOther;
-	}
-
 	/**
 	 * Gets the status.
 	 *

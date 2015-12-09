@@ -63,15 +63,7 @@ public class ContactNumber {
 	@Column(length = 30)
 	private String ownerLastName;
 	
-	private Short ownerRelationId;
-	/** The owner relation. */
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ownerRelationId", insertable = false, updatable = false)
-	@ForeignKey(name = "contactnumber_ownerRelation_relationship_relationshipId_FK")
-	private Relationship ownerRelation;
-	
-	@Column(length = 30)
-	private String otherOwnerRelation;
+	private String ownerRelation;
 	
 	/** The description. */
 	
@@ -186,36 +178,15 @@ public class ContactNumber {
 	public void setOwnerLastName(String ownerLastName) {
 		this.ownerLastName = ownerLastName;
 	}
-	public Short getOwnerRelationId() {
-		return ownerRelationId;
-	}
-	public void setOwnerRelationId(Short ownerRelationId) {
-		this.ownerRelationId = ownerRelationId;
-	}
-	/**
-	 * Gets the owner relation.
-	 *
-	 * @return the owner relation
-	 */
-	public Relationship getOwnerRelation() {
+	
+	public String getOwnerRelation() {
 		return ownerRelation;
 	}
 
-	/**
-	 * Sets the owner relation.
-	 *
-	 * @param ownerRelation the new owner relation
-	 */
-	void setOwnerRelation(Relationship ownerRelation) {
+	void setOwnerRelation(String ownerRelation) {
 		this.ownerRelation = ownerRelation;
 	}
 
-	public String getOtherOwnerRelation() {
-		return otherOwnerRelation;
-	}
-	public void setOtherOwnerRelation(String otherOwnerRelation) {
-		this.otherOwnerRelation = otherOwnerRelation;
-	}
 	/**
 	 * Gets the description.
 	 *
