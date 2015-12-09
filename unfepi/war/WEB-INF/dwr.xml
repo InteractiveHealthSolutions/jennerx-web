@@ -81,6 +81,7 @@
 			<param name="class" value="org.ird.unfepi.web.dwr.DWREntityService" />
 			<include method="getContactNumberList"/>
 			<include method="getLocationList"/>
+			<include method="getLocationListByParentName"/>
 			<include method="getLocationHierarchy"/>
 		</create>	
 		<create creator="new" javascript="DWRUserService">

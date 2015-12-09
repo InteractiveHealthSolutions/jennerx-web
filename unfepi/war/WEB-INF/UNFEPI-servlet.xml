@@ -35,10 +35,10 @@
     <!-- STATIC PAGES W/O CONTROLLER -->
 	<prop key="/s_home_incentive.htm">urlFilenameViewController</prop>
 	<prop key="/s_export_unconsumed_incentive.htm">urlFilenameViewController</prop>
-	<prop key="/s_home_reminder.htm">urlFilenameViewController</prop>
+	<prop key="/s_upload_processed_child_incentive.htm">urlFilenameViewController</prop>
+		<prop key="/s_home_reminder.htm">urlFilenameViewController</prop>
 	<prop key="/s_gallery.htm">urlFilenameViewController</prop>
 	<prop key="/s_location_tree.htm">urlFilenameViewController</prop>
-		
 	<!-- DYNAMIC AND COMPLEX PAGES WITH CONTROLLER MAPPING -->
 	<prop key="/login.htm">LoginController</prop>
 	<prop key="/mainpage.htm">MainPageController</prop>
@@ -90,8 +90,10 @@
 	<prop key="/viewLocations.htm">ViewLocationsController</prop>
 	
 	<!-- Women Controllers -->
-	<prop key="/viewWomen.htm">ViewWomenController</prop>
+	<!-- <prop key="/viewWomen.htm">ViewWomenController</prop>
 	<prop key="/addWomen.htm">AddWomenController</prop>
+	<prop key="/womenFollowup.htm">FollowupWomenVaccinationController</prop>
+	<prop key="/womenDashboard.htm">WomenDashboardController</prop> -->
 	
 		
 	<prop key="/viewUsers.htm">ViewUsersController</prop>
@@ -107,7 +109,7 @@
 	<prop key="/viewDailySummaries.htm">ViewDailySummaryController</prop>
 	<prop key="/adddailySummary.htm">AddDailySummaryController</prop>
 	<prop key="/editDailySummary.htm">EditDailySummaryController</prop>
-	<prop key="/viewDailySummarywindow.htm">ViewDailySummaryWindowController</prop>
+	<!-- <prop key="/viewDailySummarywindow.htm">ViewDailySummaryWindowController</prop> -->
 	<prop key="/viewDownloadables.htm">ViewDownloadableReportsController</prop>
 
 	<prop key="/viewVaccinatorIncentives.htm">ViewVaccinatorIncentivesController</prop>
@@ -223,6 +225,29 @@
 		<value>editVaccine</value>
 	</property>
 </bean>
+
+<!-- <bean name="FollowupWomenVaccinationController" class="org.ird.unfepi.web.controller.FollowupWomenVaccinationController">
+	<property name="sessionForm">
+		<value>true</value>
+	</property>
+	<property name="commandName">
+		<value>command</value>
+	</property>
+	<property name="commandClass">
+		<value>org.ird.unfepi.web.utils.WomenVaccinationCenterVisit</value>
+	</property>
+	<property name="formView">
+		<value>dataForm</value>
+	</property>
+	<property name="dataEntryForm">
+	    <bean class="org.ird.unfepi.DataEntryForm">
+	        <property name="formName" value="women_followup" />
+        	<property name="formTitle" value="Follow Up" />
+        	<property name="permission" value="ADD_VACCINATIONS" />
+    	</bean>
+    </property>
+</bean> -->
+
 <bean name="ExceptionController" class="org.ird.unfepi.web.controller.ExceptionController"/>
 
 <bean name="ViewResponsesController" class="org.ird.unfepi.web.controller.ViewResponsesController">
@@ -773,7 +798,7 @@
     </property>
 </bean>
 
-<bean name="ViewWomenController" class="org.ird.unfepi.web.controller.ViewWomenController">
+<!-- <bean name="ViewWomenController" class="org.ird.unfepi.web.controller.ViewWomenController">
     <property name="formView" value="dataForm"/>
 	<property name="dataForm">
 	    <bean class="org.ird.unfepi.DataViewForm">
@@ -795,9 +820,9 @@
 	<property name="commandClass">
 		<value>org.ird.unfepi.beans.EnrollmentWrapperWomen</value>
 	</property>
-	<!-- <property name="validator">
-		<ref bean="childValidator"/>
-	</property> -->
+	<property name="validator">
+		<ref bean="addWomenValidator"/>
+	</property>
 	<property name="formView">
 		<value>dataForm</value>
 	</property>
@@ -809,6 +834,7 @@
     	</bean>
     </property>
    </bean>
+	<bean id="addWomenValidator" class="org.ird.unfepi.web.validator.AddWomenValidator"/> -->
 
 <bean name="ViewUsersController" class="org.ird.unfepi.web.controller.ViewUsersController">
 	<property name="formView" value="dataForm"/>
@@ -995,7 +1021,7 @@
 	<property name="dataForm">
 	    <bean class="org.ird.unfepi.DataSearchForm">
 	        <property name="formName" value="child_incentive" />
-        	<property name="formTitle" value="Child Lotteries" />
+        	<property name="formTitle" value="Child Incentives" />
         	<property name="permission" value="VIEW_CHILD_INCENTIVE" />
         	<property name="isInsertable" value="false" />
     	</bean>
@@ -1098,6 +1124,19 @@
     	</bean>
     </property>
 </bean>
+
+<!-- <bean name="WomenDashboardController" class="org.ird.unfepi.web.controller.WomenDashboardController">
+    <property name="formView" value="dataForm"/>
+	<property name="dataForm">
+	    <bean class="org.ird.unfepi.DataViewForm">
+	        <property name="formName" value="women_dashboard" />
+        	<property name="formTitle" value="Women Dashboard" />
+        	<property name="permission" value="VIEW_CHILDREN_DATA" />
+        	<property name="isInsertable" value="false" />
+    	</bean>
+    </property>
+</bean> -->
+
 <bean id="dwrController" class= "org.springframework.web.servlet.mvc.ServletWrappingController">
   <property name="servletClass">
     <value>org.directwebremoting.servlet.DwrServlet</value>
