@@ -55,8 +55,7 @@ public class DAOUserImpl extends DAOHibernateImpl implements DAOUser{
 		Criteria cri = session.createCriteria(User.class).setReadOnly(isreadonly);
 				
 		if(joinIdMapper){
-			cri.setFetchMode("idMapper",(joinIdMapper ? FetchMode.JOIN : FetchMode.SELECT))
-			.createAlias("idMapper.identifiers", "idm");
+			cri.createAlias("idMapper", "idmp").createAlias("idmp.identifiers", "idm");
 			
 			if(joinRoles){
 				cri.createAlias("idMapper.role", "role")
@@ -100,8 +99,7 @@ public class DAOUserImpl extends DAOHibernateImpl implements DAOUser{
 		Criteria cri = session.createCriteria(User.class).setReadOnly(isreadonly);
 		
 		if(joinIdMapper || programid != null){
-			cri.setFetchMode("idMapper",(joinIdMapper ? FetchMode.JOIN : FetchMode.SELECT))
-				.createAlias("idMapper.identifiers", "idm");
+			cri.createAlias("idMapper", "idmp").createAlias("idmp.identifiers", "idm");
 			
 			if(programid != null){
 				cri.add(Restrictions.eq("idm.identifier", programid));
@@ -153,8 +151,7 @@ public class DAOUserImpl extends DAOHibernateImpl implements DAOUser{
 		cri.add(Restrictions.eq("username", username));
 
 		if(joinIdMapper ){
-			cri.setFetchMode("idMapper",(joinIdMapper ? FetchMode.JOIN : FetchMode.SELECT))
-				.createAlias("idMapper.identifiers", "idm");
+			cri.createAlias("idMapper", "idmp").createAlias("idmp.identifiers", "idm");
 			
 			if(joinRoles){
 				cri.createAlias("idMapper.role", "role")
@@ -205,8 +202,7 @@ public class DAOUserImpl extends DAOHibernateImpl implements DAOUser{
 		Criteria cri = session.createCriteria(User.class).setReadOnly(isreadonly);
 				
 		if(joinIdMapper){
-			cri.setFetchMode("idMapper",(joinIdMapper ? FetchMode.JOIN : FetchMode.SELECT))
-			.createAlias("idMapper.identifiers", "idm");
+			cri.createAlias("idMapper", "idmp").createAlias("idmp.identifiers", "idm");
 		}
 		else{
 			cri.addOrder(Order.asc("username"));
@@ -230,11 +226,11 @@ public class DAOUserImpl extends DAOHibernateImpl implements DAOUser{
 			boolean putNotWithUserStatus, int firstResult, int fetchsize, boolean isreadonly,
 			boolean joinIdMapper, boolean joinRoles, boolean joinRolePermissions, String[] mappingsToJoin) 
 	{
-		Criteria cri= session.createCriteria(User.class).setReadOnly(isreadonly);
+		Criteria cri= session.createCriteria(User.class)
+				.setFetchMode("idMapper",FetchMode.JOIN )
+				.createAlias("idMapper", "idmp").createAlias("idmp.identifiers", "idm").setReadOnly(isreadonly);
 
 		if(joinIdMapper || programid != null){
-			cri.setFetchMode("idMapper",(joinIdMapper ? FetchMode.JOIN : FetchMode.SELECT))
-				.createAlias("idMapper.identifiers", "idm");
 			
 			if(programid != null){
 				cri.add(Restrictions.eq("idm.identifier", programid));
