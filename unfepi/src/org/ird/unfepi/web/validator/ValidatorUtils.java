@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.ird.unfepi.GlobalParams;
 import org.ird.unfepi.constants.DataField;
@@ -26,12 +27,14 @@ import org.ird.unfepi.model.Model.Gender;
 import org.ird.unfepi.model.Role;
 import org.ird.unfepi.model.Storekeeper;
 import org.ird.unfepi.model.User;
+import org.ird.unfepi.model.User.UserStatus;
 import org.ird.unfepi.model.Vaccination;
 import org.ird.unfepi.model.Vaccination.VACCINATION_STATUS;
 import org.ird.unfepi.model.VaccinationCenter.CenterType;
 import org.ird.unfepi.model.Vaccinator;
 import org.ird.unfepi.model.Vaccine;
 import org.ird.unfepi.model.Women;
+import org.ird.unfepi.utils.UserSessionUtils;
 import org.ird.unfepi.utils.Utils;
 import org.ird.unfepi.utils.date.DateUtils;
 import org.ird.unfepi.utils.date.DateUtils.TIME_INTERVAL;
@@ -600,20 +603,20 @@ public class ValidatorUtils {
 	 */
 	public static void validateUserRegistration(DataEntrySource dataEntrySource, String programId, String confirmPwd, 
 			User userUnderEdit, Role userUnderEditRole, User editorUser, Role editorRole, 
-			ArrayList<String> mobileErrors, Errors webErrors, ServiceContext sc)
+			HashMap<String,String> mobileErrors, Errors webErrors, ServiceContext sc)
 	{
 		boolean useFieldPrefix = false; // We know that for user registration form, only single command object i.e. user is bound
 
-		/*validateLoginCredentials(dataEntrySource, userUnderEdit.getUsername(), userUnderEdit.getClearTextPassword(), confirmPwd, mobileErrors, webErrors, sc);
+		validateLoginCredentials(dataEntrySource, userUnderEdit.getUsername(), userUnderEdit.getClearTextPassword(), confirmPwd, mobileErrors, webErrors, sc);
 		
 		validateUser(dataEntrySource, true, programId, userUnderEdit, userUnderEditRole, editorUser, editorRole, mobileErrors, webErrors, useFieldPrefix, sc);
-*/	}
+	}
 	
 	/** @see {@linkplain ValidatorUtils#validateUser}
 	 */
 	public static void validateUserEdit(DataEntrySource dataEntrySource, String programId, User userUnderEdit, Role userUnderEditRole, 
 			User editorUser, Role editorRole, 
-			ArrayList<String> mobileErrors, Errors webErrors, ServiceContext sc){
+			HashMap<String,String> mobileErrors, Errors webErrors, ServiceContext sc){
 		boolean useFieldPrefix = false; // We know that for user edit form, only single command object i.e. user is bound
 
 		validateUser(dataEntrySource, false, programId, userUnderEdit, userUnderEditRole, editorUser, editorRole, mobileErrors, webErrors, useFieldPrefix, sc);
@@ -662,57 +665,44 @@ public class ValidatorUtils {
 	 */
 	public static void validateUser(DataEntrySource dataEntrySource, boolean isNew, String programId, User userUnderEdit, Role userUnderEditRole, 
 			User editorUser, Role editorRole, 
-			ArrayList<String> mobileErrors, Errors webErrors, boolean useFieldPrefix, ServiceContext sc) 
+			HashMap<String,String> mobileErrors, Errors webErrors, boolean useFieldPrefix, ServiceContext sc) 
 	{
 		// it should only be checked for alphanumeric and allowable range of characters. As type, regex and uniqueness would be calculated at the time of creation
-		/*if (StringUtils.isEmptyOrWhitespaceOnly(userUnderEdit.getUsername())
+		if (StringUtils.isEmptyOrWhitespaceOnly(userUnderEdit.getUsername())
 				|| !DataValidation.validate(REG_EX.ALPHA_NUMERIC, userUnderEdit.getUsername(), 5, 20)) {
-			putError(dataEntrySource, ErrorMessages.USERNAME_INVALID, mobileErrors, webErrors, getFieldName(USER_GEN_PRF, "username", useFieldPrefix));
+			putError(dataEntrySource, ErrorMessages.USERNAME_INVALID, mobileErrors, webErrors, "username", useFieldPrefix);
 		}
 
 		if (StringUtils.isEmptyOrWhitespaceOnly(userUnderEdit.getFirstName())
 				|| !DataValidation.validate(REG_EX.ALPHA, userUnderEdit.getFirstName())) {
-			putError(dataEntrySource, ErrorMessages.FIRSTNAME_INVALID, mobileErrors, webErrors, getFieldName(USER_GEN_PRF, "firstName", useFieldPrefix));
+			putError(dataEntrySource, ErrorMessages.FIRSTNAME_INVALID, mobileErrors, webErrors, "firstName", useFieldPrefix);
 		}
 		
 		if (!StringUtils.isEmptyOrWhitespaceOnly(userUnderEdit.getLastName())
 				&& !DataValidation.validate(REG_EX.ALPHA, userUnderEdit.getLastName())) {
-			putError(dataEntrySource, ErrorMessages.LASTNAME_INVALID, mobileErrors, webErrors, getFieldName(USER_GEN_PRF, "lastName", useFieldPrefix));
+			putError(dataEntrySource, ErrorMessages.LASTNAME_INVALID, mobileErrors, webErrors, "lastName", useFieldPrefix);
 		}
 		
 		if (StringUtils.isEmptyOrWhitespaceOnly(userUnderEdit.getEmail()) 
 				|| !DataValidation.validate(REG_EX.EMAIL, userUnderEdit.getEmail())) {
-			putError(dataEntrySource, ErrorMessages.EMAIL_INVALID, mobileErrors, webErrors, getFieldName(USER_GEN_PRF, "email", useFieldPrefix));
+			putError(dataEntrySource, ErrorMessages.EMAIL_INVALID, mobileErrors, webErrors, "email", useFieldPrefix);
 		}
 		
 		if (userUnderEdit.getStatus() == null) {
-			putError(dataEntrySource, ErrorMessages.USER_STATUS_MISSING, mobileErrors, webErrors, null);
+			putError(dataEntrySource, ErrorMessages.USER_STATUS_MISSING, mobileErrors, webErrors, null, useFieldPrefix);
 		}
 		
 		if (userUnderEditRole != null)
 		{
 			ValidatorOutput vidop = null;
 			if(StringUtils.isEmptyOrWhitespaceOnly(programId)) {
-				putError(dataEntrySource, ErrorMessages.ID_INVALID, mobileErrors, webErrors, null);
-			}
-			else if (
-					(userUnderEditRole.getRolename().equalsIgnoreCase("child")
-							&& !(vidop=validateChildProgramId(programId, isNew, sc)).STATUS().equals(ValidatorStatus.OK))
-					||(userUnderEditRole.getRolename().equalsIgnoreCase("vaccinator")
-							&& !(vidop=validateVaccinatorProgramId(programId, isNew, sc)).STATUS().equals(ValidatorStatus.OK))
-					||(userUnderEditRole.getRolename().equalsIgnoreCase("storekeeper")
-							&& !(vidop=validateStorekeeperProgramId(programId, isNew, sc)).STATUS().equals(ValidatorStatus.OK))
-					||(!userUnderEditRole.getRolename().matches("(?i:storekeeper|vaccinator|child)")
-							&& !(vidop=validateTeamUserProgramId(programId, isNew, sc)).STATUS().equals(ValidatorStatus.OK))
-					)
-			{
-				putError(dataEntrySource, vidop.MESSAGE(), mobileErrors, webErrors, null);
+				putError(dataEntrySource, ErrorMessages.ID_INVALID, mobileErrors, webErrors, null, useFieldPrefix);
 			}
 			
 			if(userUnderEdit.getStatus() != null
 					&& User.isUserDefaultAdministrator(userUnderEdit.getUsername(), userUnderEditRole.getRolename())
 					&& !userUnderEdit.getStatus().equals(UserStatus.ACTIVE)){
-				putError(dataEntrySource, ErrorMessages.USER_STATUS_ADMIN_INVALID, mobileErrors, webErrors, null);
+				putError(dataEntrySource, ErrorMessages.USER_STATUS_ADMIN_INVALID, mobileErrors, webErrors, null, useFieldPrefix);
 			}
 			
 			Map<String, ArrayList<Role>> rolemap = UserSessionUtils.getRolesDistinction(editorUser, editorRole, sc);
@@ -721,17 +711,17 @@ public class ValidatorUtils {
 			
 			if(User.isUserDefaultAdministrator(userUnderEdit.getUsername(), userUnderEditRole.getRolename())
 					&& !User.isUserDefaultAdministrator(editorUser.getUsername(), editorRole.getRolename())){
-				putError(dataEntrySource, ErrorMessages.USER_ADMIN_EDITOR_NOT_AUTHORIZED, mobileErrors, webErrors, null);
+				putError(dataEntrySource, ErrorMessages.USER_ADMIN_EDITOR_NOT_AUTHORIZED, mobileErrors, webErrors, null, useFieldPrefix);
 			} 
 			// If underEditRole should be in allowed rolesList and should NOT be in restricted/unallowed rolesList
 			else if(!isRoleInList(userUnderEditRole, allowedRoles) 
 					&& isRoleInList(userUnderEditRole, notAllowedRoles)){
-				putError(dataEntrySource, ErrorMessages.USER_ROLE_EDIT_NOT_ALLOWED, mobileErrors, webErrors, null);
+				putError(dataEntrySource, ErrorMessages.USER_ROLE_EDIT_NOT_ALLOWED, mobileErrors, webErrors, null, useFieldPrefix);
 			}
 		}
 		else {
-			putError(dataEntrySource, ErrorMessages.USER_ROLE_MISSING, mobileErrors, webErrors, null);
-		}*/
+			putError(dataEntrySource, ErrorMessages.USER_ROLE_MISSING, mobileErrors, webErrors, null, useFieldPrefix);
+		}
 	}
 	
 	/**
@@ -931,10 +921,10 @@ public class ValidatorUtils {
 		}
 		
 		if(StringUtils.isEmptyOrWhitespaceOnly(birthdateOrAge)){//TODO remove this. it is redundant.
-			putError(dataEntrySource, ErrorMessages.BIRTHDATE_OR_AGE_PARAM_MISSING, mobileErrors, webErrors, DataField.VACCINATOR_BIRTHDATE_OR_AGE, useFieldPrefix);
+			putError(dataEntrySource, ErrorMessages.BIRTHDATE_OR_AGE_PARAM_MISSING, mobileErrors, webErrors, null, useFieldPrefix);
 		}
 		else if(!birthdateOrAge.equalsIgnoreCase("age") && !birthdateOrAge.equalsIgnoreCase("birthdate")){
-			putError(dataEntrySource, ErrorMessages.BIRTHDATE_OR_AGE_PARAM_MISSING, mobileErrors, webErrors,  DataField.VACCINATOR_BIRTHDATE_OR_AGE, useFieldPrefix);
+			putError(dataEntrySource, ErrorMessages.BIRTHDATE_OR_AGE_PARAM_MISSING, mobileErrors, webErrors, null, useFieldPrefix);
 		}
 		else if(birthdateOrAge.toLowerCase().contains("age") && StringUtils.isEmptyOrWhitespaceOnly(ageYears)){
 			putError(dataEntrySource, ErrorMessages.INVALID_YEARS_OF_AGE, mobileErrors, webErrors, null, useFieldPrefix);
@@ -1736,7 +1726,7 @@ public class ValidatorUtils {
     		if(vaccination.getVaccinationCenterId() != null){
     			ValidatorOutput vepi = null;
     			if(vaccination.getChildId() != null){
-    				vepi = ValidatorUtils.validateEpiNumber(vaccination.getEpiNumber(), vaccination.getVaccinationCenterId(), vaccination.getChildId(), true, dataEntrySource.equals(DataEntrySource.MOBILE));
+    				vepi = ValidatorUtils.validateEpiNumber(vaccination.getEpiNumber(), vaccination.getVaccinationCenterId(), vaccination.getChildId(), false, dataEntrySource.equals(DataEntrySource.MOBILE));
     			}
     			
     			if(!vepi.STATUS().equals(ValidatorStatus.OK)){

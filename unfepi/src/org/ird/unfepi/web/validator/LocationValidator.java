@@ -1,7 +1,11 @@
 
 package org.ird.unfepi.web.validator;
 
+import java.util.List;
+
 import org.ird.unfepi.constants.ErrorMessages;
+import org.ird.unfepi.context.Context;
+import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Location;
 import org.ird.unfepi.utils.validation.DataValidation;
 import org.ird.unfepi.utils.validation.REG_EX;
@@ -21,6 +25,19 @@ public class LocationValidator implements Validator{
 		
 		if(!DataValidation.validate(REG_EX.NO_SPECIAL_CHAR, loc.getName())){
 			error.rejectValue("name" , "" , ErrorMessages.LOCATION_NAME_INVALID);
+		}
+		else {
+			ServiceContext sc = Context.getServices();
+			try{
+				List el = sc.getCustomQueryService().getDataByHQL("FROM Location WHERE name='"+loc.getName()+"'");
+				if(el.size() > 0){
+					error.rejectValue("name" , "" , "Location with given name already exists");
+				}
+			}
+			finally {
+				sc.closeSession();
+			}
+			
 		}
 
 		if(!DataValidation.validate(REG_EX.NO_SPECIAL_CHAR, loc.getFullName())){

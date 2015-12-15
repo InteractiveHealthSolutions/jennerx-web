@@ -19,14 +19,14 @@ public class AddRoleValidator implements Validator{
 		Role role=(Role)command;
 		
 		if( StringUtils.isEmptyOrWhitespaceOnly(role.getRolename()) ){
-			error.rejectValue("name" , "error.role.empty-name" , "Role name must be provided");
+			error.rejectValue("rolename" , "error.role.empty-name" , "Role name must be provided");
 		}
 		else if(!DataValidation.validate(REG_EX.WORD, role.getRolename())){
-			error.rejectValue("name" , "error.role.invalid-name" , "Role name is invalid");
+			error.rejectValue("rolename" , "error.role.invalid-name" , "Role name is invalid");
 		}
 		else if(role.getRolename().trim().equalsIgnoreCase("admin")
 				|| role.getRolename().trim().equalsIgnoreCase("administrator")){
-			error.rejectValue("name" , "" , "role name cant be admin or administrator");
+			error.rejectValue("rolename" , "" , "role name cant be admin or administrator");
 		}
  	}
 }
