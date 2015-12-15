@@ -12,13 +12,13 @@ function resetUserPwd(obj){
 	document.getElementById("udiv").style.display="block";
 	document.getElementById("utable").style.display="none";
 	
-	DWRUserService.resetPassword(id, pwd,true,{
-		async: false,
-		callback: function (res2) {
+	try{
+	DWRUserService.resetPassword(id, pwd,true, function (res2) {
 			alert(res2);
 			document.getElementById("udiv").style.display="none";
 			document.getElementById("utable").style.display="block";
-		}});
+		});
+	}catch(e){alert(e)}
 	}
 }
 function getRandomPwd(){

@@ -23,7 +23,8 @@
 <div class="dvwform">
 <table>
 <tr>
-<td><span class="error-message">${model.errorMessage}${param.editOrUpdateMessage}</span></td>
+<td><span class="error-message">${model.errorMessage}</span>
+<span class="success-message">${param.editOrUpdateMessage}</span></td>
 <td colspan="100">
 <a href="followupVaccination.htm?child_id=${model.datalist.child.mappedId}" class="easyui-linkbutton" data-options="iconCls:'icon-save'" style="float: right;"> Follow up </a></td>
 </tr>

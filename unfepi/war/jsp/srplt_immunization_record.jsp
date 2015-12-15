@@ -137,8 +137,8 @@ function removeSerachFilter(ind) {
 			<c:set var="nextSearchFieldNameValue" value="<%=SearchFilter.COLUMNS.FILTER_NAME()%>"></c:set>
 			<input id="columns" type="hidden" name="${nextSearchFieldNameValue}" value="${model[nextSearchFieldNameValue]}">
 		</td>
-	 	<td><a href="viewDownloadables.htm?action=search&<%=SearchFilter.NAME_PART.FILTER_NAME()%>=${model.dmpFileNameInit}&<%=SearchFilter.TYPE.FILTER_NAME()%>=<%=DownloadableType.DATA_DUMP%>" class="linkiconM iconcsv"></a></td>
-	</tr>
+<%-- 	 	<td><a href="viewDownloadables.htm?action=search&<%=SearchFilter.NAME_PART.FILTER_NAME()%>=${model.dmpFileNameInit}&<%=SearchFilter.TYPE.FILTER_NAME()%>=<%=DownloadableType.DATA_DUMP%>" class="linkiconM iconcsv"></a></td>
+ --%>	</tr>
 	
 </table>
 

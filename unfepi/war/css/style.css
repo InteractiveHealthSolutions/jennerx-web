@@ -517,7 +517,7 @@ border-radius: 20px; /* future proofing */
 	height: 300px !important;
 	width: 300px !important;
 	border: solid thin gray !important;
-	overflow: visible !important;
+	overflow: auto !important;
 }
 .anchorCustom{
 	cursor: pointer;
@@ -535,6 +535,13 @@ border-radius: 20px; /* future proofing */
 .error-message{
 	font-size: small;
 	color: red;
+	font-style: italic;
+	display: block;
+	width: 250px;
+}
+.success-message{
+	font-size: small;
+	color: green;
 	font-style: italic;
 	display: block;
 	width: 250px;
