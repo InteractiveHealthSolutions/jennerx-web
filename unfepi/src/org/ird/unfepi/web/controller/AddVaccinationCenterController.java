@@ -98,7 +98,8 @@ public class AddVaccinationCenterController  extends DataEntryFormController{
 		VaccinationCenterValidator v = (VaccinationCenterValidator) getValidator();
 		v.validate(command, errors);
 		
-		if(request.getParameter("cityId") == null ||request.getParameter("centerLocation") == null){
+		if(com.mysql.jdbc.StringUtils.isEmptyOrWhitespaceOnly(request.getParameter("cityId")) 
+				||com.mysql.jdbc.StringUtils.isEmptyOrWhitespaceOnly(request.getParameter("centerLocation"))){
 			errors.reject("", "City and Area MUST be specified for center");
 		}
 		return super.processFormSubmission(request, response, command, errors);
