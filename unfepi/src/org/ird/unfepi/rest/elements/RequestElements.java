@@ -87,6 +87,7 @@ public class RequestElements
 	public static final String CHILD_FIRST_NAME = "chdFirstName";
 	public static final String CHILD_LAST_NAME = "chdLastName";
 	public static final String FATHER_FIRST_NAME = "fatherFirstName";
+	public static final String FATHER_NIC = "fatherNIC";
 	public static final String FATHER_LAST_NAME = "fatherLastName";
 	public static final String MOTHER_FIRST_NAME = "motherFirstName";
 	public static final String MOTHER_LAST_NAME = "motherLastName";

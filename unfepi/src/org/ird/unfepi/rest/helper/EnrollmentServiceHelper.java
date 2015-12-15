@@ -41,6 +41,7 @@ public class EnrollmentServiceHelper
 		String childLastName;
 		String gender;
 		String fatherFirstName;
+		String fatherNIC;
 		String faterLastName;
 		String dob;
 		String epiNo;
@@ -100,6 +101,7 @@ public class EnrollmentServiceHelper
 		childLastName = (String) objectToParse.get(RequestElements.CHILD_LAST_NAME);
 		gender = (String) objectToParse.get(RequestElements.CHILD_GENDER);
 		fatherFirstName = (String) objectToParse.get(RequestElements.FATHER_FIRST_NAME);
+		fatherNIC = (String) objectToParse.get(RequestElements.FATHER_NIC);
 		faterLastName = (String) objectToParse.get(RequestElements.FATHER_LAST_NAME);
 		dob = (String) objectToParse.get(RequestElements.DOB);
 		days = (String) objectToParse.get(RequestElements.DOB_DAY);
@@ -159,6 +161,7 @@ public class EnrollmentServiceHelper
 		ch.setFirstName(childFirstName);
 		ch.setLastName(childLastName);
 		ch.setFatherFirstName(fatherFirstName);
+		ch.setNic(fatherNIC);
 		ch.setFatherLastName(faterLastName);
 		ch.setBirthdate(dateOfBirth);
 		ch.setEstimatedBirthdate(isEstimated);
