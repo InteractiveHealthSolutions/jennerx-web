@@ -130,7 +130,7 @@ function centerChanged() {
 		<td>EPI Register Number <span class="mendatory-field">*</span></td>
 		<td>
 			<spring:bind path="command.epiNumber">
-				<input type="number" id="epiNumber" name="epiNumber" maxlength="8"  class="numbersOnly" 
+				<input type="text" id="epiNumber" name="epiNumber" maxlength="8"  class="numbersOnly" 
 						value="<c:out value="${status.value}"/>"/>
 				<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
@@ -158,7 +158,7 @@ function centerChanged() {
 	<tr>
 		<td>SMS reminder ke liye Mobile Number</td>
 		<td><spring:bind path="command.contactPrimary">
-			<input type="number" id="contactPrimary" name="contactPrimary" maxlength="13" value="${status.value}" class="numbersOnly" />
+			<input type="text" id="contactPrimary" name="contactPrimary" maxlength="13" value="${status.value}" class="numbersOnly" />
 			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
 		</td>
@@ -166,7 +166,7 @@ function centerChanged() {
 	<tr>
 		<td>Raabtay ke liye koi aur number</td>
 		<td><spring:bind path="command.contactSecondary">
-			<input type="number" id="contactSecondary" name="contactSecondary" maxlength="13" value="${status.value}" class="numbersOnly" />
+			<input type="text" id="contactSecondary" name="contactSecondary" maxlength="13" value="${status.value}" class="numbersOnly" />
 			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
 		</td>

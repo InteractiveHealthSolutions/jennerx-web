@@ -669,25 +669,12 @@ public class ControllerUIHelper {
 						ChildIncentivization ir = ChildIncentivization.runIncentive(dataEntrySource, armId, vtn, vsh.getVaccine(), user, sc);
 						incentives.add(ir);
 					}
-					/*	else {					
-						Integer vaccNum = Integer.parseInt(sc.getVaccinationService().addVaccinationRecord(vtn).toString());
-						vtn.setVaccinationRecordNum(vaccNum);
-						if (vsh.getVaccine().getVaccineId() <=6 && !ChildIncentivization.vaccinationIncentiveExists(vaccNum,sc)) {
-							// Run Lottery with lottery criteria 0 as enrollment doesnt bother about timeliness
-							ChildIncentivization.runLottery(dataEntrySource, vtn, vsh.getVaccine(), 0, user, armId, sc);
-						}
-					}*/
-					
-
-					// Run Lottery with lottery criteria 0 as enrollment doesnt bother about timeliness
-					//ChildLotteryRunner lotteryRes = ChildLotteryRunner.runLottery(dataEntrySource, vtn, vsh.getVaccine(), 0, user, sc);
-					//lotteriesRun.add(lotteryRes);
 				}
 				// if retro
 				else if(vsh.getStatus().toLowerCase().startsWith("retro") 
 						|| (vsh.getVaccination_date() != null 
 							&& vsh.getVaccination_date().compareTo(centerVisit.getVisitDate()) < 0 )){
-					vtn.setVaccinationCenterId(vsh.getCenter().intValue());
+					vtn.setVaccinationCenterId(vsh.getCenter());
 					vtn.setVaccinationDuedate(vsh.getVaccination_date());
 					vtn.setVaccinationDate(vsh.getVaccination_date());
 					vtn.setVaccinationStatus(VACCINATION_STATUS.VACCINATED);
@@ -1252,15 +1239,16 @@ public class ControllerUIHelper {
 			}
 		}
 		
-		List<ContactNumber> conl = sc.getDemographicDetailsService().findContactNumber(secondaryContact, false, null);
-		ContactNumber con1 = null;
-
-		for (ContactNumber contactNumber : conl) {
-			if(contactNumber.getMappedId() == preference.getMappedId()){
-				con1 = contactNumber;
-			}
-		}
 		if(!StringUtils.isEmptyOrWhitespaceOnly(secondaryContact)){
+			List<ContactNumber> conl = sc.getDemographicDetailsService().getContactNumber(preference.getMappedId(), false, null);
+			ContactNumber con1 = null;
+			
+			for (ContactNumber contactNumber : conl) {
+				if(contactNumber.getNumberType().equals(ContactType.SECONDARY)){
+					con1 = contactNumber;
+				}
+			}
+
 			if(con1 == null){
 				con1 = new ContactNumber();
 				con1.setCreator(user);
@@ -1270,6 +1258,11 @@ public class ControllerUIHelper {
 				con1.setTelelineType(ContactTeleLineType.UNKNOWN);
 				
 				sc.getDemographicDetailsService().saveContactNumber(con1);
+			}
+			else {
+				con1.setNumber(secondaryContact);
+				con.setEditor(user);
+				sc.getDemographicDetailsService().updateContactNumber(con);
 			}
 		}
 	}

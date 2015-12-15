@@ -170,9 +170,11 @@ public class DWRCommunicationService {
 			}
 		}
 		
-		ServiceContext sc = Context.getServices();
-		TarseelServices tsc = TarseelContext.getServices();
+		ServiceContext sc = null;
+		TarseelServices tsc = null;
 		try{
+			sc = Context.getServices();
+			tsc = TarseelContext.getServices();
 			for (Map<String, String> map : recipientMap) 
 			{
 				String recipient = map.get(DGUserSmsFieldNames.number.name());

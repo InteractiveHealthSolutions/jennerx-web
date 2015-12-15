@@ -178,7 +178,7 @@ public class EditChildController extends DataEditFormController {
 			}
 			else if(editSection.equalsIgnoreCase("program")){
 				ValidatorUtils.validateChildStatus(DataEntrySource.WEB, cb.getChild(), null, errors, true);
-				ValidatorUtils.validateReminderAndContactInfo(DataEntrySource.WEB, cb.getPreference(), cb.getContactPrimary(), cb.getContactSecondary(), null, errors, sc, true);
+				ValidatorUtils.validateReminderAndContactInfo(DataEntrySource.WEB, cb.getPreference(), cb.getContactPrimary(), cb.getContactSecondary(), null, errors, sc, false);
 			}
 			else if(editSection.equalsIgnoreCase("vaccination")){
 				for (Vaccination v : cb.getVaccinations()) {
@@ -251,6 +251,7 @@ public class EditChildController extends DataEditFormController {
 		Map<String, Object> model = new HashMap<String, Object>();
 		ServiceContext sc = Context.getServices();
 		try{
+			model.put("editSection", request.getParameter("editSection"));
 			model.put("vaccinationCenters", sc.getVaccinationService().getAllVaccinationCenter(true, new String[]{"idMapper"}));
 			model.put("vaccinators", sc.getVaccinationService().getAllVaccinator(0, 100, true, new String[]{"idMapper"}));
 			ControllerUIHelper.addAddressReferenceData(request, model, sc);

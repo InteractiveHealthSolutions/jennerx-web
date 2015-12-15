@@ -23,7 +23,7 @@ public class WebGlobals {
 	public static final String URL_VIEW_VACCINATOR_INCENTIVES = "viewVaccinatorIncentives.htm";
 	public static final String URL_VIEW_VACCINATOR_INCENTIVE_TRANSACTIONS = "viewVaccinatorIncentiveTransactions.htm";
 	public static final String URL_VIEW_STOREKEEPER_INCENTIVES = "viewStorekeeperIncentives.htm";
-	public static final String VERSION_CSS_JS = "2.0";
+	public static final String VERSION_CSS_JS = "2.2";
 	public static final String VERSION_WEB_APP = "2.1.1";
 
 	public static final String CLR_CHILD_CONTACT_NUMBER_ADD_FORM_DARK = "#41DAF5";

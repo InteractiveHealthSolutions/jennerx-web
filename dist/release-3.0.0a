@@ -1,0 +1,27 @@
+Release 3.0.0a:
+
+New Features:
+============
+- Sends a CSV with AVAILABLE caregiver incentives daily to configured email addresses
+- Allows to download AVAILABLE caregiver incentive missed in emailed CSVs
+- Allows to update status of CONSUMED incentives via CSV upload
+- Allows to download ALL incentives
+- Added SMS for Incentives Won (NIC present) for any winning for caregiver lottery
+- Added Inconsistencies for Invalid or missing NIC, Invalid or ,missing Primary Contact numbers
+
+Changes:
+=======
+- Updated all views to conform new features and data 
+- Refactored all code and removed unused entities and it references like City, Ethnicity, Language, Religion, Language, Screening
+- Added incentive status and other audit info to incentives
+- Updated Navigation Bar to show required featires only
+- Safwan`s branch merged but not working
+- Data Exporter modified to allow upload and export 
+- Optimized Child Incentivization code
+- Added Incentive approval on enrollment
+
+Fix:
+====
+ - All issues in ticket # 3231
+ 
+

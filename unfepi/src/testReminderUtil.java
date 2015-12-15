@@ -31,7 +31,7 @@ public class testReminderUtil {
 		GlobalParams.UNFEPI_PROPERTIES = prop;
 		
 		ServiceContext sc = Context.getServices();
-		ReminderSms reminderSms = sc.getReminderService().getReminderSmsRecord(40702, true, new String[]{"vaccination", "reminder"});
-		ReminderUtils.pickupRandomReminderText(reminderSms, sc);
+		ReminderSms reminderSms = sc.getReminderService().getReminderSmsRecord(1, true, new String[]{"vaccination", "reminder"});
+		System.out.println(ReminderUtils.pickupRandomReminderText(reminderSms, sc));
 	}
 }

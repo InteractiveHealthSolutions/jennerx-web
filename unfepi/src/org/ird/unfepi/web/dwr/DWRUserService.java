@@ -59,6 +59,7 @@ public class DWRUserService {
 				return "You donot have permissions to reset password";
 			}
 		} catch (UserServiceException e1) {
+			e1.printStackTrace();
 			return "Error while authenticating action "+e1.getMessage();
 		}
 		
@@ -86,8 +87,10 @@ public class DWRUserService {
 			return "User "+username+" password was reset successfully. "+(sendEmail?"An email has been sent on user email address "+u.getEmail():"")+". "+errorMsg;
 		} 
 		catch (UserServiceException e) {
+			e.printStackTrace();
 			return e.getMessage();
 		} catch (Exception e) {
+			e.printStackTrace();
 			return "An error occurred while processing request. Error message is :"+e.getMessage();
 		}finally{
 			sc.closeSession();

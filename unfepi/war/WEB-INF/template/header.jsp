@@ -48,7 +48,7 @@
   <script type='text/javascript' src='${pageContext.request.contextPath}/dwr/interface/DWRValidationService.js?v=${version_css_js}'></script>
 
   <script type='text/javascript' src='${pageContext.request.contextPath}/dwr/engine.js?v=${version_css_js}'></script>
-<%--   <script type='text/javascript' src='${pageContext.request.contextPath}/dwr/util.js?v=${version_css_js}'></script> --%>
+  <script type='text/javascript' src='${pageContext.request.contextPath}/dwr/util.js?v=${version_css_js}'></script>
 
 <%@ include file="/WEB-INF/template/include.jsp"%>
 

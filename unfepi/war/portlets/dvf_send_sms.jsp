@@ -213,7 +213,9 @@ function sendSMSs() {
 	if (trim(msg) != '') {
 		var maplist = $('#' + dgSelectedRecipientListId).datagrid('getRows');
 		if (maplist.length != 0) {
+			try{
 			DWRCommunicationService.queueSms(maplist, msg, descr, hrs, processSendMsgResultReturned);
+			}catch(e){alert(e);}
 		} 
 		else {
 			alert('No recipients specified');

@@ -28,13 +28,12 @@ public class ReminderUtils {
 
 		List<String> names=new ArrayList<String>();
 		ChildIncentive vChildIncentive = null;
-		Vaccination vaccination = reminderSms.getVaccination();
+		Vaccination vaccination = Utils.initializeAndUnproxy(reminderSms.getVaccination());
 		Child child = Utils.initializeAndUnproxy(vaccination.getChild());
 		int num = Utils.getRandomNumber(rt.size());
 		
 		if(reminderSms.getReminder().getReminderType().equals(ReminderType.LOTTERY_WON_REMINDER)){
-			//TODO
-			vChildIncentive = (ChildIncentive) sc.getIncentiveService().findChildIncentiveByVaccination(reminderSms.getVaccinationRecordNum(), true, null).get(0);
+			vChildIncentive = sc.getIncentiveService().findChildIncentiveByVaccination(reminderSms.getVaccinationRecordNum(), true, null).get(0);
 		}
 		
 		try{

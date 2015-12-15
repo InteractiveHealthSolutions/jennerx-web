@@ -17,6 +17,7 @@
     				document.getElementById("childNamedtr").style.display = 'table-row';
             	}
             	else{
+            		document.getElementById("childfirstName").value = 'NO NAME';
     				document.getElementById("childNamedtr").style.display = 'none';
             	}
 			}

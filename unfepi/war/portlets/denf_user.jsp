@@ -53,9 +53,7 @@ function submitThisForm() {
 
 		<tr><td colspan="2" class="columnHeadingDiv">
 		<div class="headingS">ID PATTERNS:</div><br>
-		<div>CHILD: </div>vvvvvyymmddsss   (vaccination center + year + month + date + serial)<br>
 		<div>VACCINATOR: </div>vvvvvss     (vaccination center + serial)<br>
-		<div>STOREKEEPER: </div>ccssss     (city + serial)<br>
 		<div>OTHER USER:  </div>1ss        (1 + serial)<br>
 		</td></tr>
 		

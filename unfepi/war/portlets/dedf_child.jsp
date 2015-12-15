@@ -63,13 +63,14 @@ ID : <a onclick="viewChildDetails(this.text);" class="anchorCustom headingS">${c
 <script type="text/javascript">
 var initial_values = new Array();
 var all_form_elements = new Array();
-var curSelectedTab = '';
+var curSelectedTab = '${editSection}';
 
 $(window).load(function() 
 {
    // executes when complete page is fully loaded, including all frames, objects and images
    //setTimeout( setInitialFormValues, 1*1000 );
-   curSelectedTab = $('#tt').tabs('getSelected').panel('options').title;
+   curSelectedTab = curSelectedTab==''?$('#tt').tabs('getSelected').panel('options').title:curSelectedTab;
+   $('#tt').tabs('select', curSelectedTab);
    setInitialFormValues();
 });  
 
@@ -157,7 +158,7 @@ function changeReportingPeriod() {
 
 function submitFrm() {
 	var tabname = $('#tt').tabs('getSelected').panel('options').title;
-	$('#frm').append('<input type="hidden" name="editSection" value="'+tabname+'" />');
+	$('#editSection').val(tabname);
 	
 	if(!hasFormChanged()){
 		alert('Can not submit! Nothing edited on form.');
@@ -175,6 +176,7 @@ function submitFrm() {
 	</c:forEach>
 </select>
 <form method="post" id="frm" name="frm" >
+<input type="hidden" id="editSection" name="editSection" value="${editSection}" />
 <div id="tab-tools">
 	<a class="easyui-linkbutton" plain="true" iconCls="icon-details" onclick="loadVaccineSchedule();$('#winVsched').window('open');">View Schedule</a>
 </div>
@@ -280,7 +282,7 @@ function submitFrm() {
 	<tr>
 		<td>CNIC</td>
 		<td><spring:bind path="command.child.nic">
-			<input type="text" id="nic" name="child.nic" maxlength="15" value="${status.value}" class="numbersOnly" />
+			<input type="text" id="nic" name="child.nic" maxlength="13" value="${status.value}" class="numbersOnly" />
 			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
 		</td>

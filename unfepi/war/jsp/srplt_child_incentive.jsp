@@ -35,26 +35,26 @@
     <select id="amounttransferredrangeL" name="${nextSearchFieldNameValue}" >
     	<option></option>
     	<option>0</option>
-    	<option>1000</option>
-    	<option>2000</option>
-    	<option>3000</option> 
-    	<option>5000</option>
-    	<option>10000</option>
-    	<option>15000</option>
-    	<option>20000</option>          
+    	<option>10</option>
+    	<option>20</option>
+    	<option>30</option> 
+    	<option>50</option>
+    	<option>100</option>
+    	<option>150</option>
+    	<option>200</option>          
     </select>to
     <c:set var="nextSearchFieldNameValue" value="<%=SearchFilter.AMOUNT1_UPPER.FILTER_NAME()%>"></c:set>
     <input type="hidden" id="amounttransferredrangeUVal" value="${model[nextSearchFieldNameValue]}"/> 
     <select id="amounttransferredrangeU" name="${nextSearchFieldNameValue}" >
     	<option></option>
-    	<option>2000</option>
-    	<option>3000</option>
-    	<option>5000</option> 
-    	<option>7000</option>
-    	<option>10000</option>
-    	<option>15000</option>
-    	<option>25000</option> 
-    	<option>50000</option>  
+    	<option>20</option>
+    	<option>30</option>
+    	<option>50</option> 
+    	<option>70</option>
+    	<option>100</option>
+    	<option>150</option>
+    	<option>250</option> 
+    	<option>500</option>  
     </select>
     <script><!--
         sel = document.getElementById("amounttransferredrangeL");

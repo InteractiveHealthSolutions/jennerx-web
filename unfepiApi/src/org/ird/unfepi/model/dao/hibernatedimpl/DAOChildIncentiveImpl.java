@@ -134,7 +134,7 @@ public class DAOChildIncentiveImpl extends DAOHibernateImpl implements DAOChildI
 		}*/
 		
 		if(amountFrom != null && amountTo != null){
-			cri.add(Restrictions.between("amount", amountFrom, amountTo));
+			cri.add(Restrictions.between("amount", amountFrom.floatValue(), amountTo.floatValue()));
 		}
 		
 		/*if(storekeeperId != null){
@@ -204,7 +204,7 @@ public class DAOChildIncentiveImpl extends DAOHibernateImpl implements DAOChildI
 		}*/
 		
 		if(amountFrom != null && amountTo != null){
-			cri.add(Restrictions.between("amount", amountFrom, amountTo));
+			cri.add(Restrictions.between("amount", amountFrom.floatValue(), amountTo.floatValue()));
 		}
 		
 		/*if(storekeeperId != null){
