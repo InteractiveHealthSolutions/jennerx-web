@@ -67,6 +67,7 @@ public class EnrollmentServiceHelper
 		boolean sameCenter;
 		String strSameCenter = null;
 		boolean smsReminder;
+		boolean hasApprovedLottery;
 		String mobileNoString;
 		String landlineNoString;
 		// JSONArray vaccinesGiven;
@@ -127,6 +128,7 @@ public class EnrollmentServiceHelper
 		supplementary = (JSONArray) objectToParse.get(RequestElements.VACCINATION_SUPPLEMENTARY);
 		sameCenter = RestUtils.setBoolean((String) objectToParse.get(RequestElements.SAME_CENTER));
 		smsReminder = Boolean.parseBoolean(objectToParse.get(RequestElements.SMS_REMINDER_APP).toString());
+		hasApprovedLottery = Boolean.parseBoolean(objectToParse.get(RequestElements.LOTTERY_APPROVAL).toString());
 		mobileNoString = (String) objectToParse.get(RequestElements.PRIMARY_NUMBER);
 		landlineNoString = (String) objectToParse.get(RequestElements.SECONDARY_NUMBER);
 
@@ -249,6 +251,7 @@ public class EnrollmentServiceHelper
 		// 3.Lottery and SMs Preferences
 		LotterySms lotterysms = new LotterySms();
 		lotterysms.setHasApprovedReminders(smsReminder);
+		lotterysms.setHasApprovedLottery(hasApprovedLottery);
 
 		// 4.Same center
 		if (sameCenter)
@@ -262,6 +265,7 @@ public class EnrollmentServiceHelper
 
 		VaccinationCenterVisit vacCentrVist = new VaccinationCenterVisit(null, new Date(), Integer.valueOf(submitter.getMappedId()), Integer.valueOf(centreId), epiNo, null, mobileNoString,
 				landlineNoString, lotterysms);
+		
 
 		HashMap<String, String> mobileErrors = new HashMap<String, String>();
 
