@@ -123,8 +123,6 @@
 </property>
 </bean>
 
-<bean id="filterHeader" class="org.ird.unfepi.UnfepiRequestFilter"/>
-
 <!-- <bean name="StorekeeperIncentiveTransactionsController" class="org.ird.unfepi.web.controller.StorekeeperIncentiveTransactionsController"/>
  -->
 <bean name="LoginController" class="org.ird.unfepi.web.controller.LoginController">
