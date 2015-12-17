@@ -89,11 +89,11 @@
 	<prop key="/editlocation.htm">EditLocationController</prop>
 	<prop key="/viewLocations.htm">ViewLocationsController</prop>
 	
-	<!-- Women Controllers -->
-	<!-- <prop key="/viewWomen.htm">ViewWomenController</prop>
+		<!-- Women Controllers -->
+	<prop key="/viewWomen.htm">ViewWomenController</prop>
 	<prop key="/addWomen.htm">AddWomenController</prop>
 	<prop key="/womenFollowup.htm">FollowupWomenVaccinationController</prop>
-	<prop key="/womenDashboard.htm">WomenDashboardController</prop> -->
+	<prop key="/womenDashboard.htm">WomenDashboardController</prop>
 	
 		
 	<prop key="/viewUsers.htm">ViewUsersController</prop>
@@ -224,7 +224,7 @@
 	</property>
 </bean>
 
-<!-- <bean name="FollowupWomenVaccinationController" class="org.ird.unfepi.web.controller.FollowupWomenVaccinationController">
+<bean name="FollowupWomenVaccinationController" class="org.ird.unfepi.web.controller.FollowupWomenVaccinationController">
 	<property name="sessionForm">
 		<value>true</value>
 	</property>
@@ -244,7 +244,57 @@
         	<property name="permission" value="ADD_VACCINATIONS" />
     	</bean>
     </property>
-</bean> -->
+</bean>
+
+<bean name="ViewWomenController" class="org.ird.unfepi.web.controller.ViewWomenController">
+    <property name="formView" value="dataForm"/>
+	<property name="dataForm">
+	    <bean class="org.ird.unfepi.DataViewForm">
+	        <property name="formName" value="women" />
+        	<property name="formTitle" value="Women" />
+        	<property name="permission" value="VIEW_USERS" />
+        	<property name="isInsertable" value="false" />
+    	</bean>
+    </property>
+</bean>
+
+<bean name="AddWomenController" class="org.ird.unfepi.web.controller.AddWomenController">
+	<property name="sessionForm">
+		<value>true</value>
+	</property>
+	<property name="commandName">
+		<value>command</value>
+	</property>
+	<property name="commandClass">
+		<value>org.ird.unfepi.beans.EnrollmentWrapperWomen</value>
+	</property>
+	<property name="validator">
+		<ref bean="addWomenValidator"/>
+	</property>
+	<property name="formView">
+		<value>dataForm</value>
+	</property>
+	<property name="dataEntryForm">
+	    <bean class="org.ird.unfepi.DataEntryForm">
+	        <property name="formName" value="women" />
+        	<property name="formTitle" value="Enrollment (New)" />
+        	<property name="permission" value="ADD_CHILDREN_DATA" />
+    	</bean>
+    </property>
+   </bean>
+	<bean id="addWomenValidator" class="org.ird.unfepi.web.validator.AddWomenValidator"/>
+	
+	<bean name="WomenDashboardController" class="org.ird.unfepi.web.controller.WomenDashboardController">
+    <property name="formView" value="dataForm"/>
+	<property name="dataForm">
+	    <bean class="org.ird.unfepi.DataViewForm">
+	        <property name="formName" value="women_dashboard" />
+        	<property name="formTitle" value="Women Dashboard" />
+        	<property name="permission" value="VIEW_CHILDREN_DATA" />
+        	<property name="isInsertable" value="false" />
+    	</bean>
+    </property>
+</bean>
 
 <bean name="ExceptionController" class="org.ird.unfepi.web.controller.ExceptionController"/>
 
@@ -796,43 +846,6 @@
     </property>
 </bean>
 
-<!-- <bean name="ViewWomenController" class="org.ird.unfepi.web.controller.ViewWomenController">
-    <property name="formView" value="dataForm"/>
-	<property name="dataForm">
-	    <bean class="org.ird.unfepi.DataViewForm">
-	        <property name="formName" value="women" />
-        	<property name="formTitle" value="Women" />
-        	<property name="permission" value="VIEW_USERS" />
-        	<property name="isInsertable" value="false" />
-    	</bean>
-    </property>
-</bean>
-
-<bean name="AddWomenController" class="org.ird.unfepi.web.controller.AddWomenController">
-	<property name="sessionForm">
-		<value>true</value>
-	</property>
-	<property name="commandName">
-		<value>command</value>
-	</property>
-	<property name="commandClass">
-		<value>org.ird.unfepi.beans.EnrollmentWrapperWomen</value>
-	</property>
-	<property name="validator">
-		<ref bean="addWomenValidator"/>
-	</property>
-	<property name="formView">
-		<value>dataForm</value>
-	</property>
-	<property name="dataEntryForm">
-	    <bean class="org.ird.unfepi.DataEntryForm">
-	        <property name="formName" value="women" />
-        	<property name="formTitle" value="Enrollment (New)" />
-        	<property name="permission" value="ADD_CHILDREN_DATA" />
-    	</bean>
-    </property>
-   </bean>
-	<bean id="addWomenValidator" class="org.ird.unfepi.web.validator.AddWomenValidator"/> -->
 
 <bean name="ViewUsersController" class="org.ird.unfepi.web.controller.ViewUsersController">
 	<property name="formView" value="dataForm"/>
@@ -1123,17 +1136,6 @@
     </property>
 </bean>
 
-<!-- <bean name="WomenDashboardController" class="org.ird.unfepi.web.controller.WomenDashboardController">
-    <property name="formView" value="dataForm"/>
-	<property name="dataForm">
-	    <bean class="org.ird.unfepi.DataViewForm">
-	        <property name="formName" value="women_dashboard" />
-        	<property name="formTitle" value="Women Dashboard" />
-        	<property name="permission" value="VIEW_CHILDREN_DATA" />
-        	<property name="isInsertable" value="false" />
-    	</bean>
-    </property>
-</bean> -->
 
 <bean id="dwrController" class= "org.springframework.web.servlet.mvc.ServletWrappingController">
   <property name="servletClass">

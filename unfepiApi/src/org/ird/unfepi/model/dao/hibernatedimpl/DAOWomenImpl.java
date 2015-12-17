@@ -3,10 +3,14 @@
  */
 package org.ird.unfepi.model.dao.hibernatedimpl;
 
-import java.io.Serializable;
 import java.util.List;
 
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.ird.unfepi.model.Women;
 import org.ird.unfepi.model.dao.DAOWomen;
 
@@ -18,6 +22,8 @@ public class DAOWomenImpl extends DAOHibernateImpl implements DAOWomen {
 	
 	/** The session. */
 	private Session session;
+	
+	private Number LAST_QUERY_TOTAL_ROW_COUNT;
 
 	public DAOWomenImpl(Session session) {
 		super(session);
@@ -26,14 +32,28 @@ public class DAOWomenImpl extends DAOHibernateImpl implements DAOWomen {
 
 	@Override
 	public Women findById(int mappedId) {
-		// TODO Auto-generated method stub
-		return null;
+		Criteria criteria = session.createCriteria(Women.class).add(Restrictions.eq("mappedId", mappedId));
+		@SuppressWarnings("unchecked")
+		List<Women> women = criteria.list();
+		return (women.size() == 0 ? null : women.get(0));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<Women> getAllWomen(boolean readOnly) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Women> getAllWomen(boolean isreadonly, int firstResult, int fetchsize, String[] mappingsToJoin) {
+		Criteria cri = session.createCriteria(Women.class).setReadOnly(isreadonly);
+
+		if(mappingsToJoin != null)
+			for (String mapping : mappingsToJoin) {
+				cri.setFetchMode(mapping, FetchMode.JOIN);
+			}
+		
+		setLAST_QUERY_TOTAL_ROW_COUNT((Number) cri.setProjection(Projections.rowCount()).uniqueResult());
+		cri.setProjection(null).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		
+		List<Women> list = cri.addOrder(Order.desc("dateEnrolled")).addOrder(Order.desc("createdDate")).setFirstResult(firstResult).setMaxResults(fetchsize).list();
+		return list;
+
 	}
 
 	@Override
@@ -41,5 +61,38 @@ public class DAOWomenImpl extends DAOHibernateImpl implements DAOWomen {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Women findById(int mappedId, boolean isreadonly,
+			String[] mappingsToJoin) {
+		Criteria cri = session.createCriteria(Women.class).setReadOnly(isreadonly)
+				.add(Restrictions.eq("mappedId", mappedId));
+			
+		if(mappingsToJoin != null)
+			for (String mapping : mappingsToJoin) {
+				cri.setFetchMode(mapping, FetchMode.JOIN);
+			}
+		
+		List<Women> list = cri.list();
+		setLAST_QUERY_TOTAL_ROW_COUNT(list.size());
+		return (list.size() == 0 ? null : list.get(0));
+	}
+
+	private void setLAST_QUERY_TOTAL_ROW_COUNT(int LAST_QUERY_TOTAL_ROW_COUNT) {
+		this.LAST_QUERY_TOTAL_ROW_COUNT = LAST_QUERY_TOTAL_ROW_COUNT;
+		
+	}
+	
+	private void setLAST_QUERY_TOTAL_ROW_COUNT(Number LAST_QUERY_TOTAL_ROW_COUNT) {
+		this.LAST_QUERY_TOTAL_ROW_COUNT = LAST_QUERY_TOTAL_ROW_COUNT;
+	}
+	
+	@Override
+	public Number LAST_QUERY_TOTAL_ROW_COUNT() {
+		return LAST_QUERY_TOTAL_ROW_COUNT;
+	}
+	
+	
 }
 

@@ -1,34 +1,8 @@
 <%@page import="org.ird.unfepi.constants.WebGlobals"%>
 <tr>
-        <td>House number</td>
-        <td><spring:bind path="command.${commandAdditionalPathStr}addHouseNumber">
-            <input type="text" id="addHouseNumber" name="${commandAdditionalPathStr}addHouseNumber" maxlength="30" value="<c:out value="${status.value}"/>"/>
-            <span class="error-message"><c:out value="${status.errorMessage}"/></span>
-			</spring:bind>
-		</td>
-	</tr>
-	<tr>
-        <td>Street</td>
-        <td>
-            <spring:bind path="command.${commandAdditionalPathStr}addStreet">
-            <input type="text" id="addStreet" name="${commandAdditionalPathStr}addStreet" maxlength="30" value="<c:out value="${status.value}"/>"/>
-            <span class="error-message"><c:out value="${status.errorMessage}"/></span>
-			</spring:bind>
-		</td>
-    </tr>
-    <tr>
-         <td>Sector</td>
-         <td>
-             <spring:bind path="command.${commandAdditionalPathStr}addSector">
-             <input type="text" id="addSector" name="${commandAdditionalPathStr}addSector" maxlength="30" value="<c:out value="${status.value}"/>"/>
-             <span class="error-message"><c:out value="${status.errorMessage}"/></span>
-		 </spring:bind>
-    </tr>
-    <tr>
-        <td>Colony <span class="mendatory-field"></span></td>
-        <td>
-            <spring:bind path="command.${commandAdditionalPathStr}addColony">
-            <input type="text" id="addColony" name="${commandAdditionalPathStr}addColony" maxlength="30" value="<c:out value="${status.value}"/>"/>
+        <td>Address</td>
+        <td><spring:bind path="command.${commandAdditionalPathStr}address1">
+            <input type="text" id="address1" name="${commandAdditionalPathStr}address1" maxlength="255" value="<c:out value="${status.value}"/>"/>
             <span class="error-message"><c:out value="${status.errorMessage}"/></span>
 			</spring:bind>
 		</td>

@@ -14,7 +14,7 @@
 			</li>
 			<li><a>Women</a>
 				<ul>
-					<%-- <%@ include file="linklistwomen.jsp" %> --%>
+					 <%@ include file="linklistwomen.jsp" %>
 				</ul>
 			</li>
 			<li><a href="s_home_reminder.htm">Communication</a>

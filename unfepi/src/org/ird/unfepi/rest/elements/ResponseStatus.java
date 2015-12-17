@@ -7,6 +7,8 @@ public class ResponseStatus
 	 */
 
 	public static final int STATUS_ID_CHILD_NOT_EXIST = 0;
+	
+	public static final int STATUS_ID_WOMEN_NOT_EXIST = 0;
 
 	/**
 	 * Status for denoting the successful completion of the request

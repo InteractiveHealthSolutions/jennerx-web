@@ -5,8 +5,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.catalina.util.Base64;
-
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
  
@@ -21,15 +19,15 @@ public class NetClientGet {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("GET");
 		conn.setRequestProperty("Accept", "application/dsd+xml");
-		String auth = new String(Base64.encode(("admin:district").getBytes ("UTF-8")));
-        conn.setRequestProperty ("Authorization", "Basic " + auth);
+		//String auth = new String(Base64.encode(("admin:district").getBytes ("UTF-8")));
+        //conn.setRequestProperty ("Authorization", "Basic " + auth);
         
 		BASE64Encoder e= new BASE64Encoder();
 		String eD = e.encode("admin:district".getBytes("UTF-8"));
 
         
         BASE64Decoder d =new BASE64Decoder();
-		String decoded = new String(d.decodeBuffer(auth));
+		String decoded = new String(d.decodeBuffer(eD));
 		
 		String reqp = conn.getHeaderField("Authorization");
 		String dcoded = new String(d.decodeBuffer(reqp));

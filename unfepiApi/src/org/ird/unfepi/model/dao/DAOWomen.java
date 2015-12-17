@@ -14,9 +14,13 @@ import org.ird.unfepi.model.Women;
  */
 public interface DAOWomen extends DAO {
 	
+	Number LAST_QUERY_TOTAL_ROW_COUNT();
+	
 	Women findById (int mappedId);
 	
-	List<Women> getAllWomen (boolean readOnly);
+	Women findById(int mappedId, boolean isreadonly, String[] mappingsToJoin);
+	
+	List<Women> getAllWomen (boolean isreadonly, int firstResult, int fetchsize, String[] mappingsToJoin);
 	
 	List<Women> getWomen (String partialName, String nic);
 }

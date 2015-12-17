@@ -172,11 +172,8 @@ public class EnrollmentServiceHelper
 
 		// ///////////Address fields ///////////////////////
 		Address add = new Address();
-		add.setAddHouseNumber(houseNo);
-		add.setAddSector(sector);
-		add.setAddColony(colony);
+		add.setAddress1(houseNo + sector + colony + street);
 		add.setAddLandmark(landmark);
-		add.setAddStreet(street);
 		add.setCityId(Integer.valueOf(city));
 		// set town id
 		add.setAddtown(town);

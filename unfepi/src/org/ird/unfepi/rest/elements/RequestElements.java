@@ -86,11 +86,15 @@ public class RequestElements
 	public static final String CHILD_NAMED = "chldNamed";
 	public static final String CHILD_FIRST_NAME = "chdFirstName";
 	public static final String CHILD_LAST_NAME = "chdLastName";
+	public static final String WOMEN_FIRST_NAME = "womenFirstName";
+	public static final String WOMEN_LAST_NAME = "womenLastName";
 	public static final String FATHER_FIRST_NAME = "fatherFirstName";
 	public static final String FATHER_NIC = "fatherNIC";
 	public static final String FATHER_LAST_NAME = "fatherLastName";
 	public static final String MOTHER_FIRST_NAME = "motherFirstName";
 	public static final String MOTHER_LAST_NAME = "motherLastName";
+	public static final String HUSBAND_FIRST_NAME = "husbandFirstName";
+	public static final String HUSBAND_LAST_NAME = "husbandLastName";
 	public static final String CHILD_GENDER = "childGender";
 	public static final String DOB = "dob";
 	public static final String IS_BIRHTDATE_ESTIMATED = "estimatedDOB";
@@ -202,5 +206,22 @@ public class RequestElements
 
 	// Shopkeeper Forms
 	public static final String GET_AMOUNT = "GetAmount";
+	
+	// Women
+	public static final String WOMEN_ID = "women";
+	public static final String WOMEN_PROJECT_ID = "projectId";
+	public static final String TT1 = "TT1";
+	public static final String TT2 = "TT2";
+	public static final String TT3 = "TT3";
+	public static final String TT4 = "TT4";
+	public static final String TT5 = "TT5"; 
+	public static final String WOMEN_VACCINATION_STATUS = "status";
+	public static final String WOMEN_VACCINATION_DATE = "date";
+	public static final String WOMEN_ADDRESS = "address";
+	public static final String WOMEN_MARITAL_STATUS = "maritalStatus";
+	public static final String WOMEN_DEMOGRAPHICS = "Demographics";
+	public static final String WOMEN_VACCINATION = "Vaccination";
+	public static final String WOMEN_PRIMARY_CONTACT = "primaryContact";
+	public static final String WOMEN_SECONDARY_CONTACT = "secondaryContact";
 
 }

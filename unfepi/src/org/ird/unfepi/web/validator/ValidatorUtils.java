@@ -1260,36 +1260,6 @@ public class ValidatorUtils {
 	 */
 	public static void validateAddress(DataEntrySource dataEntrySource, Address address, HashMap<String, String> mobileErrors, Errors error, boolean useFieldPrefix)
 	{
-		if(StringUtils.isEmptyOrWhitespaceOnly( address.getAddHouseNumber())){
-		}
-		else if(!DataValidation.validate(REG_EX.NO_SPECIAL_CHAR, address.getAddHouseNumber())){
-			putError(dataEntrySource, ErrorMessages.ADDRESS_HOUSE_NUMBER_INVALID, mobileErrors, error, DataField.ADDRESS_HOUSE_NUMBER, useFieldPrefix);
-		}
-		
-		if(StringUtils.isEmptyOrWhitespaceOnly(address.getAddStreet())){
-		}
-		else{
-			if(!DataValidation.validate(REG_EX.NO_SPECIAL_CHAR, address.getAddStreet())){
-				putError(dataEntrySource, ErrorMessages.ADDRESS_STREET_INVALID, mobileErrors, error, DataField.ADDRESS_STREET, useFieldPrefix);
-			}
-		}
-
-		if(StringUtils.isEmptyOrWhitespaceOnly(address.getAddSector())){
-		}
-		else{
-			if(!DataValidation.validate(REG_EX.NO_SPECIAL_CHAR, address.getAddSector())){
-				putError(dataEntrySource, ErrorMessages.ADDRESS_SECTOR_INVALID, mobileErrors, error, DataField.ADDRESS_SECTOR, useFieldPrefix);
-			}
-		}
-		
-		if(StringUtils.isEmptyOrWhitespaceOnly(address.getAddColony())){
-		}
-		else{
-			if(!DataValidation.validate(REG_EX.NO_SPECIAL_CHAR, address.getAddColony())){
-				putError(dataEntrySource, ErrorMessages.ADDRESS_COLONY_INVALID, mobileErrors, error, DataField.ADDRESS_COLONY, useFieldPrefix);
-			}
-		}
-		
 		if(StringUtils.isEmptyOrWhitespaceOnly(address.getAddtown())){
 			putError(dataEntrySource, ErrorMessages.ADDRESS_TOWN_MISSING, mobileErrors, error, DataField.ADDRESS_TOWN, useFieldPrefix);
 		}

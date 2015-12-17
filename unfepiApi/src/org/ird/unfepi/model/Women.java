@@ -115,6 +115,9 @@ public enum WOMENSTATUS {
 	private String husbandLastName;
 	
 	@Column(length = 30)
+	private String maritalStatus;
+	
+	@Column(length = 30)
 	private String nic;
 	
 	@Column(length = 30)
@@ -395,6 +398,14 @@ public enum WOMENSTATUS {
 
 	public void setHusbandLastName(String husbandLastName) {
 		this.husbandLastName = husbandLastName;
+	}
+	
+	public String getMaritalStatus() {
+		return maritalStatus;
+	}
+
+	public void setMaritalStatus(String maritalStatus) {
+		this.maritalStatus = maritalStatus;
 	}
 
 	/**

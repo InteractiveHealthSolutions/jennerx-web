@@ -268,34 +268,19 @@ public class ControllerUIHelper {
 		
 		handleWomenVaccination(sc, women, centerVisit, user, enrollmentVaccine, vaccines);
 		
-	/*	handleEnrollmentChild(projectId, childNamed, child, getEnrollmentVaccine(vaccineSchedule, child.getBirthdate(), sc, centerVisit.getVisitDate()), centerVisit.getVaccinationCenterId(), user, sc);
-
-
-	//	List<ChildLotteryRunner> lotteryResults = handleEnrollmentVaccinations(dataEntrySource, centerVisit, vaccineSchedule, centerVisit.getPreference().getHasApprovedReminders(), child, user, sc);
-		handleEnrollmentVaccinations(dataEntrySource, centerVisit, vaccineSchedule, centerVisit.getPreference().getHasApprovedReminders(), child, user, sc);
-
-		boolean measles2Given = IMRUtils.isMeasles2Given(vaccineSchedule, child.getDateEnrolled());
-		handlePreference(centerVisit.getPreference(), measles2Given , child, user, sc);
-		
-		handleEnrollmentContactInfo(centerVisit.getPreference().getHasApprovedReminders(), centerVisit.getContactPrimary(), centerVisit.getContactSecondary(), address, child, user, sc);
-		
-		EncounterUtil.createEnrollmentEncounter(dataEntrySource, projectId, childNamed, child, birthdateOrAge, ageYears, ageMonths, ageWeeks, ageDays, address, centerVisit, vaccineSchedule, completeCourseFromCenter, /*lotteryResults, *//*formStartDate, user, sc);*/
-		//return lotteryResults;
 	}
 	
-	public static void handleWomenVaccination(ServiceContext sc, Women women, WomenVaccinationCenterVisit centerVisit, User user, String enrollmentVaccine, List<WomenVaccination> vaccines){
+public static void handleWomenVaccination(ServiceContext sc, Women women, WomenVaccinationCenterVisit centerVisit, User user, String enrollmentVaccine, List<WomenVaccination> vaccines){
 		
 		for(int i = 0; i < vaccines.size(); i++){
 			if(!vaccines.get(i).getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.NOT_VACCINATED)){
 			WomenVaccination wv = new WomenVaccination();
-			if(vaccines.get(i).getName() != ""){
 				wv.setWomenId(women.getMappedId());
 				wv.setVaccinationCenterId(centerVisit.getVaccinationCenterId());
 				wv.setCreator(user);
 				wv.setVaccinatorId(centerVisit.getVaccinatorId());
 				
 				wv.setVaccinationDate(women.getDateEnrolled());
-
 				if(vaccines.get(i).getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.PENDING)){
 					wv.setVaccinationDuedate(vaccines.get(i).getVaccinationDate());
 				} else {
@@ -314,9 +299,8 @@ public class ControllerUIHelper {
 				wv.setVaccinationDate(vaccines.get(i).getVaccinationDate());
 				wv.setVaccinationStatus(vaccines.get(i).getVaccinationStatus());
 				sc.getWomenVaccinationService().save(wv);
-			} 
+			}
 		}
-	}
 	}
 	
 	/** Manipulates (populates required default info) and saves data for entities participating in 
@@ -711,11 +695,11 @@ public class ControllerUIHelper {
 	{
 		
 		Calendar cal = Calendar.getInstance();  
-        cal.setTime(new Date());  
-        cal.set(Calendar.HOUR_OF_DAY, 0);  
-        cal.set(Calendar.MINUTE, 0);  
-        cal.set(Calendar.SECOND, 0);  
-        cal.set(Calendar.MILLISECOND, 0); 
+       cal.setTime(new Date());  
+       cal.set(Calendar.HOUR_OF_DAY, 0);  
+       cal.set(Calendar.MINUTE, 0);  
+       cal.set(Calendar.SECOND, 0);  
+       cal.set(Calendar.MILLISECOND, 0); 
 		
 		if(centerVisit.getTt1().getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.VACCINATED)){
 			if(centerVisit.getTt1().getVaccinationDate() != null ){

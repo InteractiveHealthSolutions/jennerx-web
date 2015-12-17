@@ -50,28 +50,28 @@ public class Address {
 	private ContactType addressType;
 	
 	/** The add house number. */
-	@Column(length = 30)
-	private String addHouseNumber;
+	@Column(length = 255)
+	private String address1;
 	
 	/** The add street. */
-	@Column(length = 30)
-	private String addStreet;
+	@Column(length = 255)
+	private String address2;
 	
 	/** The add sector. */
-	@Column(length = 30)
-	private String addSector;
+	@Column(length = 255)
+	private String address3;
 	
 	/** The add area. */
-	@Column(length = 30)
-	private String addArea;
+	@Column(length = 255)
+	private String address4;
 	
 	/** The add district. */
 	@Column(length = 30)
 	private String addDistrict;
 	
 	/** The add colony. */
-	@Column(length = 30)
-	private String addColony;
+	@Column(length = 255)
+	private String address5;
 	
 	@Column(length = 50)
 	private String addtown;
@@ -219,17 +219,17 @@ public class Address {
 	 *
 	 * @return the adds the house number
 	 */
-	public String getAddHouseNumber() {
-		return addHouseNumber;
+	public String getAddress1() {
+		return address1;
 	}
 
 	/**
 	 * Sets the adds the house number.
 	 *
-	 * @param addHouseNumber the new adds the house number
+	 * @param address1 the new adds the house number
 	 */
-	public void setAddHouseNumber(String addHouseNumber) {
-		this.addHouseNumber = addHouseNumber;
+	public void setAddress1(String address1) {
+		this.address1 = address1;
 	}
 
 	/**
@@ -237,17 +237,17 @@ public class Address {
 	 *
 	 * @return the adds the street
 	 */
-	public String getAddStreet() {
-		return addStreet;
+	public String getAddress2() {
+		return address2;
 	}
 
 	/**
 	 * Sets the adds the street.
 	 *
-	 * @param addStreet the new adds the street
+	 * @param address2 the new adds the street
 	 */
-	public void setAddStreet(String addStreet) {
-		this.addStreet = addStreet;
+	public void setAddress2(String address2) {
+		this.address2 = address2;
 	}
 
 	/**
@@ -255,17 +255,17 @@ public class Address {
 	 *
 	 * @return the adds the sector
 	 */
-	public String getAddSector() {
-		return addSector;
+	public String getAddress3() {
+		return address3;
 	}
 
 	/**
 	 * Sets the adds the sector.
 	 *
-	 * @param addSector the new adds the sector
+	 * @param address3 the new adds the sector
 	 */
-	public void setAddSector(String addSector) {
-		this.addSector = addSector;
+	public void setAddress3(String address3) {
+		this.address3 = address3;
 	}
 
 	/**
@@ -273,17 +273,17 @@ public class Address {
 	 *
 	 * @return the adds the area
 	 */
-	public String getAddArea() {
-		return addArea;
+	public String getAddress4() {
+		return address4;
 	}
 
 	/**
 	 * Sets the adds the area.
 	 *
-	 * @param addArea the new adds the area
+	 * @param address4 the new adds the area
 	 */
-	public void setAddArea(String addArea) {
-		this.addArea = addArea;
+	public void setAddress4(String address4) {
+		this.address4 = address4;
 	}
 
 	/**
@@ -309,17 +309,17 @@ public class Address {
 	 *
 	 * @return the adds the colony
 	 */
-	public String getAddColony() {
-		return addColony;
+	public String getAddress5() {
+		return address5;
 	}
 
 	/**
 	 * Sets the adds the colony.
 	 *
-	 * @param addColony the new adds the colony
+	 * @param address5 the new adds the colony
 	 */
-	public void setAddColony(String addColony) {
-		this.addColony = addColony;
+	public void setAddress5(String address5) {
+		this.address5 = address5;
 	}
 
 	public Integer getCityId() {

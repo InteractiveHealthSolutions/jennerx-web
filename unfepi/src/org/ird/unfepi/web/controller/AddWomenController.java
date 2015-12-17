@@ -3,7 +3,6 @@
  */
 package org.ird.unfepi.web.controller;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,7 +20,6 @@ import org.ird.unfepi.context.LoggedInUser;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Address;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
-import org.ird.unfepi.model.VaccinationStatusDate;
 import org.ird.unfepi.model.Women;
 import org.ird.unfepi.model.WomenVaccination;
 import org.ird.unfepi.model.WomenVaccination.WOMEN_VACCINATION_STATUS;
@@ -56,7 +54,7 @@ public class AddWomenController extends DataEntryFormController {
 		String projectId = ewr.getProjectId();
 		ServiceContext sc = Context.getServices();
 		List<WomenVaccination> vaccines = new ArrayList<WomenVaccination>();
-		
+
 		String enrollmentVaccine = "";
 		Date enrollmentDate = null;
 		if(centerVisit.getTt1().getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.VACCINATED)){
@@ -81,11 +79,11 @@ public class AddWomenController extends DataEntryFormController {
 		vaccines.add(centerVisit.getTt3());
 		vaccines.add(centerVisit.getTt4());
 		vaccines.add(centerVisit.getTt5());
-	
+		
 		for(int i = 0; i < vaccines.size(); i++){
 			vaccines.get(i).setVaccineId(sc.getVaccinationService().getByName("TT" + (i+1)).getVaccineId());
-			}
-
+		}
+		
 		
 		ControllerUIHelper.doWomenEnrollment(DataEntrySource.WEB, projectId, women, 
 				ewr.getBirthdateOrAge(), ewr.getwomenagey(), ewr.getwomenagem(), ewr.getwomenagew(), ewr.getwomenaged(), 
@@ -95,11 +93,11 @@ public class AddWomenController extends DataEntryFormController {
 		sc.commitTransaction();
 		
 		
-
+		
 			return new ModelAndView(new RedirectView("addWomen.htm"));
 			//return new ModelAndView(new RedirectView("childDashboard.htm?action=search&editOrUpdateMessage="+editmessage+"&childId="+projectId));
 		} 
-			
+		
 	
 	@Override
 	protected ModelAndView processFormSubmission(HttpServletRequest request, HttpServletResponse response, 

@@ -56,7 +56,7 @@ public class FollowupVaccinationPrivilegedController extends SimpleFormControlle
 			{
 				editmessage += "\n"+childLotteryRunner.VACCINE_NAME + " lottery ";
 				if(childLotteryRunner.HAS_WON==null){
-					editmessage+=" errors ("+childLotteryRunner.LOTTERY_STATUS_ERRORS+")";
+					editmessage+=" errors ("+childLotteryRunner.INCENTIVE_STATUS_ERRORS+")";
 				}
 				else if(childLotteryRunner.HAS_WON){
 					editmessage+=" won, CODE="+childLotteryRunner.VERIFICATION_CODE+":AMOUNT="+childLotteryRunner.AMOUNT.toString();

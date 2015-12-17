@@ -117,6 +117,7 @@ public class EncounterUtil {
 	}
 	
 	public enum ElementAddress{
+		ADDRESS_LINE1,
 		HOUSE_NUMBER,
 		STREET,
 		SECTOR,
@@ -633,10 +634,7 @@ public class EncounterUtil {
 	{
 		List c = sc.getCustomQueryService().getDataBySQL("select otherIdentifier, name from location where locationId="+address.getCityId());
 		
-		encr.add(createEncounterResult(e, ElementAddress.HOUSE_NUMBER, address.getAddHouseNumber(), null, null));
-		encr.add(createEncounterResult(e, ElementAddress.STREET, address.getAddStreet(), null, null));
-		encr.add(createEncounterResult(e, ElementAddress.SECTOR, address.getAddSector(), null, null));
-		encr.add(createEncounterResult(e, ElementAddress.COLONY, address.getAddColony(), null, null));
+		encr.add(createEncounterResult(e, ElementAddress.ADDRESS_LINE1, address.getAddress1(), null, null));
 		encr.add(createEncounterResult(e, ElementAddress.TOWN, address.getAddtown(), null, null));
 		encr.add(createEncounterResult(e, ElementAddress.UC, address.getAddUc(), null, null));
 		encr.add(createEncounterResult(e, ElementAddress.LANDMARK, address.getAddLandmark(), null, null));
