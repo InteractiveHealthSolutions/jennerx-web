@@ -1,5 +1,6 @@
 package org.ird.unfepi.rest.helper;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,10 +23,14 @@ import org.ird.unfepi.model.Identifier;
 import org.ird.unfepi.model.IdentifierType;
 import org.ird.unfepi.model.LotterySms;
 import org.ird.unfepi.model.Model.ContactType;
+import org.ird.unfepi.model.Model.Gender;
 import org.ird.unfepi.model.User;
 import org.ird.unfepi.model.Vaccination;
 import org.ird.unfepi.model.Vaccination.VACCINATION_STATUS;
+import org.ird.unfepi.model.dao.DAOChild;
+import org.ird.unfepi.model.dao.hibernatedimpl.DAOChildImpl;
 import org.ird.unfepi.model.Vaccine;
+import org.ird.unfepi.model.Child.STATUS;
 import org.ird.unfepi.model.exception.VaccinationDataException;
 import org.ird.unfepi.rest.elements.RequestElements;
 import org.ird.unfepi.rest.elements.ResponseStatus;
@@ -34,6 +39,7 @@ import org.ird.unfepi.service.DemographicDetailsService;
 import org.ird.unfepi.service.IdMapperService;
 import org.ird.unfepi.service.VaccinationService;
 import org.ird.unfepi.service.exception.ChildDataInconsistencyException;
+import org.ird.unfepi.service.impl.ChildServiceImpl;
 import org.ird.unfepi.web.utils.ControllerUIHelper;
 import org.ird.unfepi.web.utils.VaccinationCenterVisit;
 import org.ird.unfepi.web.utils.VaccineSchedule;
@@ -66,6 +72,7 @@ public class FollowupHelper
 
 		List<VaccineSchedule> schedule = new ArrayList<VaccineSchedule>();
 		VaccinationCenterVisit centreVisit;
+		
 
 		identifier = form.get(RequestElements.CHILD_ID).toString();
 		newEpiNo = form.get(RequestElements.EPI_NO).toString();
@@ -161,12 +168,13 @@ public class FollowupHelper
 			schedule.add(row);
 		}
 
-		smsPreferences = new LotterySms();
-		smsPreferences.setHasApprovedReminders(smsApproval);
-		smsPreferences.setHasApprovedLottery(null);
-
+		// smsPreferences = new LotterySms();
+		// smsPreferences.setHasApprovedReminders(smsApproval);
+		// smsPreferences.setHasApprovedLottery(null);
+		smsPreferences = sc.getChildService().findLotterySmsByChild(mappedId, true, 0, 2,  null).get(0);
 		centreVisit = new VaccinationCenterVisit(mappedId, new Date(), userId, centreId, newEpiNo, null, primaryNo, secondaryNo, smsPreferences);
-
+		
+		
 		try
 		{
 			HashMap<String, String> mobileErrors = new HashMap<String, String>();

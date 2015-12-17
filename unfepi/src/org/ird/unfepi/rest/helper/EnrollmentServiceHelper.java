@@ -41,6 +41,7 @@ public class EnrollmentServiceHelper
 		String childLastName;
 		String gender;
 		String fatherFirstName;
+		String fatherNIC;
 		String faterLastName;
 		String dob;
 		String epiNo;
@@ -67,6 +68,7 @@ public class EnrollmentServiceHelper
 		boolean sameCenter;
 		String strSameCenter = null;
 		boolean smsReminder;
+		boolean hasApprovedLottery;
 		String mobileNoString;
 		String landlineNoString;
 		// JSONArray vaccinesGiven;
@@ -99,6 +101,7 @@ public class EnrollmentServiceHelper
 		childLastName = (String) objectToParse.get(RequestElements.CHILD_LAST_NAME);
 		gender = (String) objectToParse.get(RequestElements.CHILD_GENDER);
 		fatherFirstName = (String) objectToParse.get(RequestElements.FATHER_FIRST_NAME);
+		fatherNIC = (String) objectToParse.get(RequestElements.FATHER_NIC);
 		faterLastName = (String) objectToParse.get(RequestElements.FATHER_LAST_NAME);
 		dob = (String) objectToParse.get(RequestElements.DOB);
 		days = (String) objectToParse.get(RequestElements.DOB_DAY);
@@ -127,6 +130,7 @@ public class EnrollmentServiceHelper
 		supplementary = (JSONArray) objectToParse.get(RequestElements.VACCINATION_SUPPLEMENTARY);
 		sameCenter = RestUtils.setBoolean((String) objectToParse.get(RequestElements.SAME_CENTER));
 		smsReminder = Boolean.parseBoolean(objectToParse.get(RequestElements.SMS_REMINDER_APP).toString());
+		hasApprovedLottery = Boolean.parseBoolean(objectToParse.get(RequestElements.LOTTERY_APPROVAL).toString());
 		mobileNoString = (String) objectToParse.get(RequestElements.PRIMARY_NUMBER);
 		landlineNoString = (String) objectToParse.get(RequestElements.SECONDARY_NUMBER);
 
@@ -157,6 +161,7 @@ public class EnrollmentServiceHelper
 		ch.setFirstName(childFirstName);
 		ch.setLastName(childLastName);
 		ch.setFatherFirstName(fatherFirstName);
+		ch.setNic(fatherNIC);
 		ch.setFatherLastName(faterLastName);
 		ch.setBirthdate(dateOfBirth);
 		ch.setEstimatedBirthdate(isEstimated);
@@ -249,6 +254,7 @@ public class EnrollmentServiceHelper
 		// 3.Lottery and SMs Preferences
 		LotterySms lotterysms = new LotterySms();
 		lotterysms.setHasApprovedReminders(smsReminder);
+		lotterysms.setHasApprovedLottery(hasApprovedLottery);
 
 		// 4.Same center
 		if (sameCenter)
@@ -262,6 +268,7 @@ public class EnrollmentServiceHelper
 
 		VaccinationCenterVisit vacCentrVist = new VaccinationCenterVisit(null, new Date(), Integer.valueOf(submitter.getMappedId()), Integer.valueOf(centreId), epiNo, null, mobileNoString,
 				landlineNoString, lotterysms);
+		
 
 		HashMap<String, String> mobileErrors = new HashMap<String, String>();
 
