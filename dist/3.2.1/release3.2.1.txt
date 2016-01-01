@@ -1,7 +1,17 @@
 release 3.2.1
 
+For Setup on tomcat 7:
+
 Add jstl config setting as explained in http://stackoverflow.com/a/16091433/830945 
 Add notifier recipients manually after setting up database
 
+Changes from previous release:
+
+- Adress template changed. (only one line for address street and area part)
+- Changed backgroud and layout vaccine schedule in enrollment an followups and made it better validated and better appear on page
+- Added page that shows incentive smses too.
+- Modified Homepage data scripts and now it shows correct data
+- Immunization Records details page added with incentive details
+- Vaccination now has three different statuses (vaccinated, retro, retro_date_missing) which earlier were only on UI and backend only saved vaccinated status
 
 
