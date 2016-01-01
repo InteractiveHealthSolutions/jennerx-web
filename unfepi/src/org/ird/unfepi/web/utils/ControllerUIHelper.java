@@ -914,7 +914,7 @@ public class ControllerUIHelper {
 
 		Integer armId = null;
 		if(hasApprovedLottery != null && hasApprovedLottery){
-			IncentiveUtils.determineIncentiveScheme();
+			armId = IncentiveUtils.determineIncentiveScheme();
 		}
 
 		for (VaccineSchedule vsh : vaccineSchedule) {
