@@ -13,7 +13,6 @@ public class VaccinationCenterVisit {
 	private Integer vaccinatorId;
 	private Integer vaccinationCenterId;
 	private String epiNumber;
-	private Boolean hasApprovedLottery;
 	private String contactPrimary;
 	private String contactSecondary;
 	private LotterySms preference = new LotterySms();
@@ -42,7 +41,6 @@ public class VaccinationCenterVisit {
 		this.vaccinatorId = vaccinatorId;
 		this.vaccinationCenterId = vaccinationCenterId;
 		this.epiNumber = epiNumber;
-		this.hasApprovedLottery = hasApprovedLottery;
 		this.contactPrimary = contactPrimary;
 		this.contactSecondary = contactSecondary;
 		this.preference = preference;
@@ -78,14 +76,6 @@ public class VaccinationCenterVisit {
 
 	public void setEpiNumber(String epiNumber) {
 		this.epiNumber = epiNumber;
-	}
-
-	public Boolean getHasApprovedLottery() {
-		return hasApprovedLottery;
-	}
-
-	public void setHasApprovedLottery(Boolean hasApprovedLottery) {
-		this.hasApprovedLottery = hasApprovedLottery;
 	}
 
 	public String getContactPrimary() {

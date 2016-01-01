@@ -84,7 +84,9 @@ $( document ).ready(function() {
 				if(hasFormChanged() && curSelectedTab != title){
 					alert('Data in previous tab has been changed. Submit changes first.');
 					$('#tt').tabs('select', curSelectedTab);
+					return;
 				}
+			curSelectedTab = title;
 			}
 		}
 	});
@@ -178,7 +180,6 @@ function submitFrm() {
 <form method="post" id="frm" name="frm" >
 <input type="hidden" id="editSection" name="editSection" value="${editSection}" />
 <div id="tab-tools">
-	<a class="easyui-linkbutton" plain="true" iconCls="icon-details" onclick="loadVaccineSchedule();$('#winVsched').window('open');">View Schedule</a>
 </div>
 	<div id="tt" class="easyui-tabs">
     <div title="Biographic" >
@@ -304,7 +305,3 @@ function submitFrm() {
     <input id="submitButton" type="button" onclick="submitFrm();" value="Submit Data">
 </div>
 </form>
-<div id="winVsched" class="easyui-window" title="Vaccination Schedule" style="width:600px;height:600px" 
-	data-options="modal:true,closed:true">
-    <%@ include file="plt_vaccine_schedule2.jsp" %>
-</div>

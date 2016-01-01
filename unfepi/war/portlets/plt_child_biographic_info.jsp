@@ -3,7 +3,7 @@
 	<tr>
         <td>Bache ka naam rakha gaya hai? <span class="mendatory-field">*</span></td>
         <td><spring:bind path="command.childNamed">
-			<select id="childNamed" name="childNamed" onchange="childNamedChanged(this);" bind-value="${status.value}">
+			<select id="childNamed" name="childNamed" onchange="childNamedChanged(this,'');" bind-value="${status.value}">
 				<option></option>
 				<option value="<%=WebGlobals.BOOLEAN_CONVERTER_TRUE_STRING%>">Yes</option>
 				<option value="<%=WebGlobals.BOOLEAN_CONVERTER_FALSE_STRING%>">No</option>
@@ -12,9 +12,10 @@
 		</spring:bind>
 		<script type="text/javascript">
 			<!--
-            function childNamedChanged(sel) {
+            function childNamedChanged(sel, prevname) {
             	if(document.getElementById("childNamed").value == '<%=WebGlobals.BOOLEAN_CONVERTER_TRUE_STRING%>'){
     				document.getElementById("childNamedtr").style.display = 'table-row';
+            		document.getElementById("childfirstName").value = prevname;
             	}
             	else{
             		document.getElementById("childfirstName").value = 'NO NAME';
@@ -23,7 +24,7 @@
 			}
 			
 			$( document ).ready(function() {
-				childNamedChanged(document.getElementById("childNamed"));
+				childNamedChanged(document.getElementById("childNamed"),document.getElementById("childfirstName").value);
 			});
 			
 		//-->

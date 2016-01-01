@@ -24,6 +24,7 @@ import org.ird.unfepi.model.VaccineGap;
 import org.ird.unfepi.model.VaccinePrerequisite;
 import org.ird.unfepi.utils.ArmDayTiming;
 import org.ird.unfepi.utils.Utils;
+import org.ird.unfepi.utils.date.DateUtils;
 import org.ird.unfepi.web.utils.VaccineSchedule.VaccineStatusType;
 
 /**
@@ -51,7 +52,7 @@ public class IMRUtils {
 		for (VaccineSchedule vs : vaccineSchedule) {
 			if(vs.getVaccine().getName().equalsIgnoreCase("measles2")
 					&& vs.getVaccination_date() != null && visitDate != null 
-					&& vs.getVaccination_date().compareTo(visitDate)==0){
+					&& DateUtils.datesEqual(vs.getVaccination_date(),visitDate)){
 				measles2Given = true;
 			}
 		}
@@ -64,20 +65,20 @@ public class IMRUtils {
 			return true;
 		}
 		
-		// if any pre-req is mandatory block it
-		for (VaccinePrerequisite prereq : vaccineSch.getPrerequisites()) {
-			if(prereq.getMandatory() != null && prereq.getMandatory()){
+		// if any pre-req is mandatory and not satified block it
+		for (VaccinePrerequisite prereq : vaccineSch.getPrerequisites()) 
+		{
+			if(prereq.getMandatory() != null && prereq.getMandatory())
+			{
 				boolean prereqVaccineFoundInlist = false;// if prereq not in given schedule say prereq not satisfied
-
+				
 				for (VaccineSchedule vaccineSchedule : schedule) {
-					
 					if(prereq.getVaccinePrerequisiteId().getVaccinePrerequisiteId() == vaccineSchedule.getVaccine().getVaccineId()){
 						prereqVaccineFoundInlist = true;
-					}
-
-					if(prereq.getVaccinePrerequisiteId().getVaccinePrerequisiteId() == vaccineSchedule.getVaccine().getVaccineId()
-							&& !vaccineSchedule.getStatus().equalsIgnoreCase(VaccineStatusType.RETRO_DATE_MISSING.name()) && vaccineSchedule.getVaccination_date() == null){
-						return false;
+						if(!vaccineSchedule.getStatus().equalsIgnoreCase(VaccineStatusType.RETRO_DATE_MISSING.name()) 
+							&& vaccineSchedule.getVaccination_date() == null){
+							return false;
+						}
 					}
 				}
 				
@@ -91,7 +92,7 @@ public class IMRUtils {
 		return true;
 	}
 	
-	public static Date getPrerequisiteVaccineDate(VaccineSchedule vaccineSch, ArrayList<VaccineSchedule> schedule) {
+	public static Date getPrerequisiteVaccineDate(VaccineSchedule vaccineSch, List<VaccineSchedule> schedule) {
 		if(vaccineSch.getPrerequisites() == null || vaccineSch.getPrerequisites().size() == 0){
 			return null;
 		}
@@ -106,7 +107,21 @@ public class IMRUtils {
 		
 		return null;
 	}
-	
+	public static boolean isPrerequisiteVaccinatedOnCurrentVisit(VaccineSchedule vaccineSch, List<VaccineSchedule> schedule) {
+		if(vaccineSch.getPrerequisites() == null || vaccineSch.getPrerequisites().size() == 0){
+			return false;
+		}
+		for (VaccinePrerequisite prereq : vaccineSch.getPrerequisites()) {
+			for (VaccineSchedule vaccineSchedule : schedule) {
+				if(prereq.getVaccinePrerequisiteId().getVaccinePrerequisiteId() == vaccineSchedule.getVaccine().getVaccineId()
+						&& vaccineSchedule.getStatus().equalsIgnoreCase(VaccineStatusType.VACCINATED.name())){
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
 	public static String getNextVaccineName(String currentVaccine){
 		return Context.getSetting("vaccine.next-vaccine."+currentVaccine.trim().toLowerCase(), "Not Found");
 	}
@@ -389,7 +404,7 @@ public class IMRUtils {
 			cal.add(Calendar.DATE, r.getGapEventDay());
 			
 			rsms.setDueDate(cal.getTime());
-			rsms.setReminderStatus(REMINDER_STATUS.PENDING);
+			rsms.setReminderStatus(REMINDER_STATUS.SCHEDULED);
 			rsms.setVaccinationRecordNum(vaccination.getVaccinationRecordNum());
 			
 			reminderSmses.add(rsms);
@@ -407,8 +422,8 @@ public class IMRUtils {
 	 * @return
 	 */
 	@SuppressWarnings("deprecation")
-	public static List<ReminderSms> createLotteryWonReminderSms(int vaccinationRecordNum, Date lotteryDate, User user, ArmDayTiming timings, ServiceContext sc){
-		List<Reminder> remis = sc.getReminderService().findRemindersByName(null, ReminderType.LOTTERY_WON_REMINDER, 0, 10, true, null);
+	public static List<ReminderSms> createLotteryWonReminderSms(String reminderNme, int vaccinationRecordNum, Date lotteryDate, User user, ArmDayTiming timings, ServiceContext sc){
+		List<Reminder> remis = sc.getReminderService().findRemindersByName(reminderNme, ReminderType.LOTTERY_WON_REMINDER, 0, 10, true, null);
 		List<ReminderSms> reminderSmses = new ArrayList<ReminderSms>();
 		for (Reminder r : remis) {
 			ReminderSms rsms = new ReminderSms();
@@ -428,7 +443,7 @@ public class IMRUtils {
 			cal.add(Calendar.DATE, r.getGapEventDay());
 			
 			rsms.setDueDate(cal.getTime());
-			rsms.setReminderStatus(REMINDER_STATUS.PENDING);
+			rsms.setReminderStatus(REMINDER_STATUS.SCHEDULED);
 			rsms.setVaccinationRecordNum(vaccinationRecordNum);
 			
 			reminderSmses.add(rsms);
@@ -468,7 +483,7 @@ public class IMRUtils {
 			cal.add(Calendar.DATE, r.getGapEventDay());
 			
 			rsms.setDueDate(cal.getTime());
-			rsms.setReminderStatus(REMINDER_STATUS.PENDING);
+			rsms.setReminderStatus(REMINDER_STATUS.SCHEDULED);
 			rsms.setVaccinationRecordNum(vaccinationRecordNum);
 			
 			reminderSmses.add(rsms);

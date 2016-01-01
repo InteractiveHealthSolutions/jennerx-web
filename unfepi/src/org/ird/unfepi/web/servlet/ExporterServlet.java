@@ -123,7 +123,7 @@ public class ExporterServlet extends HttpServlet
 		}
 		else if(extype.equalsIgnoreCase(SystemPermissions.DOWNLOAD_SUMMARY_IMUNIZATION_AGE_APROPRIATE_WITH_RETRO_CSV.name()))
 		{
-			exportSummaryFollowups(req, response);
+			exportSummaryImmunizationAgeAppropriateWithRetro(req, response);
 		}
 		else if(extype.equalsIgnoreCase(SystemPermissions.DOWNLOAD_SUMMARY_IMMUNIZATION_BY_VACCINATOR_CSV.name()))
 		{
@@ -140,10 +140,6 @@ public class ExporterServlet extends HttpServlet
 		else if(extype.equalsIgnoreCase(SystemPermissions.UPLOAD_CHILD_PROCESSED_INCENTIVE_CSV.name()))
 		{
 			importProcessedChildIncentive(req, response);
-		}
-		else if(extype.equalsIgnoreCase(SystemPermissions.DOWNLOAD_CHILD_CSV.name()))
-		{
-			exportChildren(req, response);
 		}
 		else if(extype.equalsIgnoreCase(SystemPermissions.DOWNLOAD_REMINDERSMS_CSV.name()))
 		{
@@ -629,7 +625,7 @@ public class ExporterServlet extends HttpServlet
 						rowres[5] = "SUCCESS: FOUND "+incent.size()+"records. MARKED record # "+incent.get(0).getChildIncentiveId()+" CONSUMED";
 					}
 					else {
-						incent.get(0).setIncentiveStatus(IncentiveStatus.WAITING);
+//						incent.get(0).setIncentiveStatus(IncentiveStatus.WAITING);
 						incent.get(0).setTransactionDate(disdate);
 						incent.get(0).setDescription(jo.getString("REASON"));
 						incent.get(0).setLastEditedDate(new Date());
@@ -1203,198 +1199,6 @@ public class ExporterServlet extends HttpServlet
 		}
 	}
 	
-	private void exportChildren(HttpServletRequest req,	HttpServletResponse response) {
-		ServiceContext sc = Context.getServices();
-		
-		try{
-			String childId=(StringUtils.isEmptyOrWhitespaceOnly(req.getParameter("childid")))?null:req.getParameter("childid").trim();
-			String childNamepart=(StringUtils.isEmptyOrWhitespaceOnly(req.getParameter("childnamepart")))?null:req.getParameter("childnamepart").trim();		
-			String cellNumber=(StringUtils.isEmptyOrWhitespaceOnly(req.getParameter("cellNumber")))?null:req.getParameter("cellNumber").trim();
-			//STATUS status=(StringUtils.isEmptyOrWhitespaceOnly(req.getParameter("followupstatus")))?null:STATUS.valueOf(req.getParameter("followupstatus"));	
-			//boolean isnotChecked=(StringUtils.isEmptyOrWhitespaceOnly(req.getParameter("followupstatusNotchk")))?false:true;	
-			Gender gender=(StringUtils.isEmptyOrWhitespaceOnly(req.getParameter("gender")))?null:Gender.valueOf(req.getParameter("gender"));	
-			//String epiNumber=(StringUtils.isEmptyOrWhitespaceOnly(req.getParameter("epiNumber")))?null:req.getParameter("epiNumber");	
-			Date enrollmentDatefrom = (StringUtils.isEmptyOrWhitespaceOnly(req.getParameter("enrollmentDatefrom"))) ? null : WebGlobals.GLOBAL_JAVA_DATE_FORMAT.parse(req.getParameter("enrollmentDatefrom"));	
-			Date enrollmentDateto = (StringUtils.isEmptyOrWhitespaceOnly(req.getParameter("enrollmentDateto"))) ? null : WebGlobals.GLOBAL_JAVA_DATE_FORMAT.parse(req.getParameter("enrollmentDateto"));	
-			Date birthDatefrom = (StringUtils.isEmptyOrWhitespaceOnly(req.getParameter("birthDatefrom"))) ? null : WebGlobals.GLOBAL_JAVA_DATE_FORMAT.parse(req.getParameter("birthDatefrom"));	
-			Date birthDateto = (StringUtils.isEmptyOrWhitespaceOnly(req.getParameter("birthDateto"))) ? null : WebGlobals.GLOBAL_JAVA_DATE_FORMAT.parse(req.getParameter("birthDateto"));	
-			
-			// our child may be mapped onto different centers but the center on which it was enrolled
-			// will be only one and the very first and will be part of child's id hence for finding children 
-			// of a center we will set child id digits as center id
-			String vaccCenter = req.getParameter("vaccinationCenterddp");
-			if(childId == null && !StringUtils.isEmptyOrWhitespaceOnly(vaccCenter)){
-				childId = vaccCenter;
-			}
-						
-			response.setContentType("application/zip"); 
-			response.setHeader("Content-Disposition", "attachment; filename=Exporter_children_"+GlobalParams.CSV_FILENAME_DATE_FORMAT.format(new Date())+".zip"); 
-
-			Csvee csv = new Csvee();
-			
-			CsveeRow headerrow = new CsveeRow();
-			headerrow.addRowElement("S. no.");
-			headerrow.addRowElement("Child ID");
-			headerrow.addRowElement("Date Enrolled");
-			headerrow.addRowElement("Enrollment Vaccine ID");
-			headerrow.addRowElement("Enrollment Vaccine");
-			headerrow.addRowElement("Enrollment Center");
-			headerrow.addRowElement("Enrollment Timeliness");
-			headerrow.addRowElement("Enrollment Timeliness Factor");
-			headerrow.addRowElement("Enrollment Vaccinator");
-			/*headerrow.addRowElement("Enrollment Brought By Relationship ID");
-			headerrow.addRowElement("Enrollment Brought By");
-			headerrow.addRowElement("Enrollment Brought By Other");*/
-			headerrow.addRowElement("Enrollment OPV Given");
-			headerrow.addRowElement("Enrollment PCV Given");
-			/*headerrow.addRowElement("Enrollment Weight");
-			headerrow.addRowElement("Enrollment Height");*/
-			headerrow.addRowElement("Enrollment EPI number");
-			headerrow.addRowElement("Child First Name");
-			headerrow.addRowElement("Child Last Name");
-			headerrow.addRowElement("Father First Name");
-			headerrow.addRowElement("Father Last Name");
-			headerrow.addRowElement("Mother First Name");
-			headerrow.addRowElement("Mother Last Name");
-			headerrow.addRowElement("Gender");
-			headerrow.addRowElement("Birthdate");
-			headerrow.addRowElement("Is Estimated Birthdate");
-			headerrow.addRowElement("Religion ID");
-			headerrow.addRowElement("Religion");
-			headerrow.addRowElement("Other Religion");
-			headerrow.addRowElement("Language ID");
-			headerrow.addRowElement("Language");
-			headerrow.addRowElement("Other Language");
-			
-			headerrow.addRowElement("Address Type");
-			headerrow.addRowElement("House Number");
-			headerrow.addRowElement("Street Numbr");
-			headerrow.addRowElement("Sector");
-			headerrow.addRowElement("Colony");
-			headerrow.addRowElement("Town");
-			headerrow.addRowElement("UC");
-			headerrow.addRowElement("Landmark");
-			headerrow.addRowElement("City ID");
-			headerrow.addRowElement("City");
-			headerrow.addRowElement("Other City");
-
-			headerrow.addRowElement("Date Of Preference");
-			headerrow.addRowElement("Approved Lottery");
-			headerrow.addRowElement("Lottery Rejection Reason");
-			headerrow.addRowElement("Other Lottery Rejection Reason");
-			headerrow.addRowElement("Approved Reminders");
-			headerrow.addRowElement("Reminders Rejection Reason");
-			headerrow.addRowElement("Other Reminders Rejection Reason");
-			headerrow.addRowElement("Has Cell Phone Access");
-			headerrow.addRowElement("Preferred Sms Timings");
-			
-			headerrow.addRowElement("Contact1 Number Type");
-			headerrow.addRowElement("Owner Relation ID");
-			headerrow.addRowElement("Owner Relation");
-			headerrow.addRowElement("Other Owner Relation");
-			headerrow.addRowElement("Number");
-			headerrow.addRowElement("Contact2 Number Type");
-			headerrow.addRowElement("Line Type");
-			headerrow.addRowElement("Number");
-			headerrow.addRowElement("Date Created");
-			headerrow.addRowElement("Data Entry User");
-			headerrow.addRowElement("Data Entry Source");
-			headerrow.addRowElement("Description");
-
-			csv.addHeader(headerrow );
-			
-			String qury = "select cid.programId , " +
-					" c.dateEnrolled , ifnull(CAST(venr.vaccineId AS char(2)), 'NOT FOUND') EnrVaccineId, ifnull(vc.name, 'NOT FOUND') EnrVaccineName, ifnull(enrvcntid.programId, 'NOT FOUND') EnrCenter, " +
-					" venr.timelinessStatus as Timeliness, venr.timelinessFactor as TimelinessFactor, ifnull(enrvtorid.programId, 'NOT FOUND') EnrVaccinator, venr.polioVaccineGiven EnrPolioGiven, venr.pcvGiven EnrPCVGiven, ifnull(venr.epiNumber, 'NOT FOUND') EnrEpiNumber, " +
-					" c.firstName , c.lastName , c.fatherFirstName , c.fatherLastName , " +
-					" c.motherFirstName , c.motherLastName ,  c.gender , c.birthdate , c.estimatedBirthdate, " +
-					" c.religionId , rlg.religionName , c.otherReligion , c.languageId , lng.languageName , c.otherLanguage , " +
-					" ifnull(ad.addressType, 'NOT FOUND') addressType, ad.addHouseNumber , ad.addStreet , ad.addSector , ad.addColony , ifnull(ad.addtown, 'NOT FOUND') addressTown, ad.addUc , ad.addLandmark , ifnull(CAST(ad.cityId AS char(2)), 'NOT FOUND') cityId, cty.cityName , ad.cityName as othercity, " +
-					" ifnull(CAST(prf.datePreferenceChanged AS char(20)), '') dateOfPreference, ifnull(CAST(venr.hasApprovedLottery AS char(2)), '') HasApprovedLottery, prf.reasonLotteryRejection , prf.reasonLotteryRejectionOther , " +
-					" ifnull(CAST(prf.hasApprovedReminders AS char(2)), '') HasApprovedReminders, prf.reasonRemindersRejection , prf.reasonRemindersRejectionOther , prf.hasCellPhoneAccess , prf.preferredSmsTiming , " +
-					" ifnull(c1.numberType, '') Contact1Type, c1.ownerRelationId , c1rl.relationName , c1.otherOwnerRelation , ifnull(c1.number, '') Contact1Number, " +
-					" c2.numberType Contact2Type, c2.telelineType , c2.number , " +
-					" c.createdDate , u.username , e.dataEntrySource , c.description " +
-					" from child c" +
-					" left join idmapper cid on c.mappedId = cid.mappedId " +
-					" left join religion rlg on c.religionId = rlg.religionId " +
-					" left join language lng on c.languageId = lng.languageId " +
-					" left join user u on c.createdByUserId = u.mappedId " +
-					" left join (select * from lotterysms lin where lin.datepreferencechanged=(select max(datepreferencechanged) from lotterysms where mappedid=lin.mappedid) " +
-					"		and lin.createdDate=(select max(createdDate) from lotterysms where mappedid=lin.mappedid and date(datepreferencechanged)=date(lin.datepreferencechanged))) " +
-					" 		prf on c.mappedId=prf.mappedId " +
-					" left join contactnumber c1 on c.mappedId = c1.mappedId and c1.numberType='PRIMARY' " +
-					" left join contactnumber c2 on c.mappedId = c2.mappedId and c2.numberType='SECONDARY' " +
-					" left join address ad on c.mappedId = ad.mappedId " +
-					" left join vaccination venr on c.mappedId = venr.childId and venr.vaccinationDate is not null and date(venr.vaccinationDate) = (select min(date(vaccinationDate)) from vaccination where childId= venr.childId) " +
-					" 						and venr.vaccinationRecordNum = (select min(vaccinationRecordNum) from vaccination where childId=venr.childId and date(vaccinationDate)=date(venr.vaccinationDate)) " +
-					" left join vaccine vc on venr.vaccineId = vc.vaccineId " +
-					" left join idmapper enrvtorid on venr.vaccinatorId = enrvtorid.mappedId " +
-					" left join idmapper enrvcntid on venr.vaccinationCenterId = enrvcntid.mappedId " +
-					" left join city cty on ad.cityId = cty.cityId " +
-					" left join relationship c1rl on c1.ownerRelationId = c1rl.relationshipId " +
-					" left join encounter e on c.mappedId = e.p1id and e.encounterType = 'Enrollment' " +
-					" where c.mappedId is not null ";
-			
-			if(childId != null ){
-				qury += " and cid.programId like '" + childId +"%' ";
-			}
-			if(enrollmentDatefrom != null && enrollmentDateto != null){
-				qury += " and dateEnrolled between '"+GlobalParams.SQL_DATE_FORMAT.format(enrollmentDatefrom)+"' and '"+GlobalParams.SQL_DATE_FORMAT.format(enrollmentDateto)+"' ";
-			}
-			if(birthDatefrom != null && birthDateto != null){
-				qury += " and birthDate between '"+GlobalParams.SQL_DATE_FORMAT.format(birthDatefrom)+"' and '"+GlobalParams.SQL_DATE_FORMAT.format(birthDateto)+"' ";
-			}
-			if(childNamepart != null){
-				qury += " and (c.firstName like '"+childNamepart+"%' OR c.lastName like '"+childNamepart+"%' )";
-			}
-			if(cellNumber != null){
-				qury += " and (c1.number like '%"+cellNumber+"' OR c2.number like '%"+cellNumber+"' )";
-			}
-			if(gender != null){
-				qury += " and gender = '"+gender.name()+"' ";
-			}
-
-			qury += " order by dateEnrolled desc, createdDate desc";
-
-			//System.out.println(qury);
-			
-			List list = sc.getCustomQueryService().getDataBySQL(qury);
-
-			int i=1;
-			for(Object object : list){
-				CsveeRow datarow = new CsveeRow();
-				datarow.addRowElement(i);
-				
-				if(object instanceof Object[]){
-					Object[] coldata = (Object[]) object;
-					for (int ind = 0 ; ind < coldata.length ; ind++) {
-						datarow.addRowElement(coldata[ind]);
-					}
-				}
-				else{
-					datarow.addRowElement(object);
-				}
-				
-				csv.addData(datarow);
-				
-				i++;
-			}
-			
-			ZipOutputStream zip = new ZipOutputStream(response.getOutputStream());
-			zip.putNextEntry(new ZipEntry("children.csv"));
-			zip.write(csv.getCsv(true));
-			zip.closeEntry();
-			zip.close();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		finally{
-			sc.closeSession();
-		}
-	}
-
 	@SuppressWarnings("rawtypes")
 	private void exportSummaryFollowups(HttpServletRequest req, HttpServletResponse response) {
 		ServiceContext sc = Context.getServices();
@@ -1759,7 +1563,7 @@ public class ExporterServlet extends HttpServlet
 			String d1f = StringUtils.isEmptyOrWhitespaceOnly(date1from)?null:("'"+new SimpleDateFormat("yyyy-MM-dd").format(WebGlobals.GLOBAL_JAVA_DATE_FORMAT.parse(date1from))+"'");
 			String d1t = StringUtils.isEmptyOrWhitespaceOnly(date1to)?null:("'"+new SimpleDateFormat("yyyy-MM-dd").format(WebGlobals.GLOBAL_JAVA_DATE_FORMAT.parse(date1to))+"'");
 
-			List centersummary = sc.getCustomQueryService().getDataBySQL("CALL SummaryEnrByCenterCohort2('"+(center==null?"":center.trim())+"', "+d1f+", "+d1t+" , 0, "+Integer.MAX_VALUE+", '', '')");
+			List centersummary = sc.getCustomQueryService().getDataBySQL("CALL SummaryEnrByCenterCohort('"+(center==null?"":center.trim())+"', "+d1f+", "+d1t+" , 0, "+Integer.MAX_VALUE+", '', '')");
 
 			response.setContentType("application/csv"); 
 			response.setHeader("Content-Disposition", "attachment; filename=Exporter_SummaryEnrollmentByCohortAndCenter_"+GlobalParams.CSV_FILENAME_DATE_FORMAT.format(new Date())+".csv"); 
@@ -2210,7 +2014,7 @@ public class ExporterServlet extends HttpServlet
 						qury += " and v.vaccineId ="+(vacc==null?-1:vacc.getVaccineId())+" ";
 					}
 					//////////////////FOR searching VACCINATION CENTERS
-					if(vaccstatus != null && vaccstatus.equals(VACCINATION_STATUS.PENDING) && vaccCenter != null){
+					if(vaccstatus != null && vaccstatus.equals(VACCINATION_STATUS.SCHEDULED) && vaccCenter != null){
 //TODO						qury += " and v.child.idMapper.identifiers[0].identifier like '"+sc.getIdMapperService().findIdMapper(vaccCenter).getProgramId()+"%' ";
 					}
 					else if(vaccCenter != null){

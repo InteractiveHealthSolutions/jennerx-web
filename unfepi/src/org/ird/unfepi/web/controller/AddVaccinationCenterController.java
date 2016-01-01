@@ -51,7 +51,7 @@ public class AddVaccinationCenterController  extends DataEntryFormController{
 			String centerLocation = request.getParameter("centerLocation");
 			String cityId = sc.getCustomQueryService().getDataByHQL("SELECT otherIdentifier FROM Location WHERE locationId="+cityIdParam).get(0).toString();
 
-			String sql = "SELECT IFNULL(MAX(SUBSTRING(i.identifier, "+(cityId.length()+1)+",LENGTH(i.identifier)-"+(cityId.length()-1)+")),0) FROM vaccinationcenter v JOIN idmapper id ON v.mappedId=id.mappedId JOIN identifier i ON id.mappedId=i.mappedId WHERE name NOT LIKE 'other%' AND i.identifier NOT LIKE '%999' AND i.identifier LIKE '"+cityId+"%'";
+			String sql = "SELECT IFNULL(MAX(SUBSTRING(i.identifier, "+(cityId.length()+1)+",LENGTH(i.identifier)-"+(cityId.length()-1)+")),0) FROM vaccinationcenter v JOIN idmapper id ON v.mappedId=id.mappedId JOIN identifier i ON id.mappedId=i.mappedId WHERE i.identifier NOT LIKE '%999' AND i.identifier LIKE '"+cityId+"%'";
 			int maxidstk = Integer.parseInt(sc.getCustomQueryService().getDataBySQL(sql ).get(0).toString());
 			String vcProgramId = cityId+StringUtils.leftPad(""+(maxidstk+1), 3, "0");//request.getParameter("autogenIdPart")+request.getParameter("storekeeperIdAssigned");
 	

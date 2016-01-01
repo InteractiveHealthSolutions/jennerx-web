@@ -17,9 +17,7 @@ import org.ird.unfepi.GlobalParams;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Address;
-import org.ird.unfepi.model.ContactNumber;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
-import org.ird.unfepi.model.Model.ContactTeleLineType;
 import org.ird.unfepi.model.User;
 import org.ird.unfepi.model.Women;
 import org.ird.unfepi.model.Women.WOMENSTATUS;
@@ -27,8 +25,6 @@ import org.ird.unfepi.model.WomenVaccination;
 import org.ird.unfepi.model.WomenVaccination.WOMEN_VACCINATION_STATUS;
 import org.ird.unfepi.rest.elements.RequestElements;
 import org.ird.unfepi.rest.elements.ResponseStatus;
-import org.ird.unfepi.service.UserService;
-import org.ird.unfepi.service.exception.ChildDataInconsistencyException;
 import org.ird.unfepi.web.utils.ControllerUIHelper;
 import org.ird.unfepi.web.utils.WomenVaccinationCenterVisit;
 import org.json.simple.JSONObject;
@@ -232,12 +228,12 @@ public class WomenEnrollmentServiceHelper {
 		// ///////////Address fields ///////////////////////
 		Address add = new Address();
 		add.setAddress1(address);
-		add.setAddLandmark(landmark);
+		add.setLandmark(landmark);
 		add.setCityId(Integer.valueOf(city));
 		// set town id
-		add.setAddtown(town);
+		add.setTown(town);
 		// set uc id
-		add.setAddUc(uc);
+		add.setUc(uc);
 		// hardcoating the id for testing
 		centerVisit.setVaccinationCenterId(centreId);
 		

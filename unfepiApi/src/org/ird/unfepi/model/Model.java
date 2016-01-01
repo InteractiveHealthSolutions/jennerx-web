@@ -69,37 +69,12 @@ public class Model {
 	
 	public enum SmsStatus {
 
-		/** Pending. */
-		PENDING("PND"),
-		/** Sent. */
-		SENT("SNT"),
-		/** Failed. */
-		FAILED("FLD"),
-		/** Missed. */
-		MISSED("MIS"),
-		/** Cancelled. */
-		CANCELLED("CNCL"),
-		LOGGED("LGD");
-
-		/** The REPRESENTATION. */
-		private String REPRESENTATION;
-
-		public String getREPRESENTATION() {
-			return REPRESENTATION;
-		}
-
-		private SmsStatus(String representation) {
-			this.REPRESENTATION = representation;
-		}
-
-		public static SmsStatus findEnum(String representationString) {
-			for (SmsStatus en : SmsStatus.values()) {
-				if (en.REPRESENTATION.equalsIgnoreCase(representationString)) {
-					return en;
-				}
-			}
-			return null;
-		}
+		SCHEDULED,
+		SENT,
+		FAILED,
+		MISSED,
+		CANCELLED,
+		LOGGED;
 	}
 	
 	/**

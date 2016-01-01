@@ -173,12 +173,12 @@ public class EnrollmentServiceHelper
 		// ///////////Address fields ///////////////////////
 		Address add = new Address();
 		add.setAddress1(houseNo + sector + colony + street);
-		add.setAddLandmark(landmark);
+		add.setLandmark(landmark);
 		add.setCityId(Integer.valueOf(city));
 		// set town id
-		add.setAddtown(town);
+		add.setTown(town);
 		// set uc id
-		add.setAddUc(uc);
+		add.setUc(uc);
 
 
 		ContactNumber contactMob = new ContactNumber();

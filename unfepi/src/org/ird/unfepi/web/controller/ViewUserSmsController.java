@@ -14,6 +14,7 @@ import org.ird.unfepi.GlobalParams.SearchFilter;
 import org.ird.unfepi.constants.WebGlobals;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
+import org.ird.unfepi.model.IdMapper;
 import org.ird.unfepi.model.Model.SmsStatus;
 import org.ird.unfepi.model.UserSms;
 import org.ird.unfepi.utils.UnfepiUtils;
@@ -53,8 +54,16 @@ public class ViewUserSmsController extends DataDisplayController{
 			if(!StringUtils.isEmptyOrWhitespaceOnly(pagerOffset)){//request is to navigate pages
 				startRecord = Integer.parseInt(req.getParameter("pager.offset"));
 			}
+			
+			IdMapper idm = null;
+			if(!StringUtils.isEmptyOrWhitespaceOnly(recpid)){
+				idm = sc.getIdMapperService().findIdMapper(recpid);
+				if(idm == null){
+					idm = new IdMapper();//to make sure that it would not skip id in searching incentive
+				}
+			}
 
-			list = sc.getUserSmsService().findUserSmsByCriteria(dueDatefrom, dueDateto, sentDatefrom, sentDateto, status, false, null, null, null, null, startRecord, WebGlobals.DEFAULT_PAGING_MAX_PAGE_ITEMS, true, new String[]{"idMapper","createdByUserId"});
+			list = sc.getUserSmsService().findUserSmsByCriteria(dueDatefrom, dueDateto, sentDatefrom, sentDateto, status, false, null, cellNumber, (idm==null?null:idm.getMappedId()), null, startRecord, WebGlobals.DEFAULT_PAGING_MAX_PAGE_ITEMS, true, new String[]{"idMapper","createdByUserId"});
 
 			if(sc.getUserSmsService().LAST_QUERY_TOTAL_ROW_COUNT(UserSms.class)!=null){
 			totalRows= sc.getUserSmsService().LAST_QUERY_TOTAL_ROW_COUNT(UserSms.class).intValue();

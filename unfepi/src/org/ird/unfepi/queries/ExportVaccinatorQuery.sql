@@ -10,9 +10,8 @@ vtor.firstName , vtor.lastName ,
 vtor.gender , vtor.birthdate , vtor.estimatedBirthdate, vtor.qualification, 
 vid.identifier ClosestCenter, vtor.nic, vtor.epAccountNumber, 
 (select group_concat('--',numberType,':',number) from contactnumber where mappedid=vtor.mappedId) contactnumbers, 
-(select group_concat('H.No:',IFNULL(a.addHouseNumber,'NIL'),' Street:',IFNULL(a.addStreet,'NIL'),
-' Sector:',IFNULL(a.addSector,'NIL'),' Colony:',IFNULL(a.addColony,'NIL'),' Town:',IFNULL(a.addtown,'NIL'),
-' UC:',IFNULL(a.addUc,'NIL'),' LMARK:',IFNULL(a.addLandmark,'NIL'),
+(select group_concat('AddressLine1:',IFNULL(a.address1,'NIL'),' Town:',IFNULL(a.town,'NIL'),
+' UC:',IFNULL(a.uc,'NIL'),' LMARK:',IFNULL(a.landmark,'NIL'),
 ' CityID:',CAST(IFNULL(a.cityId,'') AS char(2))) from address a where a.mappedid=vtor.mappedId) addresses, 
 vtor.description
 FROM vaccinator vtor 

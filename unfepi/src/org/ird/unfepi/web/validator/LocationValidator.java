@@ -29,7 +29,7 @@ public class LocationValidator implements Validator{
 		else {
 			ServiceContext sc = Context.getServices();
 			try{
-				List el = sc.getCustomQueryService().getDataByHQL("FROM Location WHERE name='"+loc.getName()+"'");
+				List el = sc.getCustomQueryService().getDataByHQL("FROM Location WHERE name='"+loc.getName()+"' AND locationId <> "+loc.getLocationId());
 				if(el.size() > 0){
 					error.rejectValue("name" , "" , "Location with given name already exists");
 				}
@@ -38,6 +38,9 @@ public class LocationValidator implements Validator{
 				sc.closeSession();
 			}
 			
+		}
+		if(!DataValidation.validate(REG_EX.NO_SPECIAL_CHAR, loc.getFullName())){
+			error.rejectValue("fullName" , "" , ErrorMessages.LOCATION_FULLNAME_INVALID);
 		}
 
 		if(!DataValidation.validate(REG_EX.NO_SPECIAL_CHAR, loc.getFullName())){

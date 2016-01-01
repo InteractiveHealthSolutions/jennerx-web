@@ -7,7 +7,6 @@
 
 <c:set var="childsessvar" value="childfollowup"></c:set>
 <script type="text/javascript">
-<!--
 window.onload = onloadSettingOfControls;
 
 function onloadSettingOfControls() 
@@ -18,7 +17,7 @@ function onloadSettingOfControls()
 function loadSchedule(resetall){
 	DWRVaccineService.getSchedule('${command.uuid}', function(result) {
 		//alert(result);
-		vaccineScheduleGeneratorAndReset(convertToDate($('#birthdateinh').val()), convertToDate($('#centerVisitDate').val()), '${command.childId}', resetall?null:result, '${command.uuid}', true);
+		vaccineScheduleGenerator(convertToDate($('#birthdateinh').val()), convertToDate($('#centerVisitDate').val()), '${command.childId}', '${command.vaccinationCenterId}', result, '${command.uuid}',true);
 	});
 }
 function subfrm()
@@ -37,46 +36,12 @@ function submitThisForm() {
 	//document.getElementById("submitBtn").disabled=true;
 	document.getElementById("frm").submit();
 }
-//-->
 </script>
 <form method="post" id="frm" name="frm" >
 <table class="denform-h">
     <tr>
     	<td colspan="2"><%@ include file="dg_child_biographic_info.jsp" %></td>
     </tr>
-<%--     <c:set var="pndStatus" value="<%=Vaccination.VACCINATION_STATUS.PENDING %>"></c:set>
-    <c:set var="prevvacclistsessvar" value="prevVaccList${sessionScope[childsessvar].idMapper.mappedId}"></c:set>
-	<tr>
-        <td colspan="2" class="headerrow">Previous Vaccination Details</td>
-    </tr>
-    <tr><td colspan="2">
-    <table class="previousDataDisplay">
-    <c:forEach items="${sessionScope[prevvacclistsessvar]}" var="prevvaccmap"> 
-   	<tr>
-		<td colspan="1"><span class="separator-heading">${prevvaccmap.previous_vaccination.vaccine.name}</span> - 
-		${prevvaccmap.previous_vaccination.epiNumber} : ${prevvaccmap.previous_vaccination.vaccinationStatus}  (${prevvaccmap.previous_vaccination.vaccinationRecordNum})</td>
-		<td>${prevvaccmap.previous_vaccination_vcenter.idMapper.identifiers[0].identifier} : ${prevvaccmap.previous_vaccination_vcenter.name}</td>
-		<th colspan="2"><fmt:formatDate value="${prevvaccmap.previous_vaccination.vaccinationDate}" pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>"/>
-	<c:if test="${prevvaccmap.previous_vaccination.vaccinationStatus==pndStatus}">
-		<fmt:formatDate value="${prevvaccmap.previous_vaccination.vaccinationDuedate}" pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>"/>
-	</c:if>
-		</th>
-	</tr>
-	<c:if test="${prevvaccmap.previous_vaccination.vaccinationStatus!=pndStatus}">
-	<tr>
-		<td>Vaccination Center , Vaccinator</td>
-		<td>${prevvaccmap.previous_vaccination_vcenter.idMapper.identifiers[0].identifier} : ${prevvaccmap.previous_vaccination_vcenter.name}
-		 , ${prevvaccmap.previous_vaccination_vaccinator.idMapper.identifiers[0].identifier} : ${prevvaccmap.previous_vaccination_vaccinator.firstName}</td>
-	</tr>
-	<tr>	
-		<td>Epi Number</td>
-		<td>${prevvaccmap.previous_vaccination.epiNumber}</td>
-	</tr>
-	</c:if>
-    </c:forEach>
-    	</table>
-    </td>
-	</tr> --%>
 	<tr>
         <td colspan="2" class="headerrow">Immunization Details</td>
     </tr>
@@ -138,7 +103,7 @@ function centerChanged() {
 	</tr>
 	<tr>
         <td colspan="2">
-        <%@ include file="plt_vaccine_schedule.jsp" %>
+        <%@ include file="plt_vaccine_schedule_den.jsp" %>
         </td>
     </tr>
 	<tr>
@@ -150,7 +115,7 @@ function centerChanged() {
 			<spring:bind path="command.preference.hasApprovedReminders">
 				<input type="radio" name="preference.hasApprovedReminders" <c:if test='${not empty status.value && status.value == true}'>checked = "checked"</c:if> value="<%=WebGlobals.BOOLEAN_CONVERTER_TRUE_STRING%>"/>Yes<br>
 				<input type="radio" name="preference.hasApprovedReminders" <c:if test='${not empty status.value && status.value == false}'>checked = "checked"</c:if> value="<%=WebGlobals.BOOLEAN_CONVERTER_FALSE_STRING%>"/>No
-				<input type="radio" name="preference.hasApprovedReminders" value="" disabled="disabled"/>N/A<br>
+				<input type="radio" name="preference.hasApprovedReminders" value="" disabled="disabled" style="display: none"/>
 				<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
 		</td>

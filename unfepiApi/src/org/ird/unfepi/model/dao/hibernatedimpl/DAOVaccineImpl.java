@@ -9,6 +9,7 @@ import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.ird.unfepi.model.Vaccine;
 import org.ird.unfepi.model.dao.DAOVaccine;
 import org.ird.unfepi.utils.OrderBySqlFormula;
@@ -125,6 +126,22 @@ public class DAOVaccineImpl extends DAOHibernateImpl implements DAOVaccine{
 		
 		List<Vaccine> list = cri.addOrder(OrderBySqlFormula.sqlFormula(orderBySqlFormula)).list();
 		setLAST_QUERY_TOTAL_ROW_COUNT(list.size());
+		return list;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Vaccine> getById(Short[] vaccineIds, boolean readonly, String[] mappingsToJoin, String orderBySqlFormula) {
+		Criteria cri = session.createCriteria(Vaccine.class).setReadOnly(readonly);
+		cri.add(Restrictions.in("vaccineId", vaccineIds));
+		if(mappingsToJoin != null)
+			for (String mapping : mappingsToJoin) {
+				cri.setFetchMode(mapping, FetchMode.JOIN);
+			}
+		
+		setLAST_QUERY_TOTAL_ROW_COUNT((Number) cri.setProjection(Projections.rowCount()).uniqueResult());
+		cri.setProjection(null).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		
+		List<Vaccine> list = cri.addOrder(OrderBySqlFormula.sqlFormula(orderBySqlFormula)).list();
 		return list;
 	}
 	

@@ -3,9 +3,7 @@
  */
 package org.ird.unfepi.web.utils;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 import org.ird.unfepi.model.WomenVaccination;

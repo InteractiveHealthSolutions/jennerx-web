@@ -115,9 +115,6 @@ public class AddChildController extends DataEntryFormController
 			ControllerUIHelper.prepareVaccinationReferenceData(request, model, 
 					sc.getVaccinationService().getAllVaccinationCenter(true, new String[]{"idMapper"}), 
 					sc.getVaccinationService().getAllVaccinator(0, Integer.MAX_VALUE, true, new String[]{"idMapper"}));
-
-			ControllerUIHelper.prepareEnrollmentReferenceData(request, model, (EnrollmentWrapper) command, sc);
-			
 		}catch (Exception e) {
 			e.printStackTrace();
 			GlobalParams.FILELOGGER.error(formType.name(), e);

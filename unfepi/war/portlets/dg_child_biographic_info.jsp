@@ -25,7 +25,7 @@
 	<tr>
 		<td>DOB , Age</td>
 		<td>
-			<input class="readonlyLabelInput" readonly="readonly" id="birthdateinh" name="birthdateinh" value="<fmt:formatDate value="${sessionScope[childsessvar].birthdate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/>">
+			<input class="readonlyLabelInput" style="width: 65px" readonly="readonly" id="birthdateinh" name="birthdateinh" value="<fmt:formatDate value="${sessionScope[childsessvar].birthdate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/>">
 		 , 
 			<c:if test="${sessionScope[childsessvar].age < 20}">${sessionScope[childsessvar].age} Weeks</c:if>
 			<c:if test="${sessionScope[childsessvar].age >= 20}">

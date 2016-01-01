@@ -128,9 +128,6 @@ public class AddWomenController extends DataEntryFormController {
 			ControllerUIHelper.prepareVaccinationReferenceData(request, model, 
 					sc.getVaccinationService().getAllVaccinationCenter(true, new String[]{"idMapper"}), 
 					sc.getVaccinationService().getAllVaccinator(0, Integer.MAX_VALUE, true, new String[]{"idMapper"}));
-
-			ControllerUIHelper.prepareWomenEnrollmentReferenceData(request, model, (EnrollmentWrapperWomen) command, sc);
-			
 		}catch (Exception e) {
 			e.printStackTrace();
 			request.setAttribute("errorMessagev", "An error occurred while retrieving reference data list. Error message is:"+e.getMessage());

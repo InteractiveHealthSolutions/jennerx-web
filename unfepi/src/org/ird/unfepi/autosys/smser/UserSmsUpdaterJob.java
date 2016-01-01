@@ -20,7 +20,7 @@ public class UserSmsUpdaterJob extends TimerTask
 		ServiceContext sc = Context.getServices();
 		
 		try{
-			List<UserSms> smslist = sc.getUserSmsService().findUserSmsByCriteria(null, null, null, null, SmsStatus.PENDING, false, null, null, null, null, 0, Integer.MAX_VALUE, false, null);
+			List<UserSms> smslist = sc.getUserSmsService().findUserSmsByCriteria(null, null, null, null, SmsStatus.SCHEDULED, false, null, null, null, null, 0, Integer.MAX_VALUE, false, null);
 			
 			for (UserSms sms : smslist) 
 			{

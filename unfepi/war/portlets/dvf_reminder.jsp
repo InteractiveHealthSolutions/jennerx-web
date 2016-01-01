@@ -18,6 +18,7 @@ if(editremperm){
 }
 %>        		
             <th>Reminder Name</th>
+            <th>Reminder Type</th>
             <th>Description</th>
 <%-- <%
 boolean permuid=UserSessionUtils.hasActiveUserPermission(SystemPermissions.VIEW_USERID, request);
@@ -50,6 +51,7 @@ if(editremperm){
 <%}
 %>            
             <td><c:out value="${rem.remindername}"></c:out></td>
+            <td><c:out value="${rem.reminderType}"></c:out></td>
             <td><c:out value="${rem.description}"></c:out></td>
 <%-- <%if(permuid||permuname){ %>              
 <td><%if(permuid){%>${rem.createdByUserId.username},<%}%><%if(permuname){%>${rem.createdByUserId.firstName}<%}%></td>

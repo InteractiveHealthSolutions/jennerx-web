@@ -67,13 +67,10 @@ public class DataField {
 	public static final String VACCINATOR_EP_ACCOUNT_NUMBER = "epAccountNumber";
 	public static final String VACCINATOR_QUALIFICATION = "vaccinator.qualification";
 	
-	public static final String ADDRESS_HOUSE_NUMBER = "address.addHouseNumber";
-	public static final String ADDRESS_STREET = "address.addStreet";
-	public static final String ADDRESS_SECTOR = "address.addSector";
-	public static final String ADDRESS_COLONY = "address.addColony";
-	public static final String ADDRESS_TOWN = "address.addtown";
-	public static final String ADDRESS_UC = "address.addUc";
-	public static final String ADDRESS_LANDMARK = "address.addLandmark";
+	public static final String ADDRESS_ADDRESS1 = "address.address1";
+	public static final String ADDRESS_TOWN = "address.town";
+	public static final String ADDRESS_UC = "address.uc";
+	public static final String ADDRESS_LANDMARK = "address.landmark";
 	public static final String ADDRESS_CITY_ID = "address.cityId";
 	public static final String ADDRESS_CITY_NAME = "address.cityName";
 	
@@ -106,6 +103,7 @@ public class DataField {
 	public static final String VACCINATION_VACCINATOR_ID = "centerVisit.vaccinatorId";
 	
 	public static final String PREFERENCE_HAS_APPROVED_REMINDERS = "preference.hasApprovedReminders";
+	public static final String PREFERENCE_HAS_APPROVED_LOTTERY = "preference.hasApprovedLottery";
 
 		
 	public static final String CENTER_VISIT_WOMEN_ID = "centerVisit.womenId";

@@ -1036,8 +1036,8 @@ div.denform{
 
 .separatorline {
 	border-bottom: 1px solid #F8F8F8;
-	padding: 0px;
-	margin: 0px;
+	padding: 0px !important;
+	margin: 0px !important;
 }
 
 /* Data entry forms simple/small*/
@@ -1280,8 +1280,8 @@ font-weight: bold;
 text-decoration: underline;
 }
 .alarmZone{
-	background-color: #FFE1E1;
-	border-color: #FFC4C4;
+	background-color: #FFC4C4;
+	border-color: #F3B5B5;
 	color: black;
 }
 .greenZone{
@@ -1290,7 +1290,7 @@ text-decoration: underline;
 	color: black;
 }
 .okZone{
-	background-color: #8D8DFE;
+	background-color: #aDaDfE;
 	border-color: #8D8DFE;
 	color: black;
 }
@@ -1299,7 +1299,36 @@ text-decoration: underline;
 	border-color: silver;
 	color: black;
 }
-
+.yellowZone{
+	background-color: #ffff8a;
+	border-color: #ffff00;
+	color: black;
+}
+.alarmZone-light{
+	background-color: #ffdddd;
+	border-color: #FFC4C4;
+	color: black;
+}
+.greenZone-light{
+	background-color: #D8F6CE;
+	border-color: #A2F2C5;
+	color: black;
+}
+.okZone-light{
+	background-color: #CECEF6;
+	border-color: #8D8DFE;
+	color: black;
+}
+.grayZone-light{
+	background-color: #E6E6E6;
+	border-color: silver;
+	color: black;
+}
+.yellowZone-light{
+	background-color: #ffffc4;
+	border-color: #ffff88;
+	color: black;
+}
 table.multipleVaccinePlt{
 	padding: 0;
 	margin: 0;
@@ -1352,7 +1381,6 @@ table.multipleVaccinePlt td{
 	letter-spacing: 2px;
 	text-align: center;
 	border-bottom: solid orange thin !important;
-	border-top: solid orange thin !important;
 	
 }
 .readonlyLabelInput {
@@ -1372,7 +1400,14 @@ table.multipleVaccinePlt td{
 .sideline {
 padding-left: 10px;
 }
-
+table.lightInputBorders input {
+	border: silver thin solid !important;
+}
+table.lightInputBorders select {
+	border: silver thin solid !important;
+	width: 150px;
+	background: white !important;
+}
 input[disabled]{background-color: #E6E6E6; border: 0}
 
 .left {

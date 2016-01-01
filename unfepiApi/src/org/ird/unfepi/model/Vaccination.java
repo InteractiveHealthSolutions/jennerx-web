@@ -33,13 +33,11 @@ public class Vaccination implements java.io.Serializable {
 	}
 	
 	public enum VACCINATION_STATUS{
-		
-		PENDING("PND"),
-		
-		VACCINATED("VACC"),
-		
-		NOT_VACCINATED("NVAC"),
-		
+		SCHEDULED,
+		VACCINATED,
+		NOT_VACCINATED,
+		RETRO,
+		RETRO_DATE_MISSING,
 		/**
 		 * Entry might be a result of unfilled form, or incomplete process that partially filled the table data
 		 * to make some other process work that can not work without a vaccination in place.
@@ -48,26 +46,7 @@ public class Vaccination implements java.io.Serializable {
 		 * To make the process work, vaccination table would be filled with necessary data 
 		 * and a form would be logged as 'to be filled later' allowing lottery to take place with out followup form.
 		 */
-		UNFILLED("UFLD");
-		
-		private String REPRESENTATION;
-		
-		public String getREPRESENTATION() {
-			return REPRESENTATION;
-		}
-
-		private VACCINATION_STATUS(String representation) {
-			this.REPRESENTATION = representation;
-		}
-		
-		public static VACCINATION_STATUS findEnum(String representationString){
-			for (VACCINATION_STATUS en : VACCINATION_STATUS.values()) {
-				if(en.REPRESENTATION.equalsIgnoreCase(representationString)){
-					return en;
-				}
-			}
-			return null;
-		}
+		UNFILLED;
 	}
 
 	@Id

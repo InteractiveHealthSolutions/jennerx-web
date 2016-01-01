@@ -65,11 +65,11 @@ if(isAuth){
 </c:forEach>
 
             <td><fmt:formatDate value="${map.BCGVaccinationDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>
-            <td><fmt:formatDate value="${map.Penta1VaccinationDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>
-            <td><fmt:formatDate value="${map.Penta2VaccinationDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>
-            <td><fmt:formatDate value="${map.Penta3VaccinationDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>
-            <td><fmt:formatDate value="${map.Measles1VaccinationDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>
-            <td><fmt:formatDate value="${map.Measles2VaccinationDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>
+            <td><fmt:formatDate value="${map.PENTA1VaccinationDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>
+            <td><fmt:formatDate value="${map.PENTA2VaccinationDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>
+            <td><fmt:formatDate value="${map.PENTA3VaccinationDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>
+            <td><fmt:formatDate value="${map.MEASLES1VaccinationDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>
+            <td><fmt:formatDate value="${map.MEASLES2VaccinationDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>
             <td><fmt:formatDate value="${map.OPV0VaccinationDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>
             <td><fmt:formatDate value="${map.OPV1VaccinationDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>
             <td><fmt:formatDate value="${map.OPV2VaccinationDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>

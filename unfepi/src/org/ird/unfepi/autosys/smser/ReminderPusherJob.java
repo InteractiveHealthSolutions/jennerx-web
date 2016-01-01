@@ -53,9 +53,9 @@ public class ReminderPusherJob implements Job
 			
 			GlobalParams.REMINDERJOBLOGGER.info("Running Job: "+jxc.getJobDetail().getFullName());
 
-			List<ReminderSms> remlist = sc.getReminderService().findReminderSmsRecordByCriteria(null, null, null, null, null, cal1.getTime(), cal2.getTime(),null , null, REMINDER_STATUS.PENDING, false, 0, Integer.MAX_VALUE, false, new String[]{"vaccination", "reminder"});
+			List<ReminderSms> remlist = sc.getReminderService().findReminderSmsRecordByCriteria(null, null, null, null, null, cal1.getTime(), cal2.getTime(),null , null, REMINDER_STATUS.SCHEDULED, false, 0, Integer.MAX_VALUE, false, new String[]{"vaccination", "reminder"});
 			
-			GlobalParams.REMINDERJOBLOGGER.info("Fetched "+remlist.size()+" PENDING sms");
+			GlobalParams.REMINDERJOBLOGGER.info("Fetched "+remlist.size()+" SCHEDULED sms");
 			
 			for (ReminderSms rem : remlist) 
 			{
@@ -134,8 +134,8 @@ public class ReminderPusherJob implements Job
 								rem.setReminderStatus(REMINDER_STATUS.OPTED_OUT);
 								rem.setSmsCancelReason((rem.getSmsCancelReason()==null?"":rem.getSmsCancelReason())+new SimpleDateFormat("dd-MM-yy HH:mm").format(new Date())+"Reminder Appoval "+lsl.get(0).getHasApprovedReminders()+";");
 							}
-							// vaccination was not found PENDING on the day then reminder should be marked as CANCELLED
-							else if(!rem.getVaccination().getVaccinationStatus().equals(VACCINATION_STATUS.PENDING)){
+							// vaccination was not found SCHEDULED on the day then reminder should be marked as CANCELLED
+							else if(!rem.getVaccination().getVaccinationStatus().equals(VACCINATION_STATUS.SCHEDULED)){
 								rem.setRecipient(recipient);
 								rem.setReminderStatus(REMINDER_STATUS.CANCELLED);
 								rem.setSmsCancelReason((rem.getSmsCancelReason()==null?"":rem.getSmsCancelReason())+new SimpleDateFormat("dd-MM-yy HH:mm").format(new Date())+" Vaccination status "+rem.getVaccination().getVaccinationStatus()+";");
@@ -176,6 +176,8 @@ public class ReminderPusherJob implements Job
 							
 							rem.setReferenceNumber(referenceNumber);
 							rem.setReminderStatus(REMINDER_STATUS.LOGGED);
+							rem.setRecipient(recipient);
+							rem.setText(text);
 						}
 						catch(Exception e){
 							e.printStackTrace();

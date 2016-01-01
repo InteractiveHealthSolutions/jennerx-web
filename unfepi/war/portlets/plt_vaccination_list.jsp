@@ -4,7 +4,7 @@
 <%@page import="org.ird.unfepi.constants.WebGlobals"%>
 <%@page import="org.ird.unfepi.web.utils.VaccineSchedule.VaccineScheduleKey"%>
 <div id="vaccinelistContainerDiv">
-<c:set var="vaccStPen" value="<%=VACCINATION_STATUS.PENDING.toString()%>"></c:set>
+<c:set var="vaccStPen" value="<%=VACCINATION_STATUS.SCHEDULED.toString()%>"></c:set>
 <table id="vaccinelistContainerTbl" class="denform2" >
 <tr style="background-color: #F3F3F3">
 <td>Vaccine</td>
@@ -21,7 +21,7 @@
 <td>${vacc.vaccine.name}</td>
 <td>
 <c:choose>	
-<c:when test="${vacc.vaccinationStatus == vaccStPen}"><!-- is editable for pending vaccinations only -->
+<c:when test="${vacc.vaccinationStatus == vaccStPen}"><!-- is editable for scheduled vaccinations only -->
 	 <spring:bind path="command.vaccinations[${vst.index}].vaccinationDuedate">
        <input id="vaccinationDuedate${vst.index}" name="${status.expression}" 
        value="${status.value}" class="smallbox"/>

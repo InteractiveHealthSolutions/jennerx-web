@@ -29,8 +29,8 @@
    <tbody class="rows">
    <c:forEach items="${model.datalist}" var="lott">
    		<tr>
-	   		<td style="width: 40px !important;"><a id="${lott.incentive.childIncentiveId}anc" class="linkiconS iconexpand" title="Expand and show details" onclick="expandD('${lott.incentive.class.name}', ${lott.incentive.childIncentiveId});" value="+"></a>
-			<a class="linkiconS iconnote" title="Add note" onclick="openNoteWindow('${lott.incentive.class.name}', ${lott.incentive.childIncentiveId})"></a></td>
+	   		<td style="width: 40px !important;"><a id="${lott.incentive.childIncentiveId}anc" class="linkiconS iconexpand" title="Expand and show details" onclick="expandD('ChildIncentive.class', ${lott.incentive.childIncentiveId});" value="+"></a>
+			<a class="linkiconS iconnote" title="Add note" onclick="openNoteWindow('ChildIncentive.class', ${lott.incentive.childIncentiveId})"></a></td>
    			<td><a onclick="viewChildDetails(this.text);" class="anchorCustom">${lott.incentive.vaccination.child.idMapper.identifiers[0].identifier}</a></td>
    	 		<td class="left">${lott.incentive.vaccination.vaccine.name}</td>
    	 		<td class="left">${lott.incentive.arm.armName}</td>

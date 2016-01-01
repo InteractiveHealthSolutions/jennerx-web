@@ -26,6 +26,9 @@ if(UserSessionUtils.getActiveUser(request).isDefaultAdministrator()){%>
             <td>Date enrolled</td><td><fmt:formatDate value="${model.child.dateEnrolled}" /></td>
 </tr>
 <tr>
+        <td>Enrollment Vaccination</td><td>${model.child.enrollmentVaccine.name}</td>
+</tr>
+<tr>
             <td>First name</td><td><c:out value="${model.child.firstName}"></c:out></td>
 </tr>  
 <tr>            
@@ -109,15 +112,15 @@ if(permed){
 	  <tr>
 	    <th>Date of preference</th>
 	    <th>Data entry datetime</th>
-	    <!-- <td>Approved lottery?</td> -->
 	    <th>Approved reminders?</th>
+	    <th>Approved lottery?</th>
 	  </tr>
 	  <c:forEach items="${model.preferences}" var="prf" >
 	  <tr>
 	    <td><span style="color: maroon;"><fmt:formatDate value="${prf.datePreferenceChanged}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></span></td>
 	    <td><fmt:formatDate value="${prf.createdDate}" pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>"/></td>
-	    <%-- <td>${prf.hasApprovedLottery}</td> --%>
 	    <td>${prf.hasApprovedReminders}</td>
+	    <td>${prf.hasApprovedLottery}</td>
 	  </tr>
 	  </c:forEach>
 	</table>
@@ -171,22 +174,13 @@ if(permed){
             <td>Address Type</td><td><c:out value="${addr.addressType}"></c:out></td>
 </tr> --%>
 <tr>
-            <td>House number</td><td><c:out value="${addr.addHouseNumber}"></c:out></td>
+            <td>Address line 1</td><td><c:out value="${addr.address1}"></c:out></td>
 </tr>
 <tr>
-            <td>Street number</td><td><c:out value="${addr.addStreet}"></c:out></td>
-</tr>
-<tr>            
-			<td>Sector</td><td><c:out value="${addr.addSector}"></c:out></td>
+            <td>Town, UC</td><td><c:out value="${addr.town}"/>, UC: <c:out value="${addr.uc}"/></td>
 </tr>
 <tr>
-            <td>Colony</td><td><c:out value="${addr.addColony}"></c:out></td>
-</tr>
-<tr>
-            <td>Town, UC</td><td><c:out value="${addr.addtown}"/>, UC: <c:out value="${addr.addUc}"/></td>
-</tr>
-<tr>
-            <td>Landmark</td><td><c:out value="${addr.addLandmark}"></c:out></td>
+            <td>Landmark</td><td><c:out value="${addr.landmark}"></c:out></td>
 </tr>
 <tr>
             <td>City</td><td><c:out value="${addr.city.name}"/> <c:out value="${addr.cityName}"/></td>
@@ -218,22 +212,6 @@ if(permed){
             <td>Last updated</td><td><fmt:formatDate value="${addr.lastEditedDate}" pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>"/></td>    
 </tr>
 </c:forEach>
-<tr>
-        <td colspan="2" class="headerrow">Enrollment Vaccination (<span class="attribute-heading">${model.vacc.vaccine.name} : ${model.vacc.vaccinationRecordNum}</span>)</span></td>
-</tr>
-<tr>
-	        <td>Vaccination center, Vaccinator</td><td><c:out value="${model.vcenter.idMapper.identifiers[0].identifier} : ${model.vcenter.name}"/>
-	        , <c:out value="${model.vaccinator.idMapper.identifiers[0].identifier} : ${model.vaccinator.firstName}"/></td>
-</tr>  
-<tr>
-       		<td>Vaccination due date</td> <td><fmt:formatDate value="${model.vacc.vaccinationDuedate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>
-</tr>
-<tr>
-       		<td>Vaccination date</td> <td><fmt:formatDate value="${model.vacc.vaccinationDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>
-</tr>
-<tr>            
-        	<td>EPI number at enrollment</td><td><c:out value="${model.vacc.epiNumber}"></c:out></td>
-</tr>
 </table>
 <table>
 <tr>

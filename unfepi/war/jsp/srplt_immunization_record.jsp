@@ -10,7 +10,6 @@
 
 <form class="searchpalette" id="searchfrm" name="searchfrm" method="post" >
 <script type="text/javascript">
-<!--
 var srfilters = new Array();
 
 function addSearchFilter() {
@@ -107,7 +106,6 @@ function removeSerachFilter(ind) {
 	$('div[srflindex='+ind+']').remove();
 	srfilters[ind] = -1;
 }
-//-->
 </script>
 
 <select id="columnnameslist" style="display: none;">
@@ -149,12 +147,12 @@ function removeSerachFilter(ind) {
 <tr><td>Gender</td><td>Male | Female</td></tr>
 <tr><td>IsEstimatedBirthdate, HasApprovedReminders,<br>ApprovedLottery , PCVGiven, OPVGiven</td><td>Yes | No</td></tr>
 <tr><td>EPInumber</td><td>8 digits</td></tr>
-<tr><td>VaccinationStatus</td><td>Vaccinated | Pending</td></tr>
+<tr><td>VaccinationStatus</td><td>Vaccinated | Scheduled | Retro | Retro_date_missing</td></tr>
 <tr><td>CodeStatus</td><td>Available | Consumed | Expired</td></tr>
 <tr><td>VerficiationCode</td><td>6 digits</td></tr>
 <tr><td>StorekeeperID</td><td>6 digits</td></tr>
 <tr><td>Center</td><td>5 digits</td></tr>
-<tr><td>ReminderStatus</td><td>NA | Pending | Sent | Missed | Failed | Logged</td></tr>
+<tr><td>ReminderStatus</td><td>NA | Scheduled | Sent | Missed | Failed | Logged</td></tr>
 <tr><td>ResponseCount</td><td>any number</td></tr>
 <tr><td>Using 'Between'</td><td>startRange AND endRange</td></tr>
 <tr><td>Using 'Between' with date</td><td>yyyy-MM-dd AND yyyy-MM-dd<br>i.e. 2013-12-01 AND 2014-01-26</td></tr>

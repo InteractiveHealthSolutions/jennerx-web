@@ -33,7 +33,7 @@ function expandD(className, eventId){
 
 						var r = $('<tr class="datahighlight"></tr>');
 						r.append($('<td> ').append('Phone operator'));
-						r.append($('<td> ').append('Datetime'));
+						r.append($('<td> ').append('Date'));
 						r.append($('<td> ').append('Who called'));
 						r.append($('<td> ').append('Caller details'));
 						r.append($('<td> ').append('Reason for call (code)'));

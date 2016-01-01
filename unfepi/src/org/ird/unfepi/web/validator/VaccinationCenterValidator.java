@@ -5,6 +5,9 @@ import java.util.Map;
 
 import org.ird.unfepi.beans.VCenterRegistrationWrapper;
 import org.ird.unfepi.constants.ErrorMessages;
+import org.ird.unfepi.context.Context;
+import org.ird.unfepi.context.ServiceContext;
+import org.ird.unfepi.model.VaccinationCenter;
 import org.ird.unfepi.model.Vaccine;
 import org.ird.unfepi.utils.validation.DataValidation;
 import org.ird.unfepi.utils.validation.REG_EX;
@@ -33,6 +36,20 @@ public class VaccinationCenterValidator implements Validator{
     	
 		if(!DataValidation.validate(REG_EX.NO_SPECIAL_CHAR, vaccw.getVaccinationCenter().getName())){
 			error.rejectValue("vaccinationCenter.name" , "" , ErrorMessages.CENTER_NAME_INVALID);
+		}
+		else {
+			ServiceContext sc = Context.getServices();
+			try {
+				VaccinationCenter evc = sc.getVaccinationService().findVaccinationCenterByName(vaccw.getVaccinationCenter().getName().trim(), true, null);
+				if(evc != null && evc.getMappedId() != vaccw.getVaccinationCenter().getMappedId()){
+					error.rejectValue("vaccinationCenter.name" , "" , "Center with given name already exists");
+				}
+			} catch (Exception e) {
+				error.rejectValue("vaccinationCenter.name" , "" , e.getMessage());
+			}
+			finally{
+				sc.closeSession();
+			}
 		}
 
 		if(!DataValidation.validate(REG_EX.NO_SPECIAL_CHAR, vaccw.getVaccinationCenter().getFullName())){

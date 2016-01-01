@@ -82,7 +82,7 @@ public class DWRChildService {
 			
 			Transaction tx = ss.beginTransaction();
 			SQLQuery qu = ss.createSQLQuery("update vaccination set epiNumber = '"+epiNumber+"' " +
-					" where vaccinationStatus <> 'PENDING' " +
+					" where vaccinationStatus <> 'SCHEDULED' " +
 					" and vaccinationCenterId="+centerId +
 					" and childId=(select mappedId from idmapper where programId='"+childId+"') ");
 			qu.executeUpdate();

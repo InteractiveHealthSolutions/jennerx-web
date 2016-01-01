@@ -44,16 +44,16 @@ public class DownloadReportServlet extends HttpServlet{
 		try {
 			DownloadableReport dobl = sc.getReportService().getDownloadableReportById(Integer.parseInt(recordId), true, null);
 			
-			if(dobl.getDownloadableType().toLowerCase().endsWith(".pdf")){
+			if(dobl.getDownloadableName().toLowerCase().endsWith(".pdf")){
 				response.setContentType("application/pdf"); 
 			}
-			else if(dobl.getDownloadableType().toLowerCase().endsWith(".csv")){
+			else if(dobl.getDownloadableName().toLowerCase().endsWith(".csv")){
 				response.setContentType("text/csv"); 
 			}
-			else if(dobl.getDownloadableType().toLowerCase().endsWith(".txt")){
+			else if(dobl.getDownloadableName().toLowerCase().endsWith(".txt")){
 				response.setContentType("text/csv"); 
 			}
-			else if(dobl.getDownloadableType().toLowerCase().endsWith(".zip")){
+			else if(dobl.getDownloadableName().toLowerCase().endsWith(".zip")){
 				response.setContentType("application/zip"); 
 			}
 			else{

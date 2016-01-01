@@ -60,7 +60,7 @@ public class APVRRAnalysisGridRow {
 				if(rem.getReminderStatus().equals(REMINDER_STATUS.SENT) ){
 					sentReminder++;
 				}
-				if(rem.getReminderStatus().equals(REMINDER_STATUS.PENDING) ){
+				if(rem.getReminderStatus().equals(REMINDER_STATUS.SCHEDULED) ){
 					remindersPending++;
 				}
 				if(rem.getHoursDifference() != null 

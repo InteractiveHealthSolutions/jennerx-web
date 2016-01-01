@@ -3,12 +3,9 @@
  */
 package org.ird.unfepi.web.validator;
 
-import java.util.List;
-
 import org.ird.unfepi.beans.EnrollmentWrapperWomen;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
-import org.ird.unfepi.model.WomenVaccination;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
