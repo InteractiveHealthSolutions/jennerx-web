@@ -39,7 +39,7 @@ CREATE TABLE `idmapper` (
 
 LOCK TABLES `idmapper` WRITE;
 /*!40000 ALTER TABLE `idmapper` DISABLE KEYS */;
-INSERT INTO `idmapper` VALUES (46,1),(47,1),(49,1),(55,1),(56,1),(62,1),(64,1),(65,1),(66,1),(67,1),(68,1),(69,1),(70,1),(71,1),(45,2),(50,2),(44,3),(54,3),(72,3),(9,5),(43,5),(52,5),(51,13);
+INSERT INTO `idmapper` VALUES (9,5),(43,5);
 /*!40000 ALTER TABLE `idmapper` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
