@@ -60,7 +60,7 @@ function vaccineScheduleGenerator (cbirthdate, ccenterVisitDate, cchildId, ccent
 
 		var isExpired = vaccineSchedule[i].<%=VaccineScheduleKey.expired%>;
 		var prerequisitePassed = vaccineSchedule[i].<%=VaccineScheduleKey.prerequisite_passed%>;
-		
+		var isPrereqGivenCurrentVisit = vaccineSchedule[i].<%=VaccineScheduleKey.prerequisite_given_on_current_visit%>;
 		
 		var assignedduedate = vaccineSchedule[i].<%=VaccineScheduleKey.assigned_duedate%>;
 		var assignedduedatestring = (assignedduedate==null?'':assignedduedate.toString('<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>'));
@@ -88,7 +88,7 @@ function vaccineScheduleGenerator (cbirthdate, ccenterVisitDate, cchildId, ccent
 		}
 		
 		row.append(appendVaccineNameColumn(vaccinename, vzone));
-		row.append(appendStatusColumn(currentStatusComboId, status, isCurrentSuspect, isRetroSuspect, scheduleduedatestring, prerequisitePassed, isExpired, vzone)); 
+		row.append(appendStatusColumn(currentStatusComboId, status, isCurrentSuspect, isRetroSuspect, scheduleduedatestring, prerequisitePassed, isPrereqGivenCurrentVisit, isExpired, vzone)); 
 		row.append(appendCenterColumn(selectedCenterComboId, status, center, prerequisitePassed, vzone)); 
 		row.append(appendDueDateNoteColumn(assignedduedatestring, vzone)); 
 		row.append(appendDateColumn(currentDateInputId, nextDateInputId, status, vaccinationdatestring, assignedduedatestring, prerequisitePassed, vzone)); 
@@ -163,8 +163,10 @@ function appendDateColumn(currentDateInputId, nextDateInputId, status, vaccinati
 		ipNextDate='';
 	}
 	else{
-		ipCurrentDate = $('<input id="'+currentDateInputId+'" name="'+currentDateInputId+'" style="width: 80px" class="calendarbox" value="'+vaccinationdate+'"/>');
-		ipNextDate = $('<input id="'+nextDateInputId+'" name="'+nextDateInputId+'" style="width: 80px" class="calendarbox" value="'+assignedduedate+'"/>');
+		ipCurrentDate = $('<input id="'+currentDateInputId+'" name="'+currentDateInputId+
+				'" style="width: 80px" class="calendarbox" value="'+vaccinationdate+'" readonly="readonly"/>');
+		ipNextDate = $('<input id="'+nextDateInputId+'" name="'+nextDateInputId+
+				'" style="width: 80px" class="calendarbox" value="'+assignedduedate+'" readonly="readonly"/>');
 	
 		ipCurrentDate.datepicker({
 		  	duration: '',
@@ -172,14 +174,7 @@ function appendDateColumn(currentDateInputId, nextDateInputId, status, vaccinati
 		    dateFormat: '<%=WebGlobals.GLOBAL_DATE_FORMAT_JS%>',
 		    maxDate: '+0d',
 		    onSelect: function(dateText) {
-		    	if($('#'+getPeerControlId(this, '<%=VaccineScheduleKey.center%>')).val() == ''){
-		    		alert('Select center first');
-		    		this.value = '';
-		    		return;
-		    	}
-		    	index = getScheduleIndexFromControl(this);
-				vaccineSchedule[index].<%=VaccineScheduleKey.vaccination_date%> = convertToDate(this.value);
-				updateScheduleGrid();
+		    	currentDateChanged(this);
 		    }
 		});
 		
@@ -189,8 +184,7 @@ function appendDateColumn(currentDateInputId, nextDateInputId, status, vaccinati
 		    dateFormat: '<%=WebGlobals.GLOBAL_DATE_FORMAT_JS%>',
 		    minDate: '+0d',
 		    onSelect: function(dateText) {
-		    	index = getScheduleIndexFromControl(this);
-		    	vaccineSchedule[index].<%=VaccineScheduleKey.assigned_duedate%> = convertToDate(this.value);
+		    	nextDateChanged(this);
 		    }
 		});
 		
@@ -210,6 +204,20 @@ function appendDateColumn(currentDateInputId, nextDateInputId, status, vaccinati
 	var col = $('<td class="'+zone+'-light"></td> ');
 	col.append(ipNextDate,ipCurrentDate);
 	return col;
+}
+function currentDateChanged(obj){
+	if($('#'+getPeerControlId(obj, '<%=VaccineScheduleKey.center%>')).val() == ''){
+		alert('Select center first');
+		obj.value = '';
+		return;
+	}
+	index = getScheduleIndexFromControl(obj);
+	vaccineSchedule[index].<%=VaccineScheduleKey.vaccination_date%> = convertToDate(obj.value);
+	updateScheduleGrid();
+}
+function nextDateChanged(obj){
+	index = getScheduleIndexFromControl(obj);
+	vaccineSchedule[index].<%=VaccineScheduleKey.assigned_duedate%> = convertToDate(obj.value);
 }
 function appendCenterColumn(selectedCenterComboId, status, center, prerequisitePassed, zone){
 	var comboSelectedCenter;
@@ -244,7 +252,7 @@ function appendCenterColumn(selectedCenterComboId, status, center, prerequisiteP
 	col.append(comboSelectedCenter);
 	return col;
 }
-function appendStatusColumn(currentStatusComboId, status, isCurrentSuspect, isRetroSuspect, scheduleduedate, prerequisitePassed, isexpired, zone) {
+function appendStatusColumn(currentStatusComboId, status, isCurrentSuspect, isRetroSuspect, scheduleduedate, prerequisitePassed, isPrereqGivenCurrentVisit, isexpired, zone) {
 	var combostatus;
 	// if vaccinated earlier or prerequisite not passed combo should not be displayed
 	if(status == '<%=VaccineStatusType.VACCINATED_EARLIER%>'){
@@ -259,6 +267,9 @@ function appendStatusColumn(currentStatusComboId, status, isCurrentSuspect, isRe
 			combostatus.append("<option value=''></option>");
 			combostatus.append("<option value='<%=VaccineStatusType.RETRO%>'>Retro</option>");
 			combostatus.append("<option value='<%=VaccineStatusType.RETRO_DATE_MISSING%>'>Retro (Date Missing)</option>");
+		}
+		else if(isPrereqGivenCurrentVisit){
+			combostatus.append("<option value='<%=VaccineStatusType.SCHEDULED%>'>Schedule</option>");
 		}
 		else if(isCurrentSuspect || isRetroSuspect){
 			combostatus.append("<option value='<%=VaccineStatusType.RETRO%>'>Retro</option>");

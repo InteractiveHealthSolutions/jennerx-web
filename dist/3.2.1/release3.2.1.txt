@@ -2,6 +2,7 @@ release 3.2.1
 
 For Setup on tomcat 7:
 
+Create databases unfepi and smstarseel before importing database scripts. Script doesnot create databases autmatically because of this bug http://stackoverflow.com/a/3034381/830945.
 Add jstl config setting as explained in http://stackoverflow.com/a/16091433/830945 
 Add notifier recipients manually after setting up database
 

@@ -219,7 +219,17 @@ function centerChanged() {
 		</td>
 	</tr>
 	<tr>
-		<td>SMS reminder ke liye Mobile Number</td>
+		<td>Kya aap targheebi inaami scheme mein hisa lena chahtay hen? <span class="mendatory-field">*</span></td>
+		<td>
+			<spring:bind path="command.centerVisit.preference.hasApprovedLottery">
+				<input type="radio" name="centerVisit.preference.hasApprovedLottery" <c:if test='${not empty status.value && status.value == true}'>checked = "checked"</c:if> value="<%=WebGlobals.BOOLEAN_CONVERTER_TRUE_STRING%>"/>Yes<br>
+				<input type="radio" name="centerVisit.preference.hasApprovedLottery" <c:if test='${not empty status.value && status.value == false}'>checked = "checked"</c:if> value="<%=WebGlobals.BOOLEAN_CONVERTER_FALSE_STRING%>"/>No
+				<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
+			</spring:bind>
+		</td>
+	</tr> 
+	<tr>
+		<td>SMS ke liye Mobile Number</td>
 		<td><spring:bind path="command.centerVisit.contactPrimary">
 			<input type="text" id="contactPrimary" name="centerVisit.contactPrimary" maxlength="13" value="${status.value}" class="numbersOnly" />
 			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
@@ -235,17 +245,7 @@ function centerChanged() {
 		</td>
 	</tr>
 	<tr>
-		<td>Kya aap targheebi inaami scheme mein hisa lena chahtay hen? <span class="mendatory-field">*</span></td>
-		<td>
-			<spring:bind path="command.centerVisit.preference.hasApprovedLottery">
-				<input type="radio" name="centerVisit.preference.hasApprovedLottery" <c:if test='${not empty status.value && status.value == true}'>checked = "checked"</c:if> value="<%=WebGlobals.BOOLEAN_CONVERTER_TRUE_STRING%>"/>Yes<br>
-				<input type="radio" name="centerVisit.preference.hasApprovedLottery" <c:if test='${not empty status.value && status.value == false}'>checked = "checked"</c:if> value="<%=WebGlobals.BOOLEAN_CONVERTER_FALSE_STRING%>"/>No
-				<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
-			</spring:bind>
-		</td>
-	</tr> 
-	<tr>
-        <td>NIC Number</td>
+        <td>CNIC Number</td>
         <td><spring:bind path="command.child.nic">
              <input type="text" id="childnic" name="child.nic" maxlength="13"  class="numbersOnly" value="<c:out value="${status.value}" />"/>
              <br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>

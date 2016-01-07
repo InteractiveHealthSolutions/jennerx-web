@@ -1,6 +1,4 @@
-CREATE DATABASE  IF NOT EXISTS `unfepi` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `unfepi`;
--- MySQL dump 10.13  Distrib 5.6.17, for Win32 (x86)
+-- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
 -- Host: localhost    Database: unfepi
 -- ------------------------------------------------------
@@ -522,7 +520,7 @@ ELSE
     SET @sortQueryString = CONCAT(" ORDER BY ",sortName," ", orderName);
 END IF;
 
-SET @AllTotalQuery = concat(" SELECT 'ID' vaccineId, 'Total' cohort , c.totalEnrollments, 
+SET @AllTotalQuery = concat(" SELECT 'ID' vaccineId, 'Total' cohort, '' scheme, inn.enrollments totalEnrollments, 
 MAX(CASE WHEN inn.vaccineId=1 THEN inn.due END) bcgdue,  
 MAX(CASE WHEN inn.vaccineId=2 THEN inn.due END) penta1due,  
 MAX(CASE WHEN inn.vaccineId=3 THEN inn.due END) penta2due,  
@@ -535,12 +533,12 @@ MAX(CASE WHEN inn.vaccineId=3 THEN inn.done END) penta2done,
 MAX(CASE WHEN inn.vaccineId=4 THEN inn.done END) penta3done,  
 MAX(CASE WHEN inn.vaccineId=5 THEN inn.done END) measles1done,  
 MAX(CASE WHEN inn.vaccineId=6 THEN inn.done END) measles2done  
-FROM (select count(*) totalEnrollments from child) c, (select vc.vaccineId , count(distinct v.vaccinationRecordNum) due, 
+FROM (select count(distinct env.vaccinationRecordNum) enrollments, vc.vaccineId , count(distinct v.vaccinationRecordNum) due, 
 sum(case when v.vaccinationStatus in ('VACCINATED', 'RETRO', 'RETRO_DATE_MISSING') then 1 else 0 end) done 
 FROM vaccine vc 
 CROSS JOIN child c 
 LEFT JOIN vaccination env ON c.mappedId = env.childId AND env.vaccineId=c.enrollmentVaccineId 
-LEFT JOIN vaccination v ON c.mappedId = v.childId AND vc.vaccineId=v.vaccineId and v.vaccineId > c.enrollmentVaccineId   
+LEFT JOIN vaccination v ON c.mappedId = v.childId AND vc.vaccineId=v.vaccineId and v.vaccineId > c.enrollmentVaccineId 
 left join idmapper idvc on env.vaccinationCenterId=idvc.mappedId 
 left join identifier ivc on idvc.mappedId=ivc.mappedId AND ivc.preferred = TRUE 
 WHERE vc.vaccineId IN (1,2,3,4,5,6) 
@@ -555,7 +553,8 @@ AND DATEDIFF(CURDATE(), c.birthdate) > IFNULL((SELECT CASE WHEN gaptimeunit = 'm
 GROUP BY vc.vaccineid) inn 
 ");
 
-SET @QueryString=concat("SELECT vc.vaccineId vaccineId, vc.name cohort , count(distinct c.mappedId ) cohorttotal, 
+SET @QueryString=concat("SELECT vc.vaccineId vaccineId, CONCAT(vc.name,' (',a.armName,')') cohort, a.armName scheme ,
+inn.cohorttotal, 
 MAX(CASE WHEN inn.vaccineId=1 THEN inn.due END) bcgdue,  
 MAX(CASE WHEN inn.vaccineId=2 THEN inn.due END) penta1due,  
 MAX(CASE WHEN inn.vaccineId=3 THEN inn.due END) penta2due,  
@@ -569,16 +568,21 @@ MAX(CASE WHEN inn.vaccineId=4 THEN inn.done END) penta3done,
 MAX(CASE WHEN inn.vaccineId=5 THEN inn.done END) measles1done,  
 MAX(CASE WHEN inn.vaccineId=6 THEN inn.done END) measles2done  
 FROM vaccine vc 
+CROSS JOIN (SELECT armId, armName FROM arm UNION SELECT null, 'None') a 
 left join child c on c.enrollmentVaccineId=vc.vaccineId 
-LEFT JOIN (select vc.vaccineId , c.enrollmentVaccineId envaccineid, count(DISTINCT v.vaccinationRecordNum) due, 
+LEFT JOIN (select ar.armId, vc.vaccineId , c.enrollmentVaccineId envaccineid, 
+sum(case when env.vaccineId=vc.vaccineId then 1 else 0 end) cohorttotal , 
+count(DISTINCT v.vaccinationRecordNum) due, 
 sum(case when v.vaccinationStatus in ('VACCINATED', 'RETRO', 'RETRO_DATE_MISSING') then 1 else 0 end) done 
 FROM vaccine vc 
 CROSS JOIN child c  
 LEFT JOIN vaccination env ON c.mappedId = env.childId AND env.vaccineId=c.enrollmentVaccineId 
 LEFT JOIN vaccination v ON c.mappedId = v.childId AND vc.vaccineId=v.vaccineId and v.vaccineId > c.enrollmentVaccineId 
+LEFT JOIN childincentive ci ON ci.vaccinationRecordNum=env.vaccinationRecordNum 
+LEFT JOIN arm ar ON ci.armId=ar.armId  
 left join idmapper idvc on env.vaccinationCenterId=idvc.mappedId 
 left join identifier ivc on idvc.mappedId=ivc.mappedId AND ivc.preferred = TRUE 
-WHERE vc.vaccineId IN (1,2,3,4,5,6) AND vc.vaccineId > enrollmentVaccineId 
+WHERE vc.vaccineId IN (1,2,3,4,5,6) AND vc.vaccineId >= c.enrollmentVaccineId 
 ",
 @filterQueryString,
 " 
@@ -587,9 +591,9 @@ AND DATEDIFF(CURDATE(), c.birthdate) > IFNULL((SELECT CASE WHEN gaptimeunit = 'm
      WHEN gaptimeunit = 'day' THEN (0*value) 
      WHEN gaptimeunit = 'year' THEN (365*value) 
      ELSE 9999 END FROM vaccinegap WHERE vaccinegaptypeid=1 AND vaccineid=vc.vaccineId), 9999) 
-GROUP BY env.vaccineId, vc.vaccineid) inn ON vc.vaccineId = inn.envaccineid 
+GROUP BY env.vaccineId, vc.vaccineid, ar.armId) inn ON vc.vaccineId = inn.envaccineid and (inn.armId = a.armId OR (inn.armId IS NULL AND a.armId IS NULL))  
 WHERE vc.vaccineId IN (1,2,3,4,5,6) 
-GROUP BY vc.vaccineId ", @sortQueryString, " UNION ", @AllTotalQuery); 
+GROUP BY vc.vaccineId, a.armId ", @sortQueryString, " UNION ", @AllTotalQuery); 
 
 PREPARE stmt1 FROM @QueryString;
   EXECUTE stmt1; 
@@ -636,7 +640,7 @@ ELSE
     SET @sortQueryString = CONCAT(" ORDER BY ",sortName," ", orderName);
 END IF;
 
-SET @AllTotalQuery = concat(" SELECT 'ID' vaccineId, 'Total' cohort , c.totalEnrollments, 
+SET @AllTotalQuery = concat(" SELECT 'ID' vaccineId, 'Total' cohort, '' scheme, inn.enrollments totalEnrollments, 
 MAX(CASE WHEN inn.vaccineId=1 THEN inn.due END) bcgdue,  
 MAX(CASE WHEN inn.vaccineId=2 THEN inn.due END) penta1due,  
 MAX(CASE WHEN inn.vaccineId=3 THEN inn.due END) penta2due,  
@@ -649,7 +653,7 @@ MAX(CASE WHEN inn.vaccineId=3 THEN inn.done END) penta2done,
 MAX(CASE WHEN inn.vaccineId=4 THEN inn.done END) penta3done,  
 MAX(CASE WHEN inn.vaccineId=5 THEN inn.done END) measles1done,  
 MAX(CASE WHEN inn.vaccineId=6 THEN inn.done END) measles2done  
-FROM (select count(*) totalEnrollments from child) c, (select vc.vaccineId , count(distinct v.vaccinationRecordNum) due, 
+FROM (select count(distinct env.vaccinationRecordNum) enrollments, vc.vaccineId , count(distinct v.vaccinationRecordNum) due, 
 sum(case when v.vaccinationStatus in ('VACCINATED', 'RETRO', 'RETRO_DATE_MISSING') then 1 else 0 end) done 
 FROM vaccine vc 
 CROSS JOIN child c 
@@ -669,7 +673,8 @@ AND DATEDIFF(CURDATE(), c.birthdate) > IFNULL((SELECT CASE WHEN gaptimeunit = 'm
 GROUP BY vc.vaccineid) inn 
 ");
 
-SET @QueryString=concat("SELECT vc.vaccineId vaccineId, vc.name cohort , count(distinct c.mappedId ) cohorttotal, 
+SET @QueryString=concat("SELECT vc.vaccineId vaccineId, CONCAT(vc.name,' (',a.armName,')') cohort, a.armName scheme, 
+inn.cohorttotal, 
 MAX(CASE WHEN inn.vaccineId=1 THEN inn.due END) bcgdue,  
 MAX(CASE WHEN inn.vaccineId=2 THEN inn.due END) penta1due,  
 MAX(CASE WHEN inn.vaccineId=3 THEN inn.due END) penta2due,  
@@ -683,13 +688,18 @@ MAX(CASE WHEN inn.vaccineId=4 THEN inn.done END) penta3done,
 MAX(CASE WHEN inn.vaccineId=5 THEN inn.done END) measles1done,  
 MAX(CASE WHEN inn.vaccineId=6 THEN inn.done END) measles2done  
 FROM vaccine vc 
+CROSS JOIN (SELECT armId, armName FROM arm UNION SELECT null, 'None') a 
 left join child c on c.enrollmentVaccineId=vc.vaccineId 
-LEFT JOIN (select vc.vaccineId , c.enrollmentVaccineId envaccineid, count(DISTINCT v.vaccinationRecordNum) due, 
+LEFT JOIN (select ar.armId, vc.vaccineId , c.enrollmentVaccineId envaccineid, 
+count(distinct env.vaccinationRecordNum) cohorttotal , 
+count(DISTINCT v.vaccinationRecordNum) due, 
 sum(case when v.vaccinationStatus in ('VACCINATED', 'RETRO', 'RETRO_DATE_MISSING') then 1 else 0 end) done 
 FROM vaccine vc 
 CROSS JOIN child c  
 LEFT JOIN vaccination env ON c.mappedId = env.childId AND env.vaccineId=c.enrollmentVaccineId 
 LEFT JOIN vaccination v ON c.mappedId = v.childId AND vc.vaccineId=v.vaccineId and v.vaccineId <> c.enrollmentVaccineId 
+LEFT JOIN childincentive ci ON ci.vaccinationRecordNum=env.vaccinationRecordNum 
+LEFT JOIN arm ar ON ci.armId=ar.armId  
 left join idmapper idvc on env.vaccinationCenterId=idvc.mappedId 
 left join identifier ivc on idvc.mappedId=ivc.mappedId AND ivc.preferred = TRUE 
 WHERE vc.vaccineId IN (1,2,3,4,5,6) 
@@ -701,9 +711,9 @@ AND DATEDIFF(CURDATE(), c.birthdate) > IFNULL((SELECT CASE WHEN gaptimeunit = 'm
      WHEN gaptimeunit = 'day' THEN (0*value) 
      WHEN gaptimeunit = 'year' THEN (365*value) 
      ELSE 9999 END FROM vaccinegap WHERE vaccinegaptypeid=1 AND vaccineid=vc.vaccineId), 9999) 
-GROUP BY env.vaccineId, vc.vaccineid) inn ON vc.vaccineId = inn.envaccineid 
+GROUP BY env.vaccineId, vc.vaccineid, ar.armId) inn ON vc.vaccineId = inn.envaccineid and (inn.armId = a.armId OR (inn.armId IS NULL AND a.armId IS NULL))  
 WHERE vc.vaccineId IN (1,2,3,4,5,6) 
-GROUP BY vc.vaccineId ", @sortQueryString, " UNION ", @AllTotalQuery); 
+GROUP BY vc.vaccineId, a.armId ", @sortQueryString, " UNION ", @AllTotalQuery); 
 
 PREPARE stmt1 FROM @QueryString;
   EXECUTE stmt1; 
@@ -852,115 +862,6 @@ PREPARE stmt1 FROM @QueryString;
 
 END ;;
 DELIMITER ;
-
-DELIMITER $$
-CREATE PROCEDURE `SummaryFollowupAgeAppropriateWArm`(IN centerIdFilterCommaSeparated VARCHAR(1000),
-IN enrollmentDateFrom DATE, IN enrollmentDateTo DATE,
-IN limitStart INT, IN limitEnd INT,IN sortName VARCHAR(1000),IN orderName VARCHAR(50))
-BEGIN 
-
-SET @filterQueryString = "";
-
-IF centerIdFilterCommaSeparated IS NOT NULL AND TRIM(centerIdFilterCommaSeparated) <> "" 
-THEN 
-	SET @filterQueryString = CONCAT(@filterQueryString," AND ivc.identifier IN (",centerIdFilterCommaSeparated,") ");
-END IF;
-
-IF enrollmentDateFrom IS NOT NULL AND enrollmentDateTo IS NOT NULL  
-THEN 
-	SET @filterQueryString = CONCAT(@filterQueryString," AND c.dateEnrolled BETWEEN '", enrollmentDateFrom,"' AND '",enrollmentDateTo,"'");
-END IF;
-
-
-IF sortName IS NULL OR TRIM(sortName) = "" 
-THEN 
-    SET @sortQueryString = "";
-ELSE 
-    SET @sortQueryString = CONCAT(" ORDER BY ",sortName," ", orderName);
-END IF;
-
-SET @AllTotalQuery = concat(" SELECT 'ID' vaccineId, 'Total' cohort , c.totalEnrollments, 
-MAX(CASE WHEN inn.vaccineId=1 THEN inn.due END) bcgdue,  
-MAX(CASE WHEN inn.vaccineId=2 THEN inn.due END) penta1due,  
-MAX(CASE WHEN inn.vaccineId=3 THEN inn.due END) penta2due,  
-MAX(CASE WHEN inn.vaccineId=4 THEN inn.due END) penta3due,  
-MAX(CASE WHEN inn.vaccineId=5 THEN inn.due END) measles1due,  
-MAX(CASE WHEN inn.vaccineId=6 THEN inn.due END) measles2due, 
-MAX(CASE WHEN inn.vaccineId=1 THEN inn.done END) bcgdone,  
-MAX(CASE WHEN inn.vaccineId=2 THEN inn.done END) penta1done,  
-MAX(CASE WHEN inn.vaccineId=3 THEN inn.done END) penta2done,  
-MAX(CASE WHEN inn.vaccineId=4 THEN inn.done END) penta3done,  
-MAX(CASE WHEN inn.vaccineId=5 THEN inn.done END) measles1done,  
-MAX(CASE WHEN inn.vaccineId=6 THEN inn.done END) measles2done  
-FROM (select count(*) totalEnrollments from child) c, (select vc.vaccineId , count(distinct v.vaccinationRecordNum) due, 
-sum(case when v.vaccinationStatus in ('VACCINATED', 'RETRO', 'RETRO_DATE_MISSING') then 1 else 0 end) done 
-FROM vaccine vc 
-CROSS JOIN child c 
-LEFT JOIN vaccination env ON c.mappedId = env.childId AND env.vaccineId=c.enrollmentVaccineId 
-LEFT JOIN vaccination v ON c.mappedId = v.childId AND vc.vaccineId=v.vaccineId and v.vaccineId > c.enrollmentVaccineId 
-left join idmapper idvc on env.vaccinationCenterId=idvc.mappedId 
-left join identifier ivc on idvc.mappedId=ivc.mappedId AND ivc.preferred = TRUE 
-WHERE vc.vaccineId IN (1,2,3,4,5,6) 
-",
-@filterQueryString,
-" 
-AND DATEDIFF(CURDATE(), c.birthdate) > IFNULL((SELECT CASE WHEN gaptimeunit = 'month' THEN (30*value) 
-     WHEN gaptimeunit = 'week' THEN (7*value) 
-     WHEN gaptimeunit = 'day' THEN (0*value) 
-     WHEN gaptimeunit = 'year' THEN (365*value) 
-     ELSE 9999 END FROM vaccinegap WHERE vaccinegaptypeid=1 AND vaccineid=vc.vaccineId), 9999) 
-GROUP BY vc.vaccineid) inn 
-");
-
-SET @QueryString=concat("SELECT vc.vaccineId vaccineId, CONCAT(vc.name, ' (', a.armName,')') cohort , inn.cohorttotal, 
-MAX(CASE WHEN inn.vaccineId=1 THEN inn.due END) bcgdue,  
-MAX(CASE WHEN inn.vaccineId=2 THEN inn.due END) penta1due,  
-MAX(CASE WHEN inn.vaccineId=3 THEN inn.due END) penta2due,  
-MAX(CASE WHEN inn.vaccineId=4 THEN inn.due END) penta3due,  
-MAX(CASE WHEN inn.vaccineId=5 THEN inn.due END) measles1due,  
-MAX(CASE WHEN inn.vaccineId=6 THEN inn.due END) measles2due, 
-MAX(CASE WHEN inn.vaccineId=1 THEN inn.done END) bcgdone,  
-MAX(CASE WHEN inn.vaccineId=2 THEN inn.done END) penta1done,  
-MAX(CASE WHEN inn.vaccineId=3 THEN inn.done END) penta2done,  
-MAX(CASE WHEN inn.vaccineId=4 THEN inn.done END) penta3done,  
-MAX(CASE WHEN inn.vaccineId=5 THEN inn.done END) measles1done,  
-MAX(CASE WHEN inn.vaccineId=6 THEN inn.done END) measles2done  
-FROM vaccine vc 
-CROSS JOIN (SELECT armId, armName FROM arm UNION SELECT null, 'None') a 
-left join child c on c.enrollmentVaccineId=vc.vaccineId 
-LEFT JOIN (select ar.armId, vc.vaccineId , c.enrollmentVaccineId envaccineid, 
-count(DISTINCT env.vaccinationRecordNum) cohorttotal, 
-count(DISTINCT v.vaccinationRecordNum) due, 
-sum(case when v.vaccinationStatus in ('VACCINATED', 'RETRO', 'RETRO_DATE_MISSING') then 1 else 0 end) done 
-FROM vaccine vc 
-CROSS JOIN child c  
-LEFT JOIN vaccination env ON c.mappedId = env.childId AND env.vaccineId=c.enrollmentVaccineId 
-LEFT JOIN vaccination v ON c.mappedId = v.childId AND vc.vaccineId=v.vaccineId and v.vaccineId > c.enrollmentVaccineId 
-LEFT JOIN childincentive ci ON ci.vaccinationRecordNum=env.vaccinationRecordNum 
-LEFT JOIN arm ar ON ci.armId=ar.armId  
-left join idmapper idvc on env.vaccinationCenterId=idvc.mappedId 
-left join identifier ivc on idvc.mappedId=ivc.mappedId AND ivc.preferred = TRUE 
-WHERE vc.vaccineId IN (1,2,3,4,5,6) AND vc.vaccineId > enrollmentVaccineId 
-",
-@filterQueryString,
-" 
-AND DATEDIFF(CURDATE(), c.birthdate) > IFNULL((SELECT CASE WHEN gaptimeunit = 'month' THEN (30*value) 
-     WHEN gaptimeunit = 'week' THEN (7*value) 
-     WHEN gaptimeunit = 'day' THEN (0*value) 
-     WHEN gaptimeunit = 'year' THEN (365*value) 
-     ELSE 9999 END FROM vaccinegap WHERE vaccinegaptypeid=1 AND vaccineid=vc.vaccineId), 9999) 
-GROUP BY env.vaccineId, vc.vaccineid, ar.armId) inn ON vc.vaccineId = inn.envaccineid and (inn.armId = a.armId OR (inn.armId IS NULL AND a.armId IS NULL))  
-WHERE vc.vaccineId IN (1,2,3,4,5,6) 
-GROUP BY vc.vaccineId,a.armId ", @sortQueryString, " UNION ", @AllTotalQuery); 
-
-PREPARE stmt1 FROM @QueryString;
-  EXECUTE stmt1; 
-  DEALLOCATE PREPARE stmt1;
-
-END$$
-DELIMITER ;
-
-
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
@@ -975,4 +876,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-12-31 20:57:45
+-- Dump completed on 2016-01-07 10:06:10

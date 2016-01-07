@@ -171,7 +171,7 @@ function treeDataLoaderLocations(parentId){
 	<tr>
 		<td>Additional Note</td>
 		<td><spring:bind path="command.vaccinationCenter.description">
-			<textarea name="description" maxlength="255"></textarea>
+			<textarea name="${status.expression}" maxlength="255"></textarea>
 			<br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
 		</td>

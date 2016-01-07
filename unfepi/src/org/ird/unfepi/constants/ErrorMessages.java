@@ -179,7 +179,7 @@ public class ErrorMessages
 
 	public static final String CONTACT1_OWNER_MISSING = "Primary contact number owner missing";
 	public static final String CONTACT1_OTHER_OWNER_MISSING = "Other primary contact number owner must be specified";
-	public static final String CONTACT1_NUMBER_INVALID = "A valid cell number must be specified for primary contact for reminders";
+	public static final String CONTACT1_NUMBER_INVALID = "A valid cell number must be specified for primary contact for reminder and/or incentive SMS";
 	public static final String CONTACT1_NUMBER_OCCUPIED = "Cell number occupied";
 	
 	public static final String CONTACT2_OWNER_MISSING = "Secondary contact number owner missing";

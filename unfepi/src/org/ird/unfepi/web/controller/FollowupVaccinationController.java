@@ -23,10 +23,14 @@ import org.ird.unfepi.web.utils.ControllerUIHelper;
 import org.ird.unfepi.web.utils.VaccinationCenterVisit;
 import org.ird.unfepi.web.utils.VaccineSchedule;
 import org.ird.unfepi.web.validator.VaccinationValidator;
+import org.ird.unfepi.web.validator.ValidatorUtils;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+
+import com.mysql.jdbc.StringUtils;
+import com.sun.xml.internal.ws.api.ha.StickyFeature;
 
 public class FollowupVaccinationController extends DataEntryFormController
 {
@@ -44,6 +48,11 @@ public class FollowupVaccinationController extends DataEntryFormController
 			VaccinationCenterVisit centerVisit = (VaccinationCenterVisit) command;
 			List<VaccineSchedule> vaccineSchedule = (List<VaccineSchedule>) request.getSession().getAttribute(VaccinationCenterVisit.VACCINE_SCHEDULE_KEY+centerVisit.getUuid());
 			Child child = (Child) request.getSession().getAttribute("childfollowup");
+			if(!StringUtils.isEmptyOrWhitespaceOnly(request.getParameter("cnic"))){
+				Child c = sc.getChildService().findChildById(child.getMappedId(), false, null);
+				c.setNic(request.getParameter("cnic"));
+				sc.getChildService().updateChild(c);
+			}
 			/*List<ChildLotteryRunner> lotteryRes = */ControllerUIHelper.doFollowup(DataEntrySource.WEB, centerVisit, vaccineSchedule, dateFormStart, user.getUser(), sc);
 			
 			sc.commitTransaction();
@@ -84,6 +93,15 @@ public class FollowupVaccinationController extends DataEntryFormController
 		VaccinationValidator validator = (VaccinationValidator) getValidator();
 		List<VaccineSchedule> vaccineSchedule = (List<VaccineSchedule>) request.getSession().getAttribute(VaccinationCenterVisit.VACCINE_SCHEDULE_KEY+centerVisit.getUuid());
 		validator.validateVaccinationForm(centerVisit, vaccineSchedule, errors, request);
+		ServiceContext sc = Context.getServices();
+		try{
+			if(!StringUtils.isEmptyOrWhitespaceOnly("showcnic")){
+				ValidatorUtils.validateChildNIC(DataEntrySource.WEB, centerVisit.getChildId(), request.getParameter("cnic"), false, null, errors, false, sc);
+			}
+		}
+		finally{
+			sc.closeSession();
+		}
 		return super.processFormSubmission(request, response, command, errors);
 	}
 
@@ -95,12 +113,14 @@ public class FollowupVaccinationController extends DataEntryFormController
 		String child_id=request.getParameter("child_id");//child-program-id
 		VaccinationCenterVisit vcv = new VaccinationCenterVisit();
 		Child child = new Child();
+		boolean isIncentivized = false;
 		Vaccination previousVaccination = new Vaccination();
 		
 		ServiceContext sc = Context.getServices();
 		LotterySms prf = null;
 		try{
 			child = sc.getChildService().findChildById(Integer.parseInt(child_id), true, new String[]{"idMapper"});
+			isIncentivized = sc.getIncentiveService().findChildIncentiveByCriteria(child.getMappedId(), null, null, null, null, null, null, null, null, null, 0, 2, true, null).size()>0;
 			ControllerUIHelper.prepareFollowupDisplayObjects(request, child, sc);
 			previousVaccination = ControllerUIHelper.getPreviousVaccination(child.getMappedId(), sc);
 			prf = sc.getChildService().findLotterySmsByChild(child.getMappedId(), false, 0, 10, null).get(0);
@@ -120,6 +140,10 @@ public class FollowupVaccinationController extends DataEntryFormController
 		vcv.setEpiNumber(previousVaccination.getEpiNumber());
 		vcv.setChildId(child.getMappedId());
 		
+		if(StringUtils.isEmptyOrWhitespaceOnly(child.getNic())&&isIncentivized){
+		request.setAttribute("showcnic", true);
+		}
+
 		return vcv;
 	}
 	
@@ -137,6 +161,8 @@ public class FollowupVaccinationController extends DataEntryFormController
 						sc.getVaccinationService().getAllVaccinationCenter(true, new String[]{"idMapper"}), 
 						sc.getVaccinationService().getAllVaccinator(0, Integer.MAX_VALUE, true, new String[]{"idMapper"}));
 
+				model.put("cnic", request.getParameter("cnic"));
+				model.put("showcnic", request.getAttribute("showcnic")!=null?request.getAttribute("showcnic"):request.getParameter("showcnic"));
 			}
 			catch (Exception e) {
 				e.printStackTrace();

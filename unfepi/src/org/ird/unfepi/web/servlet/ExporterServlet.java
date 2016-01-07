@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -582,19 +581,65 @@ public class ExporterServlet extends HttpServlet
 			List<String[]> updates= new ArrayList<String[]>();
 			updates.add(new String[] {"CNIC", "AMOUNT", "LAST_UPDATE", "MSISDN", "REASON", "EPI_RESULT"});
 			for (int i = 0; i < json.length(); i++) {
+				
 				String[] rowres = new String[6];
 				JSONObject jo = json.getJSONObject(i);
-				String cnic = jo.getString("CNIC");
-				Integer amount = Integer.parseInt(jo.getString("AMOUNT"));
-				String dt = jo.getString("LAST_UPDATE");
-				String phone = jo.getString("MSISDN");
+				
+				String cnic = jo.has("CNIC")?jo.getString("CNIC"):null;
+				Integer amount = null;
+				if(jo.has("AMOUNT")){
+					try{
+						amount = Integer.parseInt(jo.getString("AMOUNT"));
+					}catch(Exception e){e.printStackTrace();}
+				}
+				Date dt = null;
+				SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yy HH.mm.ss");
+				if(jo.has("LAST_UPDATE")){
+					try{
+						String d = jo.getString("LAST_UPDATE");
+						if(d.length() > 18){
+							d = d.substring(0, 18);
+						}
+						dt = df.parse(d);
+					}catch(Exception e){e.printStackTrace();}
+				}
+				String phone = jo.has("MSISDN")?jo.getString("MSISDN"):null;
 				String reason = jo.has("REASON")?jo.getString("REASON"):"";
 				
+				String errors = "";
+
 				rowres[0] = cnic;
-				rowres[1] = amount.toString();
-				rowres[2] = dt;
+				if(StringUtils.isEmptyOrWhitespaceOnly(cnic)){
+					errors+="No data found for CNIC; ";
+				}
+				
+				if(amount==null){
+					rowres[1] = "";
+					errors+="No or invalid data found for AMOUNT; ";
+				}
+				else{
+					rowres[1] = amount.toString();
+				}
+				
+				if(dt == null){
+					rowres[2] = "";
+					errors+="No or invalid data found for LAST_UPDATE (required format: dd-MMM-yy HH.mm.ss); ";
+				}
+				else {
+					rowres[2] = df.format(dt);
+				}
+				
 				rowres[3] = phone;
+				if(StringUtils.isEmptyOrWhitespaceOnly(phone)){
+					errors+="No data found for MSISDN; ";
+				}
 				rowres[4] = reason;
+				
+				if(!StringUtils.isEmptyOrWhitespaceOnly(errors)){
+					rowres[5] = errors;
+					updates.add(rowres);
+					continue;
+				}
 				
 				List<Child> chl = sc.getChildService().findChildByCriteria(null, null, null, null, cnic, null, null, null, null, null, false, null, null, null, true, 0, 10, null);
 				if(chl.size() == 0){
@@ -604,13 +649,9 @@ public class ExporterServlet extends HttpServlet
 					rowres[5] = chl.size()+" Children found on CNIC";
 				}
 				
-				if(dt.length() > 18){
-					dt = dt.substring(0, 18);
-				}
-				
 				if(chl.size() == 1){
 					Child ch = chl.get(0);
-					Date disdate = new SimpleDateFormat("dd-MMM-yy HH.mm.ss").parse(dt);
+					Date disdate = dt;
 					List<ChildIncentive> incent = sc.getIncentiveService().findChildIncentiveByCriteria(null, ch.getMappedId(), null, null, IncentiveStatus.AVAILABLE, null, null, null, null, amount, amount, null, 0, 2, false, null);
 					if(incent.size() == 0){
 						rowres[5] = "NO Available incentive found";
@@ -658,9 +699,6 @@ public class ExporterServlet extends HttpServlet
 		} catch (JSONException e) {
 			e.printStackTrace();
 			response.getOutputStream().write(("CSV Parsing threw error"+e.getMessage()).getBytes());
-		} catch (ParseException e) {
-			e.printStackTrace();
-			response.getOutputStream().write(("Unrecognized date format").getBytes());
 		}
 		finally{
 			sc.closeSession();

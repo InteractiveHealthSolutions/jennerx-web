@@ -1144,9 +1144,14 @@ public class ControllerUIHelper {
 			command.getPreference().setHasApprovedReminders(pref.getHasApprovedReminders());
 		}
 
-		if(command.getContactPrimary() == null){
-			ContactNumber cont = sc.getDemographicDetailsService().getUniquePrimaryContactNumber(command.getChildId(), true, null);
-			if(cont != null) command.setContactPrimary(cont.getNumber());
+		List<ContactNumber> conl = sc.getDemographicDetailsService().getContactNumber(command.getChildId(), true, null);
+		for (ContactNumber cn : conl) {
+			if(command.getContactPrimary() == null && cn.getNumberType().name().equalsIgnoreCase(ContactType.PRIMARY.name())){
+				command.setContactPrimary(cn.getNumber());
+			}
+			else if(command.getContactSecondary() == null && cn.getNumberType().name().equalsIgnoreCase(ContactType.SECONDARY.name())){
+				command.setContactSecondary(cn.getNumber());
+			}
 		}
 	}
 	

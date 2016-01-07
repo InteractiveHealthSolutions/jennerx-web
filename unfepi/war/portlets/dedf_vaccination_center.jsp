@@ -114,7 +114,7 @@ function submitThisForm() {
 	<tr>
 		<td>Additional Note</td>
 		<td><spring:bind path="command.vaccinationCenter.description">
-			<textarea name="description" maxlength="255">${status.value}</textarea>
+			<textarea name="${status.expression}" maxlength="255">${status.value}</textarea>
 			<br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
 		</td>

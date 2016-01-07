@@ -177,7 +177,7 @@ public class EditChildController extends DataEditFormController {
 				ValidatorUtils.validateAddress(DataEntrySource.WEB, cb.getAddress(), null, errors, true);
 			}
 			else if(editSection.equalsIgnoreCase("program")){
-				ValidatorUtils.validateChildNIC(DataEntrySource.WEB, cb.getChild(), false, null, errors, true, sc);
+				ValidatorUtils.validateChildNIC(DataEntrySource.WEB, cb.getChild().getMappedId(), cb.getChild().getNic(), false, null, errors, true, sc);
 				ValidatorUtils.validateChildStatus(DataEntrySource.WEB, cb.getChild(), null, errors, true);
 				ValidatorUtils.validateReminderAndContactInfo(DataEntrySource.WEB, cb.getPreference(), cb.getContactPrimary(), cb.getContactSecondary(), null, errors, sc, false);
 			}

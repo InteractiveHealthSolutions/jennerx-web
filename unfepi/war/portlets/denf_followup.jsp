@@ -134,8 +134,18 @@ function centerChanged() {
 			<input type="text" id="contactSecondary" name="contactSecondary" maxlength="13" value="${status.value}" class="numbersOnly" />
 			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
+
+	<input type="hidden" name="showcnic" value="${showcnic}">
 		</td>
 	</tr>
+	<c:if test="${showcnic == true || showcnic == 'true'}">
+	<tr>
+        <td>CNIC Number</td>
+        <td>
+            <input type="text" id="cnic" name="cnic" maxlength="13"  class="numbersOnly" value="${cnic}"/>
+		</td>
+    </tr>
+    </c:if>
 	<tr>
         <td></td>
         <td>

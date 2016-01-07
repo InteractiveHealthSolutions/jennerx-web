@@ -34,7 +34,8 @@ public class VaccineSchedule {
 		is_current_suspect,
 		is_retro_suspect,
 		prerequisite_passed,
-		expired
+		expired,
+		prerequisite_given_on_current_visit
 	}
 	
 	public enum VaccineStatusType {
@@ -63,6 +64,7 @@ public class VaccineSchedule {
 	private Integer childId;
 	private Boolean prerequisite_passed;
 	private Boolean expired;
+	private Boolean prerequisite_given_on_current_visit;
 	
 	public VaccineSchedule() {
 	}
@@ -106,6 +108,7 @@ public class VaccineSchedule {
 				boolean current_suspect = false;
 				boolean retro_suspect = false;
 				boolean prerequisite_passed = false;
+				boolean prerequisite_given_today = false;
 				boolean isexpired = false;
 
 				// schedule duedate is applicable only in case of vaccines following WHO schedule
@@ -136,6 +139,7 @@ public class VaccineSchedule {
 				}
 				else {// if not given
 					prerequisite_passed = IMRUtils.passVaccinePrerequisiteCheck(vsch, schedule);
+					prerequisite_given_today = IMRUtils.isPrerequisiteVaccinatedOnCurrentVisit(vsch, schedule);
 
 					if(pvacc!=null && pvacc.size() > 0){
 						asgnduedate = pvacc.get(0).getVaccinationDuedate();
@@ -166,7 +170,7 @@ public class VaccineSchedule {
 						status = null;
 						asgnduedate = null;
 					} 
-					else if(vsch.getExpiry_date() != null && vsch.getExpiry_date().before(new Date())){
+					else if(vsch.getExpiry_date() != null && vsch.getExpiry_date().before(centerVisitDate)){
 						status = null;
 						isexpired = true;
 					}
@@ -195,6 +199,7 @@ public class VaccineSchedule {
 				vsch.setIs_current_suspect(current_suspect);
 				vsch.setIs_retro_suspect(retro_suspect);
 				vsch.setPrerequisite_passed(prerequisite_passed);
+				vsch.setPrerequisite_given_on_current_visit(prerequisite_given_today);
 				
 				schedule.add(vsch);
 			}
@@ -219,6 +224,7 @@ public class VaccineSchedule {
 						&& !schmap.getExpired()
 						&& !schmap.getStatus().equalsIgnoreCase(VaccineStatusType.VACCINATED_EARLIER.name())){
 					boolean passedPrereqCheck = IMRUtils.passVaccinePrerequisiteCheck(schmap, schedule);
+					boolean prereqGivenToday = IMRUtils.isPrerequisiteVaccinatedOnCurrentVisit(schmap, schedule);
 	
 					if(!passedPrereqCheck){
 						schmap.setStatus(VaccineStatusType.NOT_ALLOWED.name());
@@ -256,6 +262,7 @@ public class VaccineSchedule {
 							schmap.setVaccination_date(null);
 						}
 						schmap.setPrerequisite_passed(passedPrereqCheck);
+						schmap.setPrerequisite_given_on_current_visit(prereqGivenToday);
 					}
 				}
 				
@@ -477,6 +484,15 @@ public class VaccineSchedule {
 
 	public void setExpired(Boolean expired) {
 		this.expired = expired;
+	}
+
+	public Boolean getPrerequisite_given_on_current_visit() {
+		return prerequisite_given_on_current_visit;
+	}
+
+	public void setPrerequisite_given_on_current_visit(
+			Boolean prerequisite_given_on_current_visit) {
+		this.prerequisite_given_on_current_visit = prerequisite_given_on_current_visit;
 	}
 
 }

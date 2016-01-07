@@ -123,13 +123,13 @@ public class ValidatorUtils {
 		return new ValidatorOutput(ValidatorStatus.OK, "");
 	}
 	
-	public static ValidatorOutput validateNIC(Child child, boolean unique, boolean isNew, ServiceContext sc){
-		if(!StringUtils.isEmptyOrWhitespaceOnly(child.getNic()) && child.getNic().length() != 13){
+	public static ValidatorOutput validateNIC(Integer childId, String cnic, boolean unique, boolean isNew, ServiceContext sc){
+		if(!StringUtils.isEmptyOrWhitespaceOnly(cnic) && cnic.length() != 13){
 			return new ValidatorOutput(ValidatorStatus.ERROR, ErrorMessages.NIC_INVALID);
 		}
 		
-		if(!StringUtils.isEmptyOrWhitespaceOnly(child.getNic()) && unique){
-			String q = "select count(*) from child where nic = '"+child.getNic()+"' "+(isNew?"":" and mappedId <> "+child.getMappedId());
+		if(!StringUtils.isEmptyOrWhitespaceOnly(cnic) && unique){
+			String q = "select count(*) from child where nic = '"+cnic+"' "+(isNew?"":" and mappedId <> "+childId);
 			if(Integer.parseInt(sc.getCustomQueryService().getDataBySQL(q).get(0).toString()) > 0){
 				return new ValidatorOutput(ValidatorStatus.ERROR, ErrorMessages.NIC_ALREADY_EXISTS);
 			}
@@ -206,7 +206,7 @@ public class ValidatorUtils {
 			putError(dataEntrySource, ErrorMessages.COMPLETE_COURSE_FROM_CENTER_MISSING, mobileErrors, webErrors, DataField.CHILD_COMPLETE_COURSE_FROM_CENTER, useFieldPrefix);
 		}
 		
-		validateChildNIC(dataEntrySource, child, true, mobileErrors, webErrors, useFieldPrefix, sc);
+		validateChildNIC(dataEntrySource, child.getMappedId(), child.getNic(), true, mobileErrors, webErrors, useFieldPrefix, sc);
 		
 		boolean measles2Given = IMRUtils.isMeasles2Given(vaccineSchedule, child.getDateEnrolled());
 
@@ -311,6 +311,9 @@ public class ValidatorUtils {
 		
 		if(preferences == null || preferences.getHasApprovedLottery() == null){
 			putError(dataEntrySource, ErrorMessages.VACCINATION_LOTTERY_MISSING, mobileErrors, webErrors, null, useFieldPrefix);
+		}
+		else if(preferences.getHasApprovedLottery()&& (contactPrimary == null || StringUtils.isEmptyOrWhitespaceOnly(contactPrimary))){
+			putError(dataEntrySource, ErrorMessages.CONTACT1_NUMBER_INVALID, mobileErrors, webErrors, DataField.CENTER_VISIT_CONTACT_PRIMARY , useFieldPrefix);
 		}
 	}
 	
@@ -749,10 +752,10 @@ public class ValidatorUtils {
 		return new ValidatorOutput(ValidatorStatus.OK, "");
 	}
 	
-	public static void validateChildNIC(DataEntrySource dataEntrySource, Child child, boolean isNew, 	
+	public static void validateChildNIC(DataEntrySource dataEntrySource, Integer childId, String cnic, boolean isNew, 	
 			HashMap<String, String> mobileErrors, Errors webErrors, boolean useFieldPrefix, ServiceContext sc)
 	{
-		ValidatorOutput vnicop = validateNIC(child, true, isNew, sc);
+		ValidatorOutput vnicop = validateNIC(childId, cnic, true, isNew, sc);
 		if(!vnicop.STATUS().equals(ValidatorStatus.OK)){
 			putError(dataEntrySource, vnicop.MESSAGE(), mobileErrors, webErrors, null, false);
 		}

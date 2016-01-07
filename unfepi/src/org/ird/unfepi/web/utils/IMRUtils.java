@@ -114,7 +114,8 @@ public class IMRUtils {
 		for (VaccinePrerequisite prereq : vaccineSch.getPrerequisites()) {
 			for (VaccineSchedule vaccineSchedule : schedule) {
 				if(prereq.getVaccinePrerequisiteId().getVaccinePrerequisiteId() == vaccineSchedule.getVaccine().getVaccineId()
-						&& vaccineSchedule.getStatus().equalsIgnoreCase(VaccineStatusType.VACCINATED.name())){
+						&& vaccineSchedule.getStatus().equalsIgnoreCase(VaccineStatusType.VACCINATED.name())
+						&& vaccineSchedule.getVaccination_date() != null && DateUtils.datesEqual(vaccineSchedule.getVaccination_date(), vaccineSch.getVisitdate())){
 					return true;
 				}
 			}
