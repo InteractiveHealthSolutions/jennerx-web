@@ -1048,66 +1048,68 @@ public class ValidatorUtils {
 				&& (vsobj == null || StringUtils.isEmptyOrWhitespaceOnly(vsobj.getStatus()))){
 				putError(dataEntrySource, dfvsh.getVaccine().getName()+" info and status must be provided. It cannot be left blank", mobileErrors, error, null, useFieldPrefix);
 			}
-			else if(vsobj.getVaccination_date() != null 
-					&& (vsobj.getVaccination_date().before(child.getBirthdate())
-							|| DateUtils.differenceBetweenIntervals(vsobj.getVaccination_date(), centerVisit.getVisitDate(), TIME_INTERVAL.DATE) >= 1)){
-				putError(dataEntrySource, dfvsh.getVaccine().getName()+" vaccination date should not be before birthdate or a future date", mobileErrors, error, null, useFieldPrefix);
-			}
-			else if(StringUtils.isEmptyOrWhitespaceOnly(vsobj.getStatus())){// expired or out of schedule vaccines
-				if(dfvsh.getSchedule_duedate() != null && !dfvsh.getExpired()){
-					putError(dataEntrySource, dfvsh.getVaccine().getName()+" vaccination status found empty which is not possible. Contact program vendor!", mobileErrors, error, null, useFieldPrefix);
+			if(vsobj != null){
+				if(vsobj.getVaccination_date() != null 
+						&& (vsobj.getVaccination_date().before(child.getBirthdate())
+								|| DateUtils.differenceBetweenIntervals(vsobj.getVaccination_date(), centerVisit.getVisitDate(), TIME_INTERVAL.DATE) >= 1)){
+					putError(dataEntrySource, dfvsh.getVaccine().getName()+" vaccination date should not be before birthdate or a future date", mobileErrors, error, null, useFieldPrefix);
 				}
-				
-				if(vsobj.getVaccination_date() != null || vsobj.getCenter() != null){
-					putError(dataEntrySource, dfvsh.getVaccine().getName()+" vaccination status found empty but vaccination date and/or center was specified which is not possible. Contact program vendor!", mobileErrors, error, null, useFieldPrefix);
+				else if(StringUtils.isEmptyOrWhitespaceOnly(vsobj.getStatus())){// expired or out of schedule vaccines
+					if(dfvsh.getSchedule_duedate() != null && !dfvsh.getExpired()){
+						putError(dataEntrySource, dfvsh.getVaccine().getName()+" vaccination status found empty which is not possible. Contact program vendor!", mobileErrors, error, null, useFieldPrefix);
+					}
+					
+					if(vsobj.getVaccination_date() != null || vsobj.getCenter() != null){
+						putError(dataEntrySource, dfvsh.getVaccine().getName()+" vaccination status found empty but vaccination date and/or center was specified which is not possible. Contact program vendor!", mobileErrors, error, null, useFieldPrefix);
+					}
 				}
-			}
-			else if(vsobj.getStatus().equalsIgnoreCase(VaccineStatusType.SCHEDULED.name())){
-				if(vsobj.getAssigned_duedate() == null){
-					putError(dataEntrySource, dfvsh.getVaccine().getName()+" due date found empty for SCHEDULED vaccine which is not possible here. Contact program vendor!", mobileErrors, error, null, useFieldPrefix);
+				else if(vsobj.getStatus().equalsIgnoreCase(VaccineStatusType.SCHEDULED.name())){
+					if(vsobj.getAssigned_duedate() == null){
+						putError(dataEntrySource, dfvsh.getVaccine().getName()+" due date found empty for SCHEDULED vaccine which is not possible here. Contact program vendor!", mobileErrors, error, null, useFieldPrefix);
+					}
+					else if(vsobj.getAssigned_duedate().before(centerVisit.getVisitDate())){
+						putError(dataEntrySource, dfvsh.getVaccine().getName()+" due date should be after center visit date", mobileErrors, error, null, useFieldPrefix);
+					}
+					
+					if(vsobj.getVaccination_date() != null || (!dataEntrySource.equals(DataEntrySource.MOBILE) && vsobj.getCenter() != null)){
+						putError(dataEntrySource, dfvsh.getVaccine().getName()+" vaccination status found SCHEDULED but vaccination date and/or center was specified which is not possible. Contact program vendor!", mobileErrors, error, null, useFieldPrefix);
+					}
+					
+					if(!prereqpassed){
+						putError(dataEntrySource, dfvsh.getVaccine().getName()+" prerequisite vaccine not given for SCHEDULED vaccine which is not possible. Contact program vendor!", mobileErrors, error, null, useFieldPrefix);
+					}
 				}
-				else if(vsobj.getAssigned_duedate().before(centerVisit.getVisitDate())){
-					putError(dataEntrySource, dfvsh.getVaccine().getName()+" due date should be after center visit date", mobileErrors, error, null, useFieldPrefix);
+				else if(vsobj.getStatus().equalsIgnoreCase(VaccineStatusType.VACCINATED.name())){
+					anyScheduleVaccineRecceivedToday = true;
+					if(!prereqpassed){
+						putError(dataEntrySource, dfvsh.getVaccine().getName()+" prerequisite vaccine not given for VACCINATED vaccine which is not possible. Contact program vendor!", mobileErrors, error, null, useFieldPrefix);
+					}
+					
+					if( (vsobj.getVaccination_date() == null || !DateUtils.datesEqual(vsobj.getVaccination_date(),centerVisit.getVisitDate()))){
+						putError(dataEntrySource, dfvsh.getVaccine().getName()+" vaccination date must be equal to center visit date", mobileErrors, error, null, useFieldPrefix);
+					}
+					
+					if(vsobj.getCenter() == null || vsobj.getCenter() != centerVisit.getVaccinationCenterId()){
+						putError(dataEntrySource, dfvsh.getVaccine().getName()+" vaccination center must be equal to current center", mobileErrors, error, null, useFieldPrefix);
+					}
 				}
-				
-				if(vsobj.getVaccination_date() != null || vsobj.getCenter() != null){
-					putError(dataEntrySource, dfvsh.getVaccine().getName()+" vaccination status found SCHEDULED but vaccination date and/or center was specified which is not possible. Contact program vendor!", mobileErrors, error, null, useFieldPrefix);
-				}
-				
-				if(!prereqpassed){
-					putError(dataEntrySource, dfvsh.getVaccine().getName()+" prerequisite vaccine not given for SCHEDULED vaccine which is not possible. Contact program vendor!", mobileErrors, error, null, useFieldPrefix);
-				}
-			}
-			else if(vsobj.getStatus().equalsIgnoreCase(VaccineStatusType.VACCINATED.name())){
-				anyScheduleVaccineRecceivedToday = true;
-				if(!prereqpassed){
-					putError(dataEntrySource, dfvsh.getVaccine().getName()+" prerequisite vaccine not given for VACCINATED vaccine which is not possible. Contact program vendor!", mobileErrors, error, null, useFieldPrefix);
-				}
-				
-				if( (vsobj.getVaccination_date() == null || !DateUtils.datesEqual(vsobj.getVaccination_date(),centerVisit.getVisitDate()))){
-					putError(dataEntrySource, dfvsh.getVaccine().getName()+" vaccination date must be equal to center visit date", mobileErrors, error, null, useFieldPrefix);
-				}
-				
-				if(vsobj.getCenter() == null || vsobj.getCenter() != centerVisit.getVaccinationCenterId()){
-					putError(dataEntrySource, dfvsh.getVaccine().getName()+" vaccination center must be equal to current center", mobileErrors, error, null, useFieldPrefix);
-				}
-			}
-			else if(vsobj.getStatus().toUpperCase().contains(VaccineStatusType.RETRO.name())){
-				if(!prereqpassed){
-					putError(dataEntrySource, dfvsh.getVaccine().getName()+" prerequisite vaccine not given for RETRO vaccine which is not possible. Contact program vendor!", mobileErrors, error, null, useFieldPrefix);
-				}
-				
-				if(vsobj.getStatus().equalsIgnoreCase(VaccineStatusType.RETRO_DATE_MISSING.name())
-						&& vsobj.getVaccination_date() != null){
-					putError(dataEntrySource, dfvsh.getVaccine().getName()+" vaccination date found non null for RETRO_DATE_MISSING vaccine which is not possible. Contact program vendor!", mobileErrors, error, null, useFieldPrefix);
-				}
-				else if(vsobj.getStatus().equalsIgnoreCase(VaccineStatusType.RETRO.name())
-						&& (vsobj.getVaccination_date() == null || vsobj.getVaccination_date().after(centerVisit.getVisitDate()))){
-					putError(dataEntrySource, dfvsh.getVaccine().getName()+" non empty past vaccination date should be spcified for RETRO vaccine", mobileErrors, error, null, useFieldPrefix);
-				}
-				
-				if(vsobj.getCenter() == null){
-					putError(dataEntrySource, dfvsh.getVaccine().getName()+" vaccination center must be specified for RETRO vaccine", mobileErrors, error, null, useFieldPrefix);
+				else if(vsobj.getStatus().toUpperCase().contains(VaccineStatusType.RETRO.name())){
+					if(!prereqpassed){
+						putError(dataEntrySource, dfvsh.getVaccine().getName()+" prerequisite vaccine not given for RETRO vaccine which is not possible. Contact program vendor!", mobileErrors, error, null, useFieldPrefix);
+					}
+					
+					if(vsobj.getStatus().equalsIgnoreCase(VaccineStatusType.RETRO_DATE_MISSING.name())
+							&& vsobj.getVaccination_date() != null){
+						putError(dataEntrySource, dfvsh.getVaccine().getName()+" vaccination date found non null for RETRO_DATE_MISSING vaccine which is not possible. Contact program vendor!", mobileErrors, error, null, useFieldPrefix);
+					}
+					else if(vsobj.getStatus().equalsIgnoreCase(VaccineStatusType.RETRO.name())
+							&& (vsobj.getVaccination_date() == null || vsobj.getVaccination_date().after(centerVisit.getVisitDate()))){
+						putError(dataEntrySource, dfvsh.getVaccine().getName()+" non empty past vaccination date should be spcified for RETRO vaccine", mobileErrors, error, null, useFieldPrefix);
+					}
+					
+					if(vsobj.getCenter() == null){
+						putError(dataEntrySource, dfvsh.getVaccine().getName()+" vaccination center must be specified for RETRO vaccine", mobileErrors, error, null, useFieldPrefix);
+					}
 				}
 			}
 		}
