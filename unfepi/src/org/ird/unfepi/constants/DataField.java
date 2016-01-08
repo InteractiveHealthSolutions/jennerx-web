@@ -87,6 +87,7 @@ public class DataField {
 	public static final String CENTER_VISIT_VISIT_DATE = "centerVisit.visitDate";
 	public static final String CENTER_VISIT_VACCINATION_STATUS = "centerVisit.vaccinationStatus";
 	public static final String CENTER_VISIT_VACCINATOR_ID = "centerVisit.vaccinatorId";
+	public static final String CENTER_VISIT_WOMEN_ID = "centerVisit.womenId";
 	//public static final String CENTER_VISIT_VACCINE_ELSE_WHERE = "centerVisit.vaccineElseWhere";
 	//public static final String CENTER_VISIT_VACCINE_GIVEN = "centerVisit.vaccineGiven";
 	//public static final String CENTER_VISIT_VACCINE_NEXT = "centerVisit.vaccineNext";
@@ -106,7 +107,6 @@ public class DataField {
 	public static final String PREFERENCE_HAS_APPROVED_LOTTERY = "preference.hasApprovedLottery";
 
 		
-	public static final String CENTER_VISIT_WOMEN_ID = "centerVisit.womenId";
 	public static final String WOMEN_DATE_ENROLLED = "women.dateEnrolled";
 	public static final String WOMEN_FIRST_NAME = "women.firstName";
 	public static final String WOMEN_LAST_NAME = "women.lastName";
@@ -126,4 +126,6 @@ public class DataField {
 	public static final String WOMEN_WOMEN_AGE_WEEKS = "womenagew";
 	public static final String WOMEN_WOMEN_AGE_DAYS = "womenaged";
 	public static final String WOMEN_VACCINE_DATE = "centerVisit.vaccinationDate";
+	
+
 }

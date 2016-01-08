@@ -3,6 +3,7 @@
  */
 package org.ird.unfepi.web.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ import org.ird.unfepi.context.LoggedInUser;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Address;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
+import org.ird.unfepi.model.VaccinationStatusDate;
 import org.ird.unfepi.model.Women;
 import org.ird.unfepi.model.WomenVaccination;
 import org.ird.unfepi.model.WomenVaccination.WOMEN_VACCINATION_STATUS;
@@ -128,6 +130,9 @@ public class AddWomenController extends DataEntryFormController {
 			ControllerUIHelper.prepareVaccinationReferenceData(request, model, 
 					sc.getVaccinationService().getAllVaccinationCenter(true, new String[]{"idMapper"}), 
 					sc.getVaccinationService().getAllVaccinator(0, Integer.MAX_VALUE, true, new String[]{"idMapper"}));
+
+			ControllerUIHelper.prepareWomenEnrollmentReferenceData(request, model, (EnrollmentWrapperWomen) command, sc);
+			
 		}catch (Exception e) {
 			e.printStackTrace();
 			request.setAttribute("errorMessagev", "An error occurred while retrieving reference data list. Error message is:"+e.getMessage());

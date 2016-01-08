@@ -34,7 +34,7 @@
 <td colspan="2">Father Name : ${model.datalist.women.fatherFirstName} ${model.datalist.women.fatherLastName}</td>
 <td>Address : 
 <c:forEach items="${model.datalist.address}" var="add">
-${add.address1} UC:${add.uc}, Town: ${add.town}
+${add.addHouseNumber} ${add.addStreet} ${add.addSector} ${add.addArea} ${add.addDistrict} ${add.addColony} ${add.addtown} UC:${add.addUc}
 <br>
 </c:forEach></td></tr>
 <tr><td colspan="2">Birthdate : <fmt:formatDate value="${model.datalist.women.birthdate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/> <c:if test="${model.datalist.women.estimatedBirthdate}">(approx)</c:if></td>

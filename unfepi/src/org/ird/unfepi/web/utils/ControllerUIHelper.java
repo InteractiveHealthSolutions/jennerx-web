@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.ird.unfepi.ChildIncentivization;
 import org.ird.unfepi.GlobalParams;
+import org.ird.unfepi.beans.EnrollmentWrapperWomen;
 import org.ird.unfepi.constants.WebGlobals;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Address;
@@ -212,10 +214,10 @@ public class ControllerUIHelper {
 		EncounterUtil.createWomenEnrollmentEncounter(womenId, dataEntrySource, projectId, women, birthdateOrAge, ageYears, ageMonths, ageWeeks, ageDays, address, centerVisit, formStartDate, user, sc);
 		
 		handleWomenVaccination(sc, women, centerVisit, user, enrollmentVaccine, vaccines);
-		
+
 	}
 	
-	public static void handleWomenVaccination(ServiceContext sc, Women women, WomenVaccinationCenterVisit centerVisit, User user, String enrollmentVaccine, List<WomenVaccination> vaccines){
+public static void handleWomenVaccination(ServiceContext sc, Women women, WomenVaccinationCenterVisit centerVisit, User user, String enrollmentVaccine, List<WomenVaccination> vaccines){
 		
 		for(int i = 0; i < vaccines.size(); i++){
 			if(!vaccines.get(i).getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.NOT_VACCINATED)){
@@ -271,9 +273,8 @@ public class ControllerUIHelper {
 		handleFollowupWomenVaccinations(dataEntrySource, centerVisit, user, sc);
 		
 		EncounterUtil.createWomenFollowupEncounter(centerVisit, dataEntrySource, formStartDate, user, sc);
-		
-		
 	}
+
 	public static void doChangePreference(LotterySms preference, User user, ServiceContext sc) throws ChildDataInconsistencyException{
 		preference.setCreator(user);
 		sc.getChildService().saveLotterySms(preference);
@@ -775,7 +776,7 @@ public class ControllerUIHelper {
 			}
 		}
 	}
-
+	
 	/** 
 	 * Manipulate and save IdMapper for role CHILD and save child for ID assigned by IdMapper
 	 */
@@ -813,14 +814,14 @@ public class ControllerUIHelper {
 		Identifier ident = new Identifier();
 		ident.setIdentifier(projectId);
 		ident.setIdentifierType((IdentifierType)sc.getCustomQueryService().getDataByHQL("FROM IdentifierType WHERE name ='"+GlobalParams.IdentifierType.WOMEN_PROJECT_ID+"'").get(0));
-		ident.setLocationId(enrollmentCenter);
+		//ident.setLocationId(1);
 		ident.setPreferred(true);
 		ident.setIdMapper(idMapper);
 		sc.getCustomQueryService().save(ident);
 
 		women.setCreator(user);
 		women.setMappedId(idMapper.getMappedId());
-		women.setStatus(Women.WOMENSTATUS.ENROLLMENT);
+		women.setStatus(Women.WOMENSTATUS.ENROLLMENT);		
 		// calculateDate function should be used in the future for date calculation
 		women.setEnrollmentVaccineId(sc.getVaccinationService().getByName(enrollmentVaccine).getVaccineId());
 		sc.getWomenService().save(women);
@@ -1115,6 +1116,38 @@ public class ControllerUIHelper {
 				sc.getDemographicDetailsService().updateContactNumber(con);
 			}
 		}
+	}
+	
+	public static void addAddressReferenceData(HttpServletRequest request, Map<String, Object> model, ServiceContext sc) 
+	{
+		List<Map<String, String>> cities = new ArrayList<Map<String,String>>();
+		@SuppressWarnings("rawtypes")
+		List cl = sc.getCustomQueryService().getDataBySQL("select locationId cityId, name as cityName from location where locationType=1 order by cityId");
+		for (Object object : cl) {
+			HashMap<String, String> city = new HashMap<String, String>();
+			Object[] oar = (Object[]) object;
+			city.put("cityId", oar[0].toString());
+			city.put("cityName", oar[1].toString());
+			cities.add(city);
+		}		
+		
+		model.put("cities", cities);
+	}
+	
+	
+	/**
+	 * A helper method to set appropriate fields and params for display on Form requiring Enrollment specific information. 
+	 */
+	public static void prepareWomenEnrollmentReferenceData(HttpServletRequest request, Map<String, Object> model, EnrollmentWrapperWomen command, ServiceContext sc) 
+	{
+		String programId = request.getParameter("programId");
+
+		if(programId == null && command.getWomen().getIdMapper() != null)
+		{
+			programId = command.getWomen().getIdMapper().getIdentifiers().get(0).getIdentifier();
+		}
+		
+		addAddressReferenceData(request, model, sc);
 	}
 	
 	/**

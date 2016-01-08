@@ -1150,25 +1150,27 @@ public class ValidatorUtils {
 			putError(dataEntrySource, ErrorMessages.VACCINATION_CENTER_MISSING, mobileErrors, error, DataField.CENTER_VISIT_VACCINATION_CENTER_ID, useFieldPrefix);
 			return;
 		}
-    	
+   	
 		if(women.getBirthdate() == null){
 			putError(dataEntrySource, "Can not proceed without women`s birthdate", mobileErrors, error, null, useFieldPrefix);
 			return;
 		}
 		
-    	// check if user nullable dates are provided
-    	// Program assumes that dateEnrolled, vacinationDate, vaccinationDuedate should be equal for enrollment 
+		
+		
+   	// check if user nullable dates are provided
+   	// Program assumes that dateEnrolled, vacinationDate, vaccinationDuedate should be equal for enrollment 
 		// as all fields are for event information of same datetime
-    	if(isNewEnrollment && women.getDateEnrolled() != null 
+   	if(isNewEnrollment && women.getDateEnrolled() != null 
 				&& (!DateUtils.datesEqual(women.getDateEnrolled(), centerVisit.getVisitDate()))){
 			putError(dataEntrySource, ErrorMessages.ENROLLMENT_EQUAL_DATES_REQUIRED, mobileErrors, error, DataField.CHILD_DATE_ENROLLED, useFieldPrefix);
 			return;
-    	}
-    	
-    	if(centerVisit.getVaccinatorId() == null){
+   	}
+   	
+   	if(centerVisit.getVaccinatorId() == null){
 			putError(dataEntrySource, ErrorMessages.VACCINATOR_MISSING, mobileErrors, error, DataField.CENTER_VISIT_VACCINATOR_ID, useFieldPrefix);
-    	}
-    	
+   	}
+   	
 		if(centerVisit.getVaccinationCenterId() != null){
 			ValidatorOutput vepi = null;
 			if(isNewEnrollment)

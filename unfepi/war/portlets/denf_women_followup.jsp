@@ -2,7 +2,6 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
-<%@page import="java.util.Date"%>
 <%@page import="org.ird.unfepi.model.WomenVaccination.WOMEN_VACCINATION_STATUS"%>
 <%@page import="org.ird.unfepi.constants.WebGlobals"%>
 <%@page import="org.ird.unfepi.model.WomenVaccination"%>
@@ -57,16 +56,6 @@ function subfrm(){
             </spring:bind>
 		</td>
 	</tr>
-	<tr>
-    		<td>Enrollment ki Tareekh <span class="mendatory-field">*</span></td>
-       	     <td>
-       		 <spring:bind path="command.visitDate">
-   	    	 <!-- MUST be named as centerVisitDate: used in plt_vaccine_schedule for autopopulating date incase of status VACCINATED -->
-      		 	 <input id="centerVisitDate" name="${status.expression}" value="${status.value}" maxDate="+0d" class="calendarbox"/>
-			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
-			</spring:bind>
-			</td>
-		</tr>
   
 	<tr>
 			<td colspan="2" class="headerrow">Basic Info</td>

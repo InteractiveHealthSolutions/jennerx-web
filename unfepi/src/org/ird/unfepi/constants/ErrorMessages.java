@@ -143,6 +143,7 @@ public class ErrorMessages
 	public static final String VACCINATION_STATUS_MISSING = "Vaccination status missing";
 	public static final String VACCINATION_STATUS_ENROLLMENT_INVALID = "Enrollment vaccination`s status must be VACCINATED";
 	public static final String VACCINATION_STATUS_SCHEDULED_REQUIRED = "Vaccination`s status must be SCHEDULED";
+	public static final String VACCINATION_WOMEN_ID_MISSING = "Women Id for vaccination cannot be missing";
 
 	public static final String VACCINATION_NEXT_VACCINE_MISSING = "Next scheduled vaccine missing";
 	public static final String VACCINATION_NEXT_VACCINE_RECEIVED = "Vaccine next scheduled, has already been received";
@@ -228,7 +229,6 @@ public class ErrorMessages
 	public static final String DAILY_SUMMARY_BCG_TOTAL_ENROLLED_INVALID = "BCG enrollments into lottery or reminders should not exceed total enrollemnts into BCG";
 	public static final String DAILY_SUMMARY_PENTA1_TOTAL_ENROLLED_INVALID = "Penta1 enrollments into lottery or reminders should not exceed total enrollemnts into Penta1";
 	
-	public static final String VACCINATION_WOMEN_ID_MISSING = "Women Id for vaccination cannot be missing";
 	public static final String WOMEN_DATE_ENROLLED_INVALID = "A valid and past date must be specified as date enrolled for women";
 	public static final String WOMEN_VACCINATION_DATE = "Date must be entered";
 	public static final String WOMEN_NAME_LENGTH = "Minimum length should be 3";
