@@ -20,6 +20,8 @@ public interface DAOWomen extends DAO {
 	
 	Women findById(int mappedId, boolean isreadonly, String[] mappingsToJoin);
 	
+	Women findWomenByIdentifier(String programId, boolean isreadonly, String[] mappingsToJoin);
+	
 	List<Women> getAllWomen (boolean isreadonly, int firstResult, int fetchsize, String[] mappingsToJoin);
 	
 	List<Women> getWomen (String partialName, String nic);

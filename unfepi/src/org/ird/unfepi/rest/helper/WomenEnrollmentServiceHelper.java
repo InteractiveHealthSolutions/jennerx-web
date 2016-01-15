@@ -222,13 +222,6 @@ public class WomenEnrollmentServiceHelper {
 		women.setStatus(WOMENSTATUS.ENROLLMENT);
 		User user = sc.getUserService().findUser(userId);
 
-		// ch.setDateEnrolled(new Date());
-
-		// String representing the mode of recording the date of birth of the
-		// child
-		// modeDateOfBirth = (isEstimated) ? GlobalParams.MODE_BIRTHDATE_AGE :
-		// GlobalParams.MODE_BIRTHDATE_DOB;
-
 		// ///////////Address fields ///////////////////////
 		Address add = new Address();
 		add.setAddress1(address);
@@ -253,90 +246,11 @@ public class WomenEnrollmentServiceHelper {
 			e.printStackTrace();
 		}
 
-		/*ContactNumber contactMob = new ContactNumber();
-		contactMob.setNumber(mobileNoString);
-		contactMob.setTelelineType(ContactTeleLineType.MOBILE);
-
-		ContactNumber contactLnd = new ContactNumber();
-		contactLnd.setNumber(landlineNoString);
-		contactLnd.setTelelineType(ContactTeleLineType.LANDLINE);*/
-
-		// //////////Program Details////////////////////
-
-		// 2.Next vaccines:
-		// Main VaccinationCenterVisit object used for doing the enrollment
-		// VaccinationCenterVisit vcv = new VaccinationCenterVisit();
-
-		// Temporary JSONObject to get the vaccine composite currently being
-		// looked up in the loop
-		// JSONObject obj;
-
-		// Fields to retrieve from the objects in the array
-		/*
-		 * Date vaccinationDate = null; Date dueDate = null; String vaccineName
-		 * = null; Vaccine vaccine = null;
-		 */
-
-		// Iterate to loop through all the next vaccines scheduled.
-		// Iterator i = vaccinations.iterator();
-		// VaccineSchedule row;
-		// go through all the next vaccines to be given
-		/*
-		 * while (i.hasNext()) { row = new VaccineSchedule(); JSONObject o =
-		 * (JSONObject) i.next();
-		 * 
-		 * // set vaccine for vaccineschedule row vaccineName = (String)
-		 * o.get(RequestElements.VACCINENAME); vaccine =
-		 * sc.getVaccinationService().findVaccine(vaccineName, true).get(0);
-		 * row.setVaccine(vaccine);
-		 * 
-		 * // set status for for vaccineschedule row String status = (String)
-		 * o.get(RequestElements.VACCINATION_STATUS); row.setStatus(status);
-		 * 
-		 * // set centre
-		 * 
-		 * Integer vaccineCentreId =
-		 * Integer.valueOf(o.get(RequestElements.VACCINATION_CENTER
-		 * ).toString()); if (vaccineCentreId == 0)// sending 0 from mobile if
-		 * status is VACCINATED row.setCenter(centreId); else
-		 * row.setCenter(vaccineCentreId);
-		 * 
-		 * // set dates for vaccineschedule row String vaccinationDateString =
-		 * (String) o.get(RequestElements.DATE_OF_VACCINATION); String
-		 * dueDateString = (String) o.get(RequestElements.NEXT_ALLOTTED_DATE);
-		 * try { vaccinationDate =
-		 * RestUtils.stringToDate(vaccinationDateString); dueDate =
-		 * RestUtils.stringToDate(dueDateString);
-		 * row.setAssigned_duedate(dueDate);
-		 * row.setVaccination_date(vaccinationDate);
-		 * 
-		 * } catch (Exception e) { e.printStackTrace(); } }
-		 */
-
-		// 4.Same center
-		/*if (sameCenter) {
-			strSameCenter = GlobalParams.APPLICATION_YES;
-		} else {
-			strSameCenter = GlobalParams.APPLICATION_NO;
-		}*/
-
-		/*
-		 * VaccinationCenterVisit vacCentrVist = new
-		 * VaccinationCenterVisit(null, new Date(),
-		 * Integer.valueOf(submitter.getMappedId()), Integer.valueOf(centreId),
-		 * epiNo, null, mobileNoString, landlineNoString, lotterysms);
-		 */
-
+		
 		HashMap<String, String> mobileErrors = new HashMap<String, String>();
 
 		try {
-			/*
-			 * ValidatorUtils.validateEnrollmentForm(DataEntrySource.MOBILE,
-			 * projectId, isChildNamed, ch, modeDateOfBirth, years, months,
-			 * weeks, days, add, strSameCenter, vacCentrVist, schedule,
-			 * mobileErrors, null, sc);
-			 */
-
+			
 			StringBuilder builder = new StringBuilder();
 
 			for (String key : mobileErrors.keySet()) {
@@ -345,12 +259,6 @@ public class WomenEnrollmentServiceHelper {
 
 			// proceed to do enrollment if no errors found
 			if (mobileErrors.size() == 0) {
-				/*
-				 * ControllerUIHelper.doEnrollment(DataEntrySource.MOBILE,
-				 * projectId, isChildNamed, ch, dob, null, null, null, null,
-				 * add, vacCentrVist, null, schedule, new Date(), submitter,
-				 * sc);
-				 */
 				sc.commitTransaction();
 				return ResponseBuilder.buildResponse(ResponseStatus.STATUS_SUCCESS, null);
 			} else {
@@ -359,15 +267,6 @@ public class WomenEnrollmentServiceHelper {
 				GlobalParams.MOBILELOGGER.error(builder.toString());
 				return ResponseBuilder.buildResponse(ResponseStatus.STATUS_FAILURE, (Map) mobileErrors);
 
-				// Map<String,Object> hashResponse = new HashMap<String,
-				// Object>();
-				// for(String str :mobileErrors.keySet())
-				// {
-				// hashResponse.put(str, mobileErrors.get(str));
-				// }
-				// return
-				// ResponseBuilder.buildResponse(ResponseStatus.STATUS_FAILURE,
-				// hashResponse);
 			}
 
 		} catch (Exception ex) {

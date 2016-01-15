@@ -55,6 +55,7 @@ import org.ird.unfepi.model.dao.hibernatedimpl.DAOEncounterResultsImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOHibernateImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOIdMapperImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOIncentiveParamsImpl;
+import org.ird.unfepi.model.dao.hibernatedimpl.DAOLocationImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOLotterySmsImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAONotifierImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOPermissionImpl;
@@ -90,6 +91,7 @@ import org.ird.unfepi.service.DemographicDetailsService;
 import org.ird.unfepi.service.EncounterService;
 import org.ird.unfepi.service.IdMapperService;
 import org.ird.unfepi.service.IncentiveService;
+import org.ird.unfepi.service.LocationService;
 import org.ird.unfepi.service.ReminderService;
 import org.ird.unfepi.service.ReportService;
 import org.ird.unfepi.service.SettingService;
@@ -106,6 +108,7 @@ import org.ird.unfepi.service.impl.DemographicDetailsServiceImpl;
 import org.ird.unfepi.service.impl.EncounterServiceImpl;
 import org.ird.unfepi.service.impl.IdMapperServiceImpl;
 import org.ird.unfepi.service.impl.IncentiveServiceImpl;
+import org.ird.unfepi.service.impl.LocationServiceImpl;
 import org.ird.unfepi.service.impl.ReminderServiceImpl;
 import org.ird.unfepi.service.impl.ReportServiceImpl;
 import org.ird.unfepi.service.impl.SettingServiceImpl;
@@ -131,6 +134,8 @@ public class ServiceContext {
 	private IdMapperService idMapperService;
 	
 	private IncentiveService incentiveService;
+	
+	private LocationService locationService;
 	
 	private SettingService irSettingService;
 	
@@ -178,6 +183,9 @@ public class ServiceContext {
 		
 		DAOWomenImpl womendao = new DAOWomenImpl(session);
 		this.womenService = new WomenServiceImpl(this,womendao);
+		
+		DAOLocationImpl locdao = new DAOLocationImpl(session);
+		this.setLocationService(new LocationServiceImpl(this,locdao));
 		
 		DAODirectQuery dirqudao = new DAODirectQueryImpl(session);
 		DAO dao = new DAOHibernateImpl(session);
@@ -383,6 +391,14 @@ public class ServiceContext {
 	
 	public WomenVaccinationService getWomenVaccinationService() {
 		return womenVaccinationService;
+	}
+
+	public LocationService getLocationService() {
+		return locationService;
+	}
+
+	public void setLocationService(LocationService locationService) {
+		this.locationService = locationService;
 	}
 	
 }

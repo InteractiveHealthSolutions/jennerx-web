@@ -11,6 +11,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.ird.unfepi.model.Child;
 import org.ird.unfepi.model.Women;
 import org.ird.unfepi.model.dao.DAOWomen;
 
@@ -91,6 +92,23 @@ public class DAOWomenImpl extends DAOHibernateImpl implements DAOWomen {
 	@Override
 	public Number LAST_QUERY_TOTAL_ROW_COUNT() {
 		return LAST_QUERY_TOTAL_ROW_COUNT;
+	}
+
+	@Override
+	public Women findWomenByIdentifier(String programId, boolean isreadonly, String[] mappingsToJoin) {
+		Criteria cri = session.createCriteria(Women.class).setReadOnly(isreadonly)
+				.setFetchMode("idMapper",FetchMode.JOIN)
+				.createAlias("idMapper.identifiers", "idm")
+				.add(Restrictions.eq("idm.identifier", programId));
+
+		if(mappingsToJoin != null)
+			for (String mapping : mappingsToJoin) {
+				cri.setFetchMode(mapping, FetchMode.JOIN);
+			}
+		
+		List<Women> list = cri.list();
+		setLAST_QUERY_TOTAL_ROW_COUNT(list.size());
+		return (list.size() == 0 ? null : list.get(0));
 	}
 	
 	

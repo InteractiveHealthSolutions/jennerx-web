@@ -122,7 +122,7 @@ public class MetadataServiceHelper
 		// TODO: after discussion with Maimoona. Vaccine table needs restructuring
 		// TODO: add logic for returning the vaccine data here
 
-		String[] columns = new String[] { RequestElements.METADATA_FIELD_VACCINE_ID, RequestElements.METADATA_FIELD_VACCINE_NAME, RequestElements.METADATA_FIELD_VACCINE_ISSUPPLEMENTARY };
+		String[] columns = new String[] { RequestElements.METADATA_FIELD_VACCINE_ID, RequestElements.METADATA_FIELD_VACCINE_NAME, RequestElements.METADATA_FIELD_VACCINE_ISSUPPLEMENTARY, RequestElements.METADATA_FIELD_VACCINE_ENTITY };
 		String table = "vaccine";
 		fetchMetaData(RequestElements.METADATA_VACCINE, columns, table, mainResponse);
 	}

@@ -33,6 +33,7 @@ public class RequestElements
 	public static final String METADATA_FIELD_VACCINE_ID = "vaccineId";
 	public static final String METADATA_FIELD_VACCINE_NAME = "name";
 	public static final String METADATA_FIELD_VACCINE_ISSUPPLEMENTARY = "issupplementary";
+	public static final String METADATA_FIELD_VACCINE_ENTITY = "vaccine_entity";
 
 	public static final String METADATA_FIELD_VACCINEGAP_VACCINEGAPTYPEID = "vaccineGapTypeId";
 	public static final String METADATA_FIELD_VACCINEGAP_GAPTIMEUNIT = "gapTimeUnit";
@@ -218,6 +219,7 @@ public class RequestElements
 	public static final String WOMEN_VACCINATION_STATUS = "status";
 	public static final String WOMEN_VACCINATION_DATE = "date";
 	public static final String WOMEN_ADDRESS = "address";
+	public static final String WOMEN_ADDRESS_OTHER_CITY = "other_city";
 	public static final String WOMEN_MARITAL_STATUS = "maritalStatus";
 	public static final String WOMEN_DEMOGRAPHICS = "Demographics";
 	public static final String WOMEN_VACCINATION = "Vaccination";

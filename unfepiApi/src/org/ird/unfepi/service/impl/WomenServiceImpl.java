@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.ird.unfepi.context.ServiceContext;
-import org.ird.unfepi.model.Child;
 import org.ird.unfepi.model.Women;
 import org.ird.unfepi.model.dao.DAOWomen;
 import org.ird.unfepi.service.WomenService;
@@ -59,7 +58,14 @@ public class WomenServiceImpl implements WomenService {
 	@Override
 	public Women findWomenById(int mappedId, boolean isreadonly,
 			String[] mappingsToJoin) {
-		Women p=daoWomen.findById(mappedId, isreadonly, mappingsToJoin);
+		Women p = daoWomen.findById(mappedId, isreadonly, mappingsToJoin);
+		return p;
+	}
+
+
+	@Override
+	public Women findWomenByIdentifier(String programId, boolean isreadonly, String[] mappingsToJoin) {
+		Women p = daoWomen.findWomenByIdentifier(programId, isreadonly, mappingsToJoin);
 		return p;
 	}
 

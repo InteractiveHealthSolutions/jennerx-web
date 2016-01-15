@@ -996,6 +996,17 @@ public static void handleWomenVaccination(ServiceContext sc, Women women, WomenV
 	 */
 	private static void handleWomenEnrollmentContactInfo( String primaryContact, 
 			String secondaryContact, Address address, Women women, User user, ServiceContext sc) throws ChildDataInconsistencyException {
+		
+		if(!StringUtils.isEmptyOrWhitespaceOnly(primaryContact)){
+			ContactNumber primaryCont = new ContactNumber();
+			primaryCont .setCreator(user);
+			primaryCont.setMappedId(women.getMappedId());
+			primaryCont.setNumberType(ContactType.PRIMARY);
+			primaryCont.setTelelineType(ContactTeleLineType.UNKNOWN);
+			primaryCont.setNumber(primaryContact);
+			
+			sc.getDemographicDetailsService().saveContactNumber(primaryCont);
+		}
 
 		if(!StringUtils.isEmptyOrWhitespaceOnly(secondaryContact)){
 			ContactNumber secondaryCont = new ContactNumber();

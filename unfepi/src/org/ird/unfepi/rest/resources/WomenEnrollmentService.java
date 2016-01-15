@@ -26,7 +26,7 @@ import org.json.simple.parser.ParseException;
  */
 
 @Path("/womenEnrollment")
-public class WomenService {
+public class WomenEnrollmentService {
 	
 	@POST
 	@Produces(MediaType.TEXT_PLAIN)
@@ -38,8 +38,7 @@ public class WomenService {
 		{
 			JSONObject obj = (JSONObject)parser.parse(json);
 			String response = WomenEnrollmentServiceHelper.createEnrollment(obj);
-			//return response;
-			return null;
+			return response;
 		} 
 		catch (ParseException e) 
 		{
