@@ -126,9 +126,9 @@ public class WomenFollowupHelper {
 			demoJson.put(RequestElements.ADD_CITY, address.getCity());
 			// demoJson.put(RequestElements.WOMEN_ADDRESS_OTHER_CITY,
 			// address.getCity().getFullName());
-			demoJson.put(RequestElements.ADD_TOWN, address.getAddtown());
-			demoJson.put(RequestElements.ADD_UC, address.getAddUc());
-			demoJson.put(RequestElements.ADD_LANDMARK, address.getAddLandmark());
+			demoJson.put(RequestElements.ADD_TOWN, address.getTown());
+			demoJson.put(RequestElements.ADD_UC, address.getUc());
+			demoJson.put(RequestElements.ADD_LANDMARK, address.getLandmark());
 		} catch (Exception e) {
 			GlobalParams.MOBILELOGGER.error(e.getMessage());
 			e.printStackTrace();
@@ -399,12 +399,12 @@ public class WomenFollowupHelper {
 		List<Address> prevAdd = sc.getDemographicDetailsService().getAddress(women.getMappedId(), false, new String[]{"idMapper"});
 		Address add = prevAdd.get(0);
 		add.setAddress1(address);
-		add.setAddLandmark(landmark);
+		add.setLandmark(landmark);
 		add.setCityId(Integer.valueOf(city));
 		// set town id
-		add.setAddtown(town);
+		add.setTown(town);
 		// set uc id
-		add.setAddUc(uc);
+		add.setUc(uc);
 
 		centerVisit.setVaccinationCenterId(centreId);
 
