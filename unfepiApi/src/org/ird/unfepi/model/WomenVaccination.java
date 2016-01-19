@@ -42,8 +42,6 @@ public class WomenVaccination implements java.io.Serializable {
 	
 	public enum WOMEN_VACCINATION_STATUS{
 		
-		PENDING("PND"),
-		
 		VACCINATED("VACCINATED"),
 		
 		NOT_VACCINATED("NVAC"),
@@ -52,7 +50,7 @@ public class WomenVaccination implements java.io.Serializable {
 		
 		RETRO("RETRO"),
 		
-		RETRO_NO_DATE("RETRO (date missing)"),
+		RETRO_DATE_MISSING("RETRO (date missing)"),
 		
 		/**
 		 * Entry might be a result of unfilled form, or incomplete process that partially filled the table data
