@@ -17,9 +17,7 @@ import org.ird.unfepi.GlobalParams;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Address;
-import org.ird.unfepi.model.ContactNumber;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
-import org.ird.unfepi.model.Model.ContactTeleLineType;
 import org.ird.unfepi.model.User;
 import org.ird.unfepi.model.Women;
 import org.ird.unfepi.model.Women.WOMENSTATUS;
@@ -27,8 +25,6 @@ import org.ird.unfepi.model.WomenVaccination;
 import org.ird.unfepi.model.WomenVaccination.WOMEN_VACCINATION_STATUS;
 import org.ird.unfepi.rest.elements.RequestElements;
 import org.ird.unfepi.rest.elements.ResponseStatus;
-import org.ird.unfepi.service.UserService;
-import org.ird.unfepi.service.exception.ChildDataInconsistencyException;
 import org.ird.unfepi.web.utils.ControllerUIHelper;
 import org.ird.unfepi.web.utils.WomenVaccinationCenterVisit;
 import org.json.simple.JSONObject;
@@ -39,6 +35,7 @@ import org.json.simple.JSONObject;
  */
 public class WomenEnrollmentServiceHelper {
 
+	@SuppressWarnings({"unused", "rawtypes", "unchecked"})
 	public static String createEnrollment(JSONObject objectToParse) throws ParseException {
 		// demographics
 		String projectId;
@@ -143,7 +140,11 @@ public class WomenEnrollmentServiceHelper {
 			tt1 = (JSONObject) vaccination.get(RequestElements.TT1);
 			tt1Status = WOMEN_VACCINATION_STATUS.findEnum(tt1.get(RequestElements.WOMEN_VACCINATION_STATUS).toString());
 			centerVisit.getTt1().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum(tt1.get(RequestElements.WOMEN_VACCINATION_STATUS).toString()));
-			centerVisit.getTt1().setVaccinationDate(stringToDate(tt1.get(RequestElements.WOMEN_VACCINATION_DATE).toString()));
+			if (tt1.get(RequestElements.WOMEN_VACCINATION_DATE).toString().equals(""))
+				centerVisit.getTt1().setVaccinationDate(null);
+			else
+				centerVisit.getTt1().setVaccinationDate(stringToDate(tt1.get(RequestElements.WOMEN_VACCINATION_DATE).toString()));
+
 			centerVisit.getTt1().setVaccineId(sc.getVaccinationService().getByName("TT1").getVaccineId());
 			vaccines.add(centerVisit.getTt1());
 			if (tt1Status.equals(WOMEN_VACCINATION_STATUS.VACCINATED)) {
@@ -155,7 +156,11 @@ public class WomenEnrollmentServiceHelper {
 			tt2 = (JSONObject) vaccination.get(RequestElements.TT2);
 			tt2Status = WOMEN_VACCINATION_STATUS.findEnum(tt2.get(RequestElements.WOMEN_VACCINATION_STATUS).toString());
 			centerVisit.getTt2().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum(tt2.get(RequestElements.WOMEN_VACCINATION_STATUS).toString()));
-			centerVisit.getTt2().setVaccinationDate(stringToDate(tt2.get(RequestElements.WOMEN_VACCINATION_DATE).toString()));
+			if (tt1.get(RequestElements.WOMEN_VACCINATION_DATE).toString().equals(""))
+				centerVisit.getTt2().setVaccinationDate(null);
+			else
+				centerVisit.getTt2().setVaccinationDate(stringToDate(tt2.get(RequestElements.WOMEN_VACCINATION_DATE).toString()));
+
 			centerVisit.getTt2().setVaccineId(sc.getVaccinationService().getByName("TT2").getVaccineId());
 			vaccines.add(centerVisit.getTt2());
 			if (tt2Status.equals(WOMEN_VACCINATION_STATUS.VACCINATED)) {
@@ -167,7 +172,11 @@ public class WomenEnrollmentServiceHelper {
 			tt3 = (JSONObject) vaccination.get(RequestElements.TT3);
 			tt3Status = WOMEN_VACCINATION_STATUS.findEnum(tt3.get(RequestElements.WOMEN_VACCINATION_STATUS).toString());
 			centerVisit.getTt3().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum(tt3.get(RequestElements.WOMEN_VACCINATION_STATUS).toString()));
-			centerVisit.getTt3().setVaccinationDate(stringToDate(tt3.get(RequestElements.WOMEN_VACCINATION_DATE).toString()));
+			if (tt1.get(RequestElements.WOMEN_VACCINATION_DATE).toString().equals(""))
+				centerVisit.getTt3().setVaccinationDate(null);
+			else
+				centerVisit.getTt3().setVaccinationDate(stringToDate(tt3.get(RequestElements.WOMEN_VACCINATION_DATE).toString()));
+
 			centerVisit.getTt3().setVaccineId(sc.getVaccinationService().getByName("TT3").getVaccineId());
 			vaccines.add(centerVisit.getTt3());
 			if (tt3Status.equals(WOMEN_VACCINATION_STATUS.VACCINATED)) {
@@ -179,7 +188,10 @@ public class WomenEnrollmentServiceHelper {
 			tt4 = (JSONObject) vaccination.get(RequestElements.TT4);
 			tt4Status = WOMEN_VACCINATION_STATUS.findEnum(tt4.get(RequestElements.WOMEN_VACCINATION_STATUS).toString());
 			centerVisit.getTt4().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum(tt4.get(RequestElements.WOMEN_VACCINATION_STATUS).toString()));
-			centerVisit.getTt4().setVaccinationDate(stringToDate(tt4.get(RequestElements.WOMEN_VACCINATION_DATE).toString()));
+			if (tt1.get(RequestElements.WOMEN_VACCINATION_DATE).toString().equals(""))
+				centerVisit.getTt4().setVaccinationDate(null);
+			else
+				centerVisit.getTt4().setVaccinationDate(stringToDate(tt4.get(RequestElements.WOMEN_VACCINATION_DATE).toString()));
 			centerVisit.getTt4().setVaccineId(sc.getVaccinationService().getByName("TT4").getVaccineId());
 			vaccines.add(centerVisit.getTt4());
 			if (tt4Status.equals(WOMEN_VACCINATION_STATUS.VACCINATED)) {
@@ -191,7 +203,10 @@ public class WomenEnrollmentServiceHelper {
 			tt5 = (JSONObject) vaccination.get(RequestElements.TT5);
 			tt5Status = WOMEN_VACCINATION_STATUS.findEnum(tt5.get(RequestElements.WOMEN_VACCINATION_STATUS).toString());
 			centerVisit.getTt5().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum(tt5.get(RequestElements.WOMEN_VACCINATION_STATUS).toString()));
-			centerVisit.getTt5().setVaccinationDate(stringToDate(tt5.get(RequestElements.WOMEN_VACCINATION_DATE).toString()));
+			if (tt1.get(RequestElements.WOMEN_VACCINATION_DATE).toString().equals(""))
+				centerVisit.getTt5().setVaccinationDate(null);
+			else
+				centerVisit.getTt5().setVaccinationDate(stringToDate(tt5.get(RequestElements.WOMEN_VACCINATION_DATE).toString()));
 			centerVisit.getTt5().setVaccineId(sc.getVaccinationService().getByName("TT5").getVaccineId());
 			vaccines.add(centerVisit.getTt5());
 			if (tt5Status.equals(WOMEN_VACCINATION_STATUS.VACCINATED)) {
@@ -233,7 +248,7 @@ public class WomenEnrollmentServiceHelper {
 		add.setAddUc(uc);
 		// hardcoating the id for testing
 		centerVisit.setVaccinationCenterId(centreId);
-		
+
 		centerVisit.setVaccinatorId(userId);
 		centerVisit.setContactPrimary(mobileNoString);
 		centerVisit.setContactSecondary(landlineNoString);
@@ -246,11 +261,10 @@ public class WomenEnrollmentServiceHelper {
 			e.printStackTrace();
 		}
 
-		
 		HashMap<String, String> mobileErrors = new HashMap<String, String>();
 
 		try {
-			
+
 			StringBuilder builder = new StringBuilder();
 
 			for (String key : mobileErrors.keySet()) {

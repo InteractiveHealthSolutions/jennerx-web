@@ -5,10 +5,7 @@ public class ResponseStatus
 	/**
 	 * Child ID does not exist
 	 */
-
 	public static final int STATUS_ID_CHILD_NOT_EXIST = 0;
-	
-	public static final int STATUS_ID_WOMEN_NOT_EXIST = 0;
 
 	/**
 	 * Status for denoting the successful completion of the request
@@ -51,4 +48,9 @@ public class ResponseStatus
 	 * If version number of requesting application is old
 	 */
 	public static final int STATUS_OLD_VERSION = 8;
+	
+	/**
+	 * Women ID does not exist
+	 */
+	public static final int STATUS_ID_WOMEN_NOT_EXIST = 9;
 }

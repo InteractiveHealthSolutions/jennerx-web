@@ -76,6 +76,7 @@ public class RequestElements
 	public static final String SCREENING_DATE = "screeningDate";
 	public static final String VACCINATOR = "vaccinator";
 	public static final String VACCINATION_CENTER = "vaccinationCenter";
+	public static final String VACCINATION_CENTER_VISIT_DATE = "vaccinationCenterVisitDate";
 
 	// Enrollment Form
 	public static final String CHILD_PROG_ID = "childProgID";
