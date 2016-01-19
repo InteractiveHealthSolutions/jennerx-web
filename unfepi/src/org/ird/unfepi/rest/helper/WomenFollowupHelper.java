@@ -321,7 +321,7 @@ public class WomenFollowupHelper {
 			centerVisit.getTt1().setVaccineId(sc.getVaccinationService().getByName("TT1").getVaccineId());
 		}
 
-		if (vaccines.size() > 1) {
+		if (vaccines.size() > 1 && !vaccines.get(1).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled")) {
 			centerVisit.setTt2(vaccines.get(1));
 		} else {
 			tt2 = (JSONObject) vaccination.get(RequestElements.TT2);
@@ -337,7 +337,7 @@ public class WomenFollowupHelper {
 			centerVisit.getTt2().setVaccineId(sc.getVaccinationService().getByName("TT2").getVaccineId());
 		}
 
-		if (vaccines.size() > 2) {
+		if (vaccines.size() > 2 && !vaccines.get(2).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled")) {
 			centerVisit.setTt3(vaccines.get(2));
 		} else {
 			tt3 = (JSONObject) vaccination.get(RequestElements.TT3);
@@ -353,7 +353,7 @@ public class WomenFollowupHelper {
 			centerVisit.getTt3().setVaccineId(sc.getVaccinationService().getByName("TT3").getVaccineId());
 		}
 
-		if (vaccines.size() > 3) {
+		if (vaccines.size() > 3 && !vaccines.get(3).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled")) {
 			centerVisit.setTt4(vaccines.get(3));
 		} else {
 			tt4 = (JSONObject) vaccination.get(RequestElements.TT4);
@@ -369,7 +369,7 @@ public class WomenFollowupHelper {
 			centerVisit.getTt4().setVaccineId(sc.getVaccinationService().getByName("TT4").getVaccineId());
 			vaccines.add(centerVisit.getTt4());
 		}
-		if (vaccines.size() > 4) {
+		if (vaccines.size() > 4 && !vaccines.get(4).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled")) {
 			centerVisit.setTt5(vaccines.get(4));
 		} else {
 			tt5 = (JSONObject) vaccination.get(RequestElements.TT5);

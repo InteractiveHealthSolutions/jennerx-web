@@ -242,6 +242,8 @@ public class WomenEnrollmentServiceHelper {
 		add.setAddress1(address);
 		add.setLandmark(landmark);
 		add.setCityId(Integer.valueOf(city));
+		// empty for now as the application doesn't contain district
+		add.setDistrict("");
 		// set town id
 		add.setTown(town);
 		// set uc id

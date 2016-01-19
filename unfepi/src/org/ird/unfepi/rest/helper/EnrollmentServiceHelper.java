@@ -124,6 +124,7 @@ public class EnrollmentServiceHelper
 		landmark = (String) objectToParse.get(RequestElements.ADD_LANDMARK);
 		town = (String) objectToParse.get(RequestElements.ADD_TOWN);
 		city = (String) objectToParse.get(RequestElements.ADD_CITY);
+		
 
 		// program details
 		vaccinations = (JSONArray) objectToParse.get(RequestElements.VACCINATION_SCHEDULE);
@@ -173,6 +174,7 @@ public class EnrollmentServiceHelper
 		// ///////////Address fields ///////////////////////
 		Address add = new Address();
 		add.setAddress1(houseNo + sector + colony + street);
+		
 		add.setLandmark(landmark);
 		add.setCityId(Integer.valueOf(city));
 		// set town id
