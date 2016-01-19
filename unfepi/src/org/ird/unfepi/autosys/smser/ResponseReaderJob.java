@@ -141,7 +141,7 @@ public class ResponseReaderJob implements Job{
 							cal2.setTime( new Date(System.currentTimeMillis()+1000*60*60*24*15L) );
 						
 							List<Vaccination> pv = new ArrayList<Vaccination>();
-							pv = sc.getVaccinationService().findVaccinationRecordByCriteria(con.getMappedId(), null, null, null, null, cal.getTime(), cal2.getTime(), null, null, null, VACCINATION_STATUS.PENDING, false, 0,1, true, null, null);
+							pv = sc.getVaccinationService().findVaccinationRecordByCriteria(con.getMappedId(), null, null, null, null, cal.getTime(), cal2.getTime(), null, null, null, VACCINATION_STATUS.SCHEDULED, false, 0,1, true, null, null);
 		
 							if(pv.size()==0){
 								pv= sc.getVaccinationService().findVaccinationRecordByCriteria(con.getMappedId(), null, null, null, null, cal.getTime(), cal2.getTime(), null, null, null, null, false, 0, 11,true, null, null);
@@ -242,7 +242,7 @@ public class ResponseReaderJob implements Job{
 							cal2.setTime( new Date(System.currentTimeMillis()+1000*60*60*24*15L) );
 						
 							List<Vaccination> pv = new ArrayList<Vaccination>();
-							pv = sc.getVaccinationService().findVaccinationRecordByCriteria(con.getMappedId(), null, null, null, null, cal.getTime(), cal2.getTime(), null, null, null, VACCINATION_STATUS.PENDING, false, 0,1, true, null, null);
+							pv = sc.getVaccinationService().findVaccinationRecordByCriteria(con.getMappedId(), null, null, null, null, cal.getTime(), cal2.getTime(), null, null, null, VACCINATION_STATUS.SCHEDULED, false, 0,1, true, null, null);
 		
 							if(pv.size()==0){
 								pv= sc.getVaccinationService().findVaccinationRecordByCriteria(con.getMappedId(), null, null, null, null, cal.getTime(), cal2.getTime(), null, null, null, null, false, 0, 11,true, null, null);
@@ -433,11 +433,15 @@ public class ResponseReaderJob implements Job{
 		String text = "";
 		boolean allVaccinated = true;
 		for (Vaccination v : vl) {
-			if(!v.getVaccinationStatus().equals(VACCINATION_STATUS.VACCINATED)){
+			if(v.getVaccinationStatus().equals(VACCINATION_STATUS.SCHEDULED)){
 				allVaccinated = false;
 				text += "\nVaccine: "+v.getVaccine().getName()+" due on "+WebGlobals.GLOBAL_JAVA_DATE_FORMAT.format(v.getVaccinationDuedate());
 			}
-			else {
+			else if(v.getVaccinationStatus().equals(VACCINATION_STATUS.RETRO_DATE_MISSING)){
+				text += "\nVaccine: "+v.getVaccine().getName()+" received but missing date info.";
+			}
+			else if(v.getVaccinationStatus().equals(VACCINATION_STATUS.RETRO)
+					|| v.getVaccinationStatus().equals(VACCINATION_STATUS.VACCINATED)){
 				text += "\nVaccine: "+v.getVaccine().getName()+" received on "+WebGlobals.GLOBAL_JAVA_DATE_FORMAT.format(v.getVaccinationDate());
 			}
 		}

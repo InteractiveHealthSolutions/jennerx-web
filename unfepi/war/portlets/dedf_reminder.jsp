@@ -116,7 +116,6 @@ function trim(s)
 		<br><div>[[Child.FirstName]]</div> for First name part of Current Child
 		<br><div>[[Child.MiddleName]]</div> for Middle name part of Current Child
 		<br><div>[[Child.LastName]]</div> for Last name part of Current Child
-		<br><div>[[Child.LastName]]</div> for Last name part of Current Child
 		<br><div>[[Vaccination.Day]]</div> for inserting the week day when vaccination due date was scheduled
 		<br><div>[[Vaccination.Date]]</div> for inserting vaccination due date
 		<br><div>[[VerificationCode.Amount]]</div> for inserting vaccination due date

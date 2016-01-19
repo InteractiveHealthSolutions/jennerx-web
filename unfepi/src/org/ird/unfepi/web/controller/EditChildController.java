@@ -87,7 +87,7 @@ public class EditChildController extends DataEditFormController {
 					//child terminated from followup? cancel all vaccine reminders
 					if(uneditedChildStatus.name().equalsIgnoreCase(STATUS.FOLLOW_UP.name())
 							&& child.getStatus().name().equalsIgnoreCase(STATUS.TERMINATED.name())){
-						List<ReminderSms> reml = sc.getReminderService().findReminderSmsRecordByCriteria(child.getMappedId(), null, null, new ReminderType[]{ReminderType.NEXT_VACCINATION_REMINDER}, null, null, null, null, null, REMINDER_STATUS.PENDING, false, 0, 100, false, null);
+						List<ReminderSms> reml = sc.getReminderService().findReminderSmsRecordByCriteria(child.getMappedId(), null, null, new ReminderType[]{ReminderType.NEXT_VACCINATION_REMINDER}, null, null, null, null, null, REMINDER_STATUS.SCHEDULED, false, 0, 100, false, null);
 					
 						for (ReminderSms reminderSms : reml) {
 							reminderSms.setReminderStatus(REMINDER_STATUS.CANCELLED);
@@ -115,11 +115,11 @@ public class EditChildController extends DataEditFormController {
 						ved.setEditor(user.getUser());
 						sc.getVaccinationService().updateVaccinationRecord(ved);
 						
-						if(ved.getVaccinationStatus().equals(VACCINATION_STATUS.PENDING)){
+						if(ved.getVaccinationStatus().equals(VACCINATION_STATUS.SCHEDULED)){
 							List<ReminderSms> rsms=sc.getReminderService().findByCriteria(null, null, false, null, ved.getVaccinationRecordNum(), false, null); 	
 							//verify rsms are equal to daynums in arm
 							for (ReminderSms r : rsms) {
-								if(r.getReminderStatus().equals(REMINDER_STATUS.PENDING)){
+								if(r.getReminderStatus().equals(REMINDER_STATUS.SCHEDULED)){
 									int hour = r.getDueDate().getHours();
 									int min = r.getDueDate().getMinutes();
 									int sec = r.getDueDate().getSeconds();
@@ -177,6 +177,7 @@ public class EditChildController extends DataEditFormController {
 				ValidatorUtils.validateAddress(DataEntrySource.WEB, cb.getAddress(), null, errors, true);
 			}
 			else if(editSection.equalsIgnoreCase("program")){
+				ValidatorUtils.validateChildNIC(DataEntrySource.WEB, cb.getChild().getMappedId(), cb.getChild().getNic(), false, null, errors, true, sc);
 				ValidatorUtils.validateChildStatus(DataEntrySource.WEB, cb.getChild(), null, errors, true);
 				ValidatorUtils.validateReminderAndContactInfo(DataEntrySource.WEB, cb.getPreference(), cb.getContactPrimary(), cb.getContactSecondary(), null, errors, sc, false);
 			}
@@ -254,7 +255,6 @@ public class EditChildController extends DataEditFormController {
 			model.put("editSection", request.getParameter("editSection"));
 			model.put("vaccinationCenters", sc.getVaccinationService().getAllVaccinationCenter(true, new String[]{"idMapper"}));
 			model.put("vaccinators", sc.getVaccinationService().getAllVaccinator(0, 100, true, new String[]{"idMapper"}));
-			ControllerUIHelper.addAddressReferenceData(request, model, sc);
 			
 		}catch (Exception e) {
 			e.printStackTrace();

@@ -68,7 +68,7 @@ function submitThisForm() {
 	<tr><td colspan="2">
 	<span class="mobileFormsInfoDiv">
 	Note: <br>
-	~ If birthdate is changed, make sure PENDING vaccines specifically Penta1 and Measles1 are following schedule<br>
+	~ If birthdate is changed, make sure SCHEDULED vaccines specifically Penta1 and Measles1 are following schedule<br>
 	~ Changing child`s status to <%=STATUS.TERMINATED%> would lead to Cancellation of all reminders and ID could never be reactivated</span>
 	</td></tr>
 			

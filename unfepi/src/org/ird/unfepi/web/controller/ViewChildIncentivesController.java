@@ -98,6 +98,9 @@ public class ViewChildIncentivesController extends DataDisplayController{
 			IdMapper idm = null;
 			if(!StringUtils.isEmptyOrWhitespaceOnly(programId)){
 				idm = sc.getIdMapperService().findIdMapper(programId);
+				if(idm == null){
+					idm = new IdMapper();//to make sure that it would not skip id in searching incentive
+				}
 			}
 			
 			IncentiveStatus status = null;

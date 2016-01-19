@@ -211,7 +211,7 @@ public class DWRCommunicationService {
 			sms.setRecipient(recipient);
 			sms.setRecipientId(recipientMappedId);
 			sms.setReferenceNumber(referenceNum);
-			sms.setSmsStatus(SmsStatus.PENDING);
+			sms.setSmsStatus(SmsStatus.SCHEDULED);
 			sms.setSmsType(SmsType.N_A);
 			sms.setText(smsText);
 			

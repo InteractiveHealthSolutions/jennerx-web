@@ -240,12 +240,12 @@ public class WomenEnrollmentServiceHelper {
 		// ///////////Address fields ///////////////////////
 		Address add = new Address();
 		add.setAddress1(address);
-		add.setAddLandmark(landmark);
+		add.setLandmark(landmark);
 		add.setCityId(Integer.valueOf(city));
 		// set town id
-		add.setAddtown(town);
+		add.setTown(town);
 		// set uc id
-		add.setAddUc(uc);
+		add.setUc(uc);
 		// hardcoating the id for testing
 		centerVisit.setVaccinationCenterId(centreId);
 

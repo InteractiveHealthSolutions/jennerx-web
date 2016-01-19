@@ -21,6 +21,8 @@ public interface VaccinationService {
 	
 	Vaccine findVaccineById(short id);
 
+	List<Vaccine> getVaccinesById(Short[] vaccineIds, boolean readonly, String[] mappingsToJoin, String orderBySqlFormula);
+
 	Vaccine getByName(String vaccineName);
 
 	List<Vaccine> getAll(boolean readonly, String[] mappingsToJoin, String commaSeparatedOrderByFields/*int firstResult, int fetchSize*/);

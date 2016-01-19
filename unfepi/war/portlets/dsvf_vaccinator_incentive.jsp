@@ -62,15 +62,6 @@ select date<input id="incentivizationDateUpper" name="incentivizationDateUpper" 
 </div>
 <script type="text/javascript">
 <!--
-$( document ).ready(function() {
-    $('#incentivizationDateUpper').datepicker({
-    	duration: '',
-        constrainInput: false,
-        maxDate: '-2d',
-        dateFormat: '<%=WebGlobals.GLOBAL_DATE_FORMAT_JS%>'
-     });
-});
-
 function showIncentDiv(){
 	if(document.getElementById("incentivediv").style.display=='none'){
 		document.getElementById("incentivediv").style.display="inline-block";
@@ -149,7 +140,7 @@ if(UserSessionUtils.hasActiveUserPermission(SystemPermissions.UPDATE_FINANCIAL_T
 			<c:if test="${fn:toLowerCase(map.transac.transactionStatus) == 'due'}">
 				<input id="changeBtn${map.transac.vaccinatorIncentiveTransactionId}" title="${map.transac.vaccinatorIncentiveTransactionId}" type="button" class="anchorButton" value="change" onclick="showChangeDiv(this.title);">
 				<div id="changeTrDiv${map.transac.vaccinatorIncentiveTransactionId}" style="display: none;font-style: italic;font-size:smaller;color: maroon;text-align: right;border: 1px #69E6E7 ridge;">
-					Paid Date: <input id="paymentDate${map.transac.vaccinatorIncentiveTransactionId}" value="" class="calendarbox" style="width: 90px" readonly="readonly"/>
+					Paid Date: <input id="paymentDate${map.transac.vaccinatorIncentiveTransactionId}" value="" maxdate="+0d" class="calendarbox" style="width: 90px" readonly="readonly"/>
 					AddonNote:<textarea id="addonNote${map.transac.vaccinatorIncentiveTransactionId}" style="width: 90px" maxlength="150"></textarea>
 					<input type="button" title="${map.transac.vaccinatorIncentiveTransactionId}" value="OK" style="width: 50px;" onclick="processChange(this.title);">
 				</div>
@@ -165,16 +156,4 @@ if(UserSessionUtils.hasActiveUserPermission(SystemPermissions.UPDATE_FINANCIAL_T
   </tbody>
 </table>
 </div>
-<script type="text/javascript">
-<!--
-$(function() {
-    $("[id*="+'paymentDate'+"]").datepicker({
-    	duration: '',
-        constrainInput: false,
-        maxDate: '-3d',
-        dateFormat: '<%=WebGlobals.GLOBAL_DATE_FORMAT_JS%>'
-     });
-});
-//-->
-</script>
 

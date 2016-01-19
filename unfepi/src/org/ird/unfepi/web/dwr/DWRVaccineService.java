@@ -218,6 +218,12 @@ public class DWRVaccineService {
 			if(sc.getVaccinationService().findVaccinationRecordByCriteria(sc.getIdMapperService().findIdMapper(programId).getMappedId(), vaccine, null, null, null, null, null, null, null, null, VACCINATION_STATUS.VACCINATED, false, 0, 1, true, null, null).size() > 0){
 				return true;
 			}
+			if(sc.getVaccinationService().findVaccinationRecordByCriteria(sc.getIdMapperService().findIdMapper(programId).getMappedId(), vaccine, null, null, null, null, null, null, null, null, VACCINATION_STATUS.RETRO, false, 0, 1, true, null, null).size() > 0){
+				return true;
+			}
+			if(sc.getVaccinationService().findVaccinationRecordByCriteria(sc.getIdMapperService().findIdMapper(programId).getMappedId(), vaccine, null, null, null, null, null, null, null, null, VACCINATION_STATUS.RETRO_DATE_MISSING, false, 0, 1, true, null, null).size() > 0){
+				return true;
+			}
 			
 			return false;
 		}

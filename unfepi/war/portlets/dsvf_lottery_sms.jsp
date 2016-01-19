@@ -28,7 +28,7 @@ if(UserSessionUtils.getActiveUser(request).isDefaultAdministrator()){%>
     <tbody class="rows">
    <c:forEach items="${model.datalist}" var="sms">
    <tr>
-   	 		<td><input type="text" readonly="readonly" value="+" title="${sms.rsmsRecordNum}r" class="expandDataButton" onclick="expandRecord(this);"/></td>
+   	 		<td><a value="+" title="${sms.rsmsRecordNum}r" class="linkiconS iconexpand" onclick="expandRecord(this);"></a></td>
             <td><c:out value="${sms.recipient}"></c:out></td>
             <td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${sms.dueDate}" /></td>
             <td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${sms.sentDate}"/></td>

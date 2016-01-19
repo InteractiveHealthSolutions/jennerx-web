@@ -28,8 +28,8 @@ public class ErrorMessages
 	public static final String CENTER_NAME_INVALID = "Center name should not contain special characters";
 	public static final String CENTER_FULLNAME_INVALID = "Center full name should not contain special characters";
 	
-	public static final String LOCATION_NAME_INVALID = "Location name should not contain special characters";
-	public static final String LOCATION_FULLNAME_INVALID = "Location full name should not contain special characters";
+	public static final String LOCATION_NAME_INVALID = "Location name should not be empty or contain special characters";
+	public static final String LOCATION_FULLNAME_INVALID = "Location full name should not be empty or contain special characters";
 	
 	public static final String USERNAME_INVALID = "Username/Login ID must be non-whitespace alphanumeric sequence between 5-20 characters other than words admin or administrator";
 	public static final String USERNAME_OCCUPIED = "Username/Login ID given already occupied";
@@ -115,7 +115,7 @@ public class ErrorMessages
 	public static final String SCREENING_OTHER_BROUGHTBY_MISSING = "Other relationship of person who brought child must be specified";
 
 	public static final String CHILD_DATE_ENROLLED_INVALID = "A valid and past date must be specified as date enrolled for child";
-	public static final String CHILD_AGE_LIMIT_EXCEEDED = "Child should not be more than 2 years of age on vaccination (only exception for Measles2 is 3 years)";
+	public static final String CHILD_AGE_LIMIT_EXCEEDED = "Child can not be more than 2 years on vaccination (only exception is Measles2 which is 3 years)";
 
 	public static final String CHILD_RELIGION_MISSING = "Religion must be specified";
 	public static final String CHILD_ETHNICITY_MISSING = "Ethnicity must be specified";
@@ -132,17 +132,18 @@ public class ErrorMessages
 	public static final String VACCINATION_BROUGHTBY_SHOULD_NOT_BE_SPECIFIED = "Relationship of person who brought child should not be specified for pendin vaccination";
 	public static final String VACCINATION_OTHER_BROUGHTBY_MISSING = "Other relationship of person who brought child must be specified";
 	public static final String VACCINATION_VACCINE_MISSING = "Vaccine recieved/scheduled must be specified";
-	public static final String VACCINATION_VISIT_DATE_INVALID = "Visit date must be a valid, past date and ideally should not be 4 or more days before vaccination due date";
+	public static final String VACCINATION_VISIT_DATE_INVALID = "A valid past date must be specified for center visit date";
 	public static final String VACCINATION_VACCINATION_DATE_SHOULD_NOT_BE_SPECIFIED = "Vaccination date should not be specified for pending vaccination";
 	public static final String VACCINATION_POLIO_VACCINE_SHOULD_NOT_BE_SPECIFIED = "Polio vaccine given should not be specified for pending vaccination";
 	public static final String VACCINATION_PCV_SHOULD_NOT_BE_SPECIFIED = "PCV given should not be specified for pending vaccination";
 	public static final String VACCINATION_LOTTERY_APPROVAL_SHOULD_NOT_BE_SPECIFIED = "Lottery approval should not be specified for pending or Mealses2 enrollment vaccination";
 	public static final String VACCINATION_NEXT_VACCINES_SHOULD_NOT_BE_SPECIFIED = "Next vaccines should not be specified for Measles2 vaccination";
 	public static final String VACCINATION_EPI_SHOULD_NOT_BE_SPECIFIED = "Epi number should not be specified for pending vaccination";
-	public static final String VACCINATION_CHILD_ID_MISSING = "Child Id for vaccination cannot be missing";
+	public static final String VACCINATION_CHILD_ID_MISSING = "Child Id for followup vaccination cannot be missing";
 	public static final String VACCINATION_STATUS_MISSING = "Vaccination status missing";
 	public static final String VACCINATION_STATUS_ENROLLMENT_INVALID = "Enrollment vaccination`s status must be VACCINATED";
-	public static final String VACCINATION_STATUS_PENDING_REQUIRED = "Vaccination`s status must be PENDING";
+	public static final String VACCINATION_STATUS_SCHEDULED_REQUIRED = "Vaccination`s status must be SCHEDULED";
+	public static final String VACCINATION_WOMEN_ID_MISSING = "Women Id for vaccination cannot be missing";
 
 	public static final String VACCINATION_NEXT_VACCINE_MISSING = "Next scheduled vaccine missing";
 	public static final String VACCINATION_NEXT_VACCINE_RECEIVED = "Vaccine next scheduled, has already been received";
@@ -179,7 +180,7 @@ public class ErrorMessages
 
 	public static final String CONTACT1_OWNER_MISSING = "Primary contact number owner missing";
 	public static final String CONTACT1_OTHER_OWNER_MISSING = "Other primary contact number owner must be specified";
-	public static final String CONTACT1_NUMBER_INVALID = "A valid cell number must be specified for primary contact for reminders";
+	public static final String CONTACT1_NUMBER_INVALID = "A valid cell number must be specified for primary contact for reminder and/or incentive SMS";
 	public static final String CONTACT1_NUMBER_OCCUPIED = "Cell number occupied";
 	
 	public static final String CONTACT2_OWNER_MISSING = "Secondary contact number owner missing";
@@ -228,7 +229,6 @@ public class ErrorMessages
 	public static final String DAILY_SUMMARY_BCG_TOTAL_ENROLLED_INVALID = "BCG enrollments into lottery or reminders should not exceed total enrollemnts into BCG";
 	public static final String DAILY_SUMMARY_PENTA1_TOTAL_ENROLLED_INVALID = "Penta1 enrollments into lottery or reminders should not exceed total enrollemnts into Penta1";
 	
-	public static final String VACCINATION_WOMEN_ID_MISSING = "Women Id for vaccination cannot be missing";
 	public static final String WOMEN_DATE_ENROLLED_INVALID = "A valid and past date must be specified as date enrolled for women";
 	public static final String WOMEN_VACCINATION_DATE = "Date must be entered";
 	public static final String WOMEN_NAME_LENGTH = "Minimum length should be 3";

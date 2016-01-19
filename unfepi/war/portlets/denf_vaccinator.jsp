@@ -59,7 +59,13 @@ function subfrm(){
 				alert('Given username has already been assigned to another user');
 				return;
 			}
-				
+			
+			var qv = document.getElementById('qualificationOther').value;
+			if(qv != ''){
+				qv = 'Other:'+qv;
+				addNewOption(qv, '');
+				makeTextSelectedInDD(document.getElementById('qualification'), qv);
+			}
 			submitThisForm();
 		}});
 }
@@ -76,7 +82,7 @@ function submitThisForm() {
 		<td>Vaccination Center <span class="mendatory-field">*</span></td>
 		<td>
 			<spring:bind path="command.vaccinationCenterId">
-            <select id="vaccinationCenterId" name="vaccinationCenterId" bind-value="${status.value}" onchange="centerChanged();">
+            <select id="vaccinationCenterId" name="vaccinationCenterId" bind-value="${status.value}">
                	<option></option>
             	<c:forEach items="${vaccinationCenters}" var="vcenter"> 
             	<option value="${vcenter.mappedId}">${vcenter.idMapper.identifiers[0].identifier} : ${vcenter.name}</option>
@@ -84,24 +90,6 @@ function submitThisForm() {
             </select>
             <span class="error-message"><c:out	value="${status.errorMessage}" /></span> 
             </spring:bind>
-            <script><!--
-              /*  function centerChanged(){
-               	var cenid = getTextSelectedInDD(document.getElementById("vaccinationCenterId"));
-               	var cityId = cenid.substring(0,2);
-               	
-               	DWRVaccinatorService.getVaccinatorsOnCityId(cityId,{
-   					async: false,
-   					callback: function (res) {
-   						//var ctrPgidname = getTextSelectedInDD(document.getElementById("vaccinationCenterId"));
-   						//var ctrpgid = trim(ctrPgidname.substring(0,ctrPgidname.indexOf(':')));
-   						document.getElementById("vaccinatorCountDisplayp").innerHTML = "Total vaccinators registered on cityId "
-   						+cityId+" are "+res;
-   						
-   						document.getElementById("autogenIdPart").value = cityId;
-   					}});
-                } */
-            //-->
-            </script>
 		</td>
 	</tr>
     <tr>
@@ -260,8 +248,7 @@ function submitThisForm() {
 		<td>Qualification <span class="mendatory-field">*</span></td>
 		<td>
 			<spring:bind path="command.qualification">
-			<input type="hidden" id="qualificationinh" name="qualificationinh" value="${status.value}" />
-			<select id="qualification" name="qualification" onchange="otherQualification();">
+			<select id="qualification" name="qualification" onchange="resetOtherQualification();" bind-value="${status.value}">
 				<option></option>
 				<option>Primary</option>
 				<option>Middle</option>
@@ -275,52 +262,22 @@ function submitThisForm() {
 				<option>Don`t Know</option>
 			</select>
 			<br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
-			</spring:bind>
-			<input type="text" id="qualificationOther" name="qualificationOther" maxlength="50" onchange="qualificationOtherChanged();" value="${status.value}" />
+			<input type="text" id="qualificationOther" name="qualificationOther" maxlength="50"/>
 			<script type="text/javascript">
-			<!--
-			sel = document.getElementById("qualification");
-			val = document.getElementById("qualificationinh").value;
-			makeTextSelectedInDD(sel, val);
-			
-			if(val!='' && sel.value==''){
+			function addNewOption(val,prefix){
 				var opt = document.createElement("option");
-		        
-		        opt.text = val;
-		        opt.value = val;
+		        opt.text = prefix+val;
+		        opt.value = prefix+val;
 		        // Add an Option object to Drop Down/List Box
 		        try{
 		        document.getElementById("qualification").options.add(opt,null);
 		        }catch (e) {
-		        	document.getElementById("qualification").options.add(opt);
+		        document.getElementById("qualification").options.add(opt);
 				}
 			}
-			function qualificationOtherChanged() {
-				var qualSel = document.getElementById("qualification");
-				
-				var v = getTextSelectedInDD(qualSel);
-				if(endsWith(v.toLowerCase(), 'other:') || endsWith(v.toLowerCase(), 'other :')){
-					qualSel.remove(qualSel.options.length-1);//remove last one which must be the added one
-				}
-				
-				var otherval = document.getElementById("qualificationOther").value;
-				
-				var opt = document.createElement("option");
-		        
-		        opt.text = "Other:"+otherval;
-		        opt.value = "Other:"+otherval;
-		        // Add an Option object to Drop Down/List Box
-		        try{
-		        document.getElementById("qualification").options.add(opt,null);
-		        }catch (e) {
-		        	document.getElementById("qualification").options.add(opt);
-				}
-		        
-		        document.getElementById("qualificationOther").value='';
-			}
-			function otherQualification() {
+			function resetOtherQualification() {
 				var v = getTextSelectedInDD(document.getElementById("qualification"));
-				if(!endsWith(v, 'Other')){
+				if(v.toLowerCase() != 'other'){
 					document.getElementById("qualificationOther").value = '';
 					document.getElementById("qualificationOther").disabled = true;
 				}
@@ -328,8 +285,18 @@ function submitThisForm() {
 					document.getElementById("qualificationOther").disabled = false;
 				}
 			}
-			//-->
+			
+			sel = document.getElementById("qualification");
+			val = '${status.value}';
+			
+			if(val!='' && sel.value==''){
+				addNewOption(val, '');
+				makeTextSelectedInDD(sel, val);
+			}
+
+			resetOtherQualification();
 			</script>
+			</spring:bind>
 		</td>
 	</tr>
 	<tr>

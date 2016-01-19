@@ -1,6 +1,6 @@
 <%@page import="org.ird.unfepi.constants.WebGlobals"%>
 <tr>
-        <td>Address</td>
+        <td>Address line 1</td>
         <td><spring:bind path="command.${commandAdditionalPathStr}address1">
             <input type="text" id="address1" name="${commandAdditionalPathStr}address1" maxlength="255" value="<c:out value="${status.value}"/>"/>
             <span class="error-message"><c:out value="${status.errorMessage}"/></span>
@@ -10,8 +10,8 @@
 	<tr>
         <td>Koi qareebi nishaani </td>
         <td>
-            <spring:bind path="command.${commandAdditionalPathStr}addLandmark">
-            <input type="text" id="addLandmark" name="${commandAdditionalPathStr}addLandmark" maxlength="50" value="<c:out value="${status.value}"/>"/>
+            <spring:bind path="command.${commandAdditionalPathStr}landmark">
+            <input type="text" id="landmark" name="${commandAdditionalPathStr}landmark" maxlength="50" value="<c:out value="${status.value}"/>"/>
             <span class="error-message"><c:out value="${status.errorMessage}"/></span>
 			</spring:bind>
 		</td>
@@ -83,8 +83,8 @@
 	<tr>
         <td>Town <span class="mendatory-field">*</span></td>
         <td>
-            <spring:bind path="command.${commandAdditionalPathStr}addtown">
-            <select id="townlist" name="${commandAdditionalPathStr}addtown" onchange="loadUC();" bind-value="${status.value}">
+            <spring:bind path="command.${commandAdditionalPathStr}town">
+            <select id="townlist" name="${commandAdditionalPathStr}town" onchange="loadUC();" bind-value="${status.value}">
                 <option></option>
 			</select>
 			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
@@ -107,8 +107,8 @@
 	<tr>
 		<td>Union Council<span class="mendatory-field">*</span></td>
         <td>
-            <spring:bind path="command.${commandAdditionalPathStr}addUc">
-            <select id="uclist" name="${commandAdditionalPathStr}addUc" bind-value="${status.value}">
+            <spring:bind path="command.${commandAdditionalPathStr}uc">
+            <select id="uclist" name="${commandAdditionalPathStr}uc" bind-value="${status.value}">
                 <option></option>
 			</select>
             <span class="error-message"><c:out value="${status.errorMessage}"/></span>

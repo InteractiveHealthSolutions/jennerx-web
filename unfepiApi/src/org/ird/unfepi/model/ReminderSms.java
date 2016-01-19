@@ -30,63 +30,14 @@ public class ReminderSms implements java.io.Serializable {
 
 	public enum REMINDER_STATUS{
 		
-		/** Pending. */
-		PENDING("PND"),
-		
-		LOGGED("LOGD"),
-		
-		/** Sent. */
-		SENT("SNT"),
-		
-		/** Failed. */
-		FAILED("FLD"),
-		
-		/** Missed. */
-		MISSED("MIS"),
-		
-		/** Cancelled. */
-		CANCELLED("CNCL"),
-		
-		OPTED_OUT("OUT"),
-		
-		/** N/A. */
-		NA("N/A");
-		
-		/** The REPRESENTATION. */
-		private String REPRESENTATION;
-		
-		/**
-		 * Gets the rEPRESENTATION.
-		 *
-		 * @return the rEPRESENTATION
-		 */
-		public String getREPRESENTATION() {
-			return REPRESENTATION;
-		}
-		
-		/**
-		 * Instantiates a new rEMINDE r_ status.
-		 *
-		 * @param representation the representation
-		 */
-		private REMINDER_STATUS(String representation) {
-			this.REPRESENTATION = representation;
-		}
-		
-		/**
-		 * Find enum.
-		 *
-		 * @param representationString the representation string
-		 * @return the rEMINDE r_ status
-		 */
-		public static REMINDER_STATUS findEnum(String representationString){
-			for (REMINDER_STATUS en : REMINDER_STATUS.values()) {
-				if(en.REPRESENTATION.equalsIgnoreCase(representationString)){
-					return en;
-				}
-			}
-			return null;
-		}
+		SCHEDULED,
+		LOGGED,
+		SENT,
+		FAILED,
+		MISSED,
+		CANCELLED,
+		OPTED_OUT,
+		NA;
 	}
 	
 	/** The rsms record num. */

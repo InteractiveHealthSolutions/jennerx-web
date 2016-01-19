@@ -102,7 +102,7 @@ function showMsg(msg) {
     <td><input id="receiver" name="receiver" type="text" maxlength="255"/></td>
   </tr>
   <tr>
-    <td>Datetime <span class="mendatory-field">*</span></td>
+    <td>Date <span class="mendatory-field">*</span></td>
     <td><input id="eventDate" name="eventDate" maxDate="+0d" class="calendarbox"/></td>
   </tr>
   <tr>

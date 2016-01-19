@@ -112,22 +112,13 @@ if(permed){
             <td>Address Type</td><td><c:out value="${addr.addressType}"></c:out></td>
 </tr> --%>
 <tr>
-            <td>House number</td><td><c:out value="${addr.addHouseNumber}"></c:out></td>
+            <td>Address line 1</td><td><c:out value="${addr.address1}"></c:out></td>
 </tr>
 <tr>
-            <td>Street number</td><td><c:out value="${addr.addStreet}"></c:out></td>
-</tr>
-<tr>            
-			<td>Sector</td><td><c:out value="${addr.addSector}"></c:out></td>
+            <td>Town, UC</td><td><c:out value="${addr.town}"/>, UC: <c:out value="${addr.uc}"/></td>
 </tr>
 <tr>
-            <td>Colony</td><td><c:out value="${addr.addColony}"></c:out></td>
-</tr>
-<tr>
-            <td>Town, UC</td><td><c:out value="${addr.addtown}"/>, UC: <c:out value="${addr.addUc}"/></td>
-</tr>
-<tr>
-            <td>Landmark</td><td><c:out value="${addr.addLandmark}"></c:out></td>
+            <td>Landmark</td><td><c:out value="${addr.landmark}"></c:out></td>
 </tr>
 <tr>
             <td>City</td><td><c:out value="${addr.city.cityName}"/> <c:out value="${addr.cityName}"/></td>

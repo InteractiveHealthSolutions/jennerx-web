@@ -45,7 +45,7 @@ if(UserSessionUtils.getActiveUser(request).isDefaultAdministrator()){%>
 <td colspan="2">Father Name : ${model.datalist.child.fatherFirstName} ${model.datalist.child.fatherLastName}</td>
 <td>Address : 
 <c:forEach items="${model.datalist.address}" var="add">
-${add.addHouseNumber} ${add.addStreet} ${add.addSector} ${add.addArea} ${add.addDistrict} ${add.addColony} ${add.addtown} UC:${add.addUc}
+${add.address1}  UC:${add.uc}, Town: ${add.town}
 <br>
 </c:forEach></td></tr>
 <tr><td colspan="2">Birthdate : <fmt:formatDate value="${model.datalist.child.birthdate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/> <c:if test="${model.datalist.child.estimatedBirthdate}">(approx)</c:if></td>
@@ -67,6 +67,7 @@ ${fn:substring(cont.numberType,0,3)}- ${cont.number}<br>
        		<th class="center">Vaccine</th>
        		<th class="center">Vaccination Date</th>
             <th class="center">Vaccination Duedate</th>
+            <th class="center">Vaccination Status</th>
             <th class="center">Center ID</th>
             <th class="center">Vaccinator</th>
             <th class="center">Vaccination Record Num</th>
@@ -79,6 +80,7 @@ ${fn:substring(cont.numberType,0,3)}- ${cont.number}<br>
    	 		<td class="${enrvaccclass} left">${vacc.vaccine.name}</td>
             <td class="${enrvaccclass}"><fmt:formatDate value="${vacc.vaccinationDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>
             <td class="${enrvaccclass}"><fmt:formatDate value="${vacc.vaccinationDuedate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>
+            <td class="${enrvaccclass} right lowercase">${vacc.vaccinationStatus}</td>
             <td class="${enrvaccclass}">${vacc.vaccinationCenter.idMapper.identifiers[0].identifier}</td>
             <td class="${enrvaccclass}">${vacc.vaccinator.idMapper.identifiers[0].identifier}</td>
             <td class="${enrvaccclass}">${vacc.vaccinationRecordNum}</td>
@@ -142,8 +144,8 @@ ${fn:substring(cont.numberType,0,3)}- ${cont.number}<br>
             <th class="center">SMS 2 Date</th>
             <th class="center">SMS 3 Status</th>
             <th class="center">SMS 3 Date</th>
-            <!-- <th class="center">Lottery SMS Status</th>
-            <th class="center">Lottery SMS Date</th> -->
+            <th class="center">Incentive SMS Status</th>
+            <th class="center">Incentive SMS Date</th>
             
         </tr>
         <c:forEach items="${model.datalist.childReminders}" var="rem" >

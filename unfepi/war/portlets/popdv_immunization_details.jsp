@@ -30,7 +30,7 @@
 <tr><td>Enrollment Vaccine ID	</td><td>${entry.EnrollmentVaccineID}	</td></tr>
 <tr><td>Enrollment Vaccine	</td><td>${entry.EnrollmentVaccine}	</td></tr>
 <tr><td>Enrollment Center	</td><td>${entry.EnrollmentCenter}	</td></tr>
-<tr><td>Has Approved Reminders	</td><td>${entry.hasApprovedReminders}	</td></tr>
+<tr><td>Has Approved VaccineReminders	</td><td>${entry.hasApprovedVaccineReminders}	</td></tr>
 <tr><td colspan="10" class="headerrow">BCG</td></tr>
 <tr><td>Vaccination Status	</td><td>${entry.BCGVaccinationStatus}	</td></tr>
 <tr><td>EPI Number	</td><td>${entry.BCGEPINumber}	</td></tr>
@@ -45,160 +45,160 @@
 <tr><td>Transaction Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.BCGTransactionDate}"/>	</td></tr>
 <tr><td>Consumption Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.BCGConsumptionDate}"/>	</td></tr>
 <tr><td>Center	</td><td>${entry.BCGCenter}	</td></tr>
-<tr><td>Reminder1 Status	</td><td>${entry.BCGReminder1Status}	</td></tr>
-<tr><td>Reminder1 Recipient	</td><td>${entry.BCGReminder1Recipient}	</td></tr>
-<tr><td>Reminder1 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.BCGReminder1DueDate}"/>	</td></tr>
-<tr><td>Reminder1 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.BCGReminder1SentDate}"/>	</td></tr>
-<tr><td>Reminder2 Status	</td><td>${entry.BCGReminder2Status}	</td></tr>
-<tr><td>Reminder2 Recipient	</td><td>${entry.BCGReminder2Recipient}	</td></tr>
-<tr><td>Reminder2 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.BCGReminder2DueDate}"/>	</td></tr>
-<tr><td>Reminder2 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.BCGReminder2SentDate}"/>	</td></tr>
-<tr><td>Reminder3 Status	</td><td>${entry.BCGReminder3Status}	</td></tr>
-<tr><td>Reminder3 Recipient	</td><td>${entry.BCGReminder3Recipient}	</td></tr>
-<tr><td>Reminder3 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.BCGReminder3DueDate}"/>	</td></tr>
-<tr><td>Reminder3 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.BCGReminder3SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder1 Status	</td><td>${entry.BCGVaccineReminder1Status}	</td></tr>
+<tr><td>Vaccine Reminder1 Recipient	</td><td>${entry.BCGVaccineReminder1Recipient}	</td></tr>
+<tr><td>Vaccine Reminder1 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.BCGVaccineReminder1DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder1 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.BCGVaccineReminder1SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder2 Status	</td><td>${entry.BCGVaccineReminder2Status}	</td></tr>
+<tr><td>Vaccine Reminder2 Recipient	</td><td>${entry.BCGVaccineReminder2Recipient}	</td></tr>
+<tr><td>Vaccine Reminder2 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.BCGVaccineReminder2DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder2 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.BCGVaccineReminder2SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder3 Status	</td><td>${entry.BCGVaccineReminder3Status}	</td></tr>
+<tr><td>Vaccine Reminder3 Recipient	</td><td>${entry.BCGVaccineReminder3Recipient}	</td></tr>
+<tr><td>Vaccine Reminder3 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.BCGVaccineReminder3DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder3 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.BCGVaccineReminder3SentDate}"/>	</td></tr>
 <tr><td>Response Count	</td><td>${entry.BCGResponseCount}	</td></tr>
 <tr><td>Response Text	</td><td style="width: 50%">${entry.BCGResponseText}	</td></tr>
 <tr><td colspan="10" class="headerrow">Penta1</td></tr>
-<tr><td>Vaccination Status	</td><td>${entry.Penta1VaccinationStatus}	</td></tr>
-<tr><td>EPI Number	</td><td>${entry.Penta1EPINumber}	</td></tr>
-<tr><td>Vaccination Record Number	</td><td>${entry.Penta1VaccinationRecordNumber}	</td></tr>
-<tr><td>Vaccine ID	</td><td>${entry.Penta1VaccineID}	</td></tr>
-<tr><td>Vaccination Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta1VaccinationDueDate}"/>	</td></tr>
-<tr><td>Vaccination Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta1VaccinationDate}"/>	</td></tr>
-<tr><td>Approved Incentive	</td><td>${entry.Penta1ApprovedLottery}	</td></tr>
-<tr><td>Winning Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta1WinningDate}"/>	</td></tr>
-<tr><td>Amount	</td><td>${entry.Penta1Amount}	</td></tr>
-<tr><td>Incentive Status	</td><td>${entry.Penta1IncentiveStatus}	</td></tr>
-<tr><td>Transaction Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta1TransactionDate}"/>	</td></tr>
-<tr><td>Consumption Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta1ConsumptionDate}"/>	</td></tr>
-<tr><td>Center	</td><td>${entry.Penta1Center}	</td></tr>
-<tr><td>Reminder1 Status	</td><td>${entry.Penta1Reminder1Status}	</td></tr>
-<tr><td>Reminder1 Recipient	</td><td>${entry.Penta1Reminder1Recipient}	</td></tr>
-<tr><td>Reminder1 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta1Reminder1DueDate}"/>	</td></tr>
-<tr><td>Reminder1 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta1Reminder1SentDate}"/>	</td></tr>
-<tr><td>Reminder2 Status	</td><td>${entry.Penta1Reminder2Status}	</td></tr>
-<tr><td>Reminder2 Recipient	</td><td>${entry.Penta1Reminder2Recipient}	</td></tr>
-<tr><td>Reminder2 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta1Reminder2DueDate}"/>	</td></tr>
-<tr><td>Reminder2 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta1Reminder2SentDate}"/>	</td></tr>
-<tr><td>Reminder3 Status	</td><td>${entry.Penta1Reminder3Status}	</td></tr>
-<tr><td>Reminder3 Recipient	</td><td>${entry.Penta1Reminder3Recipient}	</td></tr>
-<tr><td>Reminder3 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta1Reminder3DueDate}"/>	</td></tr>
-<tr><td>Reminder3 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta1Reminder3SentDate}"/>	</td></tr>
-<tr><td>Response Count	</td><td>${entry.Penta1ResponseCount}	</td></tr>
-<tr><td>Response Text	</td><td style="width: 50%">${entry.Penta1ResponseText}	</td></tr>
+<tr><td>Vaccination Status	</td><td>${entry.PENTA1VaccinationStatus}	</td></tr>
+<tr><td>EPI Number	</td><td>${entry.PENTA1EPINumber}	</td></tr>
+<tr><td>Vaccination Record Number	</td><td>${entry.PENTA1VaccinationRecordNumber}	</td></tr>
+<tr><td>Vaccine ID	</td><td>${entry.PENTA1VaccineID}	</td></tr>
+<tr><td>Vaccination Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA1VaccinationDueDate}"/>	</td></tr>
+<tr><td>Vaccination Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA1VaccinationDate}"/>	</td></tr>
+<tr><td>Approved Incentive	</td><td>${entry.PENTA1ApprovedLottery}	</td></tr>
+<tr><td>Winning Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA1WinningDate}"/>	</td></tr>
+<tr><td>Amount	</td><td>${entry.PENTA1Amount}	</td></tr>
+<tr><td>Incentive Status	</td><td>${entry.PENTA1IncentiveStatus}	</td></tr>
+<tr><td>Transaction Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA1TransactionDate}"/>	</td></tr>
+<tr><td>Consumption Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA1ConsumptionDate}"/>	</td></tr>
+<tr><td>Center	</td><td>${entry.PENTA1Center}	</td></tr>
+<tr><td>Vaccine Reminder1 Status	</td><td>${entry.PENTA1VaccineReminder1Status}	</td></tr>
+<tr><td>Vaccine Reminder1 Recipient	</td><td>${entry.PENTA1VaccineReminder1Recipient}	</td></tr>
+<tr><td>Vaccine Reminder1 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA1VaccineReminder1DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder1 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA1VaccineReminder1SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder2 Status	</td><td>${entry.PENTA1VaccineReminder2Status}	</td></tr>
+<tr><td>Vaccine Reminder2 Recipient	</td><td>${entry.PENTA1VaccineReminder2Recipient}	</td></tr>
+<tr><td>Vaccine Reminder2 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA1VaccineReminder2DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder2 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA1VaccineReminder2SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder3 Status	</td><td>${entry.PENTA1VaccineReminder3Status}	</td></tr>
+<tr><td>Vaccine Reminder3 Recipient	</td><td>${entry.PENTA1VaccineReminder3Recipient}	</td></tr>
+<tr><td>Vaccine Reminder3 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA1VaccineReminder3DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder3 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA1VaccineReminder3SentDate}"/>	</td></tr>
+<tr><td>Response Count	</td><td>${entry.PENTA1ResponseCount}	</td></tr>
+<tr><td>Response Text	</td><td style="width: 50%">${entry.PENTA1ResponseText}	</td></tr>
 <tr><td colspan="10" class="headerrow">Penta2</td></tr>
-<tr><td>Vaccination Status	</td><td>${entry.Penta2VaccinationStatus}	</td></tr>
-<tr><td>EPI Number	</td><td>${entry.Penta2EPINumber}	</td></tr>
-<tr><td>Vaccination Record Number	</td><td>${entry.Penta2VaccinationRecordNumber}	</td></tr>
-<tr><td>Vaccine ID	</td><td>${entry.Penta2VaccineID}	</td></tr>
-<tr><td>Vaccination Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta2VaccinationDueDate}"/>	</td></tr>
-<tr><td>Vaccination Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta2VaccinationDate}"/>	</td></tr>
-<tr><td>Approved Incentive	</td><td>${entry.Penta2ApprovedLottery}	</td></tr>
-<tr><td>Winning Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta2WinningDate}"/>	</td></tr>
-<tr><td>Amount	</td><td>${entry.Penta2Amount}	</td></tr>
-<tr><td>Incentive Status	</td><td>${entry.Penta2IncentiveStatus}	</td></tr>
-<tr><td>Transaction Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta2TransactionDate}"/>	</td></tr>
-<tr><td>Consumption Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta2ConsumptionDate}"/>	</td></tr>
-<tr><td>Center	</td><td>${entry.Penta2Center}	</td></tr>
-<tr><td>Reminder1 Status	</td><td>${entry.Penta2Reminder1Status}	</td></tr>
-<tr><td>Reminder1 Recipient	</td><td>${entry.Penta2Reminder1Recipient}	</td></tr>
-<tr><td>Reminder1 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta2Reminder1DueDate}"/>	</td></tr>
-<tr><td>Reminder1 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta2Reminder1SentDate}"/>	</td></tr>
-<tr><td>Reminder2 Status	</td><td>${entry.Penta2Reminder2Status}	</td></tr>
-<tr><td>Reminder2 Recipient	</td><td>${entry.Penta2Reminder2Recipient}	</td></tr>
-<tr><td>Reminder2 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta2Reminder2DueDate}"/>	</td></tr>
-<tr><td>Reminder2 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta2Reminder2SentDate}"/>	</td></tr>
-<tr><td>Reminder3 Status	</td><td>${entry.Penta2Reminder3Status}	</td></tr>
-<tr><td>Reminder3 Recipient	</td><td>${entry.Penta2Reminder3Recipient}	</td></tr>
-<tr><td>Reminder3 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta2Reminder3DueDate}"/>	</td></tr>
-<tr><td>Reminder3 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta2Reminder3SentDate}"/>	</td></tr>
-<tr><td>Response Count	</td><td>${entry.Penta2ResponseCount}	</td></tr>
-<tr><td>Response Text	</td><td style="width: 50%">${entry.Penta2ResponseText}	</td></tr>
+<tr><td>Vaccination Status	</td><td>${entry.PENTA2VaccinationStatus}	</td></tr>
+<tr><td>EPI Number	</td><td>${entry.PENTA2EPINumber}	</td></tr>
+<tr><td>Vaccination Record Number	</td><td>${entry.PENTA2VaccinationRecordNumber}	</td></tr>
+<tr><td>Vaccine ID	</td><td>${entry.PENTA2VaccineID}	</td></tr>
+<tr><td>Vaccination Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA2VaccinationDueDate}"/>	</td></tr>
+<tr><td>Vaccination Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA2VaccinationDate}"/>	</td></tr>
+<tr><td>Approved Incentive	</td><td>${entry.PENTA2ApprovedLottery}	</td></tr>
+<tr><td>Winning Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA2WinningDate}"/>	</td></tr>
+<tr><td>Amount	</td><td>${entry.PENTA2Amount}	</td></tr>
+<tr><td>Incentive Status	</td><td>${entry.PENTA2IncentiveStatus}	</td></tr>
+<tr><td>Transaction Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA2TransactionDate}"/>	</td></tr>
+<tr><td>Consumption Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA2ConsumptionDate}"/>	</td></tr>
+<tr><td>Center	</td><td>${entry.PENTA2Center}	</td></tr>
+<tr><td>Vaccine Reminder1 Status	</td><td>${entry.PENTA2VaccineReminder1Status}	</td></tr>
+<tr><td>Vaccine Reminder1 Recipient	</td><td>${entry.PENTA2VaccineReminder1Recipient}	</td></tr>
+<tr><td>Vaccine Reminder1 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA2VaccineReminder1DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder1 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA2VaccineReminder1SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder2 Status	</td><td>${entry.PENTA2VaccineReminder2Status}	</td></tr>
+<tr><td>Vaccine Reminder2 Recipient	</td><td>${entry.PENTA2VaccineReminder2Recipient}	</td></tr>
+<tr><td>Vaccine Reminder2 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA2VaccineReminder2DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder2 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA2VaccineReminder2SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder3 Status	</td><td>${entry.PENTA2VaccineReminder3Status}	</td></tr>
+<tr><td>Vaccine Reminder3 Recipient	</td><td>${entry.PENTA2VaccineReminder3Recipient}	</td></tr>
+<tr><td>Vaccine Reminder3 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA2VaccineReminder3DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder3 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA2VaccineReminder3SentDate}"/>	</td></tr>
+<tr><td>Response Count	</td><td>${entry.PENTA2ResponseCount}	</td></tr>
+<tr><td>Response Text	</td><td style="width: 50%">${entry.PENTA2ResponseText}	</td></tr>
 <tr><td colspan="10" class="headerrow">Penta3</td></tr>
-<tr><td>Vaccination Status	</td><td>${entry.Penta3VaccinationStatus}	</td></tr>
-<tr><td>EPI Number	</td><td>${entry.Penta3EPINumber}	</td></tr>
-<tr><td>Vaccination Record Number	</td><td>${entry.Penta3VaccinationRecordNumber}	</td></tr>
-<tr><td>Vaccine ID	</td><td>${entry.Penta3VaccineID}	</td></tr>
-<tr><td>Vaccination Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta3VaccinationDueDate}"/>	</td></tr>
-<tr><td>Vaccination Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta3VaccinationDate}"/>	</td></tr>
-<tr><td>Approved Incentive	</td><td>${entry.Penta3ApprovedLottery}	</td></tr>
-<tr><td>Winning Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta3WinningDate}"/>	</td></tr>
-<tr><td>Amount	</td><td>${entry.Penta3Amount}	</td></tr>
-<tr><td>Incentive Status	</td><td>${entry.Penta3IncentiveStatus}	</td></tr>
-<tr><td>Transaction Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta3TransactionDate}"/>	</td></tr>
-<tr><td>Consumption Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta3ConsumptionDate}"/>	</td></tr>
-<tr><td>Center	</td><td>${entry.Penta3Center}	</td></tr>
-<tr><td>Reminder1 Status	</td><td>${entry.Penta3Reminder1Status}	</td></tr>
-<tr><td>Reminder1 Recipient	</td><td>${entry.Penta3Reminder1Recipient}	</td></tr>
-<tr><td>Reminder1 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta3Reminder1DueDate}"/>	</td></tr>
-<tr><td>Reminder1 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta3Reminder1SentDate}"/>	</td></tr>
-<tr><td>Reminder2 Status	</td><td>${entry.Penta3Reminder2Status}	</td></tr>
-<tr><td>Reminder2 Recipient	</td><td>${entry.Penta3Reminder2Recipient}	</td></tr>
-<tr><td>Reminder2 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta3Reminder2DueDate}"/>	</td></tr>
-<tr><td>Reminder2 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta3Reminder2SentDate}"/>	</td></tr>
-<tr><td>Reminder3 Status	</td><td>${entry.Penta3Reminder3Status}	</td></tr>
-<tr><td>Reminder3 Recipient	</td><td>${entry.Penta3Reminder3Recipient}	</td></tr>
-<tr><td>Reminder3 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta3Reminder3DueDate}"/>	</td></tr>
-<tr><td>Reminder3 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Penta3Reminder3SentDate}"/>	</td></tr>
-<tr><td>Response Count	</td><td>${entry.Penta3ResponseCount}	</td></tr>
-<tr><td>Response Text	</td><td style="width: 50%">${entry.Penta3ResponseText}	</td></tr>
+<tr><td>Vaccination Status	</td><td>${entry.PENTA3VaccinationStatus}	</td></tr>
+<tr><td>EPI Number	</td><td>${entry.PENTA3EPINumber}	</td></tr>
+<tr><td>Vaccination Record Number	</td><td>${entry.PENTA3VaccinationRecordNumber}	</td></tr>
+<tr><td>Vaccine ID	</td><td>${entry.PENTA3VaccineID}	</td></tr>
+<tr><td>Vaccination Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA3VaccinationDueDate}"/>	</td></tr>
+<tr><td>Vaccination Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA3VaccinationDate}"/>	</td></tr>
+<tr><td>Approved Incentive	</td><td>${entry.PENTA3ApprovedLottery}	</td></tr>
+<tr><td>Winning Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA3WinningDate}"/>	</td></tr>
+<tr><td>Amount	</td><td>${entry.PENTA3Amount}	</td></tr>
+<tr><td>Incentive Status	</td><td>${entry.PENTA3IncentiveStatus}	</td></tr>
+<tr><td>Transaction Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA3TransactionDate}"/>	</td></tr>
+<tr><td>Consumption Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA3ConsumptionDate}"/>	</td></tr>
+<tr><td>Center	</td><td>${entry.PENTA3Center}	</td></tr>
+<tr><td>Vaccine Reminder1 Status	</td><td>${entry.PENTA3VaccineReminder1Status}	</td></tr>
+<tr><td>Vaccine Reminder1 Recipient	</td><td>${entry.PENTA3VaccineReminder1Recipient}	</td></tr>
+<tr><td>Vaccine Reminder1 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA3VaccineReminder1DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder1 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA3VaccineReminder1SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder2 Status	</td><td>${entry.PENTA3VaccineReminder2Status}	</td></tr>
+<tr><td>Vaccine Reminder2 Recipient	</td><td>${entry.PENTA3VaccineReminder2Recipient}	</td></tr>
+<tr><td>Vaccine Reminder2 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA3VaccineReminder2DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder2 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA3VaccineReminder2SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder3 Status	</td><td>${entry.PENTA3VaccineReminder3Status}	</td></tr>
+<tr><td>Vaccine Reminder3 Recipient	</td><td>${entry.PENTA3VaccineReminder3Recipient}	</td></tr>
+<tr><td>Vaccine Reminder3 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA3VaccineReminder3DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder3 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PENTA3VaccineReminder3SentDate}"/>	</td></tr>
+<tr><td>Response Count	</td><td>${entry.PENTA3ResponseCount}	</td></tr>
+<tr><td>Response Text	</td><td style="width: 50%">${entry.PENTA3ResponseText}	</td></tr>
 <tr><td colspan="10" class="headerrow">Measles1</td></tr>
-<tr><td>Vaccination Status	</td><td>${entry.Measles1VaccinationStatus}	</td></tr>
-<tr><td>EPI Number	</td><td>${entry.Measles1EPINumber}	</td></tr>
-<tr><td>Vaccination Record Number	</td><td>${entry.Measles1VaccinationRecordNumber}	</td></tr>
-<tr><td>Vaccine ID	</td><td>${entry.Measles1VaccineID}	</td></tr>
-<tr><td>Vaccination Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Measles1VaccinationDueDate}"/>	</td></tr>
-<tr><td>Vaccination Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Measles1VaccinationDate}"/>	</td></tr>
-<tr><td>Approved Incentive	</td><td>${entry.Measles1ApprovedLottery}	</td></tr>
-<tr><td>Winning Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Measles1WinningDate}"/>	</td></tr>
-<tr><td>Amount	</td><td>${entry.Measles1Amount}	</td></tr>
-<tr><td>Incentive Status	</td><td>${entry.Measles1IncentiveStatus}	</td></tr>
-<tr><td>Transaction Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Measles1TransactionDate}"/>	</td></tr>
-<tr><td>Consumption Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Measles1ConsumptionDate}"/>	</td></tr>
-<tr><td>Center	</td><td>${entry.Measles1Center}	</td></tr>
-<tr><td>Reminder1 Status	</td><td>${entry.Measles1Reminder1Status}	</td></tr>
-<tr><td>Reminder1 Recipient	</td><td>${entry.Measles1Reminder1Recipient}	</td></tr>
-<tr><td>Reminder1 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Measles1Reminder1DueDate}"/>	</td></tr>
-<tr><td>Reminder1 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Measles1Reminder1SentDate}"/>	</td></tr>
-<tr><td>Reminder2 Status	</td><td>${entry.Measles1Reminder2Status}	</td></tr>
-<tr><td>Reminder2 Recipient	</td><td>${entry.Measles1Reminder2Recipient}	</td></tr>
-<tr><td>Reminder2 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Measles1Reminder2DueDate}"/>	</td></tr>
-<tr><td>Reminder2 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Measles1Reminder2SentDate}"/>	</td></tr>
-<tr><td>Reminder3 Status	</td><td>${entry.Measles1Reminder3Status}	</td></tr>
-<tr><td>Reminder3 Recipient	</td><td>${entry.Measles1Reminder3Recipient}	</td></tr>
-<tr><td>Reminder3 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Measles1Reminder3DueDate}"/>	</td></tr>
-<tr><td>Reminder3 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Measles1Reminder3SentDate}"/>	</td></tr>
-<tr><td>Response Count	</td><td>${entry.Measles1ResponseCount}	</td></tr>
-<tr><td>Response Text	</td><td style="width: 50%">${entry.Measles1ResponseText}	</td></tr>
+<tr><td>Vaccination Status	</td><td>${entry.MEASLES1VaccinationStatus}	</td></tr>
+<tr><td>EPI Number	</td><td>${entry.MEASLES1EPINumber}	</td></tr>
+<tr><td>Vaccination Record Number	</td><td>${entry.MEASLES1VaccinationRecordNumber}	</td></tr>
+<tr><td>Vaccine ID	</td><td>${entry.MEASLES1VaccineID}	</td></tr>
+<tr><td>Vaccination Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.MEASLES1VaccinationDueDate}"/>	</td></tr>
+<tr><td>Vaccination Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.MEASLES1VaccinationDate}"/>	</td></tr>
+<tr><td>Approved Incentive	</td><td>${entry.MEASLES1ApprovedLottery}	</td></tr>
+<tr><td>Winning Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.MEASLES1WinningDate}"/>	</td></tr>
+<tr><td>Amount	</td><td>${entry.MEASLES1Amount}	</td></tr>
+<tr><td>Incentive Status	</td><td>${entry.MEASLES1IncentiveStatus}	</td></tr>
+<tr><td>Transaction Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.MEASLES1TransactionDate}"/>	</td></tr>
+<tr><td>Consumption Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.MEASLES1ConsumptionDate}"/>	</td></tr>
+<tr><td>Center	</td><td>${entry.MEASLES1Center}	</td></tr>
+<tr><td>Vaccine Reminder1 Status	</td><td>${entry.MEASLES1VaccineReminder1Status}	</td></tr>
+<tr><td>Vaccine Reminder1 Recipient	</td><td>${entry.MEASLES1VaccineReminder1Recipient}	</td></tr>
+<tr><td>Vaccine Reminder1 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.MEASLES1VaccineReminder1DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder1 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.MEASLES1VaccineReminder1SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder2 Status	</td><td>${entry.MEASLES1VaccineReminder2Status}	</td></tr>
+<tr><td>Vaccine Reminder2 Recipient	</td><td>${entry.MEASLES1VaccineReminder2Recipient}	</td></tr>
+<tr><td>Vaccine Reminder2 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.MEASLES1VaccineReminder2DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder2 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.MEASLES1VaccineReminder2SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder3 Status	</td><td>${entry.MEASLES1VaccineReminder3Status}	</td></tr>
+<tr><td>Vaccine Reminder3 Recipient	</td><td>${entry.MEASLES1VaccineReminder3Recipient}	</td></tr>
+<tr><td>Vaccine Reminder3 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.MEASLES1VaccineReminder3DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder3 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.MEASLES1VaccineReminder3SentDate}"/>	</td></tr>
+<tr><td>Response Count	</td><td>${entry.MEASLES1ResponseCount}	</td></tr>
+<tr><td>Response Text	</td><td style="width: 50%">${entry.MEASLES1ResponseText}	</td></tr>
 <tr><td colspan="10" class="headerrow">Mealses2</td></tr>
-<tr><td>Vaccination Status	</td><td>${entry.Measles2VaccinationStatus}	</td></tr>
-<tr><td>EPI Number	</td><td>${entry.Measles2EPINumber}	</td></tr>
-<tr><td>Vaccination Record Number	</td><td>${entry.Measles2VaccinationRecordNumber}	</td></tr>
-<tr><td>Vaccine ID	</td><td>${entry.Measles2VaccineID}	</td></tr>
-<tr><td>Vaccination Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Measles2VaccinationDueDate}"/>	</td></tr>
-<tr><td>Vaccination Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Measles2VaccinationDate}"/>	</td></tr>
-<tr><td>Approved Incentive	</td><td>${entry.Measles2ApprovedLottery}	</td></tr>
-<tr><td>Winning Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Measles2WinningDate}"/>	</td></tr>
-<tr><td>Amount	</td><td>${entry.Measles2Amount}	</td></tr>
-<tr><td>Incentive Status	</td><td>${entry.Measles2IncentiveStatus}	</td></tr>
-<tr><td>Transaction Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Measles2TransactionDate}"/>	</td></tr>
-<tr><td>Consumption Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Measles2ConsumptionDate}"/>	</td></tr>
-<tr><td>Center	</td><td>${entry.Measles2Center}	</td></tr>
-<tr><td>Reminder1 Status	</td><td>${entry.Measles2Reminder1Status}	</td></tr>
-<tr><td>Reminder1 Recipient	</td><td>${entry.Measles2Reminder1Recipient}	</td></tr>
-<tr><td>Reminder1 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Measles2Reminder1DueDate}"/>	</td></tr>
-<tr><td>Reminder1 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Measles2Reminder1SentDate}"/>	</td></tr>
-<tr><td>Reminder2 Status	</td><td>${entry.Measles2Reminder2Status}	</td></tr>
-<tr><td>Reminder2 Recipient	</td><td>${entry.Measles2Reminder2Recipient}	</td></tr>
-<tr><td>Reminder2 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Measles2Reminder2DueDate}"/>	</td></tr>
-<tr><td>Reminder2 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Measles2Reminder2SentDate}"/>	</td></tr>
-<tr><td>Reminder3 Status	</td><td>${entry.Measles2Reminder3Status}	</td></tr>
-<tr><td>Reminder3 Recipient	</td><td>${entry.Measles2Reminder3Recipient}	</td></tr>
-<tr><td>Reminder3 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Measles2Reminder3DueDate}"/>	</td></tr>
-<tr><td>Reminder3 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.Measles2Reminder3SentDate}"/>	</td></tr>
-<tr><td>Response Count	</td><td>${entry.Measles2ResponseCount}	</td></tr>
-<tr><td>Response Text	</td><td style="width: 50%">${entry.Measles2ResponseText}	</td></tr>
+<tr><td>Vaccination Status	</td><td>${entry.MEASLES2VaccinationStatus}	</td></tr>
+<tr><td>EPI Number	</td><td>${entry.MEASLES2EPINumber}	</td></tr>
+<tr><td>Vaccination Record Number	</td><td>${entry.MEASLES2VaccinationRecordNumber}	</td></tr>
+<tr><td>Vaccine ID	</td><td>${entry.MEASLES2VaccineID}	</td></tr>
+<tr><td>Vaccination Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.MEASLES2VaccinationDueDate}"/>	</td></tr>
+<tr><td>Vaccination Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.MEASLES2VaccinationDate}"/>	</td></tr>
+<tr><td>Approved Incentive	</td><td>${entry.MEASLES2ApprovedLottery}	</td></tr>
+<tr><td>Winning Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.MEASLES2WinningDate}"/>	</td></tr>
+<tr><td>Amount	</td><td>${entry.MEASLES2Amount}	</td></tr>
+<tr><td>Incentive Status	</td><td>${entry.MEASLES2IncentiveStatus}	</td></tr>
+<tr><td>Transaction Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.MEASLES2TransactionDate}"/>	</td></tr>
+<tr><td>Consumption Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.MEASLES2ConsumptionDate}"/>	</td></tr>
+<tr><td>Center	</td><td>${entry.MEASLES2Center}	</td></tr>
+<tr><td>Vaccine Reminder1 Status	</td><td>${entry.MEASLES2VaccineReminder1Status}	</td></tr>
+<tr><td>Vaccine Reminder1 Recipient	</td><td>${entry.MEASLES2VaccineReminder1Recipient}	</td></tr>
+<tr><td>Vaccine Reminder1 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.MEASLES2VaccineReminder1DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder1 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.MEASLES2VaccineReminder1SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder2 Status	</td><td>${entry.MEASLES2VaccineReminder2Status}	</td></tr>
+<tr><td>Vaccine Reminder2 Recipient	</td><td>${entry.MEASLES2VaccineReminder2Recipient}	</td></tr>
+<tr><td>Vaccine Reminder2 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.MEASLES2VaccineReminder2DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder2 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.MEASLES2VaccineReminder2SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder3 Status	</td><td>${entry.MEASLES2VaccineReminder3Status}	</td></tr>
+<tr><td>Vaccine Reminder3 Recipient	</td><td>${entry.MEASLES2VaccineReminder3Recipient}	</td></tr>
+<tr><td>Vaccine Reminder3 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.MEASLES2VaccineReminder3DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder3 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.MEASLES2VaccineReminder3SentDate}"/>	</td></tr>
+<tr><td>Response Count	</td><td>${entry.MEASLES2ResponseCount}	</td></tr>
+<tr><td>Response Text	</td><td style="width: 50%">${entry.MEASLES2ResponseText}	</td></tr>
 <tr><td colspan="10" class="headerrow">OPV0</td></tr>
 <tr><td>Vaccination Status	</td><td>${entry.OPV0VaccinationStatus}	</td></tr>
 <tr><td>EPI Number	</td><td>${entry.OPV0EPINumber}	</td></tr>
@@ -213,18 +213,18 @@
 <tr><td>Transaction Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV0TransactionDate}"/>	</td></tr>
 <tr><td>Consumption Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV0ConsumptionDate}"/>	</td></tr>
 <tr><td>Center	</td><td>${entry.OPV0Center}	</td></tr>
-<tr><td>Reminder1 Status	</td><td>${entry.OPV0Reminder1Status}	</td></tr>
-<tr><td>Reminder1 Recipient	</td><td>${entry.OPV0Reminder1Recipient}	</td></tr>
-<tr><td>Reminder1 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV0Reminder1DueDate}"/>	</td></tr>
-<tr><td>Reminder1 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV0Reminder1SentDate}"/>	</td></tr>
-<tr><td>Reminder2 Status	</td><td>${entry.OPV0Reminder2Status}	</td></tr>
-<tr><td>Reminder2 Recipient	</td><td>${entry.OPV0Reminder2Recipient}	</td></tr>
-<tr><td>Reminder2 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV0Reminder2DueDate}"/>	</td></tr>
-<tr><td>Reminder2 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV0Reminder2SentDate}"/>	</td></tr>
-<tr><td>Reminder3 Status	</td><td>${entry.OPV0Reminder3Status}	</td></tr>
-<tr><td>Reminder3 Recipient	</td><td>${entry.OPV0Reminder3Recipient}	</td></tr>
-<tr><td>Reminder3 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV0Reminder3DueDate}"/>	</td></tr>
-<tr><td>Reminder3 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV0Reminder3SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder1 Status	</td><td>${entry.OPV0VaccineReminder1Status}	</td></tr>
+<tr><td>Vaccine Reminder1 Recipient	</td><td>${entry.OPV0VaccineReminder1Recipient}	</td></tr>
+<tr><td>Vaccine Reminder1 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV0VaccineReminder1DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder1 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV0VaccineReminder1SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder2 Status	</td><td>${entry.OPV0VaccineReminder2Status}	</td></tr>
+<tr><td>Vaccine Reminder2 Recipient	</td><td>${entry.OPV0VaccineReminder2Recipient}	</td></tr>
+<tr><td>Vaccine Reminder2 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV0VaccineReminder2DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder2 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV0VaccineReminder2SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder3 Status	</td><td>${entry.OPV0VaccineReminder3Status}	</td></tr>
+<tr><td>Vaccine Reminder3 Recipient	</td><td>${entry.OPV0VaccineReminder3Recipient}	</td></tr>
+<tr><td>Vaccine Reminder3 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV0VaccineReminder3DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder3 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV0VaccineReminder3SentDate}"/>	</td></tr>
 <tr><td>Response Count	</td><td>${entry.OPV0ResponseCount}	</td></tr>
 <tr><td>Response Text	</td><td style="width: 50%">${entry.OPV0ResponseText}	</td></tr>
 <tr><td colspan="10" class="headerrow">OPV1</td></tr>
@@ -241,18 +241,18 @@
 <tr><td>Transaction Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV1TransactionDate}"/>	</td></tr>
 <tr><td>Consumption Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV1ConsumptionDate}"/>	</td></tr>
 <tr><td>Center	</td><td>${entry.OPV1Center}	</td></tr>
-<tr><td>Reminder1 Status	</td><td>${entry.OPV1Reminder1Status}	</td></tr>
-<tr><td>Reminder1 Recipient	</td><td>${entry.OPV1Reminder1Recipient}	</td></tr>
-<tr><td>Reminder1 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV1Reminder1DueDate}"/>	</td></tr>
-<tr><td>Reminder1 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV1Reminder1SentDate}"/>	</td></tr>
-<tr><td>Reminder2 Status	</td><td>${entry.OPV1Reminder2Status}	</td></tr>
-<tr><td>Reminder2 Recipient	</td><td>${entry.OPV1Reminder2Recipient}	</td></tr>
-<tr><td>Reminder2 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV1Reminder2DueDate}"/>	</td></tr>
-<tr><td>Reminder2 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV1Reminder2SentDate}"/>	</td></tr>
-<tr><td>Reminder3 Status	</td><td>${entry.OPV1Reminder3Status}	</td></tr>
-<tr><td>Reminder3 Recipient	</td><td>${entry.OPV1Reminder3Recipient}	</td></tr>
-<tr><td>Reminder3 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV1Reminder3DueDate}"/>	</td></tr>
-<tr><td>Reminder3 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV1Reminder3SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder1 Status	</td><td>${entry.OPV1VaccineReminder1Status}	</td></tr>
+<tr><td>Vaccine Reminder1 Recipient	</td><td>${entry.OPV1VaccineReminder1Recipient}	</td></tr>
+<tr><td>Vaccine Reminder1 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV1VaccineReminder1DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder1 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV1VaccineReminder1SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder2 Status	</td><td>${entry.OPV1VaccineReminder2Status}	</td></tr>
+<tr><td>Vaccine Reminder2 Recipient	</td><td>${entry.OPV1VaccineReminder2Recipient}	</td></tr>
+<tr><td>Vaccine Reminder2 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV1VaccineReminder2DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder2 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV1VaccineReminder2SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder3 Status	</td><td>${entry.OPV1VaccineReminder3Status}	</td></tr>
+<tr><td>Vaccine Reminder3 Recipient	</td><td>${entry.OPV1VaccineReminder3Recipient}	</td></tr>
+<tr><td>Vaccine Reminder3 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV1VaccineReminder3DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder3 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV1VaccineReminder3SentDate}"/>	</td></tr>
 <tr><td>Response Count	</td><td>${entry.OPV1ResponseCount}	</td></tr>
 <tr><td>Response Text	</td><td style="width: 50%">${entry.OPV1ResponseText}	</td></tr>
 <tr><td colspan="10" class="headerrow">OPV2</td></tr>
@@ -269,18 +269,18 @@
 <tr><td>Transaction Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV2TransactionDate}"/>	</td></tr>
 <tr><td>Consumption Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV2ConsumptionDate}"/>	</td></tr>
 <tr><td>Center	</td><td>${entry.OPV2Center}	</td></tr>
-<tr><td>Reminder1 Status	</td><td>${entry.OPV2Reminder1Status}	</td></tr>
-<tr><td>Reminder1 Recipient	</td><td>${entry.OPV2Reminder1Recipient}	</td></tr>
-<tr><td>Reminder1 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV2Reminder1DueDate}"/>	</td></tr>
-<tr><td>Reminder1 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV2Reminder1SentDate}"/>	</td></tr>
-<tr><td>Reminder2 Status	</td><td>${entry.OPV2Reminder2Status}	</td></tr>
-<tr><td>Reminder2 Recipient	</td><td>${entry.OPV2Reminder2Recipient}	</td></tr>
-<tr><td>Reminder2 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV2Reminder2DueDate}"/>	</td></tr>
-<tr><td>Reminder2 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV2Reminder2SentDate}"/>	</td></tr>
-<tr><td>Reminder3 Status	</td><td>${entry.OPV2Reminder3Status}	</td></tr>
-<tr><td>Reminder3 Recipient	</td><td>${entry.OPV2Reminder3Recipient}	</td></tr>
-<tr><td>Reminder3 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV2Reminder3DueDate}"/>	</td></tr>
-<tr><td>Reminder3 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV2Reminder3SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder1 Status	</td><td>${entry.OPV2VaccineReminder1Status}	</td></tr>
+<tr><td>Vaccine Reminder1 Recipient	</td><td>${entry.OPV2VaccineReminder1Recipient}	</td></tr>
+<tr><td>Vaccine Reminder1 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV2VaccineReminder1DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder1 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV2VaccineReminder1SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder2 Status	</td><td>${entry.OPV2VaccineReminder2Status}	</td></tr>
+<tr><td>Vaccine Reminder2 Recipient	</td><td>${entry.OPV2VaccineReminder2Recipient}	</td></tr>
+<tr><td>Vaccine Reminder2 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV2VaccineReminder2DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder2 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV2VaccineReminder2SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder3 Status	</td><td>${entry.OPV2VaccineReminder3Status}	</td></tr>
+<tr><td>Vaccine Reminder3 Recipient	</td><td>${entry.OPV2VaccineReminder3Recipient}	</td></tr>
+<tr><td>Vaccine Reminder3 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV2VaccineReminder3DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder3 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV2VaccineReminder3SentDate}"/>	</td></tr>
 <tr><td>Response Count	</td><td>${entry.OPV2ResponseCount}	</td></tr>
 <tr><td>Response Text	</td><td style="width: 50%">${entry.OPV2ResponseText}	</td></tr>
 <tr><td colspan="10" class="headerrow">OPV3</td></tr>
@@ -297,18 +297,18 @@
 <tr><td>Transaction Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV3TransactionDate}"/>	</td></tr>
 <tr><td>Consumption Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV3ConsumptionDate}"/>	</td></tr>
 <tr><td>Center	</td><td>${entry.OPV3Center}	</td></tr>
-<tr><td>Reminder1 Status	</td><td>${entry.OPV3Reminder1Status}	</td></tr>
-<tr><td>Reminder1 Recipient	</td><td>${entry.OPV3Reminder1Recipient}	</td></tr>
-<tr><td>Reminder1 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV3Reminder1DueDate}"/>	</td></tr>
-<tr><td>Reminder1 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV3Reminder1SentDate}"/>	</td></tr>
-<tr><td>Reminder2 Status	</td><td>${entry.OPV3Reminder2Status}	</td></tr>
-<tr><td>Reminder2 Recipient	</td><td>${entry.OPV3Reminder2Recipient}	</td></tr>
-<tr><td>Reminder2 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV3Reminder2DueDate}"/>	</td></tr>
-<tr><td>Reminder2 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV3Reminder2SentDate}"/>	</td></tr>
-<tr><td>Reminder3 Status	</td><td>${entry.OPV3Reminder3Status}	</td></tr>
-<tr><td>Reminder3 Recipient	</td><td>${entry.OPV3Reminder3Recipient}	</td></tr>
-<tr><td>Reminder3 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV3Reminder3DueDate}"/>	</td></tr>
-<tr><td>Reminder3 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV3Reminder3SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder1 Status	</td><td>${entry.OPV3VaccineReminder1Status}	</td></tr>
+<tr><td>Vaccine Reminder1 Recipient	</td><td>${entry.OPV3VaccineReminder1Recipient}	</td></tr>
+<tr><td>Vaccine Reminder1 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV3VaccineReminder1DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder1 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV3VaccineReminder1SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder2 Status	</td><td>${entry.OPV3VaccineReminder2Status}	</td></tr>
+<tr><td>Vaccine Reminder2 Recipient	</td><td>${entry.OPV3VaccineReminder2Recipient}	</td></tr>
+<tr><td>Vaccine Reminder2 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV3VaccineReminder2DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder2 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV3VaccineReminder2SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder3 Status	</td><td>${entry.OPV3VaccineReminder3Status}	</td></tr>
+<tr><td>Vaccine Reminder3 Recipient	</td><td>${entry.OPV3VaccineReminder3Recipient}	</td></tr>
+<tr><td>Vaccine Reminder3 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV3VaccineReminder3DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder3 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.OPV3VaccineReminder3SentDate}"/>	</td></tr>
 <tr><td>Response Count	</td><td>${entry.OPV3ResponseCount}	</td></tr>
 <tr><td>Response Text	</td><td style="width: 50%">${entry.OPV3ResponseText}	</td></tr>
 <tr><td colspan="10" class="headerrow">PCV1</td></tr>
@@ -325,18 +325,18 @@
 <tr><td>Transaction Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV1TransactionDate}"/>	</td></tr>
 <tr><td>Consumption Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV1ConsumptionDate}"/>	</td></tr>
 <tr><td>Center	</td><td>${entry.PCV1Center}	</td></tr>
-<tr><td>Reminder1 Status	</td><td>${entry.PCV1Reminder1Status}	</td></tr>
-<tr><td>Reminder1 Recipient	</td><td>${entry.PCV1Reminder1Recipient}	</td></tr>
-<tr><td>Reminder1 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV1Reminder1DueDate}"/>	</td></tr>
-<tr><td>Reminder1 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV1Reminder1SentDate}"/>	</td></tr>
-<tr><td>Reminder2 Status	</td><td>${entry.PCV1Reminder2Status}	</td></tr>
-<tr><td>Reminder2 Recipient	</td><td>${entry.PCV1Reminder2Recipient}	</td></tr>
-<tr><td>Reminder2 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV1Reminder2DueDate}"/>	</td></tr>
-<tr><td>Reminder2 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV1Reminder2SentDate}"/>	</td></tr>
-<tr><td>Reminder3 Status	</td><td>${entry.PCV1Reminder3Status}	</td></tr>
-<tr><td>Reminder3 Recipient	</td><td>${entry.PCV1Reminder3Recipient}	</td></tr>
-<tr><td>Reminder3 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV1Reminder3DueDate}"/>	</td></tr>
-<tr><td>Reminder3 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV1Reminder3SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder1 Status	</td><td>${entry.PCV1VaccineReminder1Status}	</td></tr>
+<tr><td>Vaccine Reminder1 Recipient	</td><td>${entry.PCV1VaccineReminder1Recipient}	</td></tr>
+<tr><td>Vaccine Reminder1 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV1VaccineReminder1DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder1 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV1VaccineReminder1SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder2 Status	</td><td>${entry.PCV1VaccineReminder2Status}	</td></tr>
+<tr><td>Vaccine Reminder2 Recipient	</td><td>${entry.PCV1VaccineReminder2Recipient}	</td></tr>
+<tr><td>Vaccine Reminder2 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV1VaccineReminder2DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder2 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV1VaccineReminder2SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder3 Status	</td><td>${entry.PCV1VaccineReminder3Status}	</td></tr>
+<tr><td>Vaccine Reminder3 Recipient	</td><td>${entry.PCV1VaccineReminder3Recipient}	</td></tr>
+<tr><td>Vaccine Reminder3 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV1VaccineReminder3DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder3 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV1VaccineReminder3SentDate}"/>	</td></tr>
 <tr><td>Response Count	</td><td>${entry.PCV1ResponseCount}	</td></tr>
 <tr><td>Response Text	</td><td style="width: 50%">${entry.PCV1ResponseText}	</td></tr>
 <tr><td colspan="10" class="headerrow">PCV2</td></tr>
@@ -353,18 +353,18 @@
 <tr><td>Transaction Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV2TransactionDate}"/>	</td></tr>
 <tr><td>Consumption Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV2ConsumptionDate}"/>	</td></tr>
 <tr><td>Center	</td><td>${entry.PCV2Center}	</td></tr>
-<tr><td>Reminder1 Status	</td><td>${entry.PCV2Reminder1Status}	</td></tr>
-<tr><td>Reminder1 Recipient	</td><td>${entry.PCV2Reminder1Recipient}	</td></tr>
-<tr><td>Reminder1 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV2Reminder1DueDate}"/>	</td></tr>
-<tr><td>Reminder1 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV2Reminder1SentDate}"/>	</td></tr>
-<tr><td>Reminder2 Status	</td><td>${entry.PCV2Reminder2Status}	</td></tr>
-<tr><td>Reminder2 Recipient	</td><td>${entry.PCV2Reminder2Recipient}	</td></tr>
-<tr><td>Reminder2 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV2Reminder2DueDate}"/>	</td></tr>
-<tr><td>Reminder2 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV2Reminder2SentDate}"/>	</td></tr>
-<tr><td>Reminder3 Status	</td><td>${entry.PCV2Reminder3Status}	</td></tr>
-<tr><td>Reminder3 Recipient	</td><td>${entry.PCV2Reminder3Recipient}	</td></tr>
-<tr><td>Reminder3 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV2Reminder3DueDate}"/>	</td></tr>
-<tr><td>Reminder3 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV2Reminder3SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder1 Status	</td><td>${entry.PCV2VaccineReminder1Status}	</td></tr>
+<tr><td>Vaccine Reminder1 Recipient	</td><td>${entry.PCV2VaccineReminder1Recipient}	</td></tr>
+<tr><td>Vaccine Reminder1 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV2VaccineReminder1DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder1 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV2VaccineReminder1SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder2 Status	</td><td>${entry.PCV2VaccineReminder2Status}	</td></tr>
+<tr><td>Vaccine Reminder2 Recipient	</td><td>${entry.PCV2VaccineReminder2Recipient}	</td></tr>
+<tr><td>Vaccine Reminder2 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV2VaccineReminder2DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder2 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV2VaccineReminder2SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder3 Status	</td><td>${entry.PCV2VaccineReminder3Status}	</td></tr>
+<tr><td>Vaccine Reminder3 Recipient	</td><td>${entry.PCV2VaccineReminder3Recipient}	</td></tr>
+<tr><td>Vaccine Reminder3 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV2VaccineReminder3DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder3 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV2VaccineReminder3SentDate}"/>	</td></tr>
 <tr><td>Response Count	</td><td>${entry.PCV2ResponseCount}	</td></tr>
 <tr><td>Response Text	</td><td style="width: 50%">${entry.PCV2ResponseText}	</td></tr>
 <tr><td colspan="10" class="headerrow">PCV3</td></tr>
@@ -381,18 +381,18 @@
 <tr><td>Transaction Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV3TransactionDate}"/>	</td></tr>
 <tr><td>Consumption Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV3ConsumptionDate}"/>	</td></tr>
 <tr><td>Center	</td><td>${entry.PCV3Center}	</td></tr>
-<tr><td>Reminder1 Status	</td><td>${entry.PCV3Reminder1Status}	</td></tr>
-<tr><td>Reminder1 Recipient	</td><td>${entry.PCV3Reminder1Recipient}	</td></tr>
-<tr><td>Reminder1 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV3Reminder1DueDate}"/>	</td></tr>
-<tr><td>Reminder1 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV3Reminder1SentDate}"/>	</td></tr>
-<tr><td>Reminder2 Status	</td><td>${entry.PCV3Reminder2Status}	</td></tr>
-<tr><td>Reminder2 Recipient	</td><td>${entry.PCV3Reminder2Recipient}	</td></tr>
-<tr><td>Reminder2 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV3Reminder2DueDate}"/>	</td></tr>
-<tr><td>Reminder2 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV3Reminder2SentDate}"/>	</td></tr>
-<tr><td>Reminder3 Recipient	</td><td>${entry.PCV3Reminder3Recipient}	</td></tr>
-<tr><td>Reminder3 Status	</td><td>${entry.PCV3Reminder3Status}	</td></tr>
-<tr><td>Reminder3 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV3Reminder3DueDate}"/>	</td></tr>
-<tr><td>Reminder3 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV3Reminder3SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder1 Status	</td><td>${entry.PCV3VaccineReminder1Status}	</td></tr>
+<tr><td>Vaccine Reminder1 Recipient	</td><td>${entry.PCV3VaccineReminder1Recipient}	</td></tr>
+<tr><td>Vaccine Reminder1 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV3VaccineReminder1DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder1 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV3VaccineReminder1SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder2 Status	</td><td>${entry.PCV3VaccineReminder2Status}	</td></tr>
+<tr><td>Vaccine Reminder2 Recipient	</td><td>${entry.PCV3VaccineReminder2Recipient}	</td></tr>
+<tr><td>Vaccine Reminder2 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV3VaccineReminder2DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder2 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV3VaccineReminder2SentDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder3 Recipient	</td><td>${entry.PCV3VaccineReminder3Recipient}	</td></tr>
+<tr><td>Vaccine Reminder3 Status	</td><td>${entry.PCV3VaccineReminder3Status}	</td></tr>
+<tr><td>Vaccine Reminder3 Due Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV3VaccineReminder3DueDate}"/>	</td></tr>
+<tr><td>Vaccine Reminder3 Sent Date	</td><td><fmt:formatDate pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>" value="${entry.PCV3VaccineReminder3SentDate}"/>	</td></tr>
 <tr><td>Response Count	</td><td>${entry.PCV3ResponseCount}	</td></tr>
 <tr><td>Response Text	</td><td style="width: 50%">${entry.PCV3ResponseText}	</td></tr>
 

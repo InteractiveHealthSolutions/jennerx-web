@@ -49,39 +49,23 @@ public class Address {
 	@Column(length = 20)
 	private ContactType addressType;
 	
-	/** The add house number. */
-	@Column(length = 255)
 	private String address1;
 	
-	/** The add street. */
-	@Column(length = 255)
 	private String address2;
 	
-	/** The add sector. */
-	@Column(length = 255)
 	private String address3;
 	
-	/** The add area. */
-	@Column(length = 255)
 	private String address4;
 	
-	/** The add district. */
-	@Column(length = 30)
-	private String addDistrict;
-	
-	/** The add colony. */
-	@Column(length = 255)
 	private String address5;
 	
-	@Column(length = 50)
-	private String addtown;
+	private String district;
+
+	private String town;
 	
-	@Column(length = 30)
-	private String addUc;
+	private String uc;
 	
-	/** The add landmark. */
-	@Column(length = 50)
-	private String addLandmark;
+	private String landmark;
 	
 	private Integer cityId;
 	
@@ -90,73 +74,33 @@ public class Address {
 	@ForeignKey(name = "address_cityId_location_locationId_FK")
 	private Location city;
 	
-	/** The epi id. */
-	@Column(length = 30)
 	private String cityName;
 	
-	/** The province. */
-	@Column(length = 30)
 	private String province;
 	
-	/** The zipcode. */
-	@Column(length = 30)
 	private String zipcode;
 	
-	/** The country. */
-	@Column(length = 30)
 	private String country;
 	
-	/** The region. */
-	@Column(length = 30)
-	private String region;
+	private String lat;
 	
-	/** The lat. */
-	private Double lat;
-	
-	/** The lon. */
-	private Double lon;
-	
-	/** The phone1. */
-	@Column(length = 20)
-	private String phone1;
-	
-	/** The phone1 owner. */
-	@Column(length = 30)
-	private String phone1Owner;
-	
-	/** The phone2. */
-	@Column(length = 20)
-	private String phone2;
-	
-	/** The phone2 owner. */
-	@Column(length = 30)
-	private String phone2Owner;
-	
-	/** The weburl. */
-	@Column(length = 100)
-	private String weburl;
-	
-	/** The description. */
+	private String lon;
 	
 	private String description;
 	
-	/** The created by user id. */
 	@ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "createdByUserId")
 	@ForeignKey(name = "address_createdByUserId_user_mappedId_FK")
 	private User createdByUserId;
 
-	/** The created date. */
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdDate;
 	
-	/** The last edited by user id. */
 	@ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "lastEditedByUserId")
 	@ForeignKey(name = "address_lastEditedByUserId_user_mappedId_FK")
 	private User lastEditedByUserId;
 	
-	/** The last edited date. */
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastEditedDate;
 	
@@ -287,24 +231,6 @@ public class Address {
 	}
 
 	/**
-	 * Gets the adds the district.
-	 *
-	 * @return the adds the district
-	 */
-	public String getAddDistrict() {
-		return addDistrict;
-	}
-
-	/**
-	 * Sets the adds the district.
-	 *
-	 * @param addDistrict the new adds the district
-	 */
-	public void setAddDistrict(String addDistrict) {
-		this.addDistrict = addDistrict;
-	}
-
-	/**
 	 * Gets the adds the colony.
 	 *
 	 * @return the adds the colony
@@ -322,48 +248,55 @@ public class Address {
 		this.address5 = address5;
 	}
 
+	public String getDistrict() {
+		return district;
+	}
+	public void setDistrict(String district) {
+		this.district = district;
+	}
+	public String getTown() {
+		return town;
+	}
+	public void setTown(String town) {
+		this.town = town;
+	}
+	public String getUc() {
+		return uc;
+	}
+	public void setUc(String uc) {
+		this.uc = uc;
+	}
+	public String getLandmark() {
+		return landmark;
+	}
+	public void setLandmark(String landmark) {
+		this.landmark = landmark;
+	}
+	public String getLat() {
+		return lat;
+	}
+	public void setLat(String lat) {
+		this.lat = lat;
+	}
+	public String getLon() {
+		return lon;
+	}
+	public void setLon(String lon) {
+		this.lon = lon;
+	}
 	public Integer getCityId() {
 		return cityId;
 	}
 	public void setCityId(Integer cityId) {
 		this.cityId = cityId;
 	}
-	public String getAddtown() {
-		return addtown;
-	}
-	public void setAddtown(String addtown) {
-		this.addtown = addtown;
-	}
-	public String getAddUc() {
-		return addUc;
-	}
-	public void setAddUc(String addUc) {
-		this.addUc = addUc;
-	}
+
 	public Location getCity() {
 		return city;
 	}
 	void setCity(Location city) {
 		this.city = city;
 	}
-	/**
-	 * Gets the adds the landmark.
-	 *
-	 * @return the adds the landmark
-	 */
-	public String getAddLandmark() {
-		return addLandmark;
-	}
-
-	/**
-	 * Sets the adds the landmark.
-	 *
-	 * @param addLandmark the new adds the landmark
-	 */
-	public void setAddLandmark(String addLandmark) {
-		this.addLandmark = addLandmark;
-	}
-
 	public String getCityName() {
 		return cityName;
 	}
@@ -424,149 +357,6 @@ public class Address {
 		this.country = country;
 	}
 
-	/**
-	 * Gets the region.
-	 *
-	 * @return the region
-	 */
-	public String getRegion() {
-		return region;
-	}
-
-	/**
-	 * Sets the region.
-	 *
-	 * @param region the new region
-	 */
-	public void setRegion(String region) {
-		this.region = region;
-	}
-
-	/**
-	 * Gets the lat.
-	 *
-	 * @return the lat
-	 */
-	public Double getLat() {
-		return lat;
-	}
-
-	/**
-	 * Sets the lat.
-	 *
-	 * @param lat the new lat
-	 */
-	public void setLat(Double lat) {
-		this.lat = lat;
-	}
-
-	/**
-	 * Gets the lon.
-	 *
-	 * @return the lon
-	 */
-	public Double getLon() {
-		return lon;
-	}
-
-	/**
-	 * Sets the lon.
-	 *
-	 * @param lon the new lon
-	 */
-	public void setLon(Double lon) {
-		this.lon = lon;
-	}
-
-	/**
-	 * Gets the phone1.
-	 *
-	 * @return the phone1
-	 */
-	public String getPhone1() {
-		return phone1;
-	}
-
-	/**
-	 * Sets the phone1.
-	 *
-	 * @param phone1 the new phone1
-	 */
-	public void setPhone1(String phone1) {
-		this.phone1 = phone1;
-	}
-
-	/**
-	 * Gets the phone1 owner.
-	 *
-	 * @return the phone1 owner
-	 */
-	public String getPhone1Owner() {
-		return phone1Owner;
-	}
-
-	/**
-	 * Sets the phone1 owner.
-	 *
-	 * @param phone1Owner the new phone1 owner
-	 */
-	public void setPhone1Owner(String phone1Owner) {
-		this.phone1Owner = phone1Owner;
-	}
-
-	/**
-	 * Gets the phone2.
-	 *
-	 * @return the phone2
-	 */
-	public String getPhone2() {
-		return phone2;
-	}
-
-	/**
-	 * Sets the phone2.
-	 *
-	 * @param phone2 the new phone2
-	 */
-	public void setPhone2(String phone2) {
-		this.phone2 = phone2;
-	}
-
-	/**
-	 * Gets the phone2 owner.
-	 *
-	 * @return the phone2 owner
-	 */
-	public String getPhone2Owner() {
-		return phone2Owner;
-	}
-
-	/**
-	 * Sets the phone2 owner.
-	 *
-	 * @param phone2Owner the new phone2 owner
-	 */
-	public void setPhone2Owner(String phone2Owner) {
-		this.phone2Owner = phone2Owner;
-	}
-
-	/**
-	 * Gets the weburl.
-	 *
-	 * @return the weburl
-	 */
-	public String getWeburl() {
-		return weburl;
-	}
-
-	/**
-	 * Sets the weburl.
-	 *
-	 * @param weburl the new weburl
-	 */
-	public void setWeburl(String weburl) {
-		this.weburl = weburl;
-	}
 
 	/**
 	 * Gets the description.
@@ -679,42 +469,4 @@ public class Address {
 		setLastEditedDate(new Date());
 	}
 	
-/*	@Override
-	public String toString() {
-		StringBuilder s = new StringBuilder(getClass().getName());
-		s.append("[");
-		s.append(getAddressId());
-		s.append(getAddressType());
-		s.append(getAddArea());
-		s.append(getAddColony());
-		s.append(getAddDistrict());
-		s.append(getAddHouseNumber());
-		s.append(getAddLandmark());
-		s.append(getAddSector());
-		s.append(getAddStreet());
-		s.append(getAddTown());
-		s.append(getAddUc());
-		s.append(getCity());
-		s.append(getCountry());
-		s.append(getCreatedByUserId());
-		s.append(getCreatedByUserName());
-		s.append(getDescription());
-		s.append(get);
-		s.append(arg0);
-		s.append(arg0);
-		s.append(arg0);
-		s.append(arg0);
-		s.append(arg0);
-		s.append(arg0);
-		s.append(arg0);
-		s.append(arg0);
-		
-		int i = s.lastIndexOf(";");
-		if (i != -1)
-			s.deleteCharAt(i);
-
-		s.append("]");
-
-		return s.toString();
-	}*/
 }

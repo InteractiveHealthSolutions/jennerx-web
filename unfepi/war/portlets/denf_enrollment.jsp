@@ -33,7 +33,7 @@ function onloadSettingOfControls()
 	
 	DWRVaccineService.getSchedule('${command.centerVisit.uuid}', function(result) {
 		//alert(result);
-		vaccineScheduleGenerator(convertToDate($('#birthdate').val()), convertToDate($('#centerVisitDate').val()), '${command.centerVisit.childId}', result, '${command.centerVisit.uuid}',true);
+		vaccineScheduleGenerator(convertToDate($('#birthdate').val()), convertToDate($('#centerVisitDate').val()), '${command.centerVisit.childId}', '${command.centerVisit.vaccinationCenterId}', result, '${command.centerVisit.uuid}',true);
 	});
 }
 
@@ -46,12 +46,12 @@ function birthChanged(jqControl){
 		alert('Tareekh pedaish say pehlay Enrollment ki tareekh aur Center ka indraj zaroori hy.');
 	}
 	else{
-		vaccineScheduleGenerator(convertToDate(jqControl.val()), convertToDate($('#centerVisitDate').val()), '${command.centerVisit.childId}', null,'${command.centerVisit.uuid}',true);
+		vaccineScheduleGenerator(convertToDate(jqControl.val()), convertToDate($('#centerVisitDate').val()), '${command.centerVisit.childId}', $('#vaccinationCenterId').val(), null,'${command.centerVisit.uuid}',true);
 	}
 }
 //reset schedule
 function resetSchedule(jqControl){
-	vaccineScheduleGenerator('', '','${command.centerVisit.childId}', null,'${command.centerVisit.uuid}');
+	vaccineScheduleGenerator('', '','${command.centerVisit.childId}', null,null,'${command.centerVisit.uuid}');
 }
 function subfrm(){
 	<%-- if(!vaccinationCommonValidations(document,/^<%=REG_EX.CELL_NUMBER%>$/)){
@@ -62,7 +62,8 @@ function subfrm(){
 		alert('Pehlay Enrollment ki Tareekh ka indraj karen');
 		return;
 	}
-	else if(convertToDate($('#birthdate').val()) == null){
+	
+	if(convertToDate($('#birthdate').val()) == null){
 		alert('Pehlay Tareekh Pedaish ya Umr ka indraj karen');
 		return;
 		 
@@ -201,7 +202,7 @@ function centerChanged() {
 	</tr>
 	<tr>
         <td colspan="2">
-        <%@ include file="plt_vaccine_schedule.jsp" %>
+        <%@ include file="plt_vaccine_schedule_den.jsp" %>
         </td>
     </tr>
 	<tr>
@@ -218,7 +219,17 @@ function centerChanged() {
 		</td>
 	</tr>
 	<tr>
-		<td>SMS reminder ke liye Mobile Number</td>
+		<td>Kya aap targheebi inaami scheme mein hisa lena chahtay hen? <span class="mendatory-field">*</span></td>
+		<td>
+			<spring:bind path="command.centerVisit.preference.hasApprovedLottery">
+				<input type="radio" name="centerVisit.preference.hasApprovedLottery" <c:if test='${not empty status.value && status.value == true}'>checked = "checked"</c:if> value="<%=WebGlobals.BOOLEAN_CONVERTER_TRUE_STRING%>"/>Yes<br>
+				<input type="radio" name="centerVisit.preference.hasApprovedLottery" <c:if test='${not empty status.value && status.value == false}'>checked = "checked"</c:if> value="<%=WebGlobals.BOOLEAN_CONVERTER_FALSE_STRING%>"/>No
+				<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
+			</spring:bind>
+		</td>
+	</tr> 
+	<tr>
+		<td>SMS ke liye Mobile Number</td>
 		<td><spring:bind path="command.centerVisit.contactPrimary">
 			<input type="text" id="contactPrimary" name="centerVisit.contactPrimary" maxlength="13" value="${status.value}" class="numbersOnly" />
 			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
@@ -234,17 +245,7 @@ function centerChanged() {
 		</td>
 	</tr>
 	<tr>
-		<td>Kya aap targheebi inaami scheme mein hisa lena chahtay hen? <span class="mendatory-field">*</span></td>
-		<td>
-			<spring:bind path="command.centerVisit.preference.hasApprovedLottery">
-				<input type="radio" name="centerVisit.preference.hasApprovedLottery" <c:if test='${not empty status.value && status.value == true}'>checked = "checked"</c:if> value="<%=WebGlobals.BOOLEAN_CONVERTER_TRUE_STRING%>"/>Yes<br>
-				<input type="radio" name="centerVisit.preference.hasApprovedLottery" <c:if test='${not empty status.value && status.value == false}'>checked = "checked"</c:if> value="<%=WebGlobals.BOOLEAN_CONVERTER_FALSE_STRING%>"/>No
-				<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
-			</spring:bind>
-		</td>
-	</tr> 
-	<tr>
-        <td>NIC Number</td>
+        <td>CNIC Number</td>
         <td><spring:bind path="command.child.nic">
              <input type="text" id="childnic" name="child.nic" maxlength="13"  class="numbersOnly" value="<c:out value="${status.value}" />"/>
              <br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>

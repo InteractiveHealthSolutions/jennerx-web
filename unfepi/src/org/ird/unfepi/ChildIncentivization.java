@@ -13,7 +13,6 @@ import org.ird.unfepi.model.Vaccination;
 import org.ird.unfepi.model.Vaccination.VACCINATION_STATUS;
 import org.ird.unfepi.model.VaccinatorIncentive;
 import org.ird.unfepi.model.Vaccine;
-import org.ird.unfepi.utils.IncentiveUtils;
 import org.ird.unfepi.web.utils.IMRUtils;
 
 import com.mysql.jdbc.StringUtils;
@@ -53,10 +52,10 @@ public class ChildIncentivization
 		VACCINATION_RECORD_NUMBER = vaccinationRecordNum;
 	}
 	
-	private static ChildIncentivization createIncentives(DataEntrySource dataEntrySource, int armId, Vaccination incentiveVaccination, 
+	private static ChildIncentivization createIncentives(DataEntrySource dataEntrySource, boolean hasNic, int armId, Vaccination incentiveVaccination, 
 			Vaccine incentiveVaccine, User user, ServiceContext sc) {
 		Float amount = null;
-		IncentiveParams incentiveParams = null;
+		IncentiveParams chincentiveParams = null;
 		VaccinatorIncentive vaccinatorIncentive = new VaccinatorIncentive();
 		Integer incentiveRecordNumber = null;
 		
@@ -68,8 +67,9 @@ public class ChildIncentivization
 		if(StringUtils.isEmptyOrWhitespaceOnly(incentiveStatusErrors))
 		{
 			ChildIncentive childIncentive = new ChildIncentive();
+			chincentiveParams = incentiveParamsForChildlist.get(0);
 			
-			incentiveParams = incentiveParamsForChildlist.get(0);
+			amount = chincentiveParams.getAmount();
 			
 			childIncentive.setArmId(armId);
 			childIncentive.setCreator(user);
@@ -78,14 +78,14 @@ public class ChildIncentivization
 			childIncentive.setIncentiveDate(incentiveVaccination.getVaccinationDate());
 			childIncentive.setVaccinationRecordNum(incentiveVaccination.getVaccinationRecordNum());
 //				childIncentive.setDescription("");
-			childIncentive.setAmount(incentiveParams.getAmount());
+			childIncentive.setAmount(amount);
 			childIncentive.setIncentiveStatus(IncentiveStatus.AVAILABLE);
-			childIncentive.setIncentiveParamId(incentiveParams.getIncentiveParamsId());
+			childIncentive.setIncentiveParamId(chincentiveParams.getIncentiveParamsId());
 				
 			incentiveRecordNumber = Integer.parseInt(sc.getIncentiveService().saveChildIncentive(childIncentive).toString());
 				
 			// create incentive smses if won via web form
-			List<ReminderSms> smsl = IMRUtils.createLotteryWonReminderSms(childIncentive.getVaccinationRecordNum(), childIncentive.getIncentiveDate(), childIncentive.getCreatedByUserId(), null, sc);
+			List<ReminderSms> smsl = IMRUtils.createLotteryWonReminderSms(hasNic?"LOTTERY_WON_REMINDER_WITH_NIC":"LOTTERY_WON_REMINDER_WITHOUT_NIC", childIncentive.getVaccinationRecordNum(), childIncentive.getIncentiveDate(), childIncentive.getCreatedByUserId(), null, sc);
 			for (ReminderSms reminderSms : smsl) {
 				sc.getReminderService().addReminderSmsRecord(reminderSms);
 			}
@@ -96,7 +96,7 @@ public class ChildIncentivization
 			IncentiveParams vincentiveParams = incentiveParamsForVaccinatorlist.get(0);
 			vaccinatorIncentive.setArmId(armId);
 			vaccinatorIncentive.setIncentiveParamId(vincentiveParams.getIncentiveParamsId());
-			vaccinatorIncentive.setAmount(incentiveParams.getAmount());
+			vaccinatorIncentive.setAmount(vincentiveParams.getAmount());
 			vaccinatorIncentive.setCreator(user);
 			vaccinatorIncentive.setIsIncentivized(true);
 			vaccinatorIncentive.setIncentiveStatus(IncentiveStatus.AVAILABLE);
@@ -110,14 +110,14 @@ public class ChildIncentivization
 		}
 		
 		return new ChildIncentivization(null, StringUtils.isEmptyOrWhitespaceOnly(incentiveStatusErrors), amount, 
-				incentiveParams, incentiveStatusErrors, incentiveVaccine.getVaccineId(), incentiveVaccine.getName(), 
+				chincentiveParams, incentiveStatusErrors, incentiveVaccine.getVaccineId(), incentiveVaccine.getName(), 
 				incentiveRecordNumber, incentiveVaccination.getVaccinationRecordNum());
 	}
 	
-	 public static ChildIncentivization runIncentive(DataEntrySource dataEntrySource, int armId, Vaccination incentiveVaccination, Vaccine incentiveVaccine, 
+	 public static ChildIncentivization runIncentive(DataEntrySource dataEntrySource, boolean hasNic, int armId, Vaccination incentiveVaccination, Vaccine incentiveVaccine, 
 				User user, ServiceContext sc)
 	{
-		return createIncentives(dataEntrySource, armId, incentiveVaccination, incentiveVaccine, user, sc);
+		return createIncentives(dataEntrySource, hasNic, armId, incentiveVaccination, incentiveVaccine, user, sc);
 	}
 	
 	public static boolean vaccinationIncentiveExists(int childId, short vaccineId, ServiceContext sc){
@@ -153,7 +153,7 @@ public class ChildIncentivization
 		
 		if(!incentiveVaccination.getVaccinationStatus().equals(VACCINATION_STATUS.VACCINATED)
 				&& !incentiveVaccination.getVaccinationStatus().equals(VACCINATION_STATUS.UNFILLED)){
-			incentiveStatus += "CHILD DID NOT GET VACCINE;";
+			incentiveStatus += "CHILD DID NOT GET VACCINE TODAY;";
 		}
 		
 		if(incentiveVaccination.getHasApprovedLottery() == null || !incentiveVaccination.getHasApprovedLottery()){

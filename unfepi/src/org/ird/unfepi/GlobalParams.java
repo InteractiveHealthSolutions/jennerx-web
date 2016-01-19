@@ -252,7 +252,7 @@ public class GlobalParams
 
 	public static final int CHILD_PROGRAMID_LENGTH = 14;
 	/** 6 digit numeric sequence starting with 1 */
-	public static final String CHILD_PROGRAMID_REGEX = "[1-5].{"+(CHILD_PROGRAMID_LENGTH-1)+"}";
+	public static final String CHILD_PROGRAMID_REGEX = "[1-9].{"+(CHILD_PROGRAMID_LENGTH-1)+"}";
 	public static final String CHILD_ROLE_NAME = "child";
 
 	public static final int STOREKEEPER_PROGRAMID_LENGTH = 6;
@@ -295,7 +295,7 @@ public class GlobalParams
 	public static final String QUERY_PROJECT_TARGET_ENROLLMENTS = "select value from setting where name='project.target-enrollments'";
 	public static final String QUERY_PROJECT_TARGET_EVENTS = "select value from setting where name='project.target-events'";
 	public static final String QUERY_TOTAL_ENROLLMENTS = "select count(*) from child ch";
-	public static final String QUERY_VACCINATIONS_RECEIVED = "select count(*) from vaccination vcrc where vaccinationStatus in ('VACCINATED', 'LATE_VACCINATED')";
+	public static final String QUERY_VACCINATIONS_RECEIVED = "select count(*) from vaccination vcrc where vaccinationStatus in ('VACCINATED', 'RETRO', 'RETRO_DATE_MISSING', 'LATE_VACCINATED')";
 	//DONT delete OLD QUERIES , Perfectly working
 	//public static final String QUERY_ONLY_ENROLLMENT_FILTER_SQL_v = "( v.vaccineId=1 or (v.vaccineId=2 and not exists(select vaccinationRecordNum from vaccination where vaccineId=1 and v.childId=childId)))";
 	//public static final String QUERY_ONLY_ENROLLMENT_FILTER_HQL_v = "( v.vaccineId=1 or (v.vaccineId=2 and not exists(select vaccinationRecordNum from Vaccination where vaccineId=1 and v.childId=childId)))";

@@ -92,6 +92,11 @@ public class VaccinationServiceImpl implements VaccinationService{
 		Vaccine obj = daovacc.findById(id);
 		return obj;
 	}
+	
+	@Override
+	public List<Vaccine> getVaccinesById(Short[] vaccineIds, boolean readonly, String[] mappingsToJoin, String orderBySqlFormula) {
+		return daovacc.getById(vaccineIds, readonly, mappingsToJoin, orderBySqlFormula);
+	}
 
 	@Override
 	public List<Vaccine> findVaccine(String vaccineName, boolean readonly/*,int firstResult, int fetchSize*/){
@@ -184,7 +189,7 @@ public class VaccinationServiceImpl implements VaccinationService{
 	
 	@Override
 	public Vaccination getPendingVaccination(int childId, String vaccineName,boolean isreadonly, String[] mappingsToJoin) throws VaccinationDataException{
-		List<Vaccination> list = daoptvaccination.findByCriteria(childId, vaccineName, null, null, null, null, null, null, null, null, VACCINATION_STATUS.PENDING, false, 0, 3, isreadonly, mappingsToJoin,null);
+		List<Vaccination> list = daoptvaccination.findByCriteria(childId, vaccineName, null, null, null, null, null, null, null, null, VACCINATION_STATUS.SCHEDULED, false, 0, 3, isreadonly, mappingsToJoin,null);
 		
 		if(list.size() == 1){
 			return list.get(0);

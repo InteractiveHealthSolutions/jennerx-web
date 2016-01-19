@@ -55,7 +55,7 @@ public class WomenEnrollmentService {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String getWomenInformation(@QueryParam(RequestElements.WOMEN_ID) String womenId)
+	public String getChildInformation(@QueryParam(RequestElements.WOMEN_ID) String womenId)
 	{
 		try
 		{
