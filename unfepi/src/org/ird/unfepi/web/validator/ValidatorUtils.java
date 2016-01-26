@@ -228,10 +228,10 @@ public class ValidatorUtils {
 	{
 		boolean useFieldPrefix = true; // We know for enrollment we have encapsulated entities
 		
-		/*ValidatorOutput vidop = validateChildProgramId(projectId, true, sc);
+		ValidatorOutput vidop = validateWomenProgramId(projectId, true, sc);
 		if(!vidop.STATUS().equals(ValidatorStatus.OK)){
 			putError(dataEntrySource, vidop.MESSAGE(), mobileErrors, webErrors, DataField.PROGRAM_ID, useFieldPrefix);
-		}*/
+		}
 
 		if(women.getDateEnrolled() == null || DateUtils.afterTodaysDate(women.getDateEnrolled())){
 			putError(dataEntrySource, ErrorMessages.CHILD_DATE_ENROLLED_INVALID, mobileErrors, webErrors, DataField.CHILD_DATE_ENROLLED, useFieldPrefix);
@@ -251,6 +251,21 @@ public class ValidatorUtils {
 		validateAddress(dataEntrySource, address, mobileErrors, webErrors, useFieldPrefix);
 		
 		//validateReminderAndContactInfo(dataEntrySource, centerVisit.getPreference(), centerVisit.getContactPrimary(), centerVisit.getContactSecondary(), mobileErrors, webErrors, sc, useFieldPrefix);
+	}
+	
+	public static ValidatorOutput validateWomenProgramId(String programId, boolean isNew, ServiceContext sc){
+		/*if(StringUtils.isEmptyOrWhitespaceOnly(programId)
+				|| !DataValidation.validate(GlobalParams.WOMEN_PROGRAMID_REGEX, programId)){
+			return new ValidatorOutput(ValidatorStatus.ERROR, ErrorMessages.CHILD_ID_INVALID);
+		}*/
+		
+		if(isNew){
+			String q = "select count(*) from identifier i where identifier = '"+programId+"' ";
+			if(Integer.parseInt(sc.getCustomQueryService().getDataBySQL(q).get(0).toString()) > 0){
+				return new ValidatorOutput(ValidatorStatus.ERROR, ErrorMessages.WOMEN_ALREADY_EXISTS);
+			}
+		}
+		return new ValidatorOutput(ValidatorStatus.OK, "");
 	}
 	
 	/**

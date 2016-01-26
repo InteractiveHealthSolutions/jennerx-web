@@ -63,6 +63,7 @@ public class FollowupHelper
 		Integer centreId;
 		User user;
 		String newEpiNo;
+		String nic;
 
 		List<VaccineSchedule> schedule = new ArrayList<VaccineSchedule>();
 		VaccinationCenterVisit centreVisit;
@@ -76,6 +77,7 @@ public class FollowupHelper
 		userId = Integer.valueOf(form.get(RequestElements.LG_USERID).toString());
 		centreId = Integer.valueOf((String) form.get(RequestElements.ENROLLEMNT_CENTRE).toString());
 		primaryNo = (String) form.get(RequestElements.PRIMARY_NUMBER);
+		nic =  (String) form.get(RequestElements.FATHER_NIC);
 		secondaryNo = (String) form.get(RequestElements.SECONDARY_NUMBER);
 		String firstName = form.get(RequestElements.CHILD_FIRST_NAME).toString(); // to get the first name
 		//System.out.println(firstName);
@@ -99,6 +101,7 @@ public class FollowupHelper
 		{
 			mappedId = child.getMappedId();
 			child.setFirstName(firstName);
+			child.setNic(nic);
 			try {
 				childService.updateChild(child);
 				//childService.saveChild(child);
@@ -260,6 +263,7 @@ public class FollowupHelper
 		String dob;
 		Date dateOfBirth;
 		String epiNo;
+		String validNIC;
 
 		fatherFirstName = child.getFatherFirstName();
 		fatherLastName = child.getFatherLastName();
@@ -267,6 +271,9 @@ public class FollowupHelper
 		childLastName = child.getLastName();
 		gender = child.getGender().name();
 		dateOfBirth = child.getBirthdate();
+		// GetNIC
+		validNIC = child.getNic();
+		
 		List epiNumbersList = sc.getCustomQueryService().getDataBySQL(
 				"select epiNumber from vaccination" + " where childId=" + child.getMappedId() + " and vaccinationStatus IN ('VACCINATED','LATE_VACCINATED') order by vaccinationDate DESC");
 		epiNo = (String) (epiNumbersList.size() == 0 ? "" : epiNumbersList.get(0));
@@ -282,6 +289,7 @@ public class FollowupHelper
 			demoJson.put(RequestElements.CHILD_GENDER, gender);
 			demoJson.put(RequestElements.DOB, RestUtils.dateToString(dateOfBirth, null));
 			demoJson.put(RequestElements.EPI_NO, epiNo);
+			demoJson.put(RequestElements.FATHER_NIC, validNIC);
 		}
 		catch (Exception e)
 		{
@@ -346,7 +354,6 @@ public class FollowupHelper
 		List<ContactNumber> numbers;
 		String primaryContact = "";
 		String secondaryContact = "";
-
 		if (child == null)
 		{
 			return jsonProgram;

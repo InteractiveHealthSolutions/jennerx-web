@@ -14,6 +14,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.ird.unfepi.GlobalParams;
+import org.ird.unfepi.constants.DataField;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Address;
@@ -156,7 +157,7 @@ public class WomenEnrollmentServiceHelper {
 			tt2 = (JSONObject) vaccination.get(RequestElements.TT2);
 			tt2Status = WOMEN_VACCINATION_STATUS.findEnum(tt2.get(RequestElements.WOMEN_VACCINATION_STATUS).toString());
 			centerVisit.getTt2().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum(tt2.get(RequestElements.WOMEN_VACCINATION_STATUS).toString()));
-			if (tt1.get(RequestElements.WOMEN_VACCINATION_DATE).toString().equals(""))
+			if (tt2.get(RequestElements.WOMEN_VACCINATION_DATE).toString().equals(""))
 				centerVisit.getTt2().setVaccinationDate(null);
 			else
 				centerVisit.getTt2().setVaccinationDate(stringToDate(tt2.get(RequestElements.WOMEN_VACCINATION_DATE).toString()));
@@ -165,14 +166,14 @@ public class WomenEnrollmentServiceHelper {
 			vaccines.add(centerVisit.getTt2());
 			if (tt2Status.equals(WOMEN_VACCINATION_STATUS.VACCINATED)) {
 				enrollmentVaccine = "tt2";
-				enrollmentDate = centerVisit.getTt1().getVaccinationDate();
+				enrollmentDate = centerVisit.getTt2().getVaccinationDate();
 			}
 		}
 		if (vaccination.get(RequestElements.TT3) != null) {
 			tt3 = (JSONObject) vaccination.get(RequestElements.TT3);
 			tt3Status = WOMEN_VACCINATION_STATUS.findEnum(tt3.get(RequestElements.WOMEN_VACCINATION_STATUS).toString());
 			centerVisit.getTt3().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum(tt3.get(RequestElements.WOMEN_VACCINATION_STATUS).toString()));
-			if (tt1.get(RequestElements.WOMEN_VACCINATION_DATE).toString().equals(""))
+			if (tt3.get(RequestElements.WOMEN_VACCINATION_DATE).toString().equals(""))
 				centerVisit.getTt3().setVaccinationDate(null);
 			else
 				centerVisit.getTt3().setVaccinationDate(stringToDate(tt3.get(RequestElements.WOMEN_VACCINATION_DATE).toString()));
@@ -181,14 +182,14 @@ public class WomenEnrollmentServiceHelper {
 			vaccines.add(centerVisit.getTt3());
 			if (tt3Status.equals(WOMEN_VACCINATION_STATUS.VACCINATED)) {
 				enrollmentVaccine = "tt3";
-				enrollmentDate = centerVisit.getTt1().getVaccinationDate();
+				enrollmentDate = centerVisit.getTt3().getVaccinationDate();
 			}
 		}
 		if (vaccination.get(RequestElements.TT4) != null) {
 			tt4 = (JSONObject) vaccination.get(RequestElements.TT4);
 			tt4Status = WOMEN_VACCINATION_STATUS.findEnum(tt4.get(RequestElements.WOMEN_VACCINATION_STATUS).toString());
 			centerVisit.getTt4().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum(tt4.get(RequestElements.WOMEN_VACCINATION_STATUS).toString()));
-			if (tt1.get(RequestElements.WOMEN_VACCINATION_DATE).toString().equals(""))
+			if (tt4.get(RequestElements.WOMEN_VACCINATION_DATE).toString().equals(""))
 				centerVisit.getTt4().setVaccinationDate(null);
 			else
 				centerVisit.getTt4().setVaccinationDate(stringToDate(tt4.get(RequestElements.WOMEN_VACCINATION_DATE).toString()));
@@ -196,14 +197,14 @@ public class WomenEnrollmentServiceHelper {
 			vaccines.add(centerVisit.getTt4());
 			if (tt4Status.equals(WOMEN_VACCINATION_STATUS.VACCINATED)) {
 				enrollmentVaccine = "tt4";
-				enrollmentDate = centerVisit.getTt1().getVaccinationDate();
+				enrollmentDate = centerVisit.getTt4().getVaccinationDate();
 			}
 		}
 		if (vaccination.get(RequestElements.TT5) != null) {
 			tt5 = (JSONObject) vaccination.get(RequestElements.TT5);
 			tt5Status = WOMEN_VACCINATION_STATUS.findEnum(tt5.get(RequestElements.WOMEN_VACCINATION_STATUS).toString());
 			centerVisit.getTt5().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum(tt5.get(RequestElements.WOMEN_VACCINATION_STATUS).toString()));
-			if (tt1.get(RequestElements.WOMEN_VACCINATION_DATE).toString().equals(""))
+			if (tt5.get(RequestElements.WOMEN_VACCINATION_DATE).toString().equals(""))
 				centerVisit.getTt5().setVaccinationDate(null);
 			else
 				centerVisit.getTt5().setVaccinationDate(stringToDate(tt5.get(RequestElements.WOMEN_VACCINATION_DATE).toString()));
@@ -211,7 +212,7 @@ public class WomenEnrollmentServiceHelper {
 			vaccines.add(centerVisit.getTt5());
 			if (tt5Status.equals(WOMEN_VACCINATION_STATUS.VACCINATED)) {
 				enrollmentVaccine = "tt5";
-				enrollmentDate = centerVisit.getTt1().getVaccinationDate();
+				enrollmentDate = centerVisit.getTt5().getVaccinationDate();
 			}
 		}
 
@@ -254,16 +255,18 @@ public class WomenEnrollmentServiceHelper {
 		centerVisit.setVaccinatorId(userId);
 		centerVisit.setContactPrimary(mobileNoString);
 		centerVisit.setContactSecondary(landlineNoString);
-
+		HashMap<String, String> mobileErrors = new HashMap<String, String>();
 		try {
 			ControllerUIHelper.doWomenEnrollment(DataEntrySource.MOBILE, projectId, women, dob, years, months, weeks, days, add, centerVisit, dateFormStart, user, enrollmentVaccine, enrollmentDate,
 					vaccines, sc);
+			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			if(e.toString().contains("Duplicate"))
+				mobileErrors.put(DataField.PROGRAM_ID, "Duplicate Entry");
 		}
 
-		HashMap<String, String> mobileErrors = new HashMap<String, String>();
+		
 
 		try {
 
@@ -295,9 +298,13 @@ public class WomenEnrollmentServiceHelper {
 	}
 
 	public static Date stringToDate(String text) throws ParseException {
-		DateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-		Date date = format.parse(text);
-		return date;
+		if (text.equals(""))
+			return null;
+		else {
+			DateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+			Date date = format.parse(text);
+			return date;
+		}
 	}
 
 }

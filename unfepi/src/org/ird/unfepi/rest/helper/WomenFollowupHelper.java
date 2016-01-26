@@ -296,94 +296,97 @@ public class WomenFollowupHelper {
 		women.setBirthdate(dateOfBirth);
 		women.setFirstName(womenFirstName);
 		women.setFatherFirstName(fatherFirstName);
+		women.setHusbandFirstName(husbandFirstName);
 		women.setBirthdate(dateOfBirth);
 		women.setMaritalStatus(maritalStatus);
-		women.setStatus(WOMENSTATUS.ENROLLMENT);
+		women.setStatus(WOMENSTATUS.FOLLOW_UP);
 		User user = sc.getUserService().findUser(userId);
 
 		vaccines = sc.getWomenVaccinationService().findByWomenId(women.getMappedId());
+		
+		tt3 = (JSONObject) vaccination.get(RequestElements.TT3);
 
-		// program details
-		if (vaccines.size() > 0 && !vaccines.get(0).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled")) {
-			centerVisit.setTt1(vaccines.get(0));
-		} else {
+		// if it was scheduled previously, it's status might have changed now
+		if (vaccines.size() > 0 && vaccines.get(0).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled")) {
 			tt1 = (JSONObject) vaccination.get(RequestElements.TT1);
+			// if it's not changed then treat this as not vaccinated
 			if (tt1 == null) {
-				tt1Status = WOMEN_VACCINATION_STATUS.findEnum(WOMEN_VACCINATION_STATUS.NOT_VACCINATED.toString());
 				centerVisit.getTt1().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum("NVAC"));
 				centerVisit.getTt1().setVaccinationDate(null);
+				// if it's changed then find the new status and let it go to update
 			} else {
-				tt1Status = WOMEN_VACCINATION_STATUS.findEnum(tt1.get(RequestElements.WOMEN_VACCINATION_STATUS).toString());
+				centerVisit.setTt1(vaccines.get(0));
 				centerVisit.getTt1().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum(tt1.get(RequestElements.WOMEN_VACCINATION_STATUS).toString()));
 				centerVisit.getTt1().setVaccinationDate(stringToDate(tt1.get(RequestElements.WOMEN_VACCINATION_DATE).toString()));
 			}
-
+			if(vaccines.get(0).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled"))
+				centerVisit.getTt1().setVaccinationRecordNum(vaccines.get(0).getVaccinationRecordNum());
 			centerVisit.getTt1().setVaccineId(sc.getVaccinationService().getByName("TT1").getVaccineId());
 		}
 
-		if (vaccines.size() > 1 && !vaccines.get(1).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled")) {
-			centerVisit.setTt2(vaccines.get(1));
-		} else {
+		if (vaccines.size() > 1 && vaccines.get(1).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled")) {
 			tt2 = (JSONObject) vaccination.get(RequestElements.TT2);
 			if (tt2 == null) {
-				tt2Status = WOMEN_VACCINATION_STATUS.findEnum(WOMEN_VACCINATION_STATUS.NOT_VACCINATED.toString());
 				centerVisit.getTt2().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum("NVAC"));
 				centerVisit.getTt2().setVaccinationDate(null);
 			} else {
-				tt2Status = WOMEN_VACCINATION_STATUS.findEnum(tt2.get(RequestElements.WOMEN_VACCINATION_STATUS).toString());
+				centerVisit.setTt2(vaccines.get(1));
 				centerVisit.getTt2().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum(tt2.get(RequestElements.WOMEN_VACCINATION_STATUS).toString()));
 				centerVisit.getTt2().setVaccinationDate(stringToDate(tt2.get(RequestElements.WOMEN_VACCINATION_DATE).toString()));
 			}
+			if(vaccines.get(1).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled"))
+				centerVisit.getTt2().setVaccinationRecordNum(vaccines.get(1).getVaccinationRecordNum());
 			centerVisit.getTt2().setVaccineId(sc.getVaccinationService().getByName("TT2").getVaccineId());
 		}
 
-		if (vaccines.size() > 2 && !vaccines.get(2).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled")) {
-			centerVisit.setTt3(vaccines.get(2));
-		} else {
-			tt3 = (JSONObject) vaccination.get(RequestElements.TT3);
+		if (vaccines.size() > 2 && vaccines.get(2).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled")) {
 			if (tt3 == null) {
-				tt3Status = WOMEN_VACCINATION_STATUS.findEnum(WOMEN_VACCINATION_STATUS.NOT_VACCINATED.toString());
 				centerVisit.getTt3().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum("NVAC"));
 				centerVisit.getTt3().setVaccinationDate(null);
 			} else {
-				tt3Status = WOMEN_VACCINATION_STATUS.findEnum(tt3.get(RequestElements.WOMEN_VACCINATION_STATUS).toString());
+				centerVisit.setTt3(vaccines.get(2));
 				centerVisit.getTt3().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum(tt3.get(RequestElements.WOMEN_VACCINATION_STATUS).toString()));
 				centerVisit.getTt3().setVaccinationDate(stringToDate(tt3.get(RequestElements.WOMEN_VACCINATION_DATE).toString()));
 			}
+			if(vaccines.get(2).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled"))
+				centerVisit.getTt3().setVaccinationRecordNum(vaccines.get(2).getVaccinationRecordNum());
 			centerVisit.getTt3().setVaccineId(sc.getVaccinationService().getByName("TT3").getVaccineId());
+		} else if (vaccines.size() == 2){
+			if(tt3 != null){
+				centerVisit.getTt3().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum(tt3.get(RequestElements.WOMEN_VACCINATION_STATUS).toString()));
+				centerVisit.getTt3().setVaccinationDate(stringToDate(tt3.get(RequestElements.WOMEN_VACCINATION_DATE).toString()));
+				centerVisit.getTt3().setVaccineId(sc.getVaccinationService().getByName("TT3").getVaccineId());
+			}
 		}
 
-		if (vaccines.size() > 3 && !vaccines.get(3).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled")) {
-			centerVisit.setTt4(vaccines.get(3));
-		} else {
+		if (vaccines.size() > 3 && vaccines.get(3).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled")) {
 			tt4 = (JSONObject) vaccination.get(RequestElements.TT4);
 			if (tt4 == null) {
-				tt4Status = WOMEN_VACCINATION_STATUS.findEnum(WOMEN_VACCINATION_STATUS.NOT_VACCINATED.toString());
 				centerVisit.getTt4().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum("NVAC"));
 				centerVisit.getTt4().setVaccinationDate(null);
 			} else {
-				tt4Status = WOMEN_VACCINATION_STATUS.findEnum(tt4.get(RequestElements.WOMEN_VACCINATION_STATUS).toString());
+				centerVisit.setTt4(vaccines.get(3));
 				centerVisit.getTt4().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum(tt4.get(RequestElements.WOMEN_VACCINATION_STATUS).toString()));
 				centerVisit.getTt4().setVaccinationDate(stringToDate(tt4.get(RequestElements.WOMEN_VACCINATION_DATE).toString()));
 			}
+			if(vaccines.get(3).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled"))
+				centerVisit.getTt4().setVaccinationRecordNum(vaccines.get(3).getVaccinationRecordNum());
 			centerVisit.getTt4().setVaccineId(sc.getVaccinationService().getByName("TT4").getVaccineId());
-			vaccines.add(centerVisit.getTt4());
 		}
-		if (vaccines.size() > 4 && !vaccines.get(4).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled")) {
-			centerVisit.setTt5(vaccines.get(4));
-		} else {
+		
+		if (vaccines.size() > 4 && vaccines.get(4).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled")) {
 			tt5 = (JSONObject) vaccination.get(RequestElements.TT5);
 			if (tt5 == null) {
-				tt5Status = WOMEN_VACCINATION_STATUS.findEnum(WOMEN_VACCINATION_STATUS.NOT_VACCINATED.toString());
 				centerVisit.getTt5().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum("NVAC"));
 				centerVisit.getTt5().setVaccinationDate(null);
 			} else {
-				tt5Status = WOMEN_VACCINATION_STATUS.findEnum(tt5.get(RequestElements.WOMEN_VACCINATION_STATUS).toString());
+				centerVisit.setTt5(vaccines.get(4));
 				centerVisit.getTt5().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum(tt5.get(RequestElements.WOMEN_VACCINATION_STATUS).toString()));
 				centerVisit.getTt5().setVaccinationDate(stringToDate(tt5.get(RequestElements.WOMEN_VACCINATION_DATE).toString()));
 			}
+			if(vaccines.get(4).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled"))
+				centerVisit.getTt5().setVaccinationRecordNum(vaccines.get(4).getVaccinationRecordNum());
 			centerVisit.getTt5().setVaccineId(sc.getVaccinationService().getByName("TT5").getVaccineId());
-			vaccines.add(centerVisit.getTt5());
 		}
 
 		sameCenter = RestUtils.setBoolean((String) objectToParse.get(RequestElements.SAME_CENTER));
@@ -415,7 +418,7 @@ public class WomenFollowupHelper {
 		centerVisit.setVisitDate(stringToDate(visitDate));
 
 		try {
-			ControllerUIHelper.doWomenFollowup(DataEntrySource.MOBILE, centerVisit, women.getDateEnrolled(), women, add, user, sc);
+			ControllerUIHelper.doWomenFollowup(DataEntrySource.MOBILE, centerVisit, vaccines, women.getDateEnrolled(), women, add, user, sc);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -81,7 +81,7 @@
 		<!-- Women Controllers -->
 	<prop key="/viewWomen.htm">ViewWomenController</prop>
 	<prop key="/addWomen.htm">AddWomenController</prop>
-	<prop key="/womenFollowup.htm">FollowupWomenVaccinationController</prop>
+	<prop key="/womenWebFollowup.htm">FollowupWomenVaccinationController</prop>
 	<prop key="/womenDashboard.htm">WomenDashboardController</prop>
 	
 		

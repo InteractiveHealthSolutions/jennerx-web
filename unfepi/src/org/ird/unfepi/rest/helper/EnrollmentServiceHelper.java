@@ -53,10 +53,7 @@ public class EnrollmentServiceHelper
 		String modeDateOfBirth = null;
 
 		// Address
-		String houseNo;
-		String street;
-		String sector;
-		String colony;
+		String address;
 		String uc;
 		String landmark;
 		String city;
@@ -116,10 +113,7 @@ public class EnrollmentServiceHelper
 		isEstimated = RestUtils.setBoolean((String) objectToParse.get(RequestElements.IS_BIRHTDATE_ESTIMATED));
 
 		// address
-		houseNo = (String) objectToParse.get(RequestElements.ADD_HOUSENO);
-		street = (String) objectToParse.get(RequestElements.ADD_STREET);
-		sector = (String) objectToParse.get(RequestElements.ADD_SECTOR);
-		colony = (String) objectToParse.get(RequestElements.ADD_COLONY);
+		address = (String) objectToParse.get(RequestElements.ADD_HOUSENO);
 		uc = (String) objectToParse.get(RequestElements.ADD_UC);
 		landmark = (String) objectToParse.get(RequestElements.ADD_LANDMARK);
 		town = (String) objectToParse.get(RequestElements.ADD_TOWN);
@@ -173,7 +167,7 @@ public class EnrollmentServiceHelper
 
 		// ///////////Address fields ///////////////////////
 		Address add = new Address();
-		add.setAddress1(houseNo + sector + colony + street);
+		add.setAddress1(address);
 		
 		add.setLandmark(landmark);
 		add.setCityId(Integer.valueOf(city));

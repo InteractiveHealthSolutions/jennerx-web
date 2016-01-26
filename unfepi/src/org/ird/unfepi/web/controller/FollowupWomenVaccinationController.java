@@ -52,7 +52,7 @@ public class FollowupWomenVaccinationController extends DataEntryFormController{
 			WomenVaccinationCenterVisit centerVisit = (WomenVaccinationCenterVisit) command;
 			//List<WomenVaccination> vaccineSchedule = (List<WomenVaccination>) request.getSession().getAttribute(VaccinationCenterVisit.VACCINE_SCHEDULE_KEY+centerVisit.getUuid());
 			Women women = (Women) request.getSession().getAttribute("womenfollowup");
-			ControllerUIHelper.doWomenFollowup(DataEntrySource.WEB, centerVisit,  dateFormStart, women, null, user.getUser(), sc);
+			ControllerUIHelper.doWomenFollowup(DataEntrySource.WEB, centerVisit, null,  dateFormStart, women, null, user.getUser(), sc);
 			
 			sc.commitTransaction();
 

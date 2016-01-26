@@ -254,6 +254,8 @@ public class GlobalParams
 	/** 6 digit numeric sequence starting with 1 */
 	public static final String CHILD_PROGRAMID_REGEX = "[1-9].{"+(CHILD_PROGRAMID_LENGTH-1)+"}";
 	public static final String CHILD_ROLE_NAME = "child";
+	
+	public static final String WOMEN_PROGRAMID_REGEX = "[a-zA-Z]{1}[0-9]{13}";
 
 	public static final int STOREKEEPER_PROGRAMID_LENGTH = 6;
 	public static final String STOREKEEPER_PROGRAMID_REGEX = "[0-9]{"+(STOREKEEPER_PROGRAMID_LENGTH)+"}";
