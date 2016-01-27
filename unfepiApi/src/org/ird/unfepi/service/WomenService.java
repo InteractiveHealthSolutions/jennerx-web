@@ -27,4 +27,6 @@ public interface WomenService {
 	
 	Serializable save(Women women);
 
+	void update(Women women);
+
 }

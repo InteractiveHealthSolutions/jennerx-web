@@ -18,6 +18,7 @@ import org.ird.unfepi.constants.FormType;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.LoggedInUser;
 import org.ird.unfepi.context.ServiceContext;
+import org.ird.unfepi.model.Address;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
 import org.ird.unfepi.model.Child;
 import org.ird.unfepi.model.Women;
@@ -50,16 +51,16 @@ public class FollowupWomenVaccinationController extends DataEntryFormController{
 		ServiceContext sc = Context.getServices();
 		try{
 			WomenVaccinationCenterVisit centerVisit = (WomenVaccinationCenterVisit) command;
-			//List<WomenVaccination> vaccineSchedule = (List<WomenVaccination>) request.getSession().getAttribute(VaccinationCenterVisit.VACCINE_SCHEDULE_KEY+centerVisit.getUuid());
 			Women women = (Women) request.getSession().getAttribute("womenfollowup");
-			ControllerUIHelper.doWomenFollowup(DataEntrySource.WEB, centerVisit, null,  dateFormStart, women, null, user.getUser(), sc);
+			List<WomenVaccination> vaccines = sc.getWomenVaccinationService().findByWomenId(women.getMappedId());
+			ControllerUIHelper.doWomenFollowup(DataEntrySource.WEB, centerVisit, vaccines,  dateFormStart, women, centerVisit.getAddress(), user.getUser(), sc);
 			
 			sc.commitTransaction();
 
 			String editmessage="Women Enrolled successfully. ";
 			
 			//return new ModelAndView(new RedirectView("childDashboard.htm?action=search&editOrUpdateMessage="+editmessage+"&childId="+child.getIdMapper().getIdentifiers().get(0).getIdentifier()));
-			return null;
+			return new ModelAndView(new RedirectView("viewWomen.htm"));
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -92,6 +93,7 @@ public class FollowupWomenVaccinationController extends DataEntryFormController{
 		WomenVaccination previousVaccination = new WomenVaccination();
 		int womenId;
 		List<WomenVaccination> vaccinationList = new ArrayList<WomenVaccination>();
+		Address address = null;
 		
 		ServiceContext sc = Context.getServices();
 		try {
@@ -99,6 +101,7 @@ public class FollowupWomenVaccinationController extends DataEntryFormController{
 			women = sc.getWomenService().findById(womenId);
 			ControllerUIHelper.prepareWomenFollowupDisplayObjects(request, women, sc);
 			previousVaccination = ControllerUIHelper.getPreviousWomenVaccination(womenId, sc);
+			address = sc.getDemographicDetailsService().getAddress(women.getMappedId(), false, new String[] {"idMapper"}).get(0);
 			vaccinationList = sc.getWomenVaccinationService().findByWomenId(womenId);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -112,6 +115,7 @@ public class FollowupWomenVaccinationController extends DataEntryFormController{
 		vcv.setWomenId(women.getMappedId());
 		vcv.setVaccinationCenterId(previousVaccination.getVaccinationCenterId());
 		vcv.setVaccinatorId(previousVaccination.getVaccinatorId());
+		vcv.setAddress(address);
 		
 		for( int i = 0; i < vaccinationList.size(); i++){
 			if(i == 0)

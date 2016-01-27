@@ -304,11 +304,14 @@ public class WomenFollowupHelper {
 
 		vaccines = sc.getWomenVaccinationService().findByWomenId(women.getMappedId());
 		
+		tt1 = (JSONObject) vaccination.get(RequestElements.TT1);
+		tt2 = (JSONObject) vaccination.get(RequestElements.TT2);
 		tt3 = (JSONObject) vaccination.get(RequestElements.TT3);
+		tt4 = (JSONObject) vaccination.get(RequestElements.TT4);
+		tt5 = (JSONObject) vaccination.get(RequestElements.TT5);
 
 		// if it was scheduled previously, it's status might have changed now
 		if (vaccines.size() > 0 && vaccines.get(0).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled")) {
-			tt1 = (JSONObject) vaccination.get(RequestElements.TT1);
 			// if it's not changed then treat this as not vaccinated
 			if (tt1 == null) {
 				centerVisit.getTt1().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum("NVAC"));
@@ -322,10 +325,15 @@ public class WomenFollowupHelper {
 			if(vaccines.get(0).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled"))
 				centerVisit.getTt1().setVaccinationRecordNum(vaccines.get(0).getVaccinationRecordNum());
 			centerVisit.getTt1().setVaccineId(sc.getVaccinationService().getByName("TT1").getVaccineId());
+		} else if (vaccines.size() == 0){
+			if(tt1 != null){
+				centerVisit.getTt1().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum(tt1.get(RequestElements.WOMEN_VACCINATION_STATUS).toString()));
+				centerVisit.getTt1().setVaccinationDate(stringToDate(tt1.get(RequestElements.WOMEN_VACCINATION_DATE).toString()));
+				centerVisit.getTt1().setVaccineId(sc.getVaccinationService().getByName("TT1").getVaccineId());
+			}
 		}
 
 		if (vaccines.size() > 1 && vaccines.get(1).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled")) {
-			tt2 = (JSONObject) vaccination.get(RequestElements.TT2);
 			if (tt2 == null) {
 				centerVisit.getTt2().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum("NVAC"));
 				centerVisit.getTt2().setVaccinationDate(null);
@@ -337,6 +345,12 @@ public class WomenFollowupHelper {
 			if(vaccines.get(1).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled"))
 				centerVisit.getTt2().setVaccinationRecordNum(vaccines.get(1).getVaccinationRecordNum());
 			centerVisit.getTt2().setVaccineId(sc.getVaccinationService().getByName("TT2").getVaccineId());
+		} else if (vaccines.size() == 1){
+			if(tt2 != null){
+				centerVisit.getTt2().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum(tt2.get(RequestElements.WOMEN_VACCINATION_STATUS).toString()));
+				centerVisit.getTt2().setVaccinationDate(stringToDate(tt2.get(RequestElements.WOMEN_VACCINATION_DATE).toString()));
+				centerVisit.getTt2().setVaccineId(sc.getVaccinationService().getByName("TT2").getVaccineId());
+			}
 		}
 
 		if (vaccines.size() > 2 && vaccines.get(2).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled")) {
@@ -360,7 +374,6 @@ public class WomenFollowupHelper {
 		}
 
 		if (vaccines.size() > 3 && vaccines.get(3).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled")) {
-			tt4 = (JSONObject) vaccination.get(RequestElements.TT4);
 			if (tt4 == null) {
 				centerVisit.getTt4().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum("NVAC"));
 				centerVisit.getTt4().setVaccinationDate(null);
@@ -372,10 +385,15 @@ public class WomenFollowupHelper {
 			if(vaccines.get(3).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled"))
 				centerVisit.getTt4().setVaccinationRecordNum(vaccines.get(3).getVaccinationRecordNum());
 			centerVisit.getTt4().setVaccineId(sc.getVaccinationService().getByName("TT4").getVaccineId());
+		} else if (vaccines.size() == 3){
+			if(tt4 != null){
+				centerVisit.getTt4().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum(tt4.get(RequestElements.WOMEN_VACCINATION_STATUS).toString()));
+				centerVisit.getTt4().setVaccinationDate(stringToDate(tt4.get(RequestElements.WOMEN_VACCINATION_DATE).toString()));
+				centerVisit.getTt4().setVaccineId(sc.getVaccinationService().getByName("TT4").getVaccineId());
+			}
 		}
 		
 		if (vaccines.size() > 4 && vaccines.get(4).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled")) {
-			tt5 = (JSONObject) vaccination.get(RequestElements.TT5);
 			if (tt5 == null) {
 				centerVisit.getTt5().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum("NVAC"));
 				centerVisit.getTt5().setVaccinationDate(null);
@@ -387,6 +405,12 @@ public class WomenFollowupHelper {
 			if(vaccines.get(4).getVaccinationStatus().toString().equalsIgnoreCase("Scheduled"))
 				centerVisit.getTt5().setVaccinationRecordNum(vaccines.get(4).getVaccinationRecordNum());
 			centerVisit.getTt5().setVaccineId(sc.getVaccinationService().getByName("TT5").getVaccineId());
+		}  else if (vaccines.size() == 4){
+			if(tt5 != null){
+				centerVisit.getTt5().setVaccinationStatus(WOMEN_VACCINATION_STATUS.findEnum(tt5.get(RequestElements.WOMEN_VACCINATION_STATUS).toString()));
+				centerVisit.getTt5().setVaccinationDate(stringToDate(tt5.get(RequestElements.WOMEN_VACCINATION_DATE).toString()));
+				centerVisit.getTt5().setVaccineId(sc.getVaccinationService().getByName("TT5").getVaccineId());
+			}
 		}
 
 		sameCenter = RestUtils.setBoolean((String) objectToParse.get(RequestElements.SAME_CENTER));

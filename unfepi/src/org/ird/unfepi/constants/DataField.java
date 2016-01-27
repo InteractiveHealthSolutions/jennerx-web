@@ -126,6 +126,7 @@ public class DataField {
 	public static final String WOMEN_WOMEN_AGE_WEEKS = "womenagew";
 	public static final String WOMEN_WOMEN_AGE_DAYS = "womenaged";
 	public static final String WOMEN_VACCINE_DATE = "centerVisit.vaccinationDate";
+	public static final String WOMEN_VACCINE_TT1 = "centerVisit.tt1.vaccinationStatus";
 	
 
 }

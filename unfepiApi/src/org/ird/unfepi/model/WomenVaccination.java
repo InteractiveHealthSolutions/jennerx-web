@@ -21,6 +21,8 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.ForeignKey;
 
+import com.mysql.jdbc.StringUtils;
+
 /**
  * @author Safwan
  *
@@ -50,7 +52,7 @@ public class WomenVaccination implements java.io.Serializable {
 		
 		RETRO("RETRO"),
 		
-		RETRO_DATE_MISSING("RETRO (date missing)"),
+		RETRO_DATE_MISSING("RETRO(date missing)"),
 		
 		/**
 		 * Entry might be a result of unfilled form, or incomplete process that partially filled the table data
@@ -381,6 +383,15 @@ public class WomenVaccination implements java.io.Serializable {
 		this.vaccinationStatus = vaccinationStatus;
 	}
 
+	public void setVaccinationStatus(String vaccinationStatus) {
+		if(StringUtils.isEmptyOrWhitespaceOnly(vaccinationStatus)){
+			this.vaccinationStatus = null;
+		}
+		else {
+			this.vaccinationStatus = WOMEN_VACCINATION_STATUS.valueOf(vaccinationStatus);
+		}
+	}
+	
 	/**
 	 * Gets the reason not timely vaccination.
 	 *

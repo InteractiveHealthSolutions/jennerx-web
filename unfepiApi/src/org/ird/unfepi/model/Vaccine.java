@@ -79,9 +79,6 @@ public class Vaccine implements java.io.Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date voidedDate;
 	
-	@Column(length = 255)
-	private String vaccine_entity;
-	
 	public Vaccine() {
 	}
 
@@ -215,14 +212,6 @@ public class Vaccine implements java.io.Serializable {
 
 	public void setVoidedByUserId(User voidedByUserId) {
 		this.voidedByUserId = voidedByUserId;
-	}
-
-	public String getVaccine_entity() {
-		return vaccine_entity;
-	}
-
-	public void setVaccine_entity(String vaccine_entity) {
-		this.vaccine_entity = vaccine_entity;
 	}
 
 	public Date getVoidedDate() {

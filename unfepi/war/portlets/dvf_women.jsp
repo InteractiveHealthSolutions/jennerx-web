@@ -19,7 +19,7 @@
 	<c:forEach items="${model.women}" var="women">
 	<tr>
 	
-		<td> <a href="womenFollowup.htm?women_id=${women.mappedId}"> ${women.idMapper.identifiers[0].identifier} </a></td>
+		<td> <a href="womenWebFollowup.htm?women_id=${women.mappedId}"> ${women.idMapper.identifiers[0].identifier} </a></td>
 		<td> ${women.firstName} </td>
 		<td> ${women.fatherFirstName} </td>
 		<td> ${women.husbandFirstName} </td>

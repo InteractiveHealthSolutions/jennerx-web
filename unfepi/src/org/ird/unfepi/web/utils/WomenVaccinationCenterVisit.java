@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.ird.unfepi.model.Address;
 import org.ird.unfepi.model.WomenVaccination;
 
 /**
@@ -19,6 +20,7 @@ public class WomenVaccinationCenterVisit {
 	public static final String WOMEN_VACCINE_SCHEDULE_KEY = "WOMEN_VACCINE_SCHEDULE";
 
 	private Integer womenId;
+	private Address address;
 	private Date visitDate;
 	private Integer vaccinatorId;
 	private Integer vaccinationCenterId;
@@ -52,11 +54,12 @@ public class WomenVaccinationCenterVisit {
 	}
 	
 
-	public WomenVaccinationCenterVisit(Integer womenId, Date visitDate,
+	public WomenVaccinationCenterVisit(Integer womenId, Address address, Date visitDate,
 			Integer vaccinatorId, Integer vaccinationCenterId, String epiNumber,
 			String contactPrimary, String contactSecondary, WomenVaccination tt1, WomenVaccination tt2,
 			WomenVaccination tt3, WomenVaccination tt4, WomenVaccination tt5) {
 		this.womenId = womenId;
+		this.address = address;
 		this.visitDate = visitDate;
 		this.vaccinatorId = vaccinatorId;
 		this.vaccinationCenterId = vaccinationCenterId;
@@ -86,6 +89,16 @@ public class WomenVaccinationCenterVisit {
 	public void setWomenId(Integer womenId) {
 		this.womenId = womenId;
 	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
 
 	public Integer getVaccinatorId() {
 		return vaccinatorId;

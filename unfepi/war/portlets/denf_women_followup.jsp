@@ -61,15 +61,22 @@ function subfrm(){
 			<td colspan="2" class="headerrow">Basic Info</td>
 	</tr>
 	<tr>
-	<td>
-		<%@ include file="dg_women_biographic_info.jsp" %>
+		<td>
+			<%@ include file="dg_women_biographic_info.jsp" %>
 		</td>
-		</tr>
+	</tr>
+	<tr>
+		<td>
+		<c:set var="commandAdditionalPathStr" value="address."></c:set>
+		<%@ include file="plt_address.jsp" %>
+		</td>
+	</tr>
     <tr>	
         <td colspan="2" class="headerrow">Vaccine Information</td>
     </tr>
     <tr>
     <td>
+    <c:set var="commandAdditionalPathStr" value=""></c:set>
         <%@ include file="plt_vaccine_women_tt.jsp" %>
     </td>
    </tr>

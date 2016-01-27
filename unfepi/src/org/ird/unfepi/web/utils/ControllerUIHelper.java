@@ -308,7 +308,7 @@ public class ControllerUIHelper {
 
 		handleFollowupWomenVaccinations(dataEntrySource, centerVisit, vaccines, user, sc);
 
-		//EncounterUtil.createWomenFollowupEncounter(centerVisit, dataEntrySource, formStartDate, user, sc);
+		EncounterUtil.createWomenFollowupEncounter(centerVisit, dataEntrySource, formStartDate, user, sc);
 
 	}
 	
@@ -681,7 +681,7 @@ public class ControllerUIHelper {
 			// if it's not vaccinated then it's not changed.
 			if (!tt1.getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.NOT_VACCINATED)) {
 				// record number != 0 means record exists, so update it.
-				if (tt1.getVaccinationRecordNum() != 0) {
+				if (tt1.getVaccinationRecordNum() != 0 && !tt1.getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.VACCINATED)) {
 					sc.getWomenVaccinationService().updateVaccinationRecord(tt1);
 				} 
 				// if the list queried from db is empty then create/save this record
@@ -692,7 +692,7 @@ public class ControllerUIHelper {
 					tt1.setCreatedDate(new Date());
 					tt1.setVaccinationCenterId(centerVisit.getVaccinationCenterId());
 					tt1.setVaccinatorId(centerVisit.getVaccinatorId());
-					tt1.setVaccinationDuedate(null);
+					tt1.setIsFirstVaccination(false);
 					sc.getWomenVaccinationService().save(tt1);
 				}
 			}
@@ -700,16 +700,18 @@ public class ControllerUIHelper {
 
 		if (tt2.getVaccinationStatus() != null) {
 			if (!tt2.getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.NOT_VACCINATED)) {
-				if (tt2.getVaccinationRecordNum() != 0) {
+				if (tt2.getVaccinationRecordNum() != 0 && !tt2.getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.VACCINATED)) {
 					sc.getWomenVaccinationService().updateVaccinationRecord(tt2);
 				} 
 				// if the size is exactly one then it means this is new record.
 				else if (vaccines.size() == 1) {
+					tt2.setVaccineId(sc.getVaccinationService().getByName("TT2").getVaccineId());
 					tt2.setWomenId(centerVisit.getWomenId());
 					tt2.setCreator(user);
 					tt2.setCreatedDate(new Date());
 					tt2.setVaccinationCenterId(centerVisit.getVaccinationCenterId());
 					tt2.setVaccinatorId(centerVisit.getVaccinatorId());
+					tt2.setIsFirstVaccination(false);
 					sc.getWomenVaccinationService().save(tt2);
 				}
 
@@ -718,15 +720,15 @@ public class ControllerUIHelper {
 
 		if (tt3.getVaccinationStatus() != null) {
 			if (!tt3.getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.NOT_VACCINATED)) {
-				if (tt3.getVaccinationRecordNum() != 0) {
+				if (tt3.getVaccinationRecordNum() != 0 && !tt3.getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.VACCINATED)) {
 					sc.getWomenVaccinationService().updateVaccinationRecord(tt3);
 				} else if (vaccines.size() == 2) {
+					tt3.setVaccineId(sc.getVaccinationService().getByName("TT3").getVaccineId());
 					tt3.setWomenId(centerVisit.getWomenId());
 					tt3.setCreator(user);
 					tt3.setCreatedDate(new Date());
 					tt3.setVaccinationCenterId(centerVisit.getVaccinationCenterId());
 					tt3.setVaccinatorId(centerVisit.getVaccinatorId());
-					tt3.setVaccinationDuedate(null);
 					tt3.setIsFirstVaccination(false);
 					sc.getWomenVaccinationService().save(tt3);
 				}
@@ -736,14 +738,16 @@ public class ControllerUIHelper {
 
 		if (tt4.getVaccinationStatus() != null) {
 			if (!tt4.getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.NOT_VACCINATED)) {
-				if (tt4.getVaccinationRecordNum() != 0) {
+				if (tt4.getVaccinationRecordNum() != 0 && !tt4.getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.VACCINATED)) {
 					sc.getWomenVaccinationService().updateVaccinationRecord(tt4);
 				} else if (vaccines.size() == 3) {
+					tt4.setVaccineId(sc.getVaccinationService().getByName("TT4").getVaccineId());
 					tt4.setWomenId(centerVisit.getWomenId());
 					tt4.setCreator(user);
 					tt4.setCreatedDate(new Date());
 					tt4.setVaccinationCenterId(centerVisit.getVaccinationCenterId());
 					tt4.setVaccinatorId(centerVisit.getVaccinatorId());
+					tt4.setIsFirstVaccination(false);
 					sc.getWomenVaccinationService().save(tt4);
 				}
 			}
@@ -751,14 +755,16 @@ public class ControllerUIHelper {
 
 		if (tt5.getVaccinationStatus() != null) {
 			if (tt5.getVaccinationRecordNum() == 0 && !tt5.getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.NOT_VACCINATED)) {
-				if (tt5.getVaccinationRecordNum() != 0) {
+				if (tt5.getVaccinationRecordNum() != 0 && !tt5.getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.VACCINATED)) {
 					sc.getWomenVaccinationService().updateVaccinationRecord(tt5);
 				} else if (vaccines.size() == 4) {
+					tt5.setVaccineId(sc.getVaccinationService().getByName("TT5").getVaccineId());
 					tt5.setWomenId(centerVisit.getWomenId());
 					tt5.setCreator(user);
 					tt5.setCreatedDate(new Date());
 					tt5.setVaccinationCenterId(centerVisit.getVaccinationCenterId());
 					tt5.setVaccinatorId(centerVisit.getVaccinatorId());
+					tt5.setIsFirstVaccination(false);
 					sc.getWomenVaccinationService().save(tt5);
 				}
 			}

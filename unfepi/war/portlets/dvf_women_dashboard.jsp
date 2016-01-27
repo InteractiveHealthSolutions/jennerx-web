@@ -24,7 +24,7 @@
 <div class="dvwform">
 <table>
 <tr>
-<td colspan="100"><a href="womenFollowup.htm?women_id=${model.datalist.women.mappedId}" class="easyui-linkbutton" data-options="iconCls:'icon-save'" style="float: right;"> Follow up </a></td>
+<td colspan="100"><a href="womenWebFollowup.htm?women_id=${model.datalist.women.mappedId}" class="easyui-linkbutton" data-options="iconCls:'icon-save'" style="float: right;"> Follow up </a></td>
 </tr>
 <tr>
     <td colspan="3" class="headerrow">

@@ -52,13 +52,14 @@
 			<td>TT1 ki tareekh</td>
 			<spring:bind path="command.${commandAdditionalPathStr}tt1.vaccinationStatus">
 			<c:set var="tt1_status" value="${status.value}" />
+			<c:set var="tt1_recordNum" value="${command.centerVisit.tt1.vaccinationRecordNum }" />
 			
-			<c:if test="${tt1_status == 'SCHEDULED' || tt1_status == null}">
+			<c:if test="${tt1_status == 'SCHEDULED' || tt1_status == null || tt1_recordNum == 0}">
 			<td>
 			<select id="tt1Status" name="${status.expression}" bind-value="${status.value}"  onChange="vaccineStatus(this);">
 					<option value="NOT_VACCINATED"></option>
 					<option value="RETRO">RETRO</option>
-					<option value="RETRO_NO_DATE">RETRO (date missing)</option>
+					<option value="RETRO_DATE_MISSING">RETRO (date missing)</option>
 					<option value="VACCINATED">VACCINATED</option>
 					<option value="SCHEDULED">SCHEDULED</option>
 			</select>
@@ -66,7 +67,7 @@
 			</td>
 			
 			</c:if>
-			<c:if test="${tt1_status != 'SCHEDULED' &&  not empty tt1_status}">
+			<c:if test="${tt1_status != 'SCHEDULED' &&  not empty tt1_status && tt1_recordNum > 0}">
 			<td><input name="${status.expression}" value="${status.value}" readonly/></td>
 			</c:if>
 			</spring:bind>
@@ -98,20 +99,21 @@
 			<td>TT2 ki tareekh</td>
 			<spring:bind path="command.${commandAdditionalPathStr}tt2.vaccinationStatus">
 			<c:set var="tt2_status" value="${status.value}" />
+			<c:set var="tt2_recordNum" value="${command.centerVisit.tt2.vaccinationRecordNum }" />
 			
-			<c:if test="${tt2_status == 'SCHEDULED' || tt2_status == null}">
+			<c:if test="${tt2_status == 'SCHEDULED' || tt2_status == null || tt2_recordNum == 0}">
 			<td>
 			<select id="tt2Status" name="${status.expression}" bind-value="${status.value}" onChange="vaccineStatus(this);">
 					<option value="NOT_VACCINATED"></option>
 					<option value="RETRO">RETRO</option>
-					<option value="RETRO_NO_DATE">RETRO (date missing)</option>
+					<option value="RETRO_DATE_MISSING">RETRO (date missing)</option>
 					<option value="VACCINATED">VACCINATED</option>
 					<option value="SCHEDULED">SCHEDULED</option>
 			</select>
 			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</td>
 			</c:if>
-			<c:if test="${tt2_status != 'SCHEDULED' &&  not empty tt2_status}">
+			<c:if test="${tt2_status != 'SCHEDULED' &&  not empty tt2_status && tt2_recordNum > 0}">
 			<td><input name="${status.expression}" value="${status.value}" readonly/></td>
 			</c:if>
 			</spring:bind>
@@ -142,20 +144,21 @@
 			<td>TT3 ki tareekh</td>
 			<spring:bind path="command.${commandAdditionalPathStr}tt3.vaccinationStatus">
 			<c:set var="tt3_status" value="${status.value}" />
+			<c:set var="tt3_recordNum" value="${command.centerVisit.tt3.vaccinationRecordNum }" />
 			
-			<c:if test="${tt3_status == 'SCHEDULED' || tt3_status == null}">
+			<c:if test="${tt3_status == 'SCHEDULED' || tt3_status == null || tt3_recordNum == 0}">
 			<td>
 			<select id="tt3Status" name="${status.expression}" bind-value="${status.value}" onChange="vaccineStatus(this);">
 					<option value="NOT_VACCINATED"></option>
 					<option value="RETRO">RETRO</option>
-					<option value="RETRO_NO_DATE">RETRO (date missing)</option>
+					<option value="RETRO_DATE_MISSING">RETRO (date missing)</option>
 					<option value="VACCINATED">VACCINATED</option>
 					<option value="SCHEDULED">SCHEDULED</option>
 			</select>
 			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</td>
 			</c:if>
-			<c:if test="${tt3_status != 'SCHEDULED' &&  not empty tt3_status}">
+			<c:if test="${tt3_status != 'SCHEDULED' &&  not empty tt3_status && tt3_recordNum > 0}">
 			<td><input name="${status.expression}" value="${status.value}" readonly/></td>
 			</c:if>
 			</spring:bind>
@@ -186,20 +189,21 @@
 			<td>TT4 ki tareekh</td>
 			<spring:bind path="command.${commandAdditionalPathStr}tt4.vaccinationStatus">
 			<c:set var="tt4_status" value="${status.value}" />
+			<c:set var="tt4_recordNum" value="${command.centerVisit.tt4.vaccinationRecordNum }" />
 			
-			<c:if test="${tt4_status == 'SCHEDULED' || tt4_status == null}">
+			<c:if test="${tt4_status == 'SCHEDULED' || tt4_status == null || tt4_recordNum == 0}">
 			<td>
 			<select id="tt4Status" name="${status.expression}" bind-value="${status.value}" onChange="vaccineStatus(this);">
 					<option value="NOT_VACCINATED"></option>
 					<option value="RETRO">RETRO</option>
-					<option value="RETRO_NO_DATE">RETRO (date missing)</option>
+					<option value="RETRO_DATE_MISSING">RETRO (date missing)</option>
 					<option value="VACCINATED">VACCINATED</option>
 					<option value="SCHEDULED">SCHEDULED</option>
 			</select>
 			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</td>
 			</c:if>
-			<c:if test="${tt4_status != 'SCHEDULED' &&  not empty tt4_status}">
+			<c:if test="${tt4_status != 'SCHEDULED' &&  not empty tt4_status && tt4_recordNum > 0}">
 			<td><input name="${status.expression}" value="${status.value}" readonly/></td>
 			</c:if>
 			</spring:bind>
@@ -230,20 +234,21 @@
 			<td>TT5 ki tareekh</td>
 			<spring:bind path="command.${commandAdditionalPathStr}tt5.vaccinationStatus">
 			<c:set var="tt5_status" value="${status.value}" />
+			<c:set var="tt5_recordNum" value="${command.centerVisit.tt5.vaccinationRecordNum }" />
 			
-			<c:if test="${tt5_status == 'SCHEDULED' || tt5_status == null}">
+			<c:if test="${tt5_status == 'SCHEDULED' || tt5_status == null || tt5_recordNum == 0}">
 			<td>
 			<select id="tt5Status" name="${status.expression}" bind-value="${status.value}" onChange="vaccineStatus(this);">
 					<option value="NOT_VACCINATED"></option>
 					<option value="RETRO">RETRO</option>
-					<option value="RETRO_NO_DATE">RETRO (date missing)</option>
+					<option value="RETRO_DATE_MISSING">RETRO (date missing)</option>
 					<option value="VACCINATED">VACCINATED</option>
 					<option value="SCHEDULED">SCHEDULED</option>
 			</select>
 			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</td>
 			</c:if>
-			<c:if test="${tt5_status != 'SCHEDULED' &&  not empty tt5_status}">
+			<c:if test="${tt5_status != 'SCHEDULED' &&  not empty tt5_status && tt5_recordNum > 0}">
 			<td><input name="${status.expression}" value="${status.value}" readonly/></td>
 			</c:if>
 			</spring:bind>

@@ -53,6 +53,12 @@ public class WomenServiceImpl implements WomenService {
 	public Serializable save(Women women) {
 		return daoWomen.save(women);
 	}
+	
+	@Override
+	public void update(Women women) {
+		daoWomen.update(women);
+	}
+
 
 
 	@Override

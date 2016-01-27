@@ -290,7 +290,7 @@ public class EncounterUtil {
 	public static void createWomenFollowupEncounter(WomenVaccinationCenterVisit centerVisit, 
 			/*List<ChildLotteryRunner> lotteryResults,*/  DataEntrySource dataEntrySource, Date formStartDate, User dataEntryUser, ServiceContext sc)
 	{
-		Encounter e = saveEncounter(centerVisit.getWomenId(), centerVisit.getVaccinatorId(), centerVisit.getVaccinationCenterId(), centerVisit.getVisitDate(), formStartDate, null, dataEntryUser.getMappedId(), EncounterType.FOLLOWUP, dataEntrySource, sc);
+		Encounter e = saveEncounter(centerVisit.getWomenId(), centerVisit.getVaccinatorId(), centerVisit.getVaccinationCenterId(), new Date(), formStartDate, null, dataEntryUser.getMappedId(), EncounterType.FOLLOWUP, dataEntrySource, sc);
 
 		List<EncounterResults> encr = new ArrayList<EncounterResults>();
 		

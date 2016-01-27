@@ -118,6 +118,8 @@ public class ErrorMessages
 
 	public static final String CHILD_DATE_ENROLLED_INVALID = "A valid and past date must be specified as date enrolled for child";
 	public static final String CHILD_AGE_LIMIT_EXCEEDED = "Child can not be more than 2 years on vaccination (only exception is Measles2 which is 3 years)";
+	
+	public static final String WOWMEN_DATE_ENROLLED_INVALID = "A valid and past date must be specified as date enrolled for women";
 
 	public static final String CHILD_RELIGION_MISSING = "Religion must be specified";
 	public static final String CHILD_ETHNICITY_MISSING = "Ethnicity must be specified";
