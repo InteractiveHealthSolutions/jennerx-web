@@ -685,7 +685,7 @@ public class EncounterUtil {
 			encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_DUE_DATE,  WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.format(centerVisit.getTt3().getVaccinationDuedate()), group));
 			
 			if(centerVisit.getTt3().getVaccinationDate()!= null)
-			encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_DATE,  WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.format(centerVisit.getTt1().getVaccinationDate()), group));
+			encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_DATE,  WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.format(centerVisit.getTt3().getVaccinationDate()), group));
 			
 			encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_CENTER, centerVisit.getVaccinationCenterId(), group));
 			encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_CENTER_ID,  sc.getVaccinationService().findVaccinationCenterById(centerVisit.getVaccinationCenterId(), true, new String[]{"idMapper"}).getIdMapper().getIdentifiers().get(0).getIdentifier(), group));

@@ -28,6 +28,9 @@ import org.ird.unfepi.rest.elements.RequestElements;
 import org.ird.unfepi.rest.elements.ResponseStatus;
 import org.ird.unfepi.web.utils.ControllerUIHelper;
 import org.ird.unfepi.web.utils.WomenVaccinationCenterVisit;
+import org.ird.unfepi.web.validator.ValidatorOutput;
+import org.ird.unfepi.web.validator.ValidatorUtils;
+import org.ird.unfepi.web.validator.ValidatorOutput.ValidatorStatus;
 import org.json.simple.JSONObject;
 
 /**
@@ -256,17 +259,10 @@ public class WomenEnrollmentServiceHelper {
 		centerVisit.setContactPrimary(mobileNoString);
 		centerVisit.setContactSecondary(landlineNoString);
 		HashMap<String, String> mobileErrors = new HashMap<String, String>();
-		try {
-			ControllerUIHelper.doWomenEnrollment(DataEntrySource.MOBILE, projectId, women, dob, years, months, weeks, days, add, centerVisit, dateFormStart, user, enrollmentVaccine, enrollmentDate,
-					vaccines, sc);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			if(e.toString().contains("Duplicate"))
-				mobileErrors.put(DataField.PROGRAM_ID, "Duplicate Entry");
+		ValidatorOutput vidop = ValidatorUtils.validateWomenProgramId(projectId, true, sc);
+		if (!vidop.STATUS().equals(ValidatorStatus.OK)) {
+			mobileErrors.put(RequestElements.ERROR, vidop.MESSAGE());
 		}
-
-		
 
 		try {
 
@@ -278,6 +274,8 @@ public class WomenEnrollmentServiceHelper {
 
 			// proceed to do enrollment if no errors found
 			if (mobileErrors.size() == 0) {
+				ControllerUIHelper.doWomenEnrollment(DataEntrySource.MOBILE, projectId, women, dob, years, months, weeks, days, add, centerVisit, dateFormStart, user, enrollmentVaccine,
+						enrollmentDate, vaccines, sc);
 				sc.commitTransaction();
 				return ResponseBuilder.buildResponse(ResponseStatus.STATUS_SUCCESS, null);
 			} else {

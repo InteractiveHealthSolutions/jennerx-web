@@ -226,5 +226,7 @@ public class RequestElements
 	public static final String WOMEN_VACCINATION = "Vaccination";
 	public static final String WOMEN_PRIMARY_CONTACT = "primaryContact";
 	public static final String WOMEN_SECONDARY_CONTACT = "secondaryContact";
+	
+	public static final String ERROR = "error";
 
 }

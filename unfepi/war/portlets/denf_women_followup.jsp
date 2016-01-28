@@ -56,6 +56,17 @@ function subfrm(){
             </spring:bind>
 		</td>
 	</tr>
+	
+	<tr>
+    		<td>Center Visit Date <span class="mendatory-field">*</span></td>
+       	     <td>
+       		 <spring:bind path="command.visitDate">
+   	    	 <!-- MUST be named as centerVisitDate: used in plt_vaccine_schedule for autopopulating date incase of status VACCINATED -->
+      		 	 <input id="centerVisitDate" name="${status.expression}" value="${status.value}" maxDate="+0d" class="calendarbox" onclosehandler="centerVisitDateChanged"/>
+			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
+			</spring:bind>
+			</td>
+		</tr>
   
 	<tr>
 			<td colspan="2" class="headerrow">Basic Info</td>

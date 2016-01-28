@@ -241,9 +241,9 @@ public class ControllerUIHelper {
 
 		handleWomenEnrollmentContactInfo(centerVisit.getContactPrimary(), centerVisit.getContactSecondary(), address, women, user, sc);
 
-		EncounterUtil.createWomenEnrollmentEncounter(womenId, dataEntrySource, projectId, women, birthdateOrAge, ageYears, ageMonths, ageWeeks, ageDays, address, centerVisit, formStartDate, user, sc);
-
 		handleWomenVaccination(sc, women, centerVisit, user, enrollmentVaccine, vaccines);
+		
+		EncounterUtil.createWomenEnrollmentEncounter(womenId, dataEntrySource, projectId, women, birthdateOrAge, ageYears, ageMonths, ageWeeks, ageDays, address, centerVisit, formStartDate, user, sc);
 
 	}
 
@@ -256,8 +256,9 @@ public class ControllerUIHelper {
 				wv.setVaccinationCenterId(centerVisit.getVaccinationCenterId());
 				wv.setCreator(user);
 				wv.setVaccinatorId(centerVisit.getVaccinatorId());
-
-				wv.setVaccinationDate(women.getDateEnrolled());
+				if (!vaccines.get(i).getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.SCHEDULED))
+					wv.setVaccinationDate(vaccines.get(i).getVaccinationDate());
+				
 				if (vaccines.get(i).getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.SCHEDULED)) {
 					wv.setVaccinationDuedate(vaccines.get(i).getVaccinationDate());
 				} else {
@@ -681,7 +682,7 @@ public class ControllerUIHelper {
 			// if it's not vaccinated then it's not changed.
 			if (!tt1.getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.NOT_VACCINATED)) {
 				// record number != 0 means record exists, so update it.
-				if (tt1.getVaccinationRecordNum() != 0 && !tt1.getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.VACCINATED)) {
+				if (tt1.getVaccinationRecordNum() != 0 && tt1.getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.SCHEDULED)) {
 					sc.getWomenVaccinationService().updateVaccinationRecord(tt1);
 				} 
 				// if the list queried from db is empty then create/save this record
@@ -700,7 +701,7 @@ public class ControllerUIHelper {
 
 		if (tt2.getVaccinationStatus() != null) {
 			if (!tt2.getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.NOT_VACCINATED)) {
-				if (tt2.getVaccinationRecordNum() != 0 && !tt2.getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.VACCINATED)) {
+				if (tt2.getVaccinationRecordNum() != 0 && tt2.getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.SCHEDULED)) {
 					sc.getWomenVaccinationService().updateVaccinationRecord(tt2);
 				} 
 				// if the size is exactly one then it means this is new record.
@@ -720,7 +721,7 @@ public class ControllerUIHelper {
 
 		if (tt3.getVaccinationStatus() != null) {
 			if (!tt3.getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.NOT_VACCINATED)) {
-				if (tt3.getVaccinationRecordNum() != 0 && !tt3.getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.VACCINATED)) {
+				if (tt3.getVaccinationRecordNum() != 0 && tt3.getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.SCHEDULED)) {
 					sc.getWomenVaccinationService().updateVaccinationRecord(tt3);
 				} else if (vaccines.size() == 2) {
 					tt3.setVaccineId(sc.getVaccinationService().getByName("TT3").getVaccineId());
@@ -738,7 +739,7 @@ public class ControllerUIHelper {
 
 		if (tt4.getVaccinationStatus() != null) {
 			if (!tt4.getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.NOT_VACCINATED)) {
-				if (tt4.getVaccinationRecordNum() != 0 && !tt4.getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.VACCINATED)) {
+				if (tt4.getVaccinationRecordNum() != 0 && tt4.getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.SCHEDULED)) {
 					sc.getWomenVaccinationService().updateVaccinationRecord(tt4);
 				} else if (vaccines.size() == 3) {
 					tt4.setVaccineId(sc.getVaccinationService().getByName("TT4").getVaccineId());
@@ -754,8 +755,8 @@ public class ControllerUIHelper {
 		}
 
 		if (tt5.getVaccinationStatus() != null) {
-			if (tt5.getVaccinationRecordNum() == 0 && !tt5.getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.NOT_VACCINATED)) {
-				if (tt5.getVaccinationRecordNum() != 0 && !tt5.getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.VACCINATED)) {
+			if (!tt5.getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.NOT_VACCINATED)) {
+				if (tt5.getVaccinationRecordNum() != 0 && tt5.getVaccinationStatus().equals(WOMEN_VACCINATION_STATUS.SCHEDULED)) {
 					sc.getWomenVaccinationService().updateVaccinationRecord(tt5);
 				} else if (vaccines.size() == 4) {
 					tt5.setVaccineId(sc.getVaccinationService().getByName("TT5").getVaccineId());

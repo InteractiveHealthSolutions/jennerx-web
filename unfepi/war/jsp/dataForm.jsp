@@ -32,6 +32,7 @@ $( document ).ready(function() {
 			  	duration: '',
 			    constrainInput: false,
 			    maxDate: $(this).attr('maxDate'),
+			    minDate: $(this).attr('minDate'),
 			    dateFormat: '<%=WebGlobals.GLOBAL_DATE_FORMAT_JS%>',
 			    onClose: window[$(this).attr('onclosehandler')],
 			    onSelect: window[$(this).attr('onselecthandler')]

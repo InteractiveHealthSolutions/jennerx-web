@@ -53,4 +53,9 @@ public class ResponseStatus
 	 * Women ID does not exist
 	 */
 	public static final int STATUS_ID_WOMEN_NOT_EXIST = 9;
+	
+	/**
+	 * Women ID already exists
+	 */
+	public static final int STATUS_ID_WOMEN_ALREADY_EXISTS = 10;
 }

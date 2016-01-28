@@ -87,19 +87,19 @@ function submitThisForm() {
 	</tr>
 		
 		<tr>
-			<td colspan="2" class="headerrow">Basic Info</td>
+			<td colspan="4" class="headerrow">Basic Info</td>
 		</tr>
 		<c:set var="commandAdditionalPathStr" value="women."></c:set>
 		<%@ include file="plt_women_biographic_info.jsp" %>
 		
 		<tr>
-			<td colspan="2" class="headerrow">Address</td>
+			<td colspan="4" class="headerrow">Address</td>
 		</tr>
 		<c:set var="commandAdditionalPathStr" value="address."></c:set>
 		<%@ include file="plt_address.jsp" %>
 
 		<tr>
-			<td colspan="2" class="headerrow">Vaccine Information</td>
+			<td colspan="4" class="headerrow">Vaccine Information</td>
 		</tr>
 		<c:set var="commandAdditionalPathStr" value="centerVisit."></c:set>
 		<%@ include file="plt_vaccine_women_tt.jsp" %>
