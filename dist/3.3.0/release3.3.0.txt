@@ -1,0 +1,18 @@
+release 3.3.0
+
+works with mobile release 1.3.1
+
+For Setup on tomcat 7:
+
+- Create databases unfepi and smstarseel before importing database scripts. Script doesnot create databases autmatically because of this bug http://stackoverflow.com/a/3034381/830945.
+- Once databases unfepi and smstarseel are imported successfully, open script files unfepi_routines.sql and smstarseel_routines.sql and run both separately. Since databases donot have full rights on server and DEFNIER root@localhost is manually removed from routine files, these are not executed using import widget.
+- Run scripts from the file additional_scripts in release 3.3.0.
+- Add jstl config setting as explained in http://stackoverflow.com/a/16091433/830945 
+- Add notifier recipients manually after setting up database
+
+Changes from previous release:
+
+- Tetanus Toxoid vaccines are working fine under the tetanus toxoid tab in mobile and women tab on web.
+
+
+
