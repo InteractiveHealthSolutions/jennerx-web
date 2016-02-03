@@ -21,6 +21,7 @@ public class RequestElements
 	public static final String METADATA_VACCINE_SCHEDULE = "vacsched";
 	public static final String METADATA_VACCINATION_CENTRES = "centr";
 	public static final String METADATA_USER = "user";
+	public static final String METADATA_USERS = "users";
 
 	public static final String METADATA_FIELD_LOCATION_ID = "locationId";
 	public static final String METADATA_FIELD_LOCATION_NAME = "fullName";
@@ -228,5 +229,14 @@ public class RequestElements
 	public static final String WOMEN_SECONDARY_CONTACT = "secondaryContact";
 	
 	public static final String ERROR = "error";
-
+	
+	
+	//user table data 
+	public static final String METADATA_USER_USERNAME = "userName";
+	public static final String METADATA_USER_PASSWORD = "password";
+	public static final String METADATA_USER_STATUS = "status";
+	public static final String METADATA_USER_LASTEDITDATE = "lastEditDate";
+	public static final String METADATA_USER_CREATEDDATE = "createdDate";
+	public static final String METADATA_USER_IDENTIFIER = "identifier";
+	
 }

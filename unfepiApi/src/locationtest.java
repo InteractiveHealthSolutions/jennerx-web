@@ -20,11 +20,20 @@ public class locationtest {
 		//GlobalParams.UNFEPI_PROPERTIES = prop;
 		
 		ServiceContext sc = Context.getServices();	
-		List<ChildIncentive> chilist = 	sc.getIncentiveService().findChildIncentiveByArm(2, true, null);
-	//	List<ChildLottery> chll = sc.getIncentiveService().findChildLotteryByCriteria(null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, 0, 10, true, new String[]{"vaccination"});
-	//	VaccinationCenter vl = sc.getVaccinationService().findVaccinationCenterById("01001", true, null);
-	//	List<Location> ll = sc.getCustomQueryService().getDataByHQL("FROM Location");
-		//Set<Location> cl = ll.get(0).getChildLocations();
-		//cl.getClass();
+	//	List lv = sc.getCustomQueryService().getDataBySQL("select * from vaccine");
+		String query="SELECT vc.mappedId centreid,v.vaccineId, v.lastEditedDate ,v.createdDate, "+
+				"v.vaccinationDate,v.vaccinationDuedate,v.vaccinationStatus, i.identifier identifier,v.childId, "+
+				"v.vaccinatorId ,v.epiNumber,v.createdByUserId creator, v.lastEditedByUserId lastEditor "+
+				"FROM unfepi.vaccination  v inner join child c on c.mappedId=v.childId "+ 
+				"inner join identifier i on v.childid=i.mappedid inner join vaccine on v.vaccineId=vaccine.vaccineId "+ 
+				"inner join vaccinationcenter vc on vc.mappedid=v.vaccinationcenterid;";
+		
+		
+		List lv2 = sc.getCustomQueryService().getDataBySQLMapResult(query);
+	System.out.println(lv2.toString());
+		lv2.size();
+
+		
+		
 	}
 }

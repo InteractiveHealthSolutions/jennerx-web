@@ -1,5 +1,6 @@
 package org.ird.unfepi.rest.helper;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -121,6 +122,31 @@ public class ResponseBuilder
 		{
 			throw new ResponseFormatException ("Unexpected data for building resopnse");
 		}	
+	}
+	
+	public static JSONObject buildJson(String tagToSortFor , List<Map> listMap){
+		JSONObject returnData = new JSONObject();		
+		HashSet set=new HashSet<String>();
+		for (int i = 0; i < listMap.size(); i++) {
+			Map map=listMap.get(i);
+			set.add( map.get(tagToSortFor));
+			
+		}
+		java.util.Iterator it =set.iterator();
+		while(it.hasNext()){
+			String s=(String)it.next();
+			JSONArray TagtoSortObject=new JSONArray();
+			for(Map m : listMap){
+			
+			if(((String)m.get(tagToSortFor)).equalsIgnoreCase(s))
+			{
+				TagtoSortObject.add(m);
+			//metadata.put(key, value)	
+			}
+		}
+			returnData.put(s,TagtoSortObject);
+		}
+		return returnData;
 	}
 	
 	public static class MalformedMetadataException extends Exception
