@@ -60,6 +60,7 @@ public class MetadataService
 		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
 			HashMap<String, Object>resp = new HashMap<String, Object>();
 			resp.put("error", "Error occured in fetching data");
 			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_FAILURE,resp);

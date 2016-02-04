@@ -239,13 +239,31 @@ public class RequestElements
 	public static final String METADATA_USER_CREATEDDATE = "createdDate";
 	public static final String METADATA_USER_IDENTIFIER = "identifier";
 	
-	//vaccination table data
+	//AllChildrenQuery table data
+	public static final String QUERY_DOB="birthdate";
+	public static final String QUERY_CREATEDDATE="createdDate";
+	public static final String QUERY_CREATEDBYUSERID="createdByUserId";
+	public static final String QUERY_CHILD_FIRSTNAME="firstName";
+	public static final String QUERY_CHILD_LAST_NAME="lastName";
+	public static final String QUERY_MOTHERNAME="motherFirstName";
+	public static final String QUERY_GENDER="gender";
+	public static final String QUERY_LASTEDITEDDATE="lastEditedDate";
+	public static final String QUERY_LASTEDITEDBYUSERID="lastEditedByUserId";
+	public static final String QUERY_STATUS="status";
+	public static final String QUERY_TERMINATIONDATE="terminationDate";
+	public static final String QUERY_TERMINATIONREASON="terminationReason";
+	public static final String QUERY_CHILDIDENTIFIER="childIdentifier";
+	public static final String QUERY_NUMBER="number";
+	public static final String QUERY_ADDRESS1="address1";
+	
+	//AllVaccinationQuery Table data
 	public static final String METADATA_VACCINATION_DATE = "vaccinationDate";
 	public static final String METADATA_VACCINATION_DUEDATE = "vaccinationDueDate";
 	public static final String METADATA_VACCINATION_STATUS = "status";
 	public static final String METADATA_VACCINATION_LASTEDITDATE = "lastEditDate";
 	public static final String METADATA_VACCINATION_CREATEDDATE = "createdDate";
 	public static final String METADATA_VACCINATION_IDENTIFIER = "identifier";
+	public static final String METADATA_ALLCHILDREN = "allchildren";
 	
 	
 }

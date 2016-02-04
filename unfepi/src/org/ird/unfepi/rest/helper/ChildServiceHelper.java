@@ -44,10 +44,10 @@ public class ChildServiceHelper {
 	public static JSONObject getAllChildren(){
 		
 		ServiceContext sc =Context.getServices();
-		String query="Select child.birthdate,child.createdDate,child.createdByUserId,child.firstName,child.lastName, child.motherFirstName"+
+		String query="Select child.birthdate,child.createdDate,child.createdByUserId,child.firstName,child.lastName, child.motherFirstName "+
 				",child.gender, child.lastEditedByUserId,child.lastEditedDate,child.status, child.terminationDate, child.terminationReason,"+
-				"identifier.identifier as childIdentifier , contactnumber.number , address.address1"+
-				"from child inner join identifier on child.mappedId=identifier.mappedId  inner join contactnumber on"+ 
+				"identifier.identifier as childIdentifier , contactnumber.number , address.address1 "+
+				"from child inner join identifier on child.mappedId=identifier.mappedId  inner join contactnumber on "+ 
 				"child.mappedId=contactnumber.mappedId inner join address on child.mappedId=address.mappedId;";
 		
 		try{

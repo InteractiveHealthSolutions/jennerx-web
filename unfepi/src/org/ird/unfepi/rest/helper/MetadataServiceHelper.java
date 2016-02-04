@@ -36,7 +36,8 @@ public class MetadataServiceHelper
 			fillVaccinePrerequisite(mainResponse);
 			fillUsers(mainResponse);
 			fillAllChildren(mainResponse);
-			fillAllVaccinations(mainResponse);
+		
+			//fillAllVaccinations(mainResponse);
 			HashMap<String, Object> resp = new HashMap<String, Object>();
 			resp.put("METADATA", mainResponse);
 
@@ -44,8 +45,9 @@ public class MetadataServiceHelper
 		}
 		catch (Exception e)
 		{
-			GlobalParams.MOBILELOGGER.equals(e);
 			e.printStackTrace();
+			GlobalParams.MOBILELOGGER.equals(e);
+		
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("error", "Error in getting metadata");
 			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_INTERNAL_ERROR, map);
@@ -189,18 +191,20 @@ public class MetadataServiceHelper
 	}
 
 	private static void fillAllChildren(JSONObject container){
+		String query="Select child.birthdate,child.createdDate,child.createdByUserId,child.firstName,child.lastName, child.motherFirstName "+
+				",child.gender, child.lastEditedByUserId,child.lastEditedDate,child.status, child.terminationDate, child.terminationReason, "+
+				"identifier.identifier as childIdentifier , contactnumber.number , address.address1 "+
+				"from child inner join identifier on child.mappedId=identifier.mappedId  inner join contactnumber on "+ 
+				"child.mappedId=contactnumber.mappedId inner join address on child.mappedId=address.mappedId;";
 		
-	//	ServiceContext sc = Context.getServices();
-		try
-		{
-			if (container == null)
-				container = new JSONObject();
-			ResponseBuilder.addToParentJSON(container,ChildServiceHelper.getAllChildren(),"AllChildren");
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		String[] columns=new String[]{RequestElements.QUERY_DOB,RequestElements.QUERY_CREATEDDATE,RequestElements.QUERY_CREATEDBYUSERID,RequestElements.QUERY_CHILD_FIRSTNAME,
+				RequestElements.QUERY_CHILD_LAST_NAME,RequestElements.QUERY_MOTHERNAME,RequestElements.QUERY_GENDER,RequestElements.QUERY_LASTEDITEDDATE,RequestElements.QUERY_LASTEDITEDBYUSERID
+		,RequestElements.QUERY_STATUS,RequestElements.QUERY_TERMINATIONDATE,RequestElements.QUERY_TERMINATIONREASON,RequestElements.QUERY_CHILDIDENTIFIER,RequestElements.QUERY_NUMBER,
+		RequestElements.QUERY_ADDRESS1
+		};
+		//System.out.println(columns);
+		fetchMetaDataByCustomQuery(RequestElements.METADATA_ALLCHILDREN,query,columns,container);
+		
 	}
 	
 	private static void fillAllVaccinations(JSONObject container){
@@ -208,9 +212,10 @@ public class MetadataServiceHelper
 		//	ServiceContext sc = Context.getServices();
 			try
 			{
-				if (container == null)
+				if (container == null){
 					container = new JSONObject();
-				ResponseBuilder.addToParentJSON(container,ChildServiceHelper.getAllChidrenVaccinations(),"AllChildren");
+				}
+				ResponseBuilder.addToParentJSON(container,ChildServiceHelper.getAllChidrenVaccinations(),"AllVaccinations");
 			}
 			catch (Exception e)
 			{
@@ -223,10 +228,13 @@ public class MetadataServiceHelper
 		{
 			if (container == null)
 				container = new JSONObject();
-		//	String query = CustomQueryBuilder.query(columns, table);
+		
 			ServiceContext sc = Context.getServices();
+		//	System.out.println("before results ");
 			List results = sc.getCustomQueryService().getDataBySQL(query);
+	//	System.out.println("results "+results.size());
 			ResponseBuilder.buildMetadataResponse(container, dataType, columns, results);
+	//		System.out.println("after after results ");
 		}
 		catch (Exception e)
 		{

@@ -120,14 +120,19 @@ public class ResponseBuilder
 		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
 			throw new ResponseFormatException ("Unexpected data for building resopnse");
 		}	
 	}
 	
 	public static void addToParentJSON(JSONObject parent,JSONObject metadata,String tag){
-		
+		try{
+			System.out.println(parent.toJSONString());
 		parent.put(tag, metadata);
-	}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		}
 	
 	public static JSONObject buildJson(String tagToSortFor , List<Map> listMap){
 		JSONObject returnData = new JSONObject();		
