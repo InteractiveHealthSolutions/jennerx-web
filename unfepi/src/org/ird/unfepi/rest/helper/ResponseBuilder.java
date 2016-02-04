@@ -124,6 +124,11 @@ public class ResponseBuilder
 		}	
 	}
 	
+	public static void addToParentJSON(JSONObject parent,JSONObject metadata,String tag){
+		
+		parent.put(tag, metadata);
+	}
+	
 	public static JSONObject buildJson(String tagToSortFor , List<Map> listMap){
 		JSONObject returnData = new JSONObject();		
 		HashSet set=new HashSet<String>();

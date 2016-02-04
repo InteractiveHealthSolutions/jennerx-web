@@ -239,4 +239,13 @@ public class RequestElements
 	public static final String METADATA_USER_CREATEDDATE = "createdDate";
 	public static final String METADATA_USER_IDENTIFIER = "identifier";
 	
+	//vaccination table data
+	public static final String METADATA_VACCINATION_DATE = "vaccinationDate";
+	public static final String METADATA_VACCINATION_DUEDATE = "vaccinationDueDate";
+	public static final String METADATA_VACCINATION_STATUS = "status";
+	public static final String METADATA_VACCINATION_LASTEDITDATE = "lastEditDate";
+	public static final String METADATA_VACCINATION_CREATEDDATE = "createdDate";
+	public static final String METADATA_VACCINATION_IDENTIFIER = "identifier";
+	
+	
 }

@@ -41,7 +41,7 @@ public class ChildServiceHelper {
 	private String lastEditor;
 	
 	
-	public static String getAllChildren(){
+	public static JSONObject getAllChildren(){
 		
 		ServiceContext sc =Context.getServices();
 		String query="Select child.birthdate,child.createdDate,child.createdByUserId,child.firstName,child.lastName, child.motherFirstName"+
@@ -53,7 +53,7 @@ public class ChildServiceHelper {
 		try{
 				List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
 		
-		return map.toString();	
+				return buildJson("childIdentifier",map);
 		}catch (Exception e)
 		{
 			e.printStackTrace();
@@ -63,7 +63,7 @@ public class ChildServiceHelper {
 		return null;
 	}
 	
-	public static String getAllChidrenVaccinations(){
+	public static JSONObject getAllChidrenVaccinations(){
 		ServiceContext sc =Context.getServices();
 		String query="SELECT vc.mappedId centreid,v.vaccineId, v.lastEditedDate ,v.createdDate, "+
 				"v.vaccinationDate,v.vaccinationDuedate,v.vaccinationStatus, i.identifier identifier,v.childId, "+
@@ -77,7 +77,7 @@ public class ChildServiceHelper {
 		try{
 				List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
 		
-		return buildJson("identifier",map).toString();
+		return buildJson("identifier",map);
 		}catch (Exception e)
 		{
 			e.printStackTrace();

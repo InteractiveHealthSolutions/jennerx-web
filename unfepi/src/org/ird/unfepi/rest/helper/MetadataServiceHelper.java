@@ -35,6 +35,8 @@ public class MetadataServiceHelper
 			fillVaccineGapType(mainResponse);
 			fillVaccinePrerequisite(mainResponse);
 			fillUsers(mainResponse);
+			fillAllChildren(mainResponse);
+			fillAllVaccinations(mainResponse);
 			HashMap<String, Object> resp = new HashMap<String, Object>();
 			resp.put("METADATA", mainResponse);
 
@@ -113,7 +115,8 @@ public class MetadataServiceHelper
 		String table = "location";
 		fetchMetaData(/* "location" */RequestElements.METADATA_LOCATION, columns, table, mainResponse);
 	}
-
+	
+	
 	private static void fillLocationType(JSONObject mainResponse)
 	{
 		String[] columns = new String[] { RequestElements.METADATA_FIELD_LOCATION_TYPE_ID,
@@ -185,6 +188,35 @@ public class MetadataServiceHelper
 
 	}
 
+	private static void fillAllChildren(JSONObject container){
+		
+	//	ServiceContext sc = Context.getServices();
+		try
+		{
+			if (container == null)
+				container = new JSONObject();
+			ResponseBuilder.addToParentJSON(container,ChildServiceHelper.getAllChildren(),"AllChildren");
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	private static void fillAllVaccinations(JSONObject container){
+		
+		//	ServiceContext sc = Context.getServices();
+			try
+			{
+				if (container == null)
+					container = new JSONObject();
+				ResponseBuilder.addToParentJSON(container,ChildServiceHelper.getAllChidrenVaccinations(),"AllChildren");
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
 	private static void fetchMetaDataByCustomQuery(String dataType , String query, String columns[], JSONObject container){
 		
 		try
