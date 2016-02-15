@@ -30,6 +30,7 @@ public class UserServiceHelper
 
 		try
 		{
+			
 			// GET PARAMETERS FROM MOBILE
 			userName = (String) jsonObject.get(RequestElements.LG_USERNAME);
 			password = (String) jsonObject.get(RequestElements.LG_PASSWORD);
@@ -103,7 +104,7 @@ public class UserServiceHelper
 		}
 	}
 	
-	private static User authenticateUser(String password, String username, String role)
+	public static User authenticateUser(String password, String username, String role)
 	{
 		ServiceContext cxt = Context.getServices();
 		User user;

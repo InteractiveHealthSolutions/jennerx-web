@@ -54,6 +54,7 @@ public class RequestElements
 	public static final String LG_PHONETIME = "phndttm";
 	public static final String USER_TYPE_VACCINATOR = "vac";
 	public static final String USER_TYPE_STOREKEEPER = "stk";
+	public static final String USER_TYPE_ADMIN = "ADMIN";
 
 	public static final String REQUEST_DATE_FORMAT = "reqdateformat";
 
@@ -264,6 +265,13 @@ public class RequestElements
 	public static final String METADATA_VACCINATION_CREATEDDATE = "createdDate";
 	public static final String METADATA_VACCINATION_IDENTIFIER = "identifier";
 	public static final String METADATA_ALLCHILDREN = "allchildren";
+	
+	//Device Data
+	public static final String DEVICE_ANDROIDID = "androidId";
+	public static final String DEVICE_MACID = "macId";
+	public static final String DEVICE_SERIALID = "serialId";
+	public static final String DEVICE_DEVICEID = "deviceId";
+	public static final String DEVICE_LASTCOUNT = "lastCount";
 	
 	
 }

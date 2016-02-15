@@ -35,7 +35,7 @@ public class MetadataServiceHelper
 			fillVaccineGapType(mainResponse);
 			fillVaccinePrerequisite(mainResponse);
 			fillUsers(mainResponse);
-			fillAllChildren(mainResponse);
+			//fillAllChildren(mainResponse);
 		
 			//fillAllVaccinations(mainResponse);
 			HashMap<String, Object> resp = new HashMap<String, Object>();
@@ -171,8 +171,9 @@ public class MetadataServiceHelper
 
 	private static void fillUsers(JSONObject mainResponse)
 	{
-		String[] columns=new String[]{RequestElements.METADATA_USER_CREATEDDATE, RequestElements.METADATA_USER_IDENTIFIER, RequestElements.METADATA_USER_LASTEDITDATE,RequestElements.METADATA_USER_PASSWORD, RequestElements.METADATA_USER_STATUS, RequestElements.METADATA_USER_USERNAME};
-		String query="SELECT user.username , user.password, user.createdDate, user.lastEditedDate, user.status , identifier.identifier FROM unfepi.identifier inner join unfepi.user on unfepi.identifier.mappedId=unfepi.user.mappedId ; ";
+		String[] columns=new String[]{ RequestElements.METADATA_USER_USERNAME,RequestElements.METADATA_USER_PASSWORD, RequestElements.METADATA_USER_IDENTIFIER, RequestElements.METADATA_USER_STATUS,RequestElements.METADATA_USER_CREATEDDATE, RequestElements.METADATA_USER_LASTEDITDATE};
+		
+		String query="SELECT user.username , user.password,identifier.identifier,  user.status,user.createdDate, user.lastEditedDate   FROM unfepi.identifier inner join unfepi.user on unfepi.identifier.mappedId=unfepi.user.mappedId ; ";
 		fetchMetaDataByCustomQuery(RequestElements.METADATA_USERS,query,columns,mainResponse);
 	}
 	private static void fillUser(JSONObject mainResponse)
@@ -207,21 +208,7 @@ public class MetadataServiceHelper
 		
 	}
 	
-	private static void fillAllVaccinations(JSONObject container){
-		
-		//	ServiceContext sc = Context.getServices();
-			try
-			{
-				if (container == null){
-					container = new JSONObject();
-				}
-				ResponseBuilder.addToParentJSON(container,ChildServiceHelper.getAllChidrenVaccinations(),"AllVaccinations");
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
+	
 	private static void fetchMetaDataByCustomQuery(String dataType , String query, String columns[], JSONObject container){
 		
 		try

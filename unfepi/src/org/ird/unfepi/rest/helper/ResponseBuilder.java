@@ -1,5 +1,6 @@
 package org.ird.unfepi.rest.helper;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -93,8 +94,6 @@ public class ResponseBuilder
 				rowJson = new JSONArray();
 				
 				//add values in a row
-				for(int i =0; i < row.length; i ++)
-				{
 					//inner loop on all fields in the row, add json objects in the row
 					for(int j =0; j<columns.length; j ++)
 					{
@@ -102,10 +101,18 @@ public class ResponseBuilder
 //						if(row[j] == null)
 //							field.put(columns[j], -1);
 //						else
+						
+						
+							Object obj = row[j];
+						if (obj instanceof Date) {
+							field.put(columns[j], row[j].toString());
+						} else {
 							field.put(columns[j], row[j]);
-						rowJson.add(field);
+						}
+						
+							rowJson.add(field);
 					}
-				}
+				
 				//values were added or not
 				if(rowJson.size()>0)
 				{

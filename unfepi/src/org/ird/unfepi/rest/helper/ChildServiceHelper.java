@@ -41,43 +41,43 @@ public class ChildServiceHelper {
 	private String lastEditor;
 	
 	
-	public static JSONObject getAllChildren(){
+	public static List<HashMap> getAllChildren(){
 		
 		ServiceContext sc =Context.getServices();
-		String query="Select child.birthdate,child.createdDate,child.createdByUserId,child.firstName,child.lastName, child.motherFirstName "+
+		String query="Select distinct identifier.identifier as childIdentifier , child.birthdate,child.createdDate,child.createdByUserId,child.firstName,child.lastName, child.motherFirstName "+
 				",child.gender, child.lastEditedByUserId,child.lastEditedDate,child.status, child.terminationDate, child.terminationReason,"+
-				"identifier.identifier as childIdentifier , contactnumber.number , address.address1 "+
+				" contactnumber.number , address.address1 "+
 				"from child inner join identifier on child.mappedId=identifier.mappedId  inner join contactnumber on "+ 
-				"child.mappedId=contactnumber.mappedId inner join address on child.mappedId=address.mappedId;";
+				"child.mappedId=contactnumber.mappedId inner join address on child.mappedId=address.mappedId  group by childIdentifier ASC limit 999;";
 		
 		try{
 				List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
-		
-				return buildJson("childIdentifier",map);
+					return map;
+				//return buildJson("childIdentifier",map);
 		}catch (Exception e)
 		{
 			e.printStackTrace();
 		}finally{
 			sc.closeSession();
 		}
-		return null;
+		return null; 
 	}
 	
-	public static JSONObject getAllChidrenVaccinations(){
+	public static List<HashMap> getAllChidrenVaccinations(){
 		ServiceContext sc =Context.getServices();
 		String query="SELECT vc.mappedId centreid,v.vaccineId, v.lastEditedDate ,v.createdDate, "+
 				"v.vaccinationDate,v.vaccinationDuedate,v.vaccinationStatus, i.identifier identifier,v.childId, "+
 				"v.vaccinatorId ,v.epiNumber,v.createdByUserId creator, v.lastEditedByUserId lastEditor "+
 				"FROM unfepi.vaccination  v inner join child c on c.mappedId=v.childId "+ 
 				"inner join identifier i on v.childid=i.mappedid inner join vaccine on v.vaccineId=vaccine.vaccineId "+ 
-				"inner join vaccinationcenter vc on vc.mappedid=v.vaccinationcenterid;";
+				"inner join vaccinationcenter vc on vc.mappedid=v.vaccinationcenterid  order by identifier ASC;";
 
 		
 		
 		try{
 				List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
 		
-		return buildJson("identifier",map);
+		return map;
 		}catch (Exception e)
 		{
 			e.printStackTrace();

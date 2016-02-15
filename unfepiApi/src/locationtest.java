@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -21,17 +22,26 @@ public class locationtest {
 		
 		ServiceContext sc = Context.getServices();	
 	//	List lv = sc.getCustomQueryService().getDataBySQL("select * from vaccine");
+	/*	String query="SELECT vc.mappedId centreid,v.vaccineId, v.lastEditedDate ,v.createdDate, "+
+				"v.vaccinationDate,v.vaccinationDuedate,v.vaccinationStatus, i.identifier identifier,v.childId, "+
+				"v.vaccinatorId ,v.epiNumber,v.createdByUserId creator, v.lastEditedByUserId lastEditor "+
+				"FROM unfepi.vaccination  v inner join child c on c.mappedId=v.childId "+ 
+				"inner join identifier i on v.childid=i.mappedid inner join vaccine on v.vaccineId=vaccine.vaccineId "+ 
+				"inner join vaccinationcenter vc on vc.mappedid=v.vaccinationcenterid;";
+		*/
 		String query="SELECT vc.mappedId centreid,v.vaccineId, v.lastEditedDate ,v.createdDate, "+
 				"v.vaccinationDate,v.vaccinationDuedate,v.vaccinationStatus, i.identifier identifier,v.childId, "+
 				"v.vaccinatorId ,v.epiNumber,v.createdByUserId creator, v.lastEditedByUserId lastEditor "+
 				"FROM unfepi.vaccination  v inner join child c on c.mappedId=v.childId "+ 
 				"inner join identifier i on v.childid=i.mappedid inner join vaccine on v.vaccineId=vaccine.vaccineId "+ 
 				"inner join vaccinationcenter vc on vc.mappedid=v.vaccinationcenterid;";
+
 		
-		
-		List lv2 = sc.getCustomQueryService().getDataBySQLMapResult(query);
-	System.out.println(lv2.toString());
-		lv2.size();
+	//	List lv2 = sc.getCustomQueryService().getDataBySQLMapResult(query);
+		List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
+		System.out.println(map.size());
+		//for(map.)
+		//lv2.size();
 
 		
 		

@@ -91,6 +91,8 @@
 		<!-- Safwan's Addition -->
 		<mapping class="org.ird.unfepi.model.Women"/>
 		<mapping class="org.ird.unfepi.model.WomenVaccination"/>
+		<!-- Ahmed's Addition -->
+			<mapping class="org.ird.unfepi.model.Device" /
 		
     </session-factory>
 </hibernate-configuration>
