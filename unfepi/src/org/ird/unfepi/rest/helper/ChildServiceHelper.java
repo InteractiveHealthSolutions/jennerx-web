@@ -66,11 +66,11 @@ public class ChildServiceHelper {
 	public static List<HashMap> getAllChidrenVaccinations(){
 		ServiceContext sc =Context.getServices();
 		String query="SELECT vc.mappedId centreid,v.vaccineId, v.lastEditedDate ,v.createdDate, "+
-				"v.vaccinationDate,v.vaccinationDuedate,v.vaccinationStatus, i.identifier identifier,v.childId, "+
+				"v.vaccinationDate,v.vaccinationDuedate,v.vaccinationStatus, i.identifier childidentifier,v.childId, "+
 				"v.vaccinatorId ,v.epiNumber,v.createdByUserId creator, v.lastEditedByUserId lastEditor "+
 				"FROM unfepi.vaccination  v inner join child c on c.mappedId=v.childId "+ 
 				"inner join identifier i on v.childid=i.mappedid inner join vaccine on v.vaccineId=vaccine.vaccineId "+ 
-				"inner join vaccinationcenter vc on vc.mappedid=v.vaccinationcenterid  order by identifier ASC;";
+				"inner join vaccinationcenter vc on vc.mappedid=v.vaccinationcenterid  order by identifier ASC limit 999;";
 
 		
 		
