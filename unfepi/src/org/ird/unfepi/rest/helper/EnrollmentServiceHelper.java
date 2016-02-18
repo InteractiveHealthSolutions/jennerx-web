@@ -43,6 +43,7 @@ public class EnrollmentServiceHelper
 		String fatherFirstName;
 		String fatherNIC;
 		String faterLastName;
+		String motherFirstName;
 		String dob;
 		String epiNo;
 		boolean isEstimated;
@@ -97,9 +98,10 @@ public class EnrollmentServiceHelper
 		childFirstName = (String) objectToParse.get(RequestElements.CHILD_FIRST_NAME);
 		childLastName = (String) objectToParse.get(RequestElements.CHILD_LAST_NAME);
 		gender = (String) objectToParse.get(RequestElements.CHILD_GENDER);
-		fatherFirstName = (String) objectToParse.get(RequestElements.FATHER_FIRST_NAME);
-		fatherNIC = (String) objectToParse.get(RequestElements.FATHER_NIC);
-		faterLastName = (String) objectToParse.get(RequestElements.FATHER_LAST_NAME);
+		motherFirstName=(String) objectToParse.get(RequestElements.MOTHER_FIRST_NAME);
+		//fatherFirstName = (String) objectToParse.get(RequestElements.FATHER_FIRST_NAME);
+	//	fatherNIC = (String) objectToParse.get(RequestElements.FATHER_NIC);
+		//faterLastName = (String) objectToParse.get(RequestElements.FATHER_LAST_NAME);
 		dob = (String) objectToParse.get(RequestElements.DOB);
 		days = (String) objectToParse.get(RequestElements.DOB_DAY);
 		weeks = (String) objectToParse.get(RequestElements.DOB_WEEK);
@@ -140,11 +142,11 @@ public class EnrollmentServiceHelper
 
 		Child ch = new Child();
 		ch.setBirthdate(dateOfBirth);
-		if ("M".equals(gender))
+		if ("M".equalsIgnoreCase(gender) || "MALE".equalsIgnoreCase(gender))
 		{
 			ch.setGender(Gender.MALE);
 		}
-		else if ("F".equals(gender))
+		else if ("F".equalsIgnoreCase(gender) || "FEMALE".equalsIgnoreCase(gender))
 		{
 			ch.setGender(Gender.FEMALE);
 		}
@@ -155,9 +157,10 @@ public class EnrollmentServiceHelper
 
 		ch.setFirstName(childFirstName);
 		ch.setLastName(childLastName);
-		ch.setFatherFirstName(fatherFirstName);
-		ch.setNic(fatherNIC);
-		ch.setFatherLastName(faterLastName);
+		ch.setMotherFirstName(motherFirstName);
+		//ch.setFatherFirstName(fatherFirstName);
+		//ch.setNic(fatherNIC);
+		//ch.setFatherLastName(faterLastName);
 		ch.setBirthdate(dateOfBirth);
 		ch.setEstimatedBirthdate(isEstimated);
 		ch.setDateEnrolled(new Date());

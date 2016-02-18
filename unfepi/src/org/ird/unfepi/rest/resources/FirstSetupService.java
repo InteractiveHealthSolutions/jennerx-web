@@ -45,7 +45,7 @@ public class FirstSetupService {
 		JSONObject obj;
 
 		obj = (JSONObject)parser.parse(json);
-		System.out.println(json);
+	//	System.out.println(json);
 		// GET PARAMETERS FROM MOBILE
 		String userName = (String) obj.get(RequestElements.LG_USERNAME);
 		String password = (String) obj.get(RequestElements.LG_PASSWORD);
@@ -97,7 +97,7 @@ public class FirstSetupService {
 		//org.json.JSONArray json=new org.json.JSONArray(childServiceHelper.getAllChildren().toString());
 		org.json.JSONObject j=new org.json.JSONObject();
 		j.put("allchildren", childServiceHelper.getAllChildren());
-		//System.out.println(j.getJSONArray("allchildren").get(0));
+		
 	return GZipper.compress(j.toString());
 	
 	}
@@ -131,51 +131,5 @@ public class FirstSetupService {
 		return out.toString(); // I would return compressedBytes instead String
 		}
 	
-	
-/*	
-	
-	@POST
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public String getData(String json){
-		DeviceServiceHelper deviceServiceHelper=new DeviceServiceHelper();
-		UserServiceHelper userServiceHelper=new UserServiceHelper();
-			
-		JSONObject jsonObject=new JSONObject();
-		try
-		{
-			JSONParser parser = new JSONParser();	
-		//parser.
-		System.out.println(json);	
-		JSONObject obj = (JSONObject)parser.parse(json);
-			// GET PARAMETERS FROM MOBILE
-			String userName = (String) obj.get(RequestElements.LG_USERNAME);
-			String password = (String) obj.get(RequestElements.LG_PASSWORD);
-		  //  return String.valueOf(UserServiceHelper.parseUser(obj));
-			User user=	userServiceHelper.authenticateUser(password, userName, RequestElements.USER_TYPE_ADMIN);
-			if(user==null)
-			{
-				
-				return String.valueOf(ResponseStatus.STATUS_INCORRECT_CREDENTIALS);
-			}
-			ChildServiceHelper childServiceHelper=new ChildServiceHelper();
-			MetadataServiceHelper metaDataServiceHelper=new MetadataServiceHelper();
-			
-			
-			jsonObject.put("allChildren", childServiceHelper.getAllChildren());
-			//deviceDetails=null;
-			
-			jsonObject.put("AllVaccinations", childServiceHelper.getAllChidrenVaccinations());
-		
-		jsonObject.put("metadata", metaDataServiceHelper.getMetadata());
-		}catch (Exception e) 
-		{
-			e.printStackTrace();
-			GlobalParams.MOBILELOGGER.error(e.getMessage());
-			return String.valueOf(ResponseStatus.STATUS_INTERNAL_ERROR);
-		} 
-		return jsonObject.toString();
-	}
-*/	
 
 }

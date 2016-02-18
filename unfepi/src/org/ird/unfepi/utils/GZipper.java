@@ -17,13 +17,10 @@ public class GZipper {
 	        if (str == null || str.length() == 0) {
 	            return str;
 	        }
-	        System.out.println("String length : " + str.length());
 	        ByteArrayOutputStream out = new ByteArrayOutputStream();
 	        GZIPOutputStream gzip = new GZIPOutputStream(out);
 	        gzip.write(str.getBytes());
 	        gzip.close();
-	        //String outStr = out.toString("ISO-8859-1");
-	       // System.out.println("Output String lenght : " + outStr.length());
 	       
 	        return  Base64.encodeBase64String(out.toByteArray());
 	     }
@@ -33,7 +30,6 @@ public class GZipper {
 	            return str;
 	        }
 	        byte[] bytes = Base64.decodeBase64(str);
-	        System.out.println("Input String length : " + str.length());
 	        GZIPInputStream gis = new GZIPInputStream(new ByteArrayInputStream(bytes));
 	       // BufferedReader bf = new BufferedReader(new InputStreamReader(gis, "ISO-8859-1"));
 	        return IOUtils.toString(gis);

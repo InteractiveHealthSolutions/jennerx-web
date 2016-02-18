@@ -272,6 +272,7 @@ public class RequestElements
 	public static final String DEVICE_SERIALID = "serialId";
 	public static final String DEVICE_DEVICEID = "deviceId";
 	public static final String DEVICE_LASTCOUNT = "lastCount";
+	public static final String LAST_SYNC_TIME = "lastSyncTime";
 	
 	
 }

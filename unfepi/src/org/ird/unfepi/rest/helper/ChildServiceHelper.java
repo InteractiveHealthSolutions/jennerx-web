@@ -87,6 +87,48 @@ public class ChildServiceHelper {
 		return null;
 	}
 	
+	public static List<HashMap> getUpdatedChildren(
+			String lastSyncedTime) {
+		ServiceContext sc = Context.getServices();
+		String query = "Select  distinct "
+				+ "i.identifier as childIdentifier ,c.birthdate,c.createdDate,c.createdByUserId,c.firstName,c.lastName, c.motherFirstName, "
+				+ "c.gender, c.lastEditedByUserId,c.lastEditedDate,c.status, c.terminationDate, c.terminationReason, "
+				+ "cn.number , a.address1	from child c inner join identifier i on c.mappedId=i.mappedId  inner join contactnumber cn on  "
+				+ "c.mappedId=cn.mappedId inner join address a on c.mappedId=a.mappedId  "
+				+ "where  c.lastEditedDate>='"+lastSyncedTime+"' group by childIdentifier ASC limit 999;";
+		try {
+			List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
+			return map;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sc.closeSession();
+		}
+		return null;
+	}
+	
+	public static List<HashMap> getUpdatedVaccinations(String lastSyncedTime) {
+		ServiceContext sc = Context.getServices();
+		String query = "SELECT  i.identifier identifier,v.childId, vc.mappedId centreid,v.vaccineId, v.lastEditedDate ,v.createdDate, "
+				+ "v.vaccinationDate,v.vaccinationDuedate,v.vaccinationStatus,  "
+				+ "v.vaccinatorId ,v.epiNumber,v.createdByUserId creator, v.lastEditedByUserId lastEditor "
+				+ "FROM unfepi.vaccination  v inner join child c on c.mappedId=v.childId "
+				+ "inner join identifier i on v.childid=i.mappedid inner join vaccine on v.vaccineId=vaccine.vaccineId "
+				+ "inner join vaccinationcenter vc on vc.mappedid=v.vaccinationcenterid where v.lastEditedDate >='"
+				+ lastSyncedTime + "' order by identifier ASC limit 999;";
+		try {
+			List<HashMap> map = sc.getCustomQueryService()
+					.getDataBySQLMapResult(query);
+			return map;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sc.closeSession();
+		}
+		return null;
+	}
+	
+	
 	
 	public static JSONObject buildJson(String tagToSortFor , List<HashMap> listMap){
 		JSONObject returnData = new JSONObject();		
