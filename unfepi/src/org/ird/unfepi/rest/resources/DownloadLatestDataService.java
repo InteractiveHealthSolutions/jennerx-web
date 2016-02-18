@@ -46,6 +46,9 @@ public class DownloadLatestDataService {
 	}
 	
 	@Path("/vaccinations")
+	@POST
+	@Produces(MediaType.TEXT_PLAIN)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public String getUpdatedVaccinations(String json){
 		ChildServiceHelper childServiceHelper=new ChildServiceHelper();
 		JSONObject jsonObject=new JSONObject();
