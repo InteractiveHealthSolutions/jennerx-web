@@ -45,8 +45,6 @@ public class FirstSetupService {
 		JSONObject obj;
 
 		obj = (JSONObject)parser.parse(json);
-	//	System.out.println(json);
-		// GET PARAMETERS FROM MOBILE
 		String userName = (String) obj.get(RequestElements.LG_USERNAME);
 		String password = (String) obj.get(RequestElements.LG_PASSWORD);
 		
@@ -89,12 +87,6 @@ public class FirstSetupService {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getAllChildren() throws IOException, JSONException{
 		ChildServiceHelper childServiceHelper=new ChildServiceHelper();
-		//return childServiceHelper.getAllChildren().toString(); its around 9.8mb
-		
-		
-		// return compressString(childServiceHelper.getAllChildren().toString());
-	//	return GZipper.compress("allChildren:"+childServiceHelper.getAllChildren().toString());
-		//org.json.JSONArray json=new org.json.JSONArray(childServiceHelper.getAllChildren().toString());
 		org.json.JSONObject j=new org.json.JSONObject();
 		j.put("allchildren", childServiceHelper.getAllChildren());
 		
@@ -110,26 +102,10 @@ public class FirstSetupService {
 		ChildServiceHelper childServiceHelper=new ChildServiceHelper();
 		org.json.JSONObject j=new org.json.JSONObject();
 		j.put("allvaccinations", childServiceHelper.getAllChidrenVaccinations());
-
+		System.out.println(j);
 		return GZipper.compress(j.toString());
 	}
 	
-	public static String compressString(String str) throws IOException{
-		if (str == null || str.length() == 0) {
-		    return str;
-		}
-		ByteArrayOutputStream out = new ByteArrayOutputStream(str.length());
-		GZIPOutputStream gzip = new GZIPOutputStream(out);
-		gzip.write(str.getBytes());
-		gzip.close();
-
-		byte[] compressedBytes = out.toByteArray(); 
-
-		//Gdx.files.local("gziptest.gzip").writeBytes(compressedBytes, false);
-		//out.close();
-
-		return out.toString(); // I would return compressedBytes instead String
-		}
 	
 
 }

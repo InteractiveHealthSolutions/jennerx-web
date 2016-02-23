@@ -35,9 +35,11 @@ public class DownloadLatestDataService {
 
 	String lastEditDate=(String)obj.get(RequestElements.LAST_SYNC_TIME)	;
 		
-	;
+	
 	org.json.JSONObject j=new org.json.JSONObject();
 	j.put("allchildren",childServiceHelper.getUpdatedChildren(lastEditDate));
+	
+	
 	return GZipper.compress(j.toString());
 		}catch(Exception e){
 			e.printStackTrace();
@@ -60,7 +62,7 @@ public class DownloadLatestDataService {
 	String lastEditDate=(String)obj.get(RequestElements.LAST_SYNC_TIME)	;
 	
 	org.json.JSONObject j=new org.json.JSONObject();
-	j.put("allchildren",childServiceHelper.getUpdatedVaccinations(lastEditDate));
+	j.put("allvaccinations",childServiceHelper.getUpdatedVaccinations(lastEditDate));
 	
 	return GZipper.compress(j.toString());
 		}catch(Exception e){
