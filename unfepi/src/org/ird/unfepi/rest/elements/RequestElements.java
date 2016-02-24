@@ -241,30 +241,37 @@ public class RequestElements
 	public static final String METADATA_USER_IDENTIFIER = "identifier";
 	
 	//AllChildrenQuery table data
-	public static final String QUERY_DOB="birthdate";
-	public static final String QUERY_CREATEDDATE="createdDate";
-	public static final String QUERY_CREATEDBYUSERID="createdByUserId";
-	public static final String QUERY_CHILD_FIRSTNAME="firstName";
-	public static final String QUERY_CHILD_LAST_NAME="lastName";
-	public static final String QUERY_MOTHERNAME="motherFirstName";
-	public static final String QUERY_GENDER="gender";
-	public static final String QUERY_LASTEDITEDDATE="lastEditedDate";
-	public static final String QUERY_LASTEDITEDBYUSERID="lastEditedByUserId";
-	public static final String QUERY_STATUS="status";
-	public static final String QUERY_TERMINATIONDATE="terminationDate";
-	public static final String QUERY_TERMINATIONREASON="terminationReason";
-	public static final String QUERY_CHILDIDENTIFIER="childIdentifier";
-	public static final String QUERY_NUMBER="number";
-	public static final String QUERY_ADDRESS1="address1";
+	public static final String CHILD_DOB="birthdate";
+	public static final String CHILD_CREATEDDATE="createdDate";
+	public static final String CHILD_CREATEDBYUSERID="creator";
+	public static final String CHILD_FIRSTNAME="firstName";
+	public static final String CHILD_CHILD_LAST_NAME="lastName";
+	public static final String CHILD_MOTHERNAME="motherFirstName";
+	public static final String CHILD_CHILD_GENDER="gender";
+	public static final String CHILD_LASTEDITEDDATE="lastEditedDate";
+	public static final String CHILD_LASTEDITEDBYUSERID="lastEditor";
+	public static final String CHILD_STATUS="status";
+	public static final String CHILD_TERMINATIONDATE="terminationDate";
+	public static final String CHILD_TERMINATIONREASON="terminationReason";
+	public static final String CHILD_CHILDIDENTIFIER="childIdentifier";
+	public static final String CHILD_NUMBER="contactnumber1";
+	public static final String CHILD_ADDRESS1="address1";
+	public static final String CHILD_ADDRESS2="address2";
+	public static final String CHILD_ENROLLEDDATE="dateEnrolled";
+	
 	
 	//AllVaccinationQuery Table data
-	public static final String METADATA_VACCINATION_DATE = "vaccinationDate";
-	public static final String METADATA_VACCINATION_DUEDATE = "vaccinationDueDate";
-	public static final String METADATA_VACCINATION_STATUS = "status";
-	public static final String METADATA_VACCINATION_LASTEDITDATE = "lastEditDate";
-	public static final String METADATA_VACCINATION_CREATEDDATE = "createdDate";
-	public static final String METADATA_VACCINATION_IDENTIFIER = "identifier";
-	public static final String METADATA_ALLCHILDREN = "allchildren";
+	public static final String VACCINATION_DATE = "vaccinationDate";
+	public static final String VACCINATION_DUEDATE = "vaccinationDueDate";
+	public static final String VACCINATION_VACCINATION_STATUS = "status";
+	public static final String VACCINATION_LASTEDITDATE = "lastEditDate";
+	public static final String VACCINATION_CREATEDDATE = "createdDate";
+	public static final String VACCINATION_CHILD_IDENTIFIER = "childidentifier";
+	public static final String VACCINATION_REASON= "reason";
+	public static final String VACCINATION_CREATOR= "creator";
+	public static final String VACCINATION_LASTEDITOR= "lastEditor";
+	public static final String VACCINATION_EPINUMBER= "epiNumber";
+	public static final String ALLCHILDREN = "allchildren";
 	
 	//Device Data
 	public static final String DEVICE_ANDROIDID = "androidId";
