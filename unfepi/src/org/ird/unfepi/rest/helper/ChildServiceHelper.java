@@ -17,11 +17,11 @@ public class ChildServiceHelper {
 	public List<HashMap> getAllChildren(){
 		
 		ServiceContext sc =Context.getServices();
-		String query="Select distinct i.identifier as childIdentifier , c.birthdate,c.createdDate,c.createdByUserId creator,c.firstName,c.lastName, c.motherFirstName "+
+		String query="Select i.identifier as childIdentifier , c.birthdate,c.createdDate,c.createdByUserId creator,c.firstName,c.lastName, c.motherFirstName "+
 				",c.gender, c.lastEditedByUserId lastEditor,c.lastEditedDate,c.status, c.terminationDate, c.terminationReason,"+
 				" cn.number contactnumber1, a.address1 ,  a.address2,c.dateEnrolled "+
-				"from child c inner join identifier i on c.mappedId=i.mappedId  inner join contactnumber cn  on "+ 
-				"c.mappedId=cn.mappedId inner join address a on c.mappedId=a.mappedId  group by childIdentifier ASC limit 999;";
+				"from child c inner join identifier i on c.mappedId=i.mappedId  AND i.preferred  left join contactnumber cn on  "+ 
+				"c.mappedId=cn.mappedId AND cn.numberType='PRIMARY' left join address a on c.mappedId=a.mappedId limit 99;";
 		
 		try{
 				List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
@@ -38,12 +38,12 @@ public class ChildServiceHelper {
 	
 	public  List<HashMap> getAllChidrenVaccinations(){
 		ServiceContext sc =Context.getServices();
-		String query="SELECT v.vaccinationCentreId centreid,v.vaccineId, v.lastEditedDate ,v.createdDate, "+
+		String query="SELECT v.vaccinationCenterId centreid,v.vaccineId, v.lastEditedDate ,v.createdDate, "+
 				"v.vaccinationDate,v.vaccinationDuedate,v.vaccinationStatus, i.identifier childidentifier,v.childId, "+
-				"v.reasonVaccineNotGiven  reason  ,v.epiNumber,v.createdByUserId creator, v.lastEditedByUserId lastEditor, "+
-				"FROM unfepi.vaccination  v inner join child c on c.mappedId=v.childId "+ 
-				"inner join identifier i on v.childid=i.mappedid inner join vaccine on v.vaccineId=vaccine.vaccineId "+ 
-				" order by identifier ASC limit 99;";
+				"v.reasonVaccineNotGiven  reason  ,v.epiNumber,v.createdByUserId creator, v.lastEditedByUserId lastEditor "+
+				"FROM unfepi.vaccination  v  inner join child c on c.mappedId=v.childId "+ 
+				"inner join identifier i on v.childid=i.mappedid  AND  i.preferred join vaccine on v.vaccineId=vaccine.vaccineId  "+ 
+				" order by identifier ASC limit 99 ";
 
 		
 		
@@ -65,10 +65,11 @@ public class ChildServiceHelper {
 		ServiceContext sc = Context.getServices();
 		String query = "Select  distinct "
 				+ "i.identifier as childIdentifier ,c.birthdate,c.createdDate,c.createdByUserId creator,c.firstName,c.lastName, c.motherFirstName, "
-				+ "c.gender, c.lastEditedByUserId lastEditor,v.epiNumber,c.lastEditedDate,c.status, c.terminationDate, c.terminationReason, "
-				+ "cn.number contactnumber1 , a.address1 , a.address2,c.dateEnrolled 	from child c inner join identifier i on c.mappedId=i.mappedId  inner join contactnumber cn on  "
-				+ "c.mappedId=cn.mappedId inner join address a on c.mappedId=a.mappedId  "
-				+ "where  c.lastEditedDate>='"+lastSyncedTime+"' group by childIdentifier ASC limit 999;";
+				+ "c.gender, c.lastEditedByUserId lastEditor ,c.lastEditedDate,c.status, c.terminationDate, c.terminationReason, "
+				+ "cn.number contactnumber1 , a.address1 , a.address2,c.dateEnrolled "
+				+ "from child c inner join identifier i on c.mappedId=i.mappedId  AND i.preferred  left join contactnumber cn on  "
+				+"c.mappedId=cn.mappedId AND cn.numberType='PRIMARY' left join address a on c.mappedId=a.mappedId "
+				+ "where  c.lastEditedDate>='"+lastSyncedTime+"' limit 99;";
 		try {
 			List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
 			return map;
@@ -82,13 +83,13 @@ public class ChildServiceHelper {
 	
 	public  List<HashMap> getUpdatedVaccinations(String lastSyncedTime) {
 		ServiceContext sc = Context.getServices();
-		String query = "SELECT  i.identifier childidentifier, v.vaccinationCentreId centreid,v.vaccineId, v.lastEditedDate ,v.createdDate, "
+		String query = "SELECT  i.identifier childidentifier, v.vaccinationCenterId centreid,v.vaccineId, v.lastEditedDate ,v.createdDate, "
 				+ "v.vaccinationDate,v.vaccinationDuedate,v.vaccinationStatus,  "
 				+ "v.vaccinatorId ,v.reasonVaccineNotGiven  reason,v.epiNumber,v.createdByUserId creator, v.lastEditedByUserId lastEditor "
-				+ "FROM unfepi.vaccination  v inner join child c on c.mappedId=v.childId "
-				+ "inner join identifier i on v.childid=i.mappedid inner join vaccine on v.vaccineId=vaccine.vaccineId "
+				+ "FROM unfepi.vaccination  v  inner join child c on c.mappedId=v.childId "
+				+ "inner join identifier i on v.childid=i.mappedid  AND  i.preferred join vaccine on v.vaccineId=vaccine.vaccineId   "
 				+ "where v.lastEditedDate >='"
-				+ lastSyncedTime+"' order by identifier ASC limit 999;";
+				+ lastSyncedTime+"' order by identifier ASC limit 99;";
 		try {
 			List<HashMap> map = sc.getCustomQueryService()
 					.getDataBySQLMapResult(query);

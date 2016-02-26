@@ -102,7 +102,7 @@ public class FirstSetupService {
 		ChildServiceHelper childServiceHelper=new ChildServiceHelper();
 		org.json.JSONObject j=new org.json.JSONObject();
 		j.put("allvaccinations", childServiceHelper.getAllChidrenVaccinations());
-		System.out.println(j);
+		//System.out.println(j);
 		return GZipper.compress(j.toString());
 	}
 	

@@ -76,21 +76,19 @@ public class FirstSetupTest2 {
 		
 		for (int i = 0; i < jcl.length(); i++) {
 			JSONObject it = jcl.getJSONObject(i);
-			assertTrue(it.has(RequestElements.CHILD_PROG_ID));
-			assertTrue(it.has(RequestElements.EPI_NO));
-			assertTrue(it.has(RequestElements.CHILD_FIRST_NAME));
-			assertTrue(it.has(RequestElements.CHILD_GENDER));
-			assertTrue(it.has(RequestElements.MOTHER_FIRST_NAME));
-			assertTrue(it.has(RequestElements.DOB));
-		/*	assertTrue(it.has(RequestElements.DATE_ENROLLED));
-			assertTrue(it.has(RequestElements.STATUS));
-			assertTrue(it.has(RequestElements.ENROLLMENT_VACCINE));
-			assertTrue(it.has(RequestElements.ADDRESS1));
-			assertTrue(it.has(RequestElements.ADDRESS2));
-			assertTrue(it.has(RequestElements.CONTACT_PRIMARY));
+			assertTrue(it.has(RequestElements.CHILD_CHILDIDENTIFIER));
+			assertTrue(it.has(RequestElements.CHILD_FIRSTNAME));
+			assertTrue(it.has(RequestElements.CHILD_CHILD_GENDER));
+//TODO			assertTrue(it.has(RequestElements.MOTHER_FIRST_NAME));
+			assertTrue(it.has(RequestElements.CHILD_DOB));
+			assertTrue(it.has(RequestElements.CHILD_ENROLLEDDATE));
+			assertTrue(it.has(RequestElements.CHILD_STATUS));
+			assertTrue(it.has(RequestElements.CHILD_ADDRESS1));
+		//TODO	assertTrue(it.has(RequestElements.CHILD_ADDRESS2));
+	//TODO		assertTrue(it.has(RequestElements.CHILD_NUMBER));
 
-			assertTrue(it.has(RequestElements.CREATED_BY));
-			assertTrue(it.has(RequestElements.DATE_CREATED));*/
+		//TODO	assertTrue(it.has(RequestElements.CHILD_CREATEDBYUSERID));
+		//TODO	assertTrue(it.has(RequestElements.CHILD_CREATEDDATE));
 		}
 	}
 	
