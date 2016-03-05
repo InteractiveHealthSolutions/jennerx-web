@@ -2,6 +2,7 @@ package org.ird.unfepi.rest.helper;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
@@ -30,7 +31,7 @@ public class DeviceServiceHelper {
 			}
 			int deviceIdd=map.get(0).get("max(deviceId)")==null?201:lastDeviceId;
 			
-			device=new Device(deviceIdd, androidId,serialId,macId,0);
+			device=new Device(deviceIdd, androidId,serialId,macId,0,new Date());
 			sc.getCustomQueryService().save(device);
 			sc.commitTransaction();
 			
@@ -47,13 +48,13 @@ public class DeviceServiceHelper {
 	
 	public Device getDevice(String androidId, String serialId,String macId){
 		ServiceContext sc =Context.getServices();
-		String query="Select * from device where android_id='"+androidId+"' or serial_id='"+serialId+"' or mac_id='"+macId+"'";
+		String query="Select * from device where androidId='"+androidId+"' or serialId='"+serialId+"' or macId='"+macId+"'";
 		Device device=null;
 		try{
 		List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
 		if(map.size()>0){
-			System.out.println(map.get(0).get("android_id"));
-		device=new Device((Integer)map.get(0).get("deviceId"), String.valueOf(map.get(0).get("android_id")), (String)map.get(0).get("serial_id"), (String)map.get(0).get("mac_id"), (Integer)map.get(0).get("lastCount"));
+			System.out.println(map.get(0).get("androidId"));
+		device=new Device((Integer)map.get(0).get("deviceId"), String.valueOf(map.get(0).get("androidId")), (String)map.get(0).get("serialId"), (String)map.get(0).get("macId"), (Integer)map.get(0).get("lastCount"),(Date)map.get(0).get("lastSyncDate"));
 		return device;
 		}
 		else {
