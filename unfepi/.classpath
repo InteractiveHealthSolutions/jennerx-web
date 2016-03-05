@@ -20,5 +20,6 @@
 	<classpathentry kind="lib" path="testlib/powermock-module-junit4-1.6.2.jar"/>
 	<classpathentry kind="lib" path="testlib/powermock-module-junit4-common-1.6.2.jar"/>
 	<classpathentry kind="lib" path="testlib/powermock-reflect-1.6.2.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/unfepiapi.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
