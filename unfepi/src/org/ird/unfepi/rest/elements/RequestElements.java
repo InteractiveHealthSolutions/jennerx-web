@@ -35,6 +35,7 @@ public class RequestElements
 	public static final String METADATA_FIELD_VACCINE_NAME = "name";
 	public static final String METADATA_FIELD_VACCINE_ISSUPPLEMENTARY = "issupplementary";
 	public static final String METADATA_FIELD_VACCINE_ENTITY = "vaccine_entity";
+	public static final String METADATA_FIELD_VACCINE_FULL_NAME = "fullName";
 
 	public static final String METADATA_FIELD_VACCINEGAP_VACCINEGAPTYPEID = "vaccineGapTypeId";
 	public static final String METADATA_FIELD_VACCINEGAP_GAPTIMEUNIT = "gapTimeUnit";
