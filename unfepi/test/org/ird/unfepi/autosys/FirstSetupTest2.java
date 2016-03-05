@@ -76,14 +76,14 @@ public class FirstSetupTest2 {
 		
 		for (int i = 0; i < jcl.length(); i++) {
 			JSONObject it = jcl.getJSONObject(i);
-			assertTrue(it.has(RequestElements.CHILD_CHILDIDENTIFIER));
-			assertTrue(it.has(RequestElements.CHILD_FIRSTNAME));
-			assertTrue(it.has(RequestElements.CHILD_CHILD_GENDER));
+			assertTrue(it.has(RequestElements.CHILD_IDENTIFIER));
+			assertTrue(it.has(RequestElements.FIRST_NAME));
+			assertTrue(it.has(RequestElements.GENDER));
 //TODO			assertTrue(it.has(RequestElements.MOTHER_FIRST_NAME));
-			assertTrue(it.has(RequestElements.CHILD_DOB));
-			assertTrue(it.has(RequestElements.CHILD_ENROLLEDDATE));
-			assertTrue(it.has(RequestElements.CHILD_STATUS));
-			assertTrue(it.has(RequestElements.CHILD_ADDRESS1));
+			assertTrue(it.has(RequestElements.BIRTH_DATE));
+			assertTrue(it.has(RequestElements.ENROLLED_DATE));
+			assertTrue(it.has(RequestElements.STATUS));
+			assertTrue(it.has(RequestElements.ADDRESS1));
 		//TODO	assertTrue(it.has(RequestElements.CHILD_ADDRESS2));
 	//TODO		assertTrue(it.has(RequestElements.CHILD_NUMBER));
 

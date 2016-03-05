@@ -172,7 +172,7 @@ public class EncounterUtil {
 		return er;
 	}
 	
-	private static Encounter saveEncounter(int p1Id, int p2Id, Integer locationId, Date encounterDate, Date formStartDate, String note, int dataEntryUserId, 
+	public static Encounter saveEncounter(int p1Id, int p2Id, Integer locationId, Date encounterDate, Date formStartDate, String note, int dataEntryUserId, 
 			EncounterType encounterType, DataEntrySource dataEntrySource, ServiceContext sc)
 	{
 		List<Encounter> listenc = sc.getEncounterService().findEncounter(p1Id, p2Id, null);

@@ -95,7 +95,7 @@ public class RequestElements
 	public static final String FATHER_FIRST_NAME = "fatherFirstName";
 	public static final String FATHER_NIC = "fatherNIC";
 	public static final String FATHER_LAST_NAME = "fatherLastName";
-	public static final String MOTHER_FIRST_NAME = "motherFirstName";
+
 	public static final String MOTHER_LAST_NAME = "motherLastName";
 	public static final String HUSBAND_FIRST_NAME = "husbandFirstName";
 	public static final String HUSBAND_LAST_NAME = "husbandLastName";
@@ -240,25 +240,24 @@ public class RequestElements
 	public static final String METADATA_USER_CREATEDDATE = "createdDate";
 	public static final String METADATA_USER_IDENTIFIER = "identifier";
 	
-	//AllChildrenQuery table data
-	public static final String CHILD_DOB="birthdate";
-	public static final String CHILD_CREATEDDATE="createdDate";
-	public static final String CHILD_CREATEDBYUSERID="creator";
-	public static final String CHILD_FIRSTNAME="firstName";
-	public static final String CHILD_CHILD_LAST_NAME="lastName";
-	public static final String CHILD_MOTHERNAME="motherFirstName";
-	public static final String CHILD_CHILD_GENDER="gender";
-	public static final String CHILD_LASTEDITEDDATE="lastEditedDate";
-	public static final String CHILD_LASTEDITEDBYUSERID="lastEditor";
-	public static final String CHILD_STATUS="status";
-	public static final String CHILD_TERMINATIONDATE="terminationDate";
-	public static final String CHILD_TERMINATIONREASON="terminationReason";
-	public static final String CHILD_CHILDIDENTIFIER="childIdentifier";
-	public static final String CHILD_NUMBER="contactnumber1";
-	public static final String CHILD_ADDRESS1="address1";
-	public static final String CHILD_ADDRESS2="address2";
-	public static final String CHILD_ENROLLEDDATE="dateEnrolled";
-	
+	//MSF CHILD ENROLLMENT  && AllChildrenQuery table data
+	public static final String BIRTH_DATE="birthdate";
+	public static final String FIRST_NAME="firstName";
+	public static final String LAST_NAME="lastName";
+	public static final String GENDER="gender";
+	public static final String STATUS="status";
+	public static final String TERMINATION_DATE="terminationDate";
+	public static final String TERMINATION_REASON="terminationReason";
+	public static final String CHILD_IDENTIFIER="childIdentifier";
+	public static final String CONTACT_NUMBER="contactnumber1";
+	public static final String ADDRESS1="address1";
+	public static final String ADDRESS2="address2";
+	public static final String ENROLLED_DATE="dateEnrolled";
+	public static final String CREATED_DATE="createdDate";
+	public static final String CREATOR="creator";
+	public static final String LAST_EDITED_DATE="lastEditedDate";
+	public static final String LASTEDITOR="lastEditor";
+	public static final String MOTHER_FIRST_NAME = "motherFirstName";
 	
 	//AllVaccinationQuery Table data
 	public static final String VACCINATION_DATE = "vaccinationDate";

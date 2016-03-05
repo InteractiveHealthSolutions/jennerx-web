@@ -43,7 +43,7 @@ public class FirstSetupService {
 		try {
 		JSONParser parser = new JSONParser();	
 		JSONObject obj;
-
+		
 		obj = (JSONObject)parser.parse(json);
 		String userName = (String) obj.get(RequestElements.LG_USERNAME);
 		String password = (String) obj.get(RequestElements.LG_PASSWORD);
@@ -75,7 +75,12 @@ public class FirstSetupService {
 		
 		
 		
-		} catch (Exception e) {
+		}catch ( ParseException e){
+			e.printStackTrace();
+			return String.valueOf(ResponseStatus.STATUS_INCORRECT_CREDENTIALS);
+
+		} 
+			catch (Exception e) {
 			e.printStackTrace();
 			GlobalParams.MOBILELOGGER.error(e.getMessage());
 			return String.valueOf(ResponseStatus.STATUS_INTERNAL_ERROR);

@@ -80,5 +80,5 @@ public class FirstSetupTest {
 		JSONObject jo = new JSONObject(res);
 		assertTrue(jo.has("status"));
 		assertTrue(jo.getString("status").equalsIgnoreCase(String.valueOf(ResponseStatus.STATUS_SUCCESS)));
-	}
+	} 
 }
