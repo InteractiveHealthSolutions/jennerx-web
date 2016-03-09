@@ -279,7 +279,7 @@ public class ChildEnrollmentServiceHelper {
 		List<Vaccination> vaccinatedList = sc.getVaccinationService().findByCriteria(mappId.getMappedId(), vaccineId.shortValue(),org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.VACCINATED, 1, 15, true,  new String[] {"idMapper"});
 	
 		
-		if(vaccinatedList.size()!=0){
+		if(vaccinatedList.size()>0){
 			return "";
 		}
 		//mappId.getMappedId();
