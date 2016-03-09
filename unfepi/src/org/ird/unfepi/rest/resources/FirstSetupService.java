@@ -91,6 +91,7 @@ public class FirstSetupService {
 	@POST
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getAllChildren() throws IOException, JSONException{
+		System.gc();
 		ChildServiceHelper childServiceHelper=new ChildServiceHelper();
 		org.json.JSONObject j=new org.json.JSONObject();
 		j.put("allchildren", childServiceHelper.getAllChildren());
@@ -104,10 +105,12 @@ public class FirstSetupService {
 	@POST
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getAllVaccinations() throws IOException, JSONException{
+		System.gc();
 		ChildServiceHelper childServiceHelper=new ChildServiceHelper();
 		org.json.JSONObject j=new org.json.JSONObject();
 		j.put("allvaccinations", childServiceHelper.getAllChidrenVaccinations());
-		//System.out.println(j);
+		
+		
 		return GZipper.compress(j.toString());
 	}
 	

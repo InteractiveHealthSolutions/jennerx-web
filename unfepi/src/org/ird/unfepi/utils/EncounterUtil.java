@@ -175,7 +175,7 @@ public class EncounterUtil {
 	public static Encounter saveEncounter(int p1Id, int p2Id, Integer locationId, Date encounterDate, Date formStartDate, String note, int dataEntryUserId, 
 			EncounterType encounterType, DataEntrySource dataEntrySource, ServiceContext sc)
 	{
-		List<Encounter> listenc = sc.getEncounterService().findEncounter(p1Id, p2Id, null);
+		List<Encounter> listenc = sc.getEncounterService().findEncounter(p1Id, p2Id, encounterType.name());
 		EncounterId id = new EncounterId(listenc.size()+1, p1Id, p2Id);
 		Encounter e = new Encounter(id , encounterType.name(), dataEntrySource, locationId == null ? null : locationId.toString(), encounterDate, formStartDate, new Date(), note);
 		e.setCreatedByUserId(dataEntryUserId);

@@ -1,7 +1,9 @@
 package org.ird.unfepi.rest.helper;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.ws.rs.Path;
 
@@ -18,6 +20,7 @@ import org.ird.unfepi.model.IdMapper;
 import org.ird.unfepi.model.Identifier;
 import org.ird.unfepi.model.IdentifierType;
 import org.ird.unfepi.model.User;
+import org.ird.unfepi.model.Vaccination;
 import org.ird.unfepi.model.Vaccine;
 import org.ird.unfepi.model.Child.STATUS;
 import org.ird.unfepi.model.Model.ContactTeleLineType;
@@ -32,49 +35,70 @@ import org.joda.time.DateTimeUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import com.sun.org.apache.xerces.internal.util.Status;
+
 public class ChildEnrollmentServiceHelper {
 
 	
-	public static String addEnrollments(JSONArray jsonArray,ServiceContext sc){
+	public static String addEnrollments(JSONArray jsonArray){
 		
 		StringBuilder string=new StringBuilder();
+		string.append("\"Enrollment\" :[ ");
+		
 		for(int i=0;i<jsonArray.size();i++)
 		{
 			try {
-				string.append(createEnrollment((JSONObject)jsonArray.get(i),sc));
+				string.append(createEnrollment((JSONObject)jsonArray.get(i)));
+				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
 		}
+		
+		string.setCharAt(string.length()-1,' '  );
+		string.append("],");
 		return string.toString();
 	}
 	
 	
-	public static String createEnrollment(JSONObject objectToParse,ServiceContext sc) throws ChildDataInconsistencyException
+	public static String createEnrollment(JSONObject objectToParse) throws ChildDataInconsistencyException
 	{
 		
+		ServiceContext sc=Context.getServices();
+		String childIdentifier="";
+		try{
 		
-		
-		
+			sc.beginTransaction();
 		//ServiceContext sc = Context.getServices();
-	String	childIdentifier=(String)objectToParse.get(RequestElements.CHILD_IDENTIFIER);
-	String	firstName=(String) objectToParse.get(RequestElements.FIRST_NAME);
-	String	lastName=(String) objectToParse.get(RequestElements.LAST_NAME);
-	String	gender=(String) objectToParse.get(RequestElements.GENDER);
-	String	birthDate=(String) objectToParse.get(RequestElements.BIRTH_DATE);
-	String	motherFirstName=(String) objectToParse.get(RequestElements.MOTHER_FIRST_NAME);
-	String	contactNumber1=(String) objectToParse.get(RequestElements.CONTACT_NUMBER);
-	String		address1=(String)objectToParse.get(RequestElements.ADDRESS1);
-	String		address2=(String)objectToParse.get(RequestElements.ADDRESS2);
-	int		userId = Integer.valueOf(objectToParse.get(RequestElements.LG_USERID).toString());
-	String		creator=(String) objectToParse.get(RequestElements.CREATOR);
-	String		lastEditor=(String) objectToParse.get(RequestElements.LASTEDITOR);
-	
-	String		createdDate=(String) objectToParse.get(RequestElements.CREATED_DATE);
-	String		lastEditedDate=(String) objectToParse.get(RequestElements.LAST_EDITED_DATE);
-	String	enrolledDate=(String)objectToParse.get(RequestElements.ENROLLED_DATE);
+		childIdentifier = String.valueOf(objectToParse
+				.get(RequestElements.CHILD_IDENTIFIER));
+		String firstName = (String) objectToParse
+				.get(RequestElements.FIRST_NAME);
+		String lastName = (String) objectToParse.get(RequestElements.LAST_NAME);
+		String gender = (String) objectToParse.get(RequestElements.GENDER);
+		String birthDate = (String) objectToParse
+				.get(RequestElements.BIRTH_DATE);
+		String motherFirstName = (String) objectToParse
+				.get(RequestElements.MOTHER_FIRST_NAME);
+		String contactNumber1 = (String) objectToParse
+				.get(RequestElements.CONTACT_NUMBER);
+		String address1 = (String) objectToParse.get(RequestElements.ADDRESS1);
+		String address2 = (String) objectToParse.get(RequestElements.ADDRESS2);
+		int userId = Integer.valueOf(objectToParse
+				.get(RequestElements.LG_USERID) != null ? objectToParse.get(
+				RequestElements.LG_USERID).toString() : "00");
+		String creator = (String) objectToParse.get(RequestElements.CREATOR);
+		String lastEditor = (String) objectToParse
+				.get(RequestElements.LASTEDITOR);
+
+		String createdDate = (String) objectToParse
+				.get(RequestElements.CREATED_DATE);
+		String lastEditedDate = (String) objectToParse
+				.get(RequestElements.LAST_EDITED_DATE);
+		String enrolledDate = (String) objectToParse
+				.get(RequestElements.ENROLLED_DATE);
 		
 		//vaccinations= (JSONArray)objectToParse.get("vaccinations");
 		
@@ -97,8 +121,10 @@ public class ChildEnrollmentServiceHelper {
 				
 				User submitter = new User();
 				UserService userService = sc.getUserService();
-				User user= new User(Integer.parseInt(creator));
-				submitter.setMappedId(userId);
+				User user=userService.findUser(creator);
+				
+				//User user= new User(Integer.parseInt(creator));
+				submitter.setMappedId(user.getMappedId());
 
 				Child ch = new Child();
 				ch.setBirthdate( RestUtils.stringToDate(birthDate));
@@ -125,6 +151,7 @@ public class ChildEnrollmentServiceHelper {
 				ch.setCreatedDate(RestUtils.stringToDate(createdDate));
 				ch.setCreator(user);
 				ch.setMappedId(idMapper.getMappedId());
+				ch.setStatus(STATUS.FOLLOW_UP);
 				sc.getChildService().saveChild(ch);
 				ChildService childService=sc.getChildService();
 				childService.saveChild(ch);
@@ -143,52 +170,90 @@ public class ChildEnrollmentServiceHelper {
 
 				
 				//setting contact informations
+				if(contactNumber1!=null){
 				ContactNumber contactMob = new ContactNumber();
 				contactMob.setNumber(contactNumber1);
 				contactMob.setTelelineType(ContactTeleLineType.MOBILE);
 				contactMob.setNumberType(ContactType.PRIMARY);
 				contactMob.setMappedId(ch.getMappedId());
 				sc.getDemographicDetailsService().saveContactNumber(contactMob);
+				}
 				sc.commitTransaction();
-	
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+			return "{ \"id\":" +childIdentifier+", \"message\":\""+e.getMessage().replace("\""," ")+"\"},";		}finally{
+			sc.closeSession();
+		}
 				
 				return "";
 	}
 	
-	public String addEvent(JSONArray array, ServiceContext sc ){
+	public String addEvent(JSONArray array ){
 		
 		StringBuilder string=new StringBuilder();
+		string.append("\"Event\" :[ ");
 		for(int i=0;i<array.size();i++)
 		{
 			try {
 			
-				string.append(addEncounter((JSONObject)array.get(i), sc));
+				string.append(addEncounter((JSONObject)array.get(i)));
+				
 			} catch (Exception e) {
 				
 				e.printStackTrace();
 			}
 			
 		}
+		string.setCharAt(string.length()-1,' '  );
+		string.append("],");
 		return string.toString();
 	}
 	
-	public String addEncounter(JSONObject json,ServiceContext sc){
+	public String addEncounter(JSONObject json){
+		ServiceContext sc=Context.getServices();
+		
+		String childIdentifier=(String)json.get("patientId");
+		try{
+		//	sc.beginTransaction();
 		IdMapper mappId=sc.getIdMapperService().findIdMapper((String)json.get("patientId"));
 		int patientId=mappId.getMappedId(); 
-		Date encounterDate= new Date((String)json.get("encounterDate")); 
+		Date encounterDate= RestUtils.stringToDate((String)json.get("encounterDate")); 
 		String encounterType=(String)json.get("encounterType");  
-		int locationId = (Integer)json.get("locationId");
-		int userId =(Integer)json.get("userId");
-		Encounter encounter = EncounterUtil.saveEncounter(patientId, userId,locationId, encounterDate,encounterDate,null,userId,EncounterType.valueOf(encounterType),DataEntrySource.MOBILE,sc);
+		long location = (Long)json.get("locationId");
+		int locationId =(int) location;
+		long user=(Long)json.get("userId");
+		User userMapped=sc.getUserService().findUser(String.valueOf(user));
+		int userId =userMapped.getMappedId();
+		EncounterType type=null;
+		if(encounterType.equalsIgnoreCase("enrollment"))
+		{
+			type=EncounterType.ENROLLMENT;
+		}else if(encounterType.equalsIgnoreCase("update")){
+			type=EncounterType.FOLLOWUP_ADMIN;
+		}else if(encounterType.equalsIgnoreCase("followup")){
+			type=EncounterType.FOLLOWUP;
+		}
+		Encounter encounter = EncounterUtil.saveEncounter(patientId, userId,locationId, encounterDate,encounterDate,null,userId,type,DataEntrySource.MOBILE,sc);
+	
 		
-		if(encounter==null)
-	{
-		return ""+patientId;
-	}
+		}catch(Exception e){
+			e.printStackTrace();
+			sc.rollbackTransaction();
+			return "{ \"id\":" +childIdentifier+", \"message\":\""+e.getMessage().replace("\""," ")+"\"},";		}finally{
+			sc.closeSession();
+		}
+		
 	return "";
 	}
 	
-	public String addVaccination(JSONObject json, ServiceContext sc ){
+	public String addVaccination(JSONObject json ){
+		ServiceContext sc=Context.getServices();
+		Long childIdentifier = null ;
+		try{
+		
+			
+			
 		//TODO add vaccinations 
 		String vaccinationStatus =(String) json.get(RequestElements.VACCINATION_STATUS);
 		String vaccinationDueDate =(String) json.get(RequestElements.VACCINATION_DUEDATE);
@@ -198,103 +263,152 @@ public class ChildEnrollmentServiceHelper {
 		String lastEditor = (String) json.get(RequestElements.LASTEDITOR);
 		String vaccinatorId = (String) json.get(RequestElements.VACCINATOR);
 		String vaccinationDate=(String) json.get(RequestElements.VACCINATION_DATE);
-		JSONObject vaccineObject=(JSONObject) json.get("vaccine");
-		JSONObject centreObject=(JSONObject) json.get("centre");
-		String centreId = (String) centreObject.get(RequestElements.VACCINATION_CENTER);
-		String vaccineId =(String) vaccineObject.get(RequestElements.VACCINEID);
-		JSONObject childObject=(JSONObject) json.get("child");
-		String childIdentifier = (String) childObject.get("childId") ;
+	//	JSONObject vaccineObject=(JSONObject) json.get("vaccine");
+		//JSONObject centreObject=(JSONObject) json.get("centre");
+		Long centreId = (Long) json.get(RequestElements.VACCINATION_CENTER);
+		Long vaccineId =(Long) json.get(RequestElements.VACCINEID);
+		//JSONObject childObject=(JSONObject) json.get("child");
+		childIdentifier = (Long) json.get(RequestElements.CHILD_IDENTIFIER) ;
 		
 		//ServiceContext sc=Context.getServices();;
-		IdMapper mappId=sc.getIdMapperService().findIdMapper(childIdentifier);
+		IdMapper mappId=sc.getIdMapperService().findIdMapper(childIdentifier.toString());
 		User creatorUser=sc.getUserService().findUser(creator);
 		User lastEditorUser=sc.getUserService().findUser(lastEditor);
 		
+		//org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.VACCINATED;
+		List<Vaccination> vaccinatedList = sc.getVaccinationService().findByCriteria(mappId.getMappedId(), vaccineId.shortValue(),org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.VACCINATED, 1, 15, true,  new String[] {"idMapper"});
+	
 		
-		mappId.getMappedId();
-		
+		if(vaccinatedList.size()!=0){
+			return "";
+		}
+		//mappId.getMappedId();
+		sc.beginTransaction();
 		org.ird.unfepi.model.Vaccination v=new org.ird.unfepi.model.Vaccination();
 		v.setChildId(mappId.getMappedId());
 		//v.setCreatedByUserId(creatorUser);
 		//v.setCreator(creatorUser);
+		//SimpleDateFormat sdf=new SimpleDateFormat(RestUtils.);
+		
+		
 		v.setLastEditedByUserId(lastEditorUser);
-		v.setLastEditedDate(new Date(lastEditDate));
-		v.setVaccinationCenterId(Integer.parseInt(centreId));
-		v.setVaccinationDate(new Date(vaccinationDate));
-		v.setVaccinationDuedate(new Date(vaccinationDueDate));
-		v.setVaccinationStatus(org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.valueOf(vaccinationStatus));
+		
+		v.setLastEditedDate(RestUtils.stringToDate(lastEditDate));
+		v.setVaccinationCenterId(Integer.parseInt(centreId.toString()));
+		v.setVaccinationDate(RestUtils.stringToDate(vaccinationDate));
+		v.setVaccinationDuedate(RestUtils.stringToDate(vaccinationDate));
+		
+		//this is done because of limit possibilities in jennerX app
+		org.ird.unfepi.model.Vaccination.VACCINATION_STATUS status=null;
+		if(vaccinationStatus.equalsIgnoreCase("vaccinated")){
+			status =org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.VACCINATED;
+		}else{
+			status=org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.NOT_VACCINATED;
+		}
+		
+		v.setVaccinationStatus(status);
+		if(vaccinatorId!=null)
+		{
 		v.setVaccinatorId(Integer.valueOf(vaccinatorId));
-		v.setVaccineId(Short.valueOf(vaccineId));
+		}else {
+			v.setVaccinatorId(null);
+			
+		}
+		v.setVaccineId(Short.valueOf(vaccineId.toString()));
 		sc.getVaccinationService().addVaccinationRecord(v);
 
 		sc.commitTransaction();
+		}catch(Exception e){
+			e.printStackTrace();
+			sc.rollbackTransaction();
+			return "{ \"id\":" +childIdentifier+", \"message\":\""+e.getMessage().replace("\""," ")+"\"},";		}finally{
+			sc.closeSession();
+		}
+		
 		return "";
 		
 	}	
-	public String addVaccinations(JSONArray array, ServiceContext sc){
+	public String addVaccinations(JSONArray array){
 		StringBuilder string=new StringBuilder();
+		string.append("\"Vaccination\" :[ ");
+		
 		for(int i=0;i<array.size();i++)
 		{
 			try {
-				string.append(addVaccination((JSONObject)array.get(i), sc));
+				string.append(addVaccination((JSONObject)array.get(i)));
+				
 			} catch (Exception e) {
 				
 				e.printStackTrace();
 			}
 			
 		}
+		string.setCharAt(string.length()-1,' '  );
+		string.append("],");
 		return string.toString();
 		
 	}
 	
-	public String addUpdates(JSONArray array , ServiceContext sc){
+	public String addUpdates(JSONArray array){
 		StringBuilder string=new StringBuilder();
+		string.append("\"Update\" :[ ");
+		
 		for(int i=0;i<array.size();i++)
 		{
 			try {
-				string.append(update((JSONObject)array.get(i), sc));
+				string.append(update((JSONObject)array.get(i)));
+				
 			} catch (Exception e) {
 				
 				e.printStackTrace();
 			}
 			
 		}
+		string.setCharAt(string.length()-1,' '  );
+		string.append("]");
+		
 		return string.toString();
 		
 	}
 
 
-	private String update(JSONObject jsonObject, ServiceContext sc) {
-		String childIdentifier=(String)jsonObject.get("childIdentifier");
+	private String update(JSONObject jsonObject) {
+		ServiceContext sc=Context.getServices();
+		Long childIdentifier=(Long)jsonObject.get("childIdentifier");
 		try {
+			sc.beginTransaction();
 		String village=(String)jsonObject.get("address1");
 		String healthArea=(String)jsonObject.get("address2");
 
 		String phoneNumber=(String)jsonObject.get("contactNumber1");
 		
-		IdMapper mappId=sc.getIdMapperService().findIdMapper(childIdentifier);
-		Address add = new Address();
+		IdMapper mappId=sc.getIdMapperService().findIdMapper(String.valueOf(childIdentifier));
+		
+		Address add=sc.getDemographicDetailsService().getAddress(mappId.getMappedId(), true, new String[] { "idMapper" }).get(0);
+		 
 		add.setAddress1(village);
 		add.setAddress2(healthArea);
-		//add.setMappedId();
-		add.setMappedId(mappId.getMappedId());
 		sc.getDemographicDetailsService().updateAddress(add);
 		//setting contact informations
-		ContactNumber contactMob = new ContactNumber();
+		if(phoneNumber!=null){
+		ContactNumber contactMob =sc.getDemographicDetailsService().getContactNumberById(Integer.parseInt(phoneNumber), true, new String[] { "idMapper" });
 		contactMob.setNumber(phoneNumber);
 		contactMob.setTelelineType(ContactTeleLineType.MOBILE);
 		contactMob.setNumberType(ContactType.PRIMARY);
-		contactMob.setMappedId(mappId.getMappedId());
-
-			sc.getDemographicDetailsService().updateContactNumber(contactMob);
+		sc.getDemographicDetailsService().updateContactNumber(contactMob);
+		}
 			sc.commitTransaction();
-			return "";
-		} catch (ChildDataInconsistencyException e) {
+			
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			sc.rollbackTransaction();
+			return "{ \"id\":" +childIdentifier+", \"message\":\""+e.getMessage().replace("\""," ")+"\"},";
+		}finally{
+			sc.closeSession();
 		}
 		
-		return childIdentifier;
+		return "";
 	}
 
 	

@@ -29,7 +29,7 @@ public class DeviceServiceHelper {
 			lastDeviceId++;
 			
 			}
-			int deviceIdd=map.get(0).get("max(deviceId)")==null?201:lastDeviceId;
+			int deviceIdd=map.get(0).get("max(deviceId)")==null?100:lastDeviceId;
 			
 			device=new Device(deviceIdd, androidId,serialId,macId,0,new Date());
 			sc.getCustomQueryService().save(device);
@@ -54,6 +54,12 @@ public class DeviceServiceHelper {
 		List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
 		if(map.size()>0){
 			System.out.println(map.get(0).get("androidId"));
+			
+
+			java.text.SimpleDateFormat sdf = 
+			     new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+			String currentTime = sdf.format(map.get(0).get("lastSyncDate"));
 		device=new Device((Integer)map.get(0).get("deviceId"), String.valueOf(map.get(0).get("androidId")), (String)map.get(0).get("serialId"), (String)map.get(0).get("macId"), (Integer)map.get(0).get("lastCount"),(Date)map.get(0).get("lastSyncDate"));
 		return device;
 		}

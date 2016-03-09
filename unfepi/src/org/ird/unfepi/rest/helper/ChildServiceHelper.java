@@ -21,7 +21,7 @@ public class ChildServiceHelper {
 				",c.gender, c.lastEditedByUserId lastEditor,c.lastEditedDate,c.status, c.terminationDate, c.terminationReason,"+
 				" cn.number contactnumber1, a.address1 ,  a.address2,c.dateEnrolled "+
 				"from child c inner join identifier i on c.mappedId=i.mappedId  AND i.preferred  left join contactnumber cn on  "+ 
-				"c.mappedId=cn.mappedId AND cn.numberType='PRIMARY' left join address a on c.mappedId=a.mappedId limit 99;";
+				"c.mappedId=cn.mappedId AND cn.numberType='PRIMARY' left join address a on c.mappedId=a.mappedId limit 110;";
 		
 		try{
 				List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
