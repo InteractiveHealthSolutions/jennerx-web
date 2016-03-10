@@ -9,8 +9,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.ird.unfepi.model.Device;
 import org.ird.unfepi.rest.elements.RequestElements;
 import org.ird.unfepi.rest.helper.ChildServiceHelper;
+import org.ird.unfepi.rest.helper.DeviceServiceHelper;
+import org.ird.unfepi.rest.helper.RestUtils;
 import org.ird.unfepi.utils.GZipper;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -52,6 +55,7 @@ public class DownloadLatestDataService {
 	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String getUpdatedVaccinations(String json){
+		DeviceServiceHelper deviceServiceHelper=new DeviceServiceHelper();
 		ChildServiceHelper childServiceHelper=new ChildServiceHelper();
 		JSONObject jsonObject=new JSONObject();
 		try {
@@ -63,6 +67,11 @@ public class DownloadLatestDataService {
 	
 	org.json.JSONObject j=new org.json.JSONObject();
 	j.put("allvaccinations",childServiceHelper.getUpdatedVaccinations(lastEditDate));
+	
+	Long deviceId = (Long) obj.get(RequestElements.DEVICE_DEVICEID);
+	Device device= deviceServiceHelper.getDevice(deviceId);
+	device.setLastSyncDate(RestUtils.stringToDate(lastEditDate));
+	deviceServiceHelper.updateDevice(device);
 	
 	return GZipper.compress(j.toString());
 		}catch(Exception e){

@@ -14,6 +14,7 @@ import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Address;
 import org.ird.unfepi.model.Child;
 import org.ird.unfepi.model.ContactNumber;
+import org.ird.unfepi.model.Device;
 import org.ird.unfepi.model.Encounter;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
 import org.ird.unfepi.model.IdMapper;
@@ -38,25 +39,38 @@ import org.json.simple.JSONObject;
 import com.sun.org.apache.xerces.internal.util.Status;
 
 public class ChildEnrollmentServiceHelper {
-
+	public static int lastCount=0;
 	
-	public static String addEnrollments(JSONArray jsonArray){
-		
+	public static String addEnrollments(JSONArray jsonArray,Device d){
 		StringBuilder string=new StringBuilder();
-		string.append("\"Enrollment\" :[ ");
+		ServiceContext sc=Context.getServices();
+		try {
 		
+		string.append("\"Enrollment\" :[ ");
+		lastCount=d.getLastCount();
 		for(int i=0;i<jsonArray.size();i++)
 		{
-			try {
-				string.append(createEnrollment((JSONObject)jsonArray.get(i)));
+			
+				String s=createEnrollment((JSONObject)jsonArray.get(i));
+				string.append(s);
 				
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+					lastCount++;
+					
+				
+				
+			
 			
 		}
-		
+	
+		d.setLastCount(lastCount);
+		sc.getCustomQueryService().update(d);
+		sc.commitTransaction();
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}finally{
+		sc.closeSession();
+	}
 		string.setCharAt(string.length()-1,' '  );
 		string.append("],");
 		return string.toString();
@@ -182,7 +196,7 @@ public class ChildEnrollmentServiceHelper {
 		}catch(Exception e)
 		{
 			e.printStackTrace();
-			return "{ \"id\":" +childIdentifier+", \"message\":\""+e.getMessage().replace("\""," ")+"\"},";		}finally{
+			return "{ \"id\":" +childIdentifier+", \"message\":\""+e.getMessage().replace("'"," ")+"\"},";		}finally{
 			sc.closeSession();
 		}
 				
@@ -240,7 +254,7 @@ public class ChildEnrollmentServiceHelper {
 		}catch(Exception e){
 			e.printStackTrace();
 			sc.rollbackTransaction();
-			return "{ \"id\":" +childIdentifier+", \"message\":\""+e.getMessage().replace("\""," ")+"\"},";		}finally{
+			return "{ \"id\":" +childIdentifier+", \"message\":\""+e.getMessage().replace("'"," ")+"\"},";		}finally{
 			sc.closeSession();
 		}
 		
@@ -321,7 +335,7 @@ public class ChildEnrollmentServiceHelper {
 		}catch(Exception e){
 			e.printStackTrace();
 			sc.rollbackTransaction();
-			return "{ \"id\":" +childIdentifier+", \"message\":\""+e.getMessage().replace("\""," ")+"\"},";		}finally{
+			return "{ \"id\":" +childIdentifier+", \"message\":\""+e.getMessage().replace("'"," ")+"\"},";		}finally{
 			sc.closeSession();
 		}
 		
@@ -365,7 +379,7 @@ public class ChildEnrollmentServiceHelper {
 			
 		}
 		string.setCharAt(string.length()-1,' '  );
-		string.append("]");
+		string.append("],");
 		
 		return string.toString();
 		
@@ -403,7 +417,7 @@ public class ChildEnrollmentServiceHelper {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			sc.rollbackTransaction();
-			return "{ \"id\":" +childIdentifier+", \"message\":\""+e.getMessage().replace("\""," ")+"\"},";
+			return "{ \"id\":" +childIdentifier+", \"message\":\""+e.getMessage().replace("'"," ")+"\"},";
 		}finally{
 			sc.closeSession();
 		}
