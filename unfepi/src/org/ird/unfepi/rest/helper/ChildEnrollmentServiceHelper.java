@@ -290,7 +290,7 @@ public class ChildEnrollmentServiceHelper {
 		User lastEditorUser=sc.getUserService().findUser(lastEditor);
 		
 		//org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.VACCINATED;
-		List<Vaccination> vaccinatedList = sc.getVaccinationService().findByCriteria(mappId.getMappedId(), vaccineId.shortValue(),org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.VACCINATED, 1, 15, true,  new String[] {"idMapper"});
+		List<Vaccination> vaccinatedList = sc.getVaccinationService().findByCriteria(mappId.getMappedId(), vaccineId.shortValue(),org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.VACCINATED, 0, 15, true,  new String[] {"idMapper"});
 	
 		
 		if(vaccinatedList.size()>0){
