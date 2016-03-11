@@ -13,6 +13,7 @@ import org.ird.unfepi.rest.elements.RequestElements;
 import org.ird.unfepi.rest.helper.ChildEnrollmentServiceHelper;
 import org.ird.unfepi.rest.helper.DeviceServiceHelper;
 import org.ird.unfepi.utils.GZipper;
+import org.ird.unfepi.utils.LoggerUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -26,8 +27,9 @@ public class ChildEnrollmentService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String enroll(String json)
 	{
+		Device device = null;
 		Long deviceId;
-		Device deviceUpdated = null;
+		
 		ChildEnrollmentServiceHelper childHelper=new ChildEnrollmentServiceHelper();
 		JSONParser parser = new JSONParser();		
 		ServiceContext sc=Context.getServices();
@@ -46,23 +48,27 @@ public class ChildEnrollmentService {
 			JSONArray updateArray=(JSONArray) obj.get("update");
 			
 			deviceId = (Long) obj.get(RequestElements.DEVICE_DEVICEID);
-			Device device= deviceServiceHelper.getDevice(deviceId);
+			long lastCount = (Long) obj.get("lastCount");
+			device= deviceServiceHelper.getDevice(deviceId);
 			
-			sB.append(childHelper.addEnrollments(enrollmentArray,device));
+			sB.append(childHelper.addEnrollments(enrollmentArray));
 			sB.append(childHelper.addVaccinations(vaccinationArray));
 			sB.append(childHelper.addEvent(eventArray));
 			sB.append(childHelper.addUpdates(updateArray));
-		
-			deviceUpdated= deviceServiceHelper.getDevice(deviceId);
+			device.setLastCount((int)lastCount);
+			deviceServiceHelper.updateDevice(device);
+			sc.commitTransaction();
 		}catch(Exception e){
 			e.printStackTrace();
+			//LoggerUtils.LogType.FAILURES
 		}finally{
 			sc.closeSession();
 		}
 		
-		
-		sB.append("\"lastCount\" :"+deviceUpdated.getLastCount());
+		int count= device.getLastCount()>0?device.getLastCount():0;
+		sB.append(" \"lastCount\" : "+count);
 		sB.append("}");
+		System.out.println(sB.toString());
 		return sB.toString();
 	}
 }

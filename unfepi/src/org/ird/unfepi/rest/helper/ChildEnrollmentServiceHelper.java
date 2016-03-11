@@ -41,30 +41,20 @@ import com.sun.org.apache.xerces.internal.util.Status;
 public class ChildEnrollmentServiceHelper {
 	public static int lastCount=0;
 	
-	public static String addEnrollments(JSONArray jsonArray,Device d){
+	public static String addEnrollments(JSONArray jsonArray){
 		StringBuilder string=new StringBuilder();
 		ServiceContext sc=Context.getServices();
 		try {
 		
 		string.append("\"Enrollment\" :[ ");
-		lastCount=d.getLastCount();
+		
 		for(int i=0;i<jsonArray.size();i++)
 		{
-			
 				String s=createEnrollment((JSONObject)jsonArray.get(i));
 				string.append(s);
-				
-					lastCount++;
-					
-				
-				
-			
-			
 		}
 	
-		d.setLastCount(lastCount);
-		sc.getCustomQueryService().update(d);
-		sc.commitTransaction();
+		
 	} catch (Exception e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
