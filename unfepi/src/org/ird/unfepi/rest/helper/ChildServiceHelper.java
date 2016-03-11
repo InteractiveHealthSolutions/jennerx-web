@@ -14,20 +14,18 @@ import org.json.simple.JSONObject;
 public class ChildServiceHelper {
 
 	
-	public List<HashMap> getAllChildren(){
-		
+	public List<HashMap> getAllChildren(long lastRecord){
 		ServiceContext sc =Context.getServices();
-		String query="Select i.identifier as childIdentifier , c.birthdate,c.createdDate,c.createdByUserId creator,c.firstName,c.lastName, c.motherFirstName "+
+		//TODO divide in 10thoussand chunks
+		String query="Select  c.mappedId, i.identifier as childIdentifier , c.birthdate,c.createdDate,c.createdByUserId creator,c.firstName,c.lastName, c.motherFirstName "+
 				",c.gender, c.lastEditedByUserId lastEditor,c.lastEditedDate,c.status, c.terminationDate, c.terminationReason,"+
 				" cn.number contactnumber1, a.address1 ,  a.address2,c.dateEnrolled "+
 				"from child c inner join identifier i on c.mappedId=i.mappedId  AND i.preferred  left join contactnumber cn on  "+ 
-				"c.mappedId=cn.mappedId AND cn.numberType='PRIMARY' left join address a on c.mappedId=a.mappedId limit 110;";
-		
-		try{
+				"c.mappedId=cn.mappedId AND cn.numberType='PRIMARY' left join address a on c.mappedId=a.mappedId  where c.mappedId>"+lastRecord+"  order by c.mappedId ASC limit 10000;";
+			try{
 				List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
 					return map;
-			
-		}catch (Exception e)
+			}catch (Exception e)
 		{
 			e.printStackTrace();
 		}finally{
@@ -36,17 +34,15 @@ public class ChildServiceHelper {
 		return null; 
 	}
 	
-	public  List<HashMap> getAllChidrenVaccinations(){
+	public  List<HashMap> getAllChidrenVaccinations(long lastRecord){
 		ServiceContext sc =Context.getServices();
-		String query="SELECT v.vaccinationCenterId centreid,v.vaccineId, v.lastEditedDate ,v.createdDate, "+
+		//TODO divide in 10thoussand chunks
+		String query="SELECT v.vaccinationRecordNum vId,v.vaccinationCenterId centreid,v.vaccineId, v.lastEditedDate ,v.createdDate, "+
 				"v.vaccinationDate,v.vaccinationDuedate,v.vaccinationStatus, i.identifier childidentifier,v.childId, "+
 				"v.reasonVaccineNotGiven  reason  ,v.epiNumber,v.createdByUserId creator, v.lastEditedByUserId lastEditor "+
 				"FROM unfepi.vaccination  v  inner join child c on c.mappedId=v.childId "+ 
 				"inner join identifier i on v.childid=i.mappedid  AND  i.preferred join vaccine on v.vaccineId=vaccine.vaccineId  "+ 
-				" order by identifier ASC limit 99 ";
-
-		
-		
+				" where v.vaccinationRecordNum>"+lastRecord+"  order by vId ASC limit 10000 ";
 		try{
 				List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
 		
@@ -69,7 +65,7 @@ public class ChildServiceHelper {
 				+ "cn.number contactnumber1 , a.address1 , a.address2,c.dateEnrolled "
 				+ "from child c inner join identifier i on c.mappedId=i.mappedId  AND i.preferred  left join contactnumber cn on  "
 				+"c.mappedId=cn.mappedId AND cn.numberType='PRIMARY' left join address a on c.mappedId=a.mappedId "
-				+ "where  c.lastEditedDate>='"+lastSyncedTime+"' limit 99;";
+				+ "where  c.lastEditedDate>='"+lastSyncedTime+"' ;";
 		try {
 			List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
 			return map;
@@ -89,7 +85,7 @@ public class ChildServiceHelper {
 				+ "FROM unfepi.vaccination  v  inner join child c on c.mappedId=v.childId "
 				+ "inner join identifier i on v.childid=i.mappedid  AND  i.preferred join vaccine on v.vaccineId=vaccine.vaccineId   "
 				+ "where v.lastEditedDate >='"
-				+ lastSyncedTime+"' order by identifier ASC limit 99;";
+				+ lastSyncedTime+"' order by identifier ASC ;";
 		try {
 			List<HashMap> map = sc.getCustomQueryService()
 					.getDataBySQLMapResult(query);

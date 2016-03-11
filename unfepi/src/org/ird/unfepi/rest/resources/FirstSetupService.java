@@ -2,6 +2,8 @@ package org.ird.unfepi.rest.resources;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
 import javax.ws.rs.Consumes;
@@ -19,6 +21,7 @@ import org.ird.unfepi.rest.elements.ResponseStatus;
 import org.ird.unfepi.rest.helper.ChildServiceHelper;
 import org.ird.unfepi.rest.helper.DeviceServiceHelper;
 import org.ird.unfepi.rest.helper.MetadataServiceHelper;
+import org.ird.unfepi.rest.helper.ResponseBuilder;
 import org.ird.unfepi.rest.helper.UserServiceHelper;
 import org.ird.unfepi.utils.GZipper;
 import org.ird.unfepi.utils.SecurityUtils;
@@ -90,28 +93,54 @@ public class FirstSetupService {
 	@Path("/allchildren")
 	@POST
 	@Produces(MediaType.TEXT_PLAIN)
-	public String getAllChildren() throws IOException, JSONException{
+	public String getAllChildren(String json) throws IOException, JSONException{
 		System.gc();
+		JSONParser parser = new JSONParser();
+		JSONObject receivedJson;
+		try {
+			receivedJson = (JSONObject)parser.parse(json);
+		
+		Long lastRecord=(Long) receivedJson.get(RequestElements.LASTRECORD);
 		ChildServiceHelper childServiceHelper=new ChildServiceHelper();
 		org.json.JSONObject j=new org.json.JSONObject();
-		j.put("allchildren", childServiceHelper.getAllChildren());
-		
+		List<HashMap> map=childServiceHelper.getAllChildren(lastRecord);
+		j.put("allchildren",map );
+		j.put(RequestElements.LASTRECORD, map.get(map.size()-1).get("mappedId"));
 	return GZipper.compress(j.toString());
-	
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return ResponseBuilder.buildResponse(ResponseStatus.STATUS_INCORRECT_DATA_FORMAT_ERROR, null);
 	}
 	
 	
 	@Path("/allvaccinations")
 	@POST
 	@Produces(MediaType.TEXT_PLAIN)
-	public String getAllVaccinations() throws IOException, JSONException{
+	public String getAllVaccinations(String json) throws IOException, JSONException{
 		System.gc();
+		JSONParser parser = new JSONParser();
+		JSONObject receivedJson;
+		try {
+			receivedJson = (JSONObject)parser.parse(json);
+		
+		Long lastRecord=(Long) receivedJson.get(RequestElements.LASTRECORD);
 		ChildServiceHelper childServiceHelper=new ChildServiceHelper();
 		org.json.JSONObject j=new org.json.JSONObject();
-		j.put("allvaccinations", childServiceHelper.getAllChidrenVaccinations());
-		
+		List<HashMap> map=childServiceHelper.getAllChidrenVaccinations(lastRecord);
+		j.put("allvaccinations", map);
+		j.put(RequestElements.LASTRECORD, map.get(map.size()-1).get("vId"));
 		
 		return GZipper.compress(j.toString());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return ResponseBuilder.buildResponse(ResponseStatus.STATUS_INCORRECT_DATA_FORMAT_ERROR, null);
+
 	}
 	
 	

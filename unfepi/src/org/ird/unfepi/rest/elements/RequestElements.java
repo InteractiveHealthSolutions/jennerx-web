@@ -282,4 +282,7 @@ public class RequestElements
 	public static final String LAST_SYNC_TIME = "lastSyncTime";
 	
 	
+	public static final String LASTRECORD = "lastRecord";
+	
+	
 }
