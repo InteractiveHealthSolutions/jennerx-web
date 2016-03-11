@@ -1,5 +1,6 @@
 package org.ird.unfepi.rest.resources;
 
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.ws.rs.Consumes;
@@ -23,12 +24,14 @@ import org.json.simple.parser.JSONParser;
 public class DownloadLatestDataService {
 
 	
+	private Date lastSynced;
+
 	@Path("/children")
 	@POST
 	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String getUpdatedChildren(String json){
-	
+	lastSynced=new Date();
 		ChildServiceHelper childServiceHelper=new ChildServiceHelper();
 		JSONObject jsonObject=new JSONObject();
 		try {
@@ -67,10 +70,12 @@ public class DownloadLatestDataService {
 	
 	org.json.JSONObject j=new org.json.JSONObject();
 	j.put("allvaccinations",childServiceHelper.getUpdatedVaccinations(lastEditDate));
-	
+	if(lastSynced==null){
+		lastSynced=new Date();
+	}
 	Long deviceId = (Long) obj.get(RequestElements.DEVICE_DEVICEID);
 	Device device= deviceServiceHelper.getDevice(deviceId);
-	device.setLastSyncDate(RestUtils.stringToDate(lastEditDate));
+	device.setLastSyncDate(lastSynced);
 	deviceServiceHelper.updateDevice(device);
 	
 	return GZipper.compress(j.toString());
