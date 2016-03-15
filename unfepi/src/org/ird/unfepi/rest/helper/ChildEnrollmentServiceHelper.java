@@ -156,7 +156,10 @@ public class ChildEnrollmentServiceHelper {
 				ch.setCreator(user);
 				ch.setMappedId(idMapper.getMappedId());
 				ch.setStatus(STATUS.FOLLOW_UP);
-				sc.getChildService().saveChild(ch);
+			
+				//Child was saved multiple times
+				//sc.getChildService().saveChild(ch);
+				
 				ChildService childService=sc.getChildService();
 				childService.saveChild(ch);
 				// ///////////Address fields ///////////////////////
