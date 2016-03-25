@@ -105,15 +105,22 @@ public class FirstSetupService {
 		org.json.JSONObject j=new org.json.JSONObject();
 		List<HashMap> map=childServiceHelper.getAllChildren(lastRecord);
 		j.put("allchildren",map );
-		j.put(RequestElements.LASTRECORD, map.get(map.size()-1).get("mappedId"));
+		int length=map.size()-1;
+		int size=length>0?length:0;
+		int mappedId=-2;
+		if(size>0){
+			mappedId=(Integer) map.get(size).get("mappedId");
+		}
+		j.put(RequestElements.LASTRECORD,mappedId );
 	return GZipper.compress(j.toString());
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_INCORRECT_DATA_FORMAT_ERROR, null);
+
 		}
 		
-		return ResponseBuilder.buildResponse(ResponseStatus.STATUS_INCORRECT_DATA_FORMAT_ERROR, null);
-	}
+			}
 	
 	
 	@Path("/allvaccinations")
@@ -131,16 +138,24 @@ public class FirstSetupService {
 		org.json.JSONObject j=new org.json.JSONObject();
 		List<HashMap> map=childServiceHelper.getAllChidrenVaccinations(lastRecord);
 		j.put("allvaccinations", map);
-		j.put(RequestElements.LASTRECORD, map.get(map.size()-1).get("vId"));
+		
+		int length=map.size()-1;
+		int size=length>0?length:0;
+		int mappedId=-2;
+		if(size>0){
+			mappedId=(Integer) map.get(size).get("vId");
+		}
+		j.put(RequestElements.LASTRECORD, mappedId);
 		
 		return GZipper.compress(j.toString());
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
+		
 			e.printStackTrace();
+			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_VACCINATOPN_DATA_NULL, null);
+
 		}
 		
-		return ResponseBuilder.buildResponse(ResponseStatus.STATUS_INCORRECT_DATA_FORMAT_ERROR, null);
-
+		
 	}
 	
 	

@@ -58,4 +58,15 @@ public class ResponseStatus
 	 * Women ID already exists
 	 */
 	public static final int STATUS_ID_WOMEN_ALREADY_EXISTS = 10;
+	
+	
+	/**
+	 *NO Child data found
+	 */
+	public static final int STATUS_CHILD_DATA_NULL = 11;
+	
+	/**
+	 *NO VACCINATION data found
+	 */
+	public static final int STATUS_VACCINATOPN_DATA_NULL = 12;
 }

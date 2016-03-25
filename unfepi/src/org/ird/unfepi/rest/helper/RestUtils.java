@@ -2,6 +2,7 @@ package org.ird.unfepi.rest.helper;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import org.ird.unfepi.GlobalParams;
 
@@ -66,7 +67,7 @@ public class RestUtils
 		{
 			try
 			{
-				sdf = new SimpleDateFormat(RestConstants.MOBILE_DATE_FORMAT);
+				sdf = new SimpleDateFormat(RestConstants.MOBILE_DATE_FORMAT, Locale.US);
 				if(dateString== null || "".equals(dateString))
 					return null;
 				d = sdf.parse(dateString);

@@ -122,7 +122,7 @@ public class ChildEnrollmentServiceHelper {
 		ident.setIdMapper(idMapper);
 		sc.getCustomQueryService().save(ident);
 				
-				
+	//	sc.commitTransaction();
 				User submitter = new User();
 				UserService userService = sc.getUserService();
 				User user=userService.findUser(creator);
@@ -283,11 +283,13 @@ public class ChildEnrollmentServiceHelper {
 		User lastEditorUser=sc.getUserService().findUser(lastEditor);
 		
 		//org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.VACCINATED;
+	
 		List<Vaccination> vaccinatedList = sc.getVaccinationService().findByCriteria(mappId.getMappedId(), vaccineId.shortValue(),org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.VACCINATED, 0, 15, true,  new String[] {"idMapper"});
 	
-		
-		if(vaccinatedList.size()>0){
-			return "";
+		if(vaccinatedList!=null) {
+			if(vaccinatedList.size()>0){
+				return "";
+			}
 		}
 		//mappId.getMappedId();
 		sc.beginTransaction();
@@ -297,13 +299,20 @@ public class ChildEnrollmentServiceHelper {
 		//v.setCreator(creatorUser);
 		//SimpleDateFormat sdf=new SimpleDateFormat(RestUtils.);
 		
-		
+		//handling users
+		v.setCreatedByUserId(creatorUser);
 		v.setLastEditedByUserId(lastEditorUser);
 		
+		//handling modification date
+		v.setCreatedDate(RestUtils.stringToDate(createdDate));
 		v.setLastEditedDate(RestUtils.stringToDate(lastEditDate));
+		
+		
 		v.setVaccinationCenterId(Integer.parseInt(centreId.toString()));
-		v.setVaccinationDate(RestUtils.stringToDate(vaccinationDate));
-		v.setVaccinationDuedate(RestUtils.stringToDate(vaccinationDate));
+		
+		Date vvDate=RestUtils.stringToDate(vaccinationDate);
+		v.setVaccinationDate(vvDate);
+		v.setVaccinationDuedate(vvDate);
 		
 		//this is done because of limit possibilities in jennerX app
 		org.ird.unfepi.model.Vaccination.VACCINATION_STATUS status=null;
@@ -328,7 +337,8 @@ public class ChildEnrollmentServiceHelper {
 		}catch(Exception e){
 			e.printStackTrace();
 			sc.rollbackTransaction();
-			return "{ \"id\":" +childIdentifier+", \"message\":\""+e.getMessage().replace("'"," ")+"\"},";		}finally{
+			return "{ \"id\":" +childIdentifier+", \"message\":\""+e.getMessage().replace("'"," ")+"\"},";		}
+		finally{
 			sc.closeSession();
 		}
 		

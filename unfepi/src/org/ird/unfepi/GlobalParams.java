@@ -1,6 +1,7 @@
 package org.ird.unfepi;
 
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -289,9 +290,9 @@ public class GlobalParams
 	public static final String INCENTIVE_CSV_DIR = "incentivecsv";
 	public static final String DATA_DUMP_DIR = "datadump";
 
-	public static final SimpleDateFormat SQL_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	public static final SimpleDateFormat CSV_FILENAME_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd_HHmm");
-	public static final SimpleDateFormat DEFAULT_MOBILE_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
+	public static final SimpleDateFormat SQL_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+	public static final SimpleDateFormat CSV_FILENAME_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd_HHmm", Locale.US);
+	public static final SimpleDateFormat DEFAULT_MOBILE_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 
 	public static final String QUERY_PROJECT_START_DATE = "select value from setting where name='project.start-date'";
 	public static final String QUERY_PROJECT_TARGET_ENROLLMENTS = "select value from setting where name='project.target-enrollments'";
