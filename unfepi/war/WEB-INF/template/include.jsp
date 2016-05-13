@@ -7,6 +7,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="springform" uri="/WEB-INF/tld/spring-form.tld"%>
 <%@ taglib prefix="spring" uri="/WEB-INF/tld/spring.tld"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="springMessage"%>
 
 <script type="text/javascript">
 <!--

@@ -1,7 +1,7 @@
 <%@page import="org.ird.unfepi.model.Model.Gender"%>
 <%@page import="org.ird.unfepi.constants.WebGlobals"%>
 	<tr>
-        <td>Bache ka naam rakha gaya hai? <span class="mendatory-field">*</span></td>
+        <td>Have You named Child? <span class="mendatory-field">*</span></td>
         <td><spring:bind path="command.childNamed">
 			<select id="childNamed" name="childNamed" onchange="childNamedChanged(this,'');" bind-value="${status.value}">
 				<option></option>
@@ -33,7 +33,7 @@
     </tr>
     <c:set var="trueStrval" value="<%=WebGlobals.BOOLEAN_CONVERTER_TRUE_STRING%>"></c:set>
 	<tr id="childNamedtr" <c:if test="${command.childNamed != trueStrval}">style="display: none"</c:if> >
-        <td>Bache ka Poora Naam <span class="mendatory-field">*</span></td>
+        <td>Child Name <span class="mendatory-field">*</span></td>
         <td><spring:bind path="command.${commandAdditionalPathStr}firstName">
              <input type="text" id="childfirstName" name="${commandAdditionalPathStr}firstName" maxlength="30" value="<c:out value="${status.value}"/>"/>
              <span class="error-message"><c:out	value="${status.errorMessage}" /></span>
@@ -41,15 +41,15 @@
 		</td>
     </tr>
     <tr>
-        <td>Walid ka Poora Naam <span class="mendatory-field">*</span></td>
-        <td><spring:bind path="command.${commandAdditionalPathStr}fatherFirstName">
+        <td><spring:message code="label.motherName"/><span class="mendatory-field">*</span></td>
+        <td><spring:bind path="command.${commandAdditionalPathStr}motherFirstName">
              <input type="text" id="childfatherFirstName" name="${commandAdditionalPathStr}fatherFirstName" maxlength="30" value="<c:out value="${status.value}"/>"/>
              <br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
              </spring:bind>
 		</td>
     </tr>
 	<tr>
-		<td>Bache ka Jins <span class="mendatory-field">*</span></td>
+		<td>Gender <span class="mendatory-field">*</span></td>
 		<td><spring:bind path="command.${commandAdditionalPathStr}gender">
 			<select id="gender" name="${commandAdditionalPathStr}gender" bind-value="${status.value}" style="text-transform: capitalize">
 				<c:forEach items="<%=Gender.values()%>" var="gen_value">
@@ -61,12 +61,12 @@
 		</td>
 	</tr>
 	<tr>
-        <td>Bache ki tareekh pedaish ya umr <span class="mendatory-field">*</span></td>
+        <td>Child birthdate or age<span class="mendatory-field">*</span></td>
         <td><spring:bind path="command.birthdateOrAge">
 			<select id="birthdateOrAge" name="birthdateOrAge" onchange="birthdateOrAgeChanged(this);" bind-value="${status.value}">
 				<option></option>
-				<option value="birthdate">Tareekh Pedaish</option>
-				<option value="age">Umr</option>
+				<option value="birthdate">birthdate</option>
+				<option value="age">Age</option>
 			</select>
 			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 		</spring:bind>
@@ -106,7 +106,7 @@
 		</td>
     </tr>
 	<tr id="birthdatetr" <c:if test="${command.birthdateOrAge != 'birthdate'}">style="display: none"</c:if> >
-		<td>Tareekh Pedaish <span class="mendatory-field">*</span></td>
+		<td>Birth Date <span class="mendatory-field">*</span></td>
         <td>
         <spring:bind path="command.${commandAdditionalPathStr}birthdate">
         <input id="birthdate" name="${commandAdditionalPathStr}birthdate" maxDate="+0d" value="${status.value}" class="calendarbox"/>
@@ -115,7 +115,7 @@
         </td>
     </tr>
     <tr id="agetr" <c:if test="${command.birthdateOrAge != 'age'}">style="display: none"</c:if> >
-        <td>Umr (insert 0 if not applicable)<span class="mendatory-field">*</span></td>
+        <td>Age (insert 0 if not applicable)<span class="mendatory-field">*</span></td>
         <td>
         <spring:bind path="command.childagey">
         <input type="text" id="childagey" name="childagey" size="1" maxlength="1" value="${status.value}" onchange="ageChanged();" class="numbersOnly"/>Years<br>

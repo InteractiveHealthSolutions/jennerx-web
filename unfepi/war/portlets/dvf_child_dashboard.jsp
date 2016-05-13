@@ -131,6 +131,8 @@ ${fn:substring(cont.numberType,0,3)}- ${cont.number}<br>
   </c:forEach>
 </table>
 </c:if>
+<%-- //Removed because of as per requirements from MSF Team
+
 <table class="left">
 <tr>
     <td colspan="20" class="headerrow-light left">SMS History</td>
@@ -155,7 +157,7 @@ ${fn:substring(cont.numberType,0,3)}- ${cont.number}<br>
         </c:forEach>
         </tr>
   		</c:forEach>
-</table>
+</table> --%>
 </div>
 </c:if>
 

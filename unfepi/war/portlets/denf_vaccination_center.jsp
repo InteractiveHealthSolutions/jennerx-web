@@ -103,7 +103,7 @@ function treeDataLoaderLocations(parentId){
 		</spring:bind>
     	</td>
 	</tr>
-    <tr>
+   <%--  <tr>
 		<td>Center Type :<span class="mendatory-field">*</span></td>
 		<td><spring:bind path="command.vaccinationCenter.centerType">
 			<select id="centerType" name="vaccinationCenter.centerType" bind-value="${status.value}">
@@ -114,7 +114,7 @@ function treeDataLoaderLocations(parentId){
 			<br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
 		</td>
-	</tr>
+	</tr> --%>
     <tr>
         <td>Center Name(unique and identifiable): <span class="mendatory-field">*</span></td>
         <td><spring:bind path="command.vaccinationCenter.name">
@@ -131,16 +131,16 @@ function treeDataLoaderLocations(parentId){
              </spring:bind>
 		</td>
     </tr>
-    <tr>
+ <!--    <tr  height="0">
         <td colspan="2" class="separator-heading">VACCINE DAYS</td>
-    </tr>
-    <tr>
+    </tr> -->
+    <tr height="0">
     	<td colspan="2">
-	    <table class="previousDataDisplay">
+	    <table class="previousDataDisplay" hidden="true">
 	    <c:forEach items="${command.vaccineDayMapList}" var="vdm" varStatus="vdmlistvarsta">
 	    	<tr>
 	    		<td colspan="12" class="headerrow">
-	    		<input type="checkbox" 
+	    		<input type="checkbox"  checked="checked"  
 	    			onclick='var checkBoxes = $(".${vdm["vaccine"].name} input");checkBoxes.attr("checked", !checkBoxes.attr("checked"));'> ${vdm['vaccine'].name}<%-- :${vdmlistvarsta.index} --%>
 	    		<%-- <input type="hidden" name="command.vaccineDayMapList[${vdmlistvarsta.index}]['vaccine'].name"> --%>
     			</td>
@@ -152,10 +152,10 @@ function treeDataLoaderLocations(parentId){
 	    			<spring:bind path="command.vaccineDayMapList[${vdmlistvarsta.index}]['daylist'][${caldayvarsta.index}]">
 	    				<c:choose>
 	    				<c:when test="${not empty status.value}">
-		    				<input type="checkbox" name="${status.expression}" value="${calday.dayFullName}" checked="checked">${calday.dayFullName}<%-- :${caldayvarsta.index} --%>
+		    				<input  type="checkbox" name="${status.expression}" value="${calday.dayFullName}" checked="checked">${calday.dayFullName}<%-- :${caldayvarsta.index} --%>
 	    				</c:when>
 	    				<c:otherwise>
-		    				<input type="checkbox" name="${status.expression}" value="${calday.dayFullName}" >${calday.dayFullName}<%-- :${caldayvarsta.index} --%>
+		    				<input type="checkbox" name="${status.expression}" value="${calday.dayFullName}"  checked="checked">${calday.dayFullName}<%-- :${caldayvarsta.index} --%>
 	    				</c:otherwise>
 	    				</c:choose>
 	    			</spring:bind>

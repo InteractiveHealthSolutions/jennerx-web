@@ -18,7 +18,6 @@ import org.json.simple.JSONObject;
 
 public class MetadataServiceHelper
 {
-	ServiceContext sc = Context.getServices();
 
 	public static String getMetadata()
 	{
@@ -173,7 +172,7 @@ public class MetadataServiceHelper
 	{
 		String[] columns=new String[]{ RequestElements.METADATA_USER_USERNAME,RequestElements.METADATA_USER_PASSWORD, RequestElements.METADATA_USER_IDENTIFIER, RequestElements.METADATA_USER_STATUS,RequestElements.METADATA_USER_CREATEDDATE, RequestElements.METADATA_USER_LASTEDITDATE};
 		
-		String query="SELECT user.username , user.password,identifier.identifier,  user.status,user.createdDate, user.lastEditedDate   FROM unfepi.identifier inner join unfepi.user on unfepi.identifier.mappedId=unfepi.user.mappedId ; ";
+		String query="SELECT user.username , user.password,identifier.identifier,  user.status,user.createdDate, user.lastEditedDate   FROM unfepi.identifier inner join unfepi.user on unfepi.identifier.mappedId=unfepi.user.mappedId  inner join vaccinator on unfepi.user.mappedId=vaccinator.mappedId ; ";
 		fetchMetaDataByCustomQuery(RequestElements.METADATA_USERS,query,columns,mainResponse);
 	}
 	private static void fillUser(JSONObject mainResponse)
@@ -217,12 +216,13 @@ public class MetadataServiceHelper
 	
 	private static void fetchMetaData(String dataType, String[] columns, String table, JSONObject container)
 	{
+		ServiceContext sc = Context.getServices();
 		try
 		{
 			if (container == null)
 				container = new JSONObject();
 			String query = CustomQueryBuilder.query(columns, table);
-			ServiceContext sc = Context.getServices();
+		
 			List results = sc.getCustomQueryService().getDataBySQL(query);
 			ResponseBuilder.buildMetadataResponse(container, dataType, columns, results);
 		}
@@ -231,6 +231,7 @@ public class MetadataServiceHelper
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		finally{sc.closeSession();}
 	}
 
 	public File zipData(File tempFile)

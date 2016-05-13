@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -69,7 +70,7 @@ public class Location {
 	@ForeignKey(name = "location_parentLocation_location_locationId_FK")
 	private Location parentLocation;
 	
-	@OneToMany(fetch = FetchType.LAZY, targetEntity = Location.class, mappedBy = "parentLocation")
+	@OneToMany(fetch = FetchType.LAZY, targetEntity = Location.class, mappedBy = "parentLocation" ,cascade=CascadeType.ALL)
 	private Set<Location> childLocations;
 	
 	@OneToOne(targetEntity = LocationType.class)

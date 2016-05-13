@@ -27,6 +27,7 @@ public class UserServiceHelper
 		String password = null;
 		String userType = null;
 		IdMapper idMapperLoginUser = null;
+		ServiceContext cxt = Context.getServices();
 
 		try
 		{
@@ -80,7 +81,6 @@ public class UserServiceHelper
 				//vacination center
 				if(role.equalsIgnoreCase(GlobalParams.VACCINATOR_ROLE_NAME))
 				{
-					ServiceContext cxt = Context.getServices();
 					VaccinationService vs = cxt.getVaccinationService();
 					
 					Vaccinator vaccinator = cxt.getVaccinationService().findVaccinatorById(user.getMappedId());
@@ -101,7 +101,7 @@ public class UserServiceHelper
 			GlobalParams.MOBILELOGGER.error("Error while parsing JSON for LoginService");
 			GlobalParams.MOBILELOGGER.error(ex.getMessage());
 			return ResponseBuilder.buildResponse( ResponseStatus.STATUS_INTERNAL_ERROR, null);
-		}
+		}finally{cxt.closeSession();}
 	}
 	
 	public static User authenticateUser(String password, String username, String role)
@@ -126,6 +126,8 @@ public class UserServiceHelper
 		catch (Exception e)
 		{
 			return handleException(e);
+		}finally{
+			cxt.closeSession();
 		}
 	}
 

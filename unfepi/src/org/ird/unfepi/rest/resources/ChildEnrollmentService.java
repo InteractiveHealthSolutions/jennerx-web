@@ -34,6 +34,7 @@ public class ChildEnrollmentService {
 		JSONParser parser = new JSONParser();		
 		ServiceContext sc=Context.getServices();
 		StringBuilder sB=new StringBuilder();
+		JSONObject jsonObject=new JSONObject();
 		sB.append("{");
 		try 
 		{
@@ -51,24 +52,25 @@ public class ChildEnrollmentService {
 			long lastCount = (Long) obj.get("lastCount");
 			device= deviceServiceHelper.getDevice(deviceId);
 			
-			sB.append(childHelper.addEnrollments(enrollmentArray));
-			sB.append(childHelper.addVaccinations(vaccinationArray));
-			sB.append(childHelper.addEvent(eventArray));
-			sB.append(childHelper.addUpdates(updateArray));
+			jsonObject.put("Enrollment",childHelper.addEnrollments(enrollmentArray));
+			jsonObject.put("Vaccination",childHelper.addVaccinations(vaccinationArray));
+			jsonObject.put("Event",childHelper.addEvent(eventArray));
+			jsonObject.put("Update",childHelper.addUpdates(updateArray));
 			device.setLastCount((int)lastCount);
 			deviceServiceHelper.updateDevice(device);
 			sc.commitTransaction();
 		}catch(Exception e){
 			e.printStackTrace();
-			//LoggerUtils.LogType.FAILURES
+			
 		}finally{
 			sc.closeSession();
 		}
 		
 		int count= device.getLastCount()>0?device.getLastCount():0;
+		jsonObject.put("lastCount", count);
 		sB.append(" \"lastCount\" : "+count);
 		sB.append("}");
-		System.out.println(sB.toString());
-		return sB.toString();
+		System.out.println(jsonObject.toJSONString());
+		return jsonObject.toJSONString();
 	}
 }

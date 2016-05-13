@@ -7,11 +7,11 @@
 					<%@ include file="linklistchildren.jsp" %>
 				</ul>
 			</li>
-			<li><a href="#">Incentives</a>
+		<%-- 	<li><a href="#">Incentives</a>
 				<ul>
 					<%@ include file="linklistincentives.jsp" %>
 				</ul>
-			</li>
+			</li> 
 			<li><a>Women</a>
 				<ul>
 					 <%@ include file="linklistwomen.jsp" %>
@@ -21,7 +21,7 @@
 				<ul>
 					<%@ include file="linklistcommunication.jsp" %>
 				</ul>
-			</li>
+			</li>--%>
 			<li><a href="#">Data</a>
 				<ul>
 					<%@ include file="linklistreporting.jsp" %>

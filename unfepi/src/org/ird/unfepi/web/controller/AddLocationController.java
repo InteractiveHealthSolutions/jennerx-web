@@ -34,10 +34,20 @@ public class AddLocationController  extends DataEntryFormController{
 	protected ModelAndView onSubmit(HttpServletRequest request,
 			HttpServletResponse response, Object command, BindException errors) throws Exception 
 	{
+		String parentLocationId=(String)request.getAttribute("cc");
 		LoggedInUser user=UserSessionUtils.getActiveUser(request);
 		
-		Location loc = (Location) command;
 		
+		Location loc = (Location) command;
+		if(parentLocationId==null)
+		{
+			
+			loc.setParentLocation(null);
+		}                                     
+		/*Location parentLocation=new Location();
+		parentLocation.setLocationId(Integer.parseInt(parentLocationId));
+		parentLocation.setLocationType(new LocationType());
+		loc.setParentLocation(parentLocation);*/
 		ServiceContext sc = Context.getServices();
 		try{
 			ControllerUIHelper.doLocationRegistration(loc, user.getUser(), sc);

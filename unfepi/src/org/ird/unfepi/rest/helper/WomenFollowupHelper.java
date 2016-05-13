@@ -42,10 +42,11 @@ public class WomenFollowupHelper {
 	public static final String DEMOGRAPHICS = "Demographics";
 	public static final String PROGRAM_DETAILS = "progDet";
 	public static final String VACCINATION = "Vaccination";
-	static ServiceContext sc = Context.getServices();
+	
 
 	public static String getData(String womenId) throws ParseException {
-
+		 ServiceContext sc = Context.getServices();
+		 try{
 		Women women = new Women();
 
 		WomenService womenService = sc.getWomenService();
@@ -64,6 +65,10 @@ public class WomenFollowupHelper {
 		} else {
 			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_ID_WOMEN_NOT_EXIST, null);
 		}
+		 }finally{
+			 sc.closeSession();
+			 
+		 }
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes", "unused"})
@@ -76,7 +81,7 @@ public class WomenFollowupHelper {
 		Date dateOfBirth;
 		String epiNo;
 		String maritalStatus;
-
+		ServiceContext sc = Context.getServices();
 		Address address = new Address();
 
 		fatherFirstName = women.getFatherFirstName();
@@ -84,7 +89,7 @@ public class WomenFollowupHelper {
 		husbandFirstName = women.getHusbandFirstName();
 		dateOfBirth = women.getBirthdate();
 		maritalStatus = women.getMaritalStatus();
-
+		
 		List epiNumbersList = sc.getCustomQueryService().getDataBySQL(
 				"select epiNumber from womenvaccination" + " where womenId=" + women.getMappedId() + " and vaccinationStatus IN ('VACCINATED') order by vaccinationDate DESC");
 		epiNo = (String) (epiNumbersList.size() == 0 ? "" : epiNumbersList.get(0));
@@ -132,15 +137,18 @@ public class WomenFollowupHelper {
 		} catch (Exception e) {
 			GlobalParams.MOBILELOGGER.error(e.getMessage());
 			e.printStackTrace();
-		}
+		}finally{sc.closeSession();}
 
 		return demoJson;
 	}
 
 	@SuppressWarnings("unchecked")
 	private static JSONObject getVaccines(Women women) throws ParseException {
+		ServiceContext sc = Context.getServices();
+		JSONObject womenVaccine=null;
+		try{
 		List<WomenVaccination> vaccineList = sc.getWomenVaccinationService().findByWomenId(women.getMappedId());
-		JSONObject womenVaccine = new JSONObject();
+		 womenVaccine = new JSONObject();
 
 		for (int i = 0; i < vaccineList.size(); i++) {
 			if (i == 0) {
@@ -193,7 +201,7 @@ public class WomenFollowupHelper {
 				womenVaccine.put(RequestElements.TT5, vaccine);
 			}
 
-		}
+		}}finally{sc.closeSession();}
 		return womenVaccine;
 	}
 

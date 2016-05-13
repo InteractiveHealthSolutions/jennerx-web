@@ -9,6 +9,7 @@ import org.ird.unfepi.model.Child;
 import org.ird.unfepi.model.IdMapper;
 import org.ird.unfepi.model.Identifier;
 import org.ird.unfepi.model.IdentifierType;
+import org.ird.unfepi.model.Vaccination;
 
 
 public class childTest {
@@ -22,10 +23,15 @@ public class childTest {
 		child=sc.getChildService().findChildById("01001120620005", false, new String[]{"idMapper"});
 		//a valid child should be provided
 							
+		
+		
 		IdMapper childIdMapper = child.getIdMapper();
 		List<Identifier> identifiers = childIdMapper.getIdentifiers();
 		Iterator< Identifier> idIterator = identifiers.iterator();
-		while(idIterator.hasNext())
+		
+		List<Vaccination> vaccinatedList = sc.getVaccinationService().findByCriteria(childIdMapper.getMappedId(), (short) 1,org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.VACCINATED, 12, 15, true,  new String[] { "idMapper" });
+		System.out.println(vaccinatedList);
+		/*while(idIterator.hasNext())
 		{
 			//an old id was found
 			Identifier oldIdentifer = idIterator.next();
@@ -45,7 +51,7 @@ public class childTest {
 		identifiers.add(newIdentifier);
 		childIdMapper.setIdentifiers(identifiers);
 		sc.getIdMapperService().updateIdMapper(childIdMapper);
-		sc.commitTransaction();
+		sc.commitTransaction();*/
 		/*Session ss = Context.getNewSession();
 		try{
 			ss.createSQLQuery("CREATE TEMPORARY TABLE table2 AS (SELECT NOW())").executeUpdate();

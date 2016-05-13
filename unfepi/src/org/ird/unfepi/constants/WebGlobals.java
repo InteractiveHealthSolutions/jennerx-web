@@ -83,6 +83,9 @@ public class WebGlobals {
 	public static final String BOOLEAN_CONVERTER_FALSE_STRING = "false";
 
 	public static final int PAGER_PAGE_SIZE = 20;
+
+	public static final int GRACE_HOURS = 96; // = 4 Days
+	
 	
 	public enum PagerParams {
 		pageSize,

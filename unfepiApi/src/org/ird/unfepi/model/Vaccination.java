@@ -32,12 +32,26 @@ public class Vaccination implements java.io.Serializable {
 		UNKNOWN
 	}
 	
+	public enum ROLE{
+		ENTRANCE("Entrance"),EXIT("Exit");
+		private String stringValue;
+		
+		private ROLE(String stringValue) {
+			this.stringValue = stringValue;
+		}
+		
+		@Override
+		public String toString() {
+			return stringValue;
+		}
+	}
 	public enum VACCINATION_STATUS{
-		SCHEDULED,
-		VACCINATED,
-		NOT_VACCINATED,
-		RETRO,
-		RETRO_DATE_MISSING,
+		
+		SCHEDULED("SCHEDULED"),
+		VACCINATED("VACCINATED"),
+		NOT_VACCINATED("NOT VACCINATED"),
+		RETRO("RETRO"),
+		RETRO_DATE_MISSING("RETRO DATE MISSING"),
 		/**
 		 * Entry might be a result of unfilled form, or incomplete process that partially filled the table data
 		 * to make some other process work that can not work without a vaccination in place.
@@ -46,7 +60,17 @@ public class Vaccination implements java.io.Serializable {
 		 * To make the process work, vaccination table would be filled with necessary data 
 		 * and a form would be logged as 'to be filled later' allowing lottery to take place with out followup form.
 		 */
-		UNFILLED;
+		UNFILLED("UNFILLED");
+		
+		private String stringValue;
+		private VACCINATION_STATUS(String stringValue) {
+			this.stringValue = stringValue;
+		}
+		
+		@Override
+		public String toString() {
+			return stringValue;
+		}
 	}
 
 	@Id
@@ -146,7 +170,42 @@ public class Vaccination implements java.io.Serializable {
 	/** The last edited date. */
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastEditedDate;
+	
+	@Column(name="voided")
+	private boolean voided;
+	@Column(name="voidReason")
+	private String voidedReason;
+	
+	@Column(name="role")
+	private String role ;
+	
+	public boolean isVoided() {
+		return voided;
+	}
 
+	public void setVoided(boolean voided) {
+		this.voided = voided;
+	}
+
+	public String getVoidedReason() {
+		return voidedReason;
+	}
+
+	public void setVoidedReason(String voidedReason) {
+		this.voidedReason = voidedReason;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	
+	
+	
 	/**
 	 * Instantiates a new vaccination.
 	 */

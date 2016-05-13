@@ -101,7 +101,7 @@ function submitThisForm() {
 		</spring:bind>
     	</td>
 	</tr>
-	<tr>
+	<%-- <tr>
         <td>Vaccinator`s NIC  : <span class="mendatory-field">*</span></td>
         <td><spring:bind path="command.nic">
              <input id="nic" name="nic" class="numbersOnly" maxlength="13" value="${status.value}"/>
@@ -116,7 +116,7 @@ function submitThisForm() {
              <br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
              </spring:bind>
 		</td>
-    </tr>
+    </tr> --%>
     <tr>
     	<td>User name<span class="mendatory-field">*</span></td>
         <td><input id="usernamegiven" name="usernamegiven" maxlength="15" value="${usernamegiven}" /></td>

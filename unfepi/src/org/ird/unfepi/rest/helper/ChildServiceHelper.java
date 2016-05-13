@@ -39,10 +39,10 @@ public class ChildServiceHelper {
 		//TODO divide in 10thoussand chunks
 		String query="SELECT v.vaccinationRecordNum vId,v.vaccinationCenterId centreid,v.vaccineId, v.lastEditedDate ,v.createdDate, "+
 				"v.vaccinationDate,v.vaccinationDuedate,v.vaccinationStatus, i.identifier childidentifier,v.childId, "+
-				"v.reasonVaccineNotGiven  reason  ,v.epiNumber,v.createdByUserId creator, v.lastEditedByUserId lastEditor "+
+				"v.reasonVaccineNotGiven  reason  , v.role role,v.epiNumber,v.createdByUserId creator, v.lastEditedByUserId lastEditor "+
 				"FROM unfepi.vaccination  v  inner join child c on c.mappedId=v.childId "+ 
 				"inner join identifier i on v.childid=i.mappedid  AND  i.preferred join vaccine on v.vaccineId=vaccine.vaccineId  "+ 
-				" where v.vaccinationRecordNum>"+lastRecord+"  order by vId ASC limit 10000 ";
+				" where v.voided=0 and v.vaccinationRecordNum>"+lastRecord+"  order by vId ASC limit 10000 ";
 		try{
 				List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
 		
@@ -81,10 +81,10 @@ public class ChildServiceHelper {
 		ServiceContext sc = Context.getServices();
 		String query = "SELECT  i.identifier childidentifier, v.vaccinationCenterId centreid,v.vaccineId, v.lastEditedDate ,v.createdDate, "
 				+ "v.vaccinationDate,v.vaccinationDuedate,v.vaccinationStatus,  "
-				+ "v.vaccinatorId ,v.reasonVaccineNotGiven  reason,v.epiNumber,v.createdByUserId creator, v.lastEditedByUserId lastEditor "
+				+ "v.vaccinatorId ,v.role role,v.reasonVaccineNotGiven  reason,v.epiNumber,v.createdByUserId creator, v.lastEditedByUserId lastEditor "
 				+ "FROM unfepi.vaccination  v  inner join child c on c.mappedId=v.childId "
 				+ "inner join identifier i on v.childid=i.mappedid  AND  i.preferred join vaccine on v.vaccineId=vaccine.vaccineId   "
-				+ "where v.lastEditedDate >='"
+				+ "where v.voided=0 and v.lastEditedDate >='"
 				+ lastSyncedTime+"' order by identifier ASC ;";
 		try {
 			List<HashMap> map = sc.getCustomQueryService()

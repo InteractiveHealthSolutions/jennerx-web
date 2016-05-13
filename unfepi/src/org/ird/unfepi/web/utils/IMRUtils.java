@@ -4,11 +4,15 @@
 package org.ird.unfepi.web.utils;
 
 import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+import org.ird.unfepi.constants.WebGlobals;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Model.TimeIntervalUnit;
@@ -21,16 +25,42 @@ import org.ird.unfepi.model.Vaccination;
 import org.ird.unfepi.model.VaccinationCenterVaccineDay;
 import org.ird.unfepi.model.Vaccine;
 import org.ird.unfepi.model.VaccineGap;
+import org.ird.unfepi.model.VaccineGapId;
 import org.ird.unfepi.model.VaccinePrerequisite;
 import org.ird.unfepi.utils.ArmDayTiming;
 import org.ird.unfepi.utils.Utils;
 import org.ird.unfepi.utils.date.DateUtils;
 import org.ird.unfepi.web.utils.VaccineSchedule.VaccineStatusType;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
  * The Class IMRUtils.
  */
 public class IMRUtils {
+	
+	 class Gap {
+		String unit;
+		int value;
+		
+		public Gap(String unit, int value) {
+			super();
+			this.unit = unit;
+			this.value = value;
+		}
+		public String getUnit() {
+			return unit;
+		}
+		public void setUnit(String unit) {
+			this.unit = unit;
+		}
+		public int getValue() {
+			return value;
+		}
+		public void setValue(int value) {
+			this.value = value;
+		}
+	}
 
 	public static Vaccine getNextVaccine(String currentVaccine, ServiceContext sc){
 		return sc.getVaccinationService().getByName(getNextVaccineName(currentVaccine));
@@ -91,6 +121,179 @@ public class IMRUtils {
 		
 		return true;
 	}
+	
+	
+	
+public static boolean validateBirthGap(Date birthDate, Date vaccinatedDate,short vaccineId) {
+	//VaccineGap gapFromBirth=new VaccineGap();
+	ServiceContext sc = Context.getServices();	
+try{
+		List<Map> list = sc.getCustomQueryService().getDataBySQLMapResult("SELECT vg.gapTimeUnit, vg.value ,vg.vaccineId,vgt.vaccineGapTypeId FROM vaccinegap vg inner join vaccinegaptype vgt on vg.vaccineGapTypeId=vgt.vaccinegaptypeid"+
+				" where vg.vaccineId="+vaccineId+" and vgt.name='Birthdate Gap';");
+		if( list.size()==0){
+			return true;
+		}
+		String unit=(String)list.get(0).get("gapTimeUnit");
+		int value=(Short)list.get(0).get("value");
+		//Gap gapFromBirth=new Gap(unit,value );
+		VaccineGapId id =new VaccineGapId();
+				id.setVaccineId((Short) list.get(0).get("vaccineId"));
+		id.setVaccineGapTypeId((Short) list.get(0).get("vaccineGapTypeId"));//vaccineGapTypeId
+		//gapFromBirth.setId(id);
+		
+		if(value == 0) {
+			return true;
+		}
+		
+		if(vaccinatedDate.before(birthDate)) {
+			return false;
+		}
+		
+		long duration  = vaccinatedDate.getTime() - birthDate.getTime();
+		long diffInHours = TimeUnit.MILLISECONDS.toHours(duration);
+		
+		//String unit = gapFromBirth.getUnit();
+		long gapInHours = 0;
+		if(unit.equals("DAY")) {
+			gapInHours =value*24;
+		} else if(unit.equals("WEEK")) {
+			gapInHours = value*7*24;
+		} else if(unit.equals("MONTH")) {
+			gapInHours = value*30*24;
+		} else if(unit.equals("YEAR")) {
+			gapInHours = value*12*30*24;
+		}
+		
+		if(diffInHours >= gapInHours) {
+			return true;
+		} else if((gapInHours-diffInHours)<=WebGlobals.GRACE_HOURS) {
+            return true;
+        }
+	
+}finally{
+	sc.closeSession();
+}
+		return false;
+	}
+	
+	
+	public static boolean validatePreRequisiteGap(short vaccineId,Date birthDate, Date preRequisiteVaccinationDate, Date vaccineDate) {
+		ServiceContext sc = Context.getServices();	
+		try{
+		List<Map> listPrequisite = sc.getCustomQueryService().getDataBySQLMapResult("SELECT vg.gapTimeUnit, vg.value ,vg.vaccineId,vgt.vaccineGapTypeId  FROM vaccinegap vg inner join vaccinegaptype vgt on vg.vaccineGapTypeId=vgt.vaccinegaptypeid"+
+				" where vg.vaccineId="+vaccineId+" and vgt.name='Previous Vaccine Gap';");
+		List<Map> listOverAge = sc.getCustomQueryService().getDataBySQLMapResult("SELECT vg.gapTimeUnit, vg.value ,vg.vaccineId,vgt.vaccineGapTypeId  FROM vaccinegap vg inner join vaccinegaptype vgt on vg.vaccineGapTypeId=vgt.vaccinegaptypeid"+
+				" where vg.vaccineId="+vaccineId+" and vgt.name='Over Age Gap';");
+		//Gap gapFromPreReq=new Gap((String)listPrequisite.get(0).get("gapTimeUnit"), (Integer)listPrequisite.get(0).get("value"));
+		
+		if(listPrequisite.size()==0){
+			return true;
+		}
+		String preReqUnit=(String)listPrequisite.get(0).get("gapTimeUnit");
+		int preReqValue=(Short)listPrequisite.get(0).get("value");
+		
+		//Gap gapOverAgeGap=new Gap((String)listOverAge.get(0).get("gapTimeUnit"), (Integer)listOverAge.get(0).get("value"));
+		String overAgeUnit = null;
+		
+		
+		int overAgeValue = 0;
+		if(listOverAge!=null && listOverAge.size()>0){
+			if(listOverAge.get(0)!=null){
+			overAgeUnit=(String)listOverAge.get(0).get("gapTimeUnit");
+			 overAgeValue=(Short)listOverAge.get(0).get("value");
+			 
+			 
+			}
+			}
+		
+		
+	//	sc.closeSession();
+		
+		if(vaccineDate.before(preRequisiteVaccinationDate)) {
+			return false;
+		}
+		
+		long duration  = vaccineDate.getTime() - preRequisiteVaccinationDate.getTime();
+		long diffInHours = TimeUnit.MILLISECONDS.toHours(duration);
+		String unit = preReqUnit;
+		int gapValue =preReqValue;
+		
+		if(listOverAge.size()>0 && listOverAge.get(0) != null) {
+			long preRequisiteAge = preRequisiteVaccinationDate.getTime() - birthDate.getTime();
+			long preRequisiteAgeHours = TimeUnit.MILLISECONDS.toHours(preRequisiteAge);
+			
+			if(preRequisiteAgeHours >= 8760) {
+				unit = overAgeUnit;
+				gapValue = overAgeValue;
+			}
+		}
+		
+		long gapInHours = 0;
+		if(unit.equals("DAY")) {
+			gapInHours = gapValue*24;
+		} else if(unit.equals("WEEK")) {
+			gapInHours = gapValue*7*24;
+		} else if(unit.equals("MONTH")) {
+			gapInHours = gapValue*30*24;
+		} else if(unit.equals("YEAR")) {
+			gapInHours = gapValue*12*30*24;
+		}
+		
+		if(diffInHours >= gapInHours) {
+			return true;
+		} else if((gapInHours-diffInHours)<=WebGlobals.GRACE_HOURS) {
+            return true;
+        }
+	}finally{
+		sc.closeSession();
+	}
+		return false;
+	}
+
+	public static boolean validateMaxBirthGap(short vaccineId,Date birthDate, Date vaccineDate) {
+		ServiceContext sc = Context.getServices();	
+		try{List<Map> listPrequisite = sc.getCustomQueryService().getDataBySQLMapResult("SELECT vg.gapTimeUnit, vg.value ,vg.vaccineId,vgt.vaccineGapTypeId  FROM vaccinegap vg inner join vaccinegaptype vgt on vg.vaccineGapTypeId=vgt.vaccinegaptypeid"+
+				" where vg.vaccineId="+vaccineId+" and vgt.name='Vaccine Expiry Gap';");
+		//Gap gapMax=new Gap((String)listPrequisite.get(0).get("gapTimeUnit"), (Integer)listPrequisite.get(0).get("value"));
+		if( listPrequisite.size()==0){
+			return true;
+		}
+		
+		String gapUnit=(String)listPrequisite.get(0).get("gapTimeUnit");
+		int gapValue=(Short)listPrequisite.get(0).get("value");
+		sc.closeSession();
+		
+		if(vaccineDate.before(birthDate)) {
+			return false;
+		}
+		
+		long duration  = vaccineDate.getTime() - birthDate.getTime();
+		long diffInHours = TimeUnit.MILLISECONDS.toHours(duration);
+		
+		String unit = gapUnit;
+		long gapInHours = 0;
+		
+		if(unit.equals("DAY")) {
+			gapInHours = gapValue*24;
+		} else if(unit.equals("WEEK")) {
+			gapInHours = gapValue*7*24;
+		} else if(unit.equals("MONTH")) {
+			gapInHours = gapValue*30*24;
+		} else if(unit.equals("YEAR")) {
+			gapInHours = gapValue*12*30*24;
+		}
+		
+		if(diffInHours <= gapInHours) {
+			return true;
+		} else if((diffInHours-gapInHours)<=WebGlobals.GRACE_HOURS) {
+            return true;
+        }
+	}finally{
+		sc.closeSession();
+	}
+		return false;
+	}
+	
 	
 	public static Date getPrerequisiteVaccineDate(VaccineSchedule vaccineSch, List<VaccineSchedule> schedule) {
 		if(vaccineSch.getPrerequisites() == null || vaccineSch.getPrerequisites().size() == 0){
@@ -492,5 +695,50 @@ public class IMRUtils {
 
 		return reminderSmses;
 	}
+
 	
+	/*
+	 *  creates json for MSF vaccine Schedule calender
+	 * 
+	 */
+	public static JSONArray buildChildVaccineJSON(List<Vaccine> vaccines,
+			 List<Vaccination> vaccinations) {
+		
+		JSONArray json = new JSONArray();
+		for (Vaccine v : vaccines) {
+			
+			JSONObject obj = new JSONObject();
+			obj.put("vaccineId", v.getVaccineId());
+			obj.put("name", v.getName());
+			JSONObject prerequesite = new JSONObject();
+			for (VaccinePrerequisite vp : v.getPrerequisites()) {
+				obj.put("preReqId", vp.getPrerequisite().getVaccineId());
+				obj.put("hasPreReq", true);
+				break;
+
+			}
+			for (VaccineGap vg : v.getVaccineGaps()) {
+				JSONObject gap = new JSONObject();
+				gap.put("unit", vg.getGapTimeUnit().name());
+				gap.put("value", vg.getValue());
+
+				obj.put(vg.getVaccineGapType().getName(), gap);
+			}
+			if (vaccinations != null) {
+				for (Vaccination va : vaccinations) {
+					if (va.getVaccineId() == v.getVaccineId()) {
+						obj.put("status", "vaccinated");
+						SimpleDateFormat sdf = new SimpleDateFormat();
+						sdf.applyPattern("dd/MM/yyyy");
+						obj.put("dateGiven",
+								sdf.format(va.getVaccinationDate()));
+					}
+				}
+			}
+			json.add(obj);
+		}
+
+		return json;
+	}
+
 }

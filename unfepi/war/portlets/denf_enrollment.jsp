@@ -10,6 +10,7 @@
 <%@page import="org.ird.unfepi.constants.FormType"%>
 <%@page import="org.ird.unfepi.utils.validation.REG_EX"%>
 <%@page import="org.ird.unfepi.model.Vaccination"%>
+<%@page import="org.ird.unfepi.model.Vaccine"%>
 <%@page import="org.ird.unfepi.model.Vaccination.VACCINATION_STATUS"%>
 <%@page import="org.ird.unfepi.model.Model.ContactTeleLineType"%>
 
@@ -33,7 +34,8 @@ function onloadSettingOfControls()
 	
 	DWRVaccineService.getSchedule('${command.centerVisit.uuid}', function(result) {
 		//alert(result);
-		vaccineScheduleGenerator(convertToDate($('#birthdate').val()), convertToDate($('#centerVisitDate').val()), '${command.centerVisit.childId}', '${command.centerVisit.vaccinationCenterId}', result, '${command.centerVisit.uuid}',true);
+	//	vaccineScheduleGenerator(convertToDate($('#birthdate').val()), convertToDate($('#centerVisitDate').val()), '${command.centerVisit.childId}', '${command.centerVisit.vaccinationCenterId}', result, '${command.centerVisit.uuid}',true);
+		vaccineMSFScheduleGenerator('${command.centerVisit.childId}' ,convertToDate($('#birthdate').val()),${vaccines});
 	});
 }
 
@@ -43,15 +45,17 @@ function birthChanged(jqControl){
 		$('input[name^="childage"]').val('');
 		//reset birthdate input
 		$('#birthdate').val('');
-		alert('Tareekh pedaish say pehlay Enrollment ki tareekh aur Center ka indraj zaroori hy.');
+		alert('Before entering birth date , please enter enrollment date.');
 	}
 	else{
-		vaccineScheduleGenerator(convertToDate(jqControl.val()), convertToDate($('#centerVisitDate').val()), '${command.centerVisit.childId}', $('#vaccinationCenterId').val(), null,'${command.centerVisit.uuid}',true);
+		vaccineMSFScheduleGenerator('${command.centerVisit.childId}' ,convertToDate($('#birthdate').val()),${vaccines});
 	}
 }
 //reset schedule
 function resetSchedule(jqControl){
-	vaccineScheduleGenerator('', '','${command.centerVisit.childId}', null,null,'${command.centerVisit.uuid}');
+	vaccineMSFScheduleGenerator('${command.centerVisit.childId}' ,convertToDate($('#birthdate').val()),${vaccines});
+
+//	vaccineScheduleGenerator('', '','${command.centerVisit.childId}', null,null,'${command.centerVisit.uuid}');
 }
 function subfrm(){
 	<%-- if(!vaccinationCommonValidations(document,/^<%=REG_EX.CELL_NUMBER%>$/)){
@@ -59,12 +63,12 @@ function subfrm(){
 	} --%>
 
 	if($('#centerVisitDate').val() == ''){
-		alert('Pehlay Enrollment ki Tareekh ka indraj karen');
+		alert('First enter enrollment date');
 		return;
 	}
 	
 	if(convertToDate($('#birthdate').val()) == null){
-		alert('Pehlay Tareekh Pedaish ya Umr ka indraj karen');
+		alert('First enter birthdate');
 		return;
 		 
 	}
@@ -98,7 +102,7 @@ function submitThisForm() {
 <form method="post" id="frm" name="frm" >
 <table class="denform-h">
 	<tr>
-    	<td>Enrollment ki Tareekh <span class="mendatory-field">*</span></td>
+    	<td><spring:message code="label.enrollmentdate"/> <span class="mendatory-field">*</span></td>
         <td>
         <spring:bind path="command.centerVisit.visitDate">
         <!-- MUST be named as centerVisitDate: used in plt_vaccine_schedule for autopopulating date incase of status VACCINATED -->
@@ -117,7 +121,7 @@ function centerVisitDateChanged() {
     	</td>
     </tr>
     <tr>
-    	<td>Vaccinator ID <span class="mendatory-field">*</span></td>
+    	<td><spring:message code="label.vaccinatorId"/><span class="mendatory-field">*</span></td>
 		<td><spring:bind path="command.centerVisit.vaccinatorId">
             <select id="vaccinatorId" name="centerVisit.vaccinatorId" bind-value="${status.value}">
                 <option></option>
@@ -130,7 +134,7 @@ function centerVisitDateChanged() {
 		</td>
 	</tr>
 	<tr>
-		<td>Vaccination Center <span class="mendatory-field">*</span></td>
+		<td><spring:message code="label.vaccinationCenter"/><span class="mendatory-field">*</span></td>
 		<td>
 			<spring:bind path="command.centerVisit.vaccinationCenterId">
             <select id="vaccinationCenterId" name="centerVisit.vaccinationCenterId" bind-value="${status.value}" onchange="centerChanged();">
@@ -152,15 +156,15 @@ function centerChanged() {
 		</td>
 	</tr>
 	<tr>
-    	<td>Project ID <span class="mendatory-field">*</span></td>
+    	<td><spring:message code="label.childIdentifier"></spring:message><span class="mendatory-field">*</span></td>
         <td>
-        	<spring:bind path="command.projectId">
-				<input type="text" id="programId" name="projectId" maxlength="14" value="<c:out value="${status.value}"/>" class="numbersOnly" />
+        	<spring:bind path="command.childIdentifier">
+				<input type="text" id="childIdentifier" name="childIdentifier" maxlength="14" value="<c:out value="${status.value}"/>" class="numbersOnly" />
 				<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
         </td>
     </tr>
-	<tr>
+	<%-- <tr>
 		<td>EPI Register Number <span class="mendatory-field">*</span></td>
 		<td>
 			<spring:bind path="command.centerVisit.epiNumber">
@@ -169,7 +173,7 @@ function centerChanged() {
 				<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
 		</td>
-	</tr>
+	</tr> --%>
 	<tr>
         <td colspan="2" class="headerrow">Basic Info</td>
     </tr>
@@ -186,7 +190,7 @@ function centerChanged() {
 	<tr>
         <td colspan="2" class="headerrow">Immunization Details</td>
     </tr>
-    <tr>
+  <%--   <tr>
 		<td>Kya vaccines ka course iss hee center se mukamal kareinge? <span class="mendatory-field">*</span></td>
 		<td>
 			<spring:bind path="command.completeCourseFromCenter">
@@ -199,16 +203,16 @@ function centerChanged() {
 			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 		</spring:bind>
 		</td>
-	</tr>
+	</tr> --%>
 	<tr>
         <td colspan="2">
-        <%@ include file="plt_vaccine_schedule_den.jsp" %>
+        <%@ include file="plt_vaccine_msf_schedule.jsp" %>
         </td>
     </tr>
 	<tr>
         <td colspan="2" class="headerrow">Programme Details</td>
     </tr>
-    <tr>
+<%--    <tr>
 		<td>Kya aap SMS reminder chahtay hein? <span class="mendatory-field">*</span></td>
 		<td>
 			<spring:bind path="command.centerVisit.preference.hasApprovedReminders">
@@ -226,17 +230,17 @@ function centerChanged() {
 				<input type="radio" name="centerVisit.preference.hasApprovedLottery" <c:if test='${not empty status.value && status.value == false}'>checked = "checked"</c:if> value="<%=WebGlobals.BOOLEAN_CONVERTER_FALSE_STRING%>"/>No
 				<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
-		</td>
+		</td>--%>
 	</tr> 
-	<tr>
-		<td>SMS ke liye Mobile Number</td>
+ 	<tr>
+		<td><spring:message code="label.contactNumber"/></td>
 		<td><spring:bind path="command.centerVisit.contactPrimary">
 			<input type="text" id="contactPrimary" name="centerVisit.contactPrimary" maxlength="13" value="${status.value}" class="numbersOnly" />
 			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
 		</td>
-	</tr>
-	<tr>
+	</tr> 
+<%-- 	<tr>
 		<td>Raabtay ke liye koi aur number</td>
 		<td><spring:bind path="command.centerVisit.contactSecondary">
 			<input type="text" id="contactSecondary" name="centerVisit.contactSecondary" maxlength="13" value="${status.value}" class="numbersOnly" />
@@ -252,7 +256,7 @@ function centerChanged() {
              </spring:bind>
 		</td>
     </tr>
-    <tr>
+    <tr> --%>
         <td></td>
         <td>
         <input type="button" id="submitBtn" value="Submit Data" onclick="subfrm();">

@@ -11,7 +11,7 @@
 %>
 <div class="centerdivh" style="margin-top: 15%;">
 <form method="post">
-    <h4 class="formheadingL" style="margin-bottom: 50px">Welcome to Zindagi Mehfooz Study</h4>
+    <h4 class="formheadingL" style="margin-bottom: 50px">Welcome to JennerX</h4>
 		<table class="denform-s" style="width: 35%">
 			<tr>
 				<td class="headerrow" colspan="2">Log in</td>

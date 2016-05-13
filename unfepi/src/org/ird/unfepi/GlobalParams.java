@@ -251,7 +251,8 @@ public class GlobalParams
 	public static final int TEAM_USER_PROGRAMID_LENGTH = 3;
 	public static final String TEAM_USER_PROGRAMID_REGEX = "[1-9].{"+(TEAM_USER_PROGRAMID_LENGTH-1)+"}";
 
-	public static final int CHILD_PROGRAMID_LENGTH = 14;
+	//changing it to 8 MSF specific
+	public static final int CHILD_PROGRAMID_LENGTH = 8;
 	/** 6 digit numeric sequence starting with 1 */
 	public static final String CHILD_PROGRAMID_REGEX = "[1-9].{"+(CHILD_PROGRAMID_LENGTH-1)+"}";
 	public static final String CHILD_ROLE_NAME = "child";

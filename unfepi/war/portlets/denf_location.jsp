@@ -18,10 +18,10 @@ function submitThisForm() {
 	<tr>
 		<td>Parent Location</td>
         <td>
-<spring:bind path="command.parentLocation.locationId">
-    <input name="${status.expression}" id="cc" class="easyui-combotree" style="width:250px;"/>
+ <spring:bind path="command.parentLocation.locationId">
+     <input name="${status.expression}" id="cc" class="easyui-combotree" style="width:250px;"/>
 	<br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
-</spring:bind>
+ </spring:bind> 
 <script type="text/javascript">
 $( document ).ready(function() {
 $('#cc').combotree({
@@ -55,14 +55,14 @@ function treeDataLoaderLocations(parentId){
             </spring:bind>
 		</td>
 	</tr>
-	<tr>
+<%-- 	<tr>
         <td>Location Program ID (mandatory incase of city)</td>
         <td><spring:bind path="command.otherIdentifier">
              <input type="text" id="otherIdentifier" name="otherIdentifier" maxlength="2" value="${status.value}"/>
              <br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
              </spring:bind>
 		</td>
-    </tr>
+    </tr> --%>
     <tr>
         <td>Name(unique and identifiable): <span class="mendatory-field">*</span></td>
         <td><spring:bind path="command.name">

@@ -22,7 +22,7 @@ public class ChildValidator implements Validator{
 	public void validateEnrollment(EnrollmentWrapper ew, List<VaccineSchedule> vaccineSchedule, Errors error){
 		ServiceContext sc = Context.getServices();
 		try{
-			ValidatorUtils.validateEnrollmentForm(DataEntrySource.WEB, ew.getProjectId(), ew.getChildNamed(), ew.getChild(), 
+			ValidatorUtils.validateEnrollmentForm(DataEntrySource.WEB, ew.getChildIdentifier(), ew.getChildNamed(), ew.getChild(), 
 					ew.getBirthdateOrAge(), ew.getChildagey(), ew.getChildagem(), ew.getChildagew(), ew.getChildaged(), ew.getAddress(), 
 					ew.getCompleteCourseFromCenter(), ew.getCenterVisit(), vaccineSchedule, null, error, sc);
 		}

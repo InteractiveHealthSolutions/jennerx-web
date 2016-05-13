@@ -1,10 +1,13 @@
 package org.ird.unfepi.web.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.PreRemove;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -19,11 +22,18 @@ import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Address;
 import org.ird.unfepi.model.Child;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
+import org.ird.unfepi.model.Vaccination;
+import org.ird.unfepi.model.Vaccine;
+import org.ird.unfepi.model.VaccineGap;
+import org.ird.unfepi.model.VaccinePrerequisite;
 import org.ird.unfepi.utils.UserSessionUtils;
 import org.ird.unfepi.web.utils.ControllerUIHelper;
+import org.ird.unfepi.web.utils.IMRUtils;
 import org.ird.unfepi.web.utils.VaccinationCenterVisit;
 import org.ird.unfepi.web.utils.VaccineSchedule;
 import org.ird.unfepi.web.validator.ChildValidator;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
@@ -40,7 +50,7 @@ public class AddChildController extends DataEntryFormController
 		LoggedInUser user=UserSessionUtils.getActiveUser(request);
 		EnrollmentWrapper ewr = (EnrollmentWrapper)command;
 		
-		String projectId = ewr.getProjectId();
+		String childIdentifier = ewr.getChildIdentifier();
 		Child ch = ewr.getChild();
 		VaccinationCenterVisit centerVisit = ewr.getCenterVisit();
 		Address addr = ewr.getAddress();
@@ -50,7 +60,7 @@ public class AddChildController extends DataEntryFormController
 			List<VaccineSchedule> vaccineSchedule = (List<VaccineSchedule>) request.getSession().getAttribute(VaccinationCenterVisit.VACCINE_SCHEDULE_KEY+ewr.getCenterVisit().getUuid());
 
 			@SuppressWarnings("unused")
-			List<ChildIncentivization> lotteryRes = ControllerUIHelper.doEnrollment(DataEntrySource.WEB, projectId, ewr.getChildNamed(), ch, 
+			List<ChildIncentivization> lotteryRes = ControllerUIHelper.doEnrollment(DataEntrySource.WEB, childIdentifier, ewr.getChildNamed(), ch, 
 					ewr.getBirthdateOrAge(), ewr.getChildagey(), ewr.getChildagem(), ewr.getChildagew(), ewr.getChildaged(), 
 					addr, centerVisit, ewr.getCompleteCourseFromCenter(), vaccineSchedule, dateFormStart, user.getUser(), sc);
 			
@@ -71,7 +81,7 @@ public class AddChildController extends DataEntryFormController
 				}
 			}*/
 			
-			return new ModelAndView(new RedirectView("childDashboard.htm?action=search&editOrUpdateMessage="+editmessage+"&childId="+projectId));
+			return new ModelAndView(new RedirectView("childDashboard.htm?action=search&editOrUpdateMessage="+editmessage+"&childId="+childIdentifier));
 		} 
 		catch (Exception e) {
 			sc.rollbackTransaction();
@@ -115,10 +125,24 @@ public class AddChildController extends DataEntryFormController
 			ControllerUIHelper.prepareVaccinationReferenceData(request, model, 
 					sc.getVaccinationService().getAllVaccinationCenter(true, new String[]{"idMapper"}), 
 					sc.getVaccinationService().getAllVaccinator(0, Integer.MAX_VALUE, true, new String[]{"idMapper"}));
+			
+			List<HashMap<String, String>> vaccines =sc.getCustomQueryService().getDataBySQLMapResult("select name , vaccine_entity,minGracePeriodDays,fullname , vaccineId from vaccine;"); //sc.getVaccinationService().getAll(true, null, "name");
+			List<HashMap<String, String>> vaccinesGap =sc.getCustomQueryService().getDataBySQLMapResult("SELECT vaccineId, gapTimeUnit,PRIORITY,value, name as gapname FROM unfepi.vaccinegap vg inner join vaccinegaptype vgt on vgt.vaccinegaptypeId=vg.vaccinegaptypeId;;"); //sc.getVaccinationService().getAll(true, null, "name");
+						
+			JSONArray arrayVaccines=new JSONArray();
+			arrayVaccines.addAll(vaccines);
+
+			List<Vaccine> vaccineList=sc.getVaccinationService().getAll(true,new String[]{},null);
+			
+		//	buildChildVaccineJSON(vaccines, gaps, vaccinations)
+			JSONArray arrayVaccinesGap=new JSONArray();
+			arrayVaccinesGap.addAll(vaccinesGap);
+			model.put("vaccines", IMRUtils.buildChildVaccineJSON(vaccineList, null) );
+			//model.put("vaccinesGap", arrayVaccinesGap );
 		}catch (Exception e) {
 			e.printStackTrace();
 			GlobalParams.FILELOGGER.error(formType.name(), e);
-			request.setAttribute("errorMessagev", "An error occurred while retrieving reference data list. Error message is:"+e.getMessage());
+			request.setAttribute("errorMessage", "An error occurred while retrieving reference data list. Error message is:"+e.getMessage());
 		}
 		finally{
 			sc.closeSession();
@@ -127,4 +151,6 @@ public class AddChildController extends DataEntryFormController
 		
 		return model;
 	}
+
+
 }

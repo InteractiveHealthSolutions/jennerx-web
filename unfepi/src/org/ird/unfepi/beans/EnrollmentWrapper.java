@@ -1,33 +1,47 @@
 package org.ird.unfepi.beans;
 
+import java.util.List;
+
 import org.ird.unfepi.model.Address;
 import org.ird.unfepi.model.Child;
+import org.ird.unfepi.model.Identifier;
+import org.ird.unfepi.model.Vaccine;
 import org.ird.unfepi.web.utils.VaccinationCenterVisit;
 
 public class EnrollmentWrapper {
-	private String projectId;
+	private String childIdentifier;
 	private Child child;
 	private Address address;
 	private Boolean childNamed;
 	private String birthdateOrAge;
+	private String village;
+	private Identifier identifier;
 	private String childagey;
 	private String childagem;
 	private String childagew;
 	private String childaged;
 	private String completeCourseFromCenter;
 	private VaccinationCenterVisit centerVisit;
+	private List<Vaccine> vaccines;
 	
 
+	public List<Vaccine> getVaccines() {
+		return vaccines;
+	}
+	public void setVaccines(List<Vaccine> vaccines) {
+		this.vaccines = vaccines;
+	}
 	public EnrollmentWrapper() {
-		child = new Child();
+	child = new Child();
+	identifier=new Identifier();
 		address = new Address();
 		centerVisit = new VaccinationCenterVisit();
 	}
-	public String getProjectId() {
-		return projectId;
+	public String getChildIdentifier() {
+		return childIdentifier;
 	}
-	public void setProjectId(String projectId) {
-		this.projectId = projectId;
+	public void setChildIdentifier(String childIdentifier) {
+		this.childIdentifier = childIdentifier;
 	}
 	public Child getChild() {
 		return child;

@@ -263,7 +263,7 @@ public class RequestElements
 	//AllVaccinationQuery Table data
 	public static final String VACCINATION_DATE = "vaccinationDate";
 	public static final String VACCINATION_DUEDATE = "vaccinationDueDate";
-	public static final String VACCINATION_VACCINATION_STATUS = "status";
+	public static final String VACCINATION_VACCINATION_STATUS = "vaccinationStatus";
 	public static final String VACCINATION_LASTEDITDATE = "lastEditDate";
 	public static final String VACCINATION_CREATEDDATE = "createdDate";
 	public static final String VACCINATION_CHILD_IDENTIFIER = "childidentifier";
@@ -283,6 +283,6 @@ public class RequestElements
 	
 	
 	public static final String LASTRECORD = "lastRecord";
-	
+	public static final String USER_ROLE = "role";
 	
 }

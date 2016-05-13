@@ -35,6 +35,7 @@ public interface VaccinationService {
 
 	Number LAST_QUERY_TOTAL_ROW_COUNT(Class clazz);
 
+	
 	Vaccination getVaccinationRecord(int recordId,boolean isreadonly, String[] mappingsToJoin, String[] sqlFilter);
 	
 	Vaccination getRecievedVaccination(int childId, String vaccineName,boolean isreadonly, String[] mappingsToJoin);
