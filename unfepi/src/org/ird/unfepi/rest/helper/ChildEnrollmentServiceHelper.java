@@ -216,8 +216,7 @@ public class ChildEnrollmentServiceHelper {
 			long location = (Long) json.get("locationId");
 			int locationId = (int) location;
 			long user = (Long) json.get("userId");		
-			User userMapped = sc.getUserService()
-					.findUser(String.valueOf(user));
+			User userMapped = sc.getUserService().findUser(String.valueOf(user));
 			int userId = userMapped.getMappedId();
 			EncounterType type = null;
 			if (encounterType.equalsIgnoreCase("enrollment")) {
@@ -286,6 +285,14 @@ public class ChildEnrollmentServiceHelper {
 							vaccineId.shortValue(),
 							org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.VACCINATED,
 							0, 1500, false, new String[] { "idMapper" });
+			List<Vaccination> retroList = sc
+					.getVaccinationService()
+					.findByCriteria(
+							mappId.getMappedId(),
+							vaccineId.shortValue(),
+							org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.RETRO,
+							0, 1500, false, new String[] { "idMapper" });
+			vaccinatedList.addAll(retroList);
 			org.ird.unfepi.model.Vaccination currentVaccination = new org.ird.unfepi.model.Vaccination();
 			// setting received data vaccine id
 			currentVaccination.setVaccineId(Short.valueOf(vaccineId.toString()));
