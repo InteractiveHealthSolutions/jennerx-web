@@ -23,8 +23,8 @@ if(edit){
 			<th>Name</th>
 			<th>Location</th>
             <th>Full Name</th>
-			<th>Center Type</th>
-			<th>Vaccine Days</th>
+<!-- 			<th>Center Type</th> -->
+<!-- 			<th>Vaccine Days</th> -->
         </tr>
     </thead>
     <tbody>
@@ -42,13 +42,13 @@ if(edit){
             <td>${centermap.center.name}</td>
             <td>${centermap.center.idMapper.identifiers[0].location.name}</td>
             <td><c:out value="${centermap.center.fullName}"></c:out></td>
-            <td class="lowercase"><c:out value="${centermap.center.centerType}"></c:out></td>
-            <td>
-            <a href="editvaccinationCenter.htm?rid=${centermap.center.mappedId}&editvaccinedays=true" class="anchorCustom">clear all and re-enter</a><br>
-            <c:forEach items="${centermap.vaccdaymaplist}" var="vdml">
-            	<span style="font-weight: bolder;">${vdml['vaccine'].name}: </span>${vdml['daylist']}<br>
-            </c:forEach>
-            </td>
+<%--             <td class="lowercase"><c:out value="${centermap.center.centerType}"></c:out></td> --%>
+<!--             <td> -->
+<%--             <a href="editvaccinationCenter.htm?rid=${centermap.center.mappedId}&editvaccinedays=true" class="anchorCustom">clear all and re-enter</a><br> --%>
+<%--             <c:forEach items="${centermap.vaccdaymaplist}" var="vdml"> --%>
+<%--             	<span style="font-weight: bolder;">${vdml['vaccine'].name}: </span>${vdml['daylist']}<br> --%>
+<%--             </c:forEach> --%>
+<!--             </td> -->
         </tr>
   </c:forEach>
   </tbody>

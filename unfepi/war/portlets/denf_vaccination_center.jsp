@@ -134,40 +134,40 @@ function treeDataLoaderLocations(parentId){
  <!--    <tr  height="0">
         <td colspan="2" class="separator-heading">VACCINE DAYS</td>
     </tr> -->
-    <tr height="0">
-    	<td colspan="2">
-	    <table class="previousDataDisplay" hidden="true">
-	    <c:forEach items="${command.vaccineDayMapList}" var="vdm" varStatus="vdmlistvarsta">
-	    	<tr>
-	    		<td colspan="12" class="headerrow">
-	    		<input type="checkbox"  checked="checked"  
-	    			onclick='var checkBoxes = $(".${vdm["vaccine"].name} input");checkBoxes.attr("checked", !checkBoxes.attr("checked"));'> ${vdm['vaccine'].name}<%-- :${vdmlistvarsta.index} --%>
-	    		<%-- <input type="hidden" name="command.vaccineDayMapList[${vdmlistvarsta.index}]['vaccine'].name"> --%>
-    			</td>
-    		</tr>
-    		<tr class="${vdm['vaccine'].name}">
-	    		<td class="columnHeadingDiv">
-	    		<c:forEach items="${command.calendarDays}" var="calday" varStatus="caldayvarsta">
-	    		<div class="columnHeadingDiv">
-	    			<spring:bind path="command.vaccineDayMapList[${vdmlistvarsta.index}]['daylist'][${caldayvarsta.index}]">
-	    				<c:choose>
-	    				<c:when test="${not empty status.value}">
-		    				<input  type="checkbox" name="${status.expression}" value="${calday.dayFullName}" checked="checked">${calday.dayFullName}<%-- :${caldayvarsta.index} --%>
-	    				</c:when>
-	    				<c:otherwise>
-		    				<input type="checkbox" name="${status.expression}" value="${calday.dayFullName}"  checked="checked">${calday.dayFullName}<%-- :${caldayvarsta.index} --%>
-	    				</c:otherwise>
-	    				</c:choose>
-	    			</spring:bind>
-	    		</div>
-    			<c:if test="${caldayvarsta.index %2 ==0}"><br></c:if>
-	    		</c:forEach> 
-	    		</td>
-	    	</tr>
-	    </c:forEach>
-   	    </table>
-    	</td>
-    </tr>
+<!--     <tr height="0"> -->
+<!--     	<td colspan="2"> -->
+<!-- 	    <table class="previousDataDisplay" hidden="true"> -->
+<%-- 	    <c:forEach items="${command.vaccineDayMapList}" var="vdm" varStatus="vdmlistvarsta"> --%>
+<!-- 	    	<tr> -->
+<!-- 	    		<td colspan="12" class="headerrow"> -->
+<!-- 	    		<input type="checkbox"  checked="checked"   -->
+<%-- 	    			onclick='var checkBoxes = $(".${vdm["vaccine"].name} input");checkBoxes.attr("checked", !checkBoxes.attr("checked"));'> ${vdm['vaccine'].name}:${vdmlistvarsta.index} --%>
+<%-- 	    		<input type="hidden" name="command.vaccineDayMapList[${vdmlistvarsta.index}]['vaccine'].name"> --%>
+<!--     			</td> -->
+<!--     		</tr> -->
+<%--     		<tr class="${vdm['vaccine'].name}"> --%>
+<!-- 	    		<td class="columnHeadingDiv"> -->
+<%-- 	    		<c:forEach items="${command.calendarDays}" var="calday" varStatus="caldayvarsta"> --%>
+<!-- 	    		<div class="columnHeadingDiv"> -->
+<%-- 	    			<spring:bind path="command.vaccineDayMapList[${vdmlistvarsta.index}]['daylist'][${caldayvarsta.index}]"> --%>
+<%-- 	    				<c:choose> --%>
+<%-- 	    				<c:when test="${not empty status.value}"> --%>
+<%-- 		    				<input  type="checkbox" name="${status.expression}" value="${calday.dayFullName}" checked="checked">${calday.dayFullName}:${caldayvarsta.index} --%>
+<%-- 	    				</c:when> --%>
+<%-- 	    				<c:otherwise> --%>
+<%-- 		    				<input type="checkbox" name="${status.expression}" value="${calday.dayFullName}"  checked="checked">${calday.dayFullName}:${caldayvarsta.index} --%>
+<%-- 	    				</c:otherwise> --%>
+<%-- 	    				</c:choose> --%>
+<%-- 	    			</spring:bind> --%>
+<!-- 	    		</div> -->
+<%--     			<c:if test="${caldayvarsta.index %2 ==0}"><br></c:if> --%>
+<%-- 	    		</c:forEach>  --%>
+<!-- 	    		</td> -->
+<!-- 	    	</tr> -->
+<%-- 	    </c:forEach> --%>
+<!--    	    </table> -->
+<!--     	</td> -->
+<!--     </tr> -->
 	<tr>
 		<td>Additional Note</td>
 		<td><spring:bind path="command.vaccinationCenter.description">

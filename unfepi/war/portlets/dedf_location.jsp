@@ -17,7 +17,31 @@ function submitThisForm() {
 <table class="denform-h">
 	<tr>
 		<td>Parent Location</td>
-        <td>${command.parentLocation.name} (${command.parentLocation.locationType.typeName})</td>
+        <td>
+ <spring:bind path="command.parentLocation.locationId">
+     <input name="${status.expression}" id="cc" class="easyui-combotree" style="width:250px;"/>
+	<br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
+ </spring:bind> 
+<script type="text/javascript">
+$( document ).ready(function() {
+$('#cc').combotree({
+    required: true,
+    loader: treeDataLoaderLocations
+    });
+    
+});
+
+function treeDataLoaderLocations(parentId){
+	//alert(JSON.stringify(parentId));
+	DWREntityService.getLocationHierarchy({"parentId": (isNaN(parentId)?"":parentId)}, 
+			{callback: function(result) {
+				$('#cc').combotree('clear');
+				$('#cc').combotree('loadData' ,result);
+				$('#cc').combotree('setValue', '${command.parentLocation.locationId}');
+			}, async: false, timeout: 5000});
+}
+</script>
+    	</td>
 	</tr>
 	<%-- <tr>
         <td>Location Program ID (mandatory incase of city)</td>

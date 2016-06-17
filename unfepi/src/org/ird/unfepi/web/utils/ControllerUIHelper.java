@@ -508,25 +508,25 @@ public class ControllerUIHelper {
 		center.setCreator(user);
 		sc.getVaccinationService().saveVaccinationCenter(center);
 
-		for (Map<String, Object> vdml : vaccinationDayMapList) {
-			String[] strarr = (String[]) vdml.get("daylist");
-			Vaccine vaccine = (Vaccine) vdml.get("vaccine");
-
-			Set<VaccinationCenterVaccineDay> av = new HashSet<VaccinationCenterVaccineDay>();
-
-			for (String dayname : strarr) {
-				if (!StringUtils.isEmptyOrWhitespaceOnly(dayname)) {
-					VaccinationCenterVaccineDay vcd = new VaccinationCenterVaccineDay();
-					vcd.setId(new VaccinationCenterVaccineDayId(idMapper.getMappedId(), vaccine.getVaccineId(), getDaySelected(dayname, calendarDays).getDayNumber()));
-
-					av.add(vcd);
-				}
-			}
-
-			for (VaccinationCenterVaccineDay vcdli : av) {
-				sc.getVaccinationService().saveVaccinationCenterVaccineDay(vcdli);
-			}
-		}
+//		for (Map<String, Object> vdml : vaccinationDayMapList) {
+//			String[] strarr = (String[]) vdml.get("daylist");
+//			Vaccine vaccine = (Vaccine) vdml.get("vaccine");
+//
+//			Set<VaccinationCenterVaccineDay> av = new HashSet<VaccinationCenterVaccineDay>();
+//
+//			for (String dayname : strarr) {
+//				if (!StringUtils.isEmptyOrWhitespaceOnly(dayname)) {
+//					VaccinationCenterVaccineDay vcd = new VaccinationCenterVaccineDay();
+//					vcd.setId(new VaccinationCenterVaccineDayId(idMapper.getMappedId(), vaccine.getVaccineId(), getDaySelected(dayname, calendarDays).getDayNumber()));
+//
+//					av.add(vcd);
+//				}
+//			}
+//
+//			for (VaccinationCenterVaccineDay vcdli : av) {
+//				sc.getVaccinationService().saveVaccinationCenterVaccineDay(vcdli);
+//			}
+//		}
 	}
 
 	public static void doLocationRegistration(Location location, User user, ServiceContext sc) {

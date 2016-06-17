@@ -39,11 +39,11 @@ public class AddLocationController  extends DataEntryFormController{
 		
 		
 		Location loc = (Location) command;
-		if(parentLocationId==null)
-		{
-			
-			loc.setParentLocation(null);
-		}                                     
+//		if(parentLocationId==null)
+//		{
+//			
+//			loc.setParentLocation(null);
+//		}                                     
 		/*Location parentLocation=new Location();
 		parentLocation.setLocationId(Integer.parseInt(parentLocationId));
 		parentLocation.setLocationType(new LocationType());

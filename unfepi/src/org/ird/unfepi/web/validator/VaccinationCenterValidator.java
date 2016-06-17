@@ -56,22 +56,22 @@ public class VaccinationCenterValidator implements Validator{
 			error.rejectValue("vaccinationCenter.fullName" , "" , ErrorMessages.CENTER_FULLNAME_INVALID);
 		}
 		
-		int i = 0;
-		for (Map<String, Object> vdml : vaccw.getVaccineDayMapList()) {
-			String[] strarr = (String[]) vdml.get("daylist");
-			boolean anydayspecified = false;
-			for (String string : strarr) {
-				if(!StringUtils.isEmptyOrWhitespaceOnly(string)){
-					anydayspecified = true;
-					break;
-				}
-			}
-			
-			if(!anydayspecified){
-				error.reject("nocode", null, "\nNo day specified for vaccine "+((Vaccine)vdml.get("vaccine")).getName());
-			}
-			
-			i++;
-		}
+//		int i = 0;
+//		for (Map<String, Object> vdml : vaccw.getVaccineDayMapList()) {
+//			String[] strarr = (String[]) vdml.get("daylist");
+//			boolean anydayspecified = false;
+//			for (String string : strarr) {
+//				if(!StringUtils.isEmptyOrWhitespaceOnly(string)){
+//					anydayspecified = true;
+//					break;
+//				}
+//			}
+//			
+//			if(!anydayspecified){
+//				error.reject("nocode", null, "\nNo day specified for vaccine "+((Vaccine)vdml.get("vaccine")).getName());
+//			}
+//			
+//			i++;
+//		}
 	}
 }

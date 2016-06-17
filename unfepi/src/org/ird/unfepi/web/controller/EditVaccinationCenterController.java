@@ -47,6 +47,10 @@ public class EditVaccinationCenterController extends DataEditFormController{
 		
 		ServiceContext sc = Context.getServices();
 		try{
+			String centerLocation = request.getParameter("centerLocation");
+			
+			vaccw.getVaccinationCenter().getIdMapper().getIdentifiers().get(0).setLocationId(Integer.parseInt(centerLocation));
+			sc.getIdMapperService().updateIdMapper(vaccw.getVaccinationCenter().getIdMapper());
 			vaccw.getVaccinationCenter().setEditor(user.getUser());
 			sc.getVaccinationService().updateVaccinationCenter(vaccw.getVaccinationCenter());
 			

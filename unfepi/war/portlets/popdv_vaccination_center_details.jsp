@@ -24,16 +24,16 @@
 <tr>            
             <td>Short name</td><td><c:out value="${model.vaccinationCenter.shortName}"></c:out></td>
 </tr>
-<tr>
-            <td>Vaccine days</td><td>
-			<c:forEach items="${model.vaccineDayMapList}" var="vdml">
-            	<span style="font-weight: bolder;">${vdml['vaccine'].name}: </span>${vdml['daylist']}<br>
-            </c:forEach>
-            </td>
-</tr>
-<tr>
-            <td>Center type</td><td><c:out value="${model.vaccinationCenter.centerType}"></c:out></td>
-</tr>
+<!-- <tr> -->
+<!--             <td>Vaccine days</td><td> -->
+<%-- 			<c:forEach items="${model.vaccineDayMapList}" var="vdml"> --%>
+<%--             	<span style="font-weight: bolder;">${vdml['vaccine'].name}: </span>${vdml['daylist']}<br> --%>
+<%--             </c:forEach> --%>
+<!--             </td> -->
+<!-- </tr> -->
+<!-- <tr> -->
+<%--             <td>Center type</td><td><c:out value="${model.vaccinationCenter.centerType}"></c:out></td> --%>
+<!-- </tr> -->
 <tr>
             <td>Additional note</td><td><c:out value="${model.vaccinationCenter.description}"></c:out></td>
 </tr>

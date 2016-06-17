@@ -22,14 +22,39 @@ function submitThisForm() {
 <!-- DONOT REMOVE -->
 <input type="hidden" value="${editvaccinedays}"/>
 <table class="denform-h">
+<!-- 	<tr> -->
+<!-- 		<td>Center Location<span class="mendatory-field">*</span></td> -->
+<%--         <td>${command.vaccinationCenter.idMapper.identifiers[0].location.parentLocation.name}  --%>
+<%--         ${command.vaccinationCenter.idMapper.identifiers[0].location.parentLocation.locationType.typeName} --%>
+<!-- <!--         >>  -->
+<%-- <%--         ${command.vaccinationCenter.idMapper.identifiers[0].location.name}  --%> 
+<%-- <%--         (${command.vaccinationCenter.idMapper.identifiers[0].location.locationType.typeName})</td> --%>
+<!-- 	</tr>	 -->
 	<tr>
-		<td>Center Location<span class="mendatory-field">*</span></td>
-        <td>${command.vaccinationCenter.idMapper.identifiers[0].location.parentLocation.name} 
-        (${command.vaccinationCenter.idMapper.identifiers[0].location.parentLocation.locationType.typeName})
-        >> 
-        ${command.vaccinationCenter.idMapper.identifiers[0].location.name} 
-        (${command.vaccinationCenter.idMapper.identifiers[0].location.locationType.typeName})</td>
-	</tr>	
+		<td>Area</td>
+        <td>
+       <input name="centerLocation" id="cc" class="easyui-combotree" style="width:250px;"/>
+<script type="text/javascript">
+$( document ).ready(function() {
+$('#cc').combotree({
+    required: true,
+    loader: treeDataLoaderLocations
+    });
+    
+});
+
+function treeDataLoaderLocations(parentId){
+	//alert(JSON.stringify(parentId));
+	DWREntityService.getLocationHierarchy({"parentId": (isNaN(parentId)?"":parentId)}, 
+			{callback: function(result) {
+				$('#cc').combotree('clear');
+				$('#cc').combotree('loadData' ,result);
+				$('#cc').combotree('setValue', '${command.vaccinationCenter.idMapper.identifiers[0].location.locationId}');
+			}, async: false, timeout: 5000});
+}
+</script>
+    	</td>
+	</tr>
     <tr>
 		<td>Date Registered<span class="mendatory-field">*</span></td>
         <td>
@@ -44,18 +69,18 @@ function submitThisForm() {
         <td><div id="idContainerDiv" class="hltext1">${command.vaccinationCenter.idMapper.identifiers[0].identifier}</div>
         </td>
     </tr>
-    <tr>
-		<td>Center Type :<span class="mendatory-field">*</span></td>
-		<td><spring:bind path="command.vaccinationCenter.centerType">
-			<select id="centerType" name="vaccinationCenter.centerType" bind-value="${status.value}">
-				<c:forEach items="<%=CenterType.values()%>" var="centerType_value">
-					<option>${centerType_value}</option>
-				</c:forEach>
-			</select>
-			<br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
-			</spring:bind>
-		</td>
-	</tr>
+<!--     <tr> -->
+<!-- 		<td>Center Type :<span class="mendatory-field">*</span></td> -->
+<%-- 		<td><spring:bind path="command.vaccinationCenter.centerType"> --%>
+<%-- 			<select id="centerType" name="vaccinationCenter.centerType" bind-value="${status.value}"> --%>
+<%-- 				<c:forEach items="<%=CenterType.values()%>" var="centerType_value"> --%>
+<%-- 					<option>${centerType_value}</option> --%>
+<%-- 				</c:forEach> --%>
+<!-- 			</select> -->
+<%-- 			<br><span class="error-message"><c:out	value="${status.errorMessage}" /></span> --%>
+<%-- 			</spring:bind> --%>
+<!-- 		</td> -->
+<!-- 	</tr> -->
     <tr>
         <td>Center Name(unique and identifiable): <span class="mendatory-field">*</span></td>
         <td><spring:bind path="command.vaccinationCenter.name">
