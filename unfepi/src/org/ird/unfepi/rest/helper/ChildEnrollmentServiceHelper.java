@@ -252,46 +252,29 @@ public class ChildEnrollmentServiceHelper {
 			// #TODO: do role based criteria
 			Vaccination dbVaccination = null;
 			
-			String vaccinationStatus = (String) json
-					.get(RequestElements.VACCINATION_VACCINATION_STATUS);
-			String vaccinationDueDate = (String) json
-					.get(RequestElements.VACCINATION_DUEDATE);
+			String vaccinationStatus = (String) json.get(RequestElements.VACCINATION_VACCINATION_STATUS);
+			String vaccinationDueDate = (String) json.get(RequestElements.VACCINATION_DUEDATE);
 		
 			String creator = (String) json.get(RequestElements.CREATOR);
-			String createdDate = (String) json
-					.get(RequestElements.CREATED_DATE);
-			String lastEditDate = (String) json
-					.get(RequestElements.LAST_EDITED_DATE);
+			String createdDate = (String) json.get(RequestElements.CREATED_DATE);
+			String lastEditDate = (String) json.get(RequestElements.LAST_EDITED_DATE);
 			String lastEditor = (String) json.get(RequestElements.LASTEDITOR);
 			String vaccinatorId = (String) json.get(RequestElements.VACCINATOR);
-			String vaccinationDate = (String) json
-					.get(RequestElements.VACCINATION_DATE);
+			String vaccinationDate = (String) json.get(RequestElements.VACCINATION_DATE);
 			Long centreId = (Long) json.get(RequestElements.VACCINATION_CENTER);
 			Long vaccineId = (Long) json.get(RequestElements.VACCINEID);
 			String role = (String) json.get(RequestElements.USER_ROLE);
 			childIdentifier = (Long) json.get(RequestElements.CHILD_IDENTIFIER);
 
-			IdMapper mappId = sc.getIdMapperService().findIdMapper(
-					childIdentifier.toString());
-			Child child = sc.getChildService().findChildById(
-					mappId.getMappedId(), true, new String[] {});
+			IdMapper mappId = sc.getIdMapperService().findIdMapper(childIdentifier.toString());
+			Child child = sc.getChildService().findChildById(mappId.getMappedId(), true, new String[] {});
 			User creatorUser = sc.getUserService().findUser(creator);
 			User lastEditorUser = sc.getUserService().findUser(lastEditor);
 			Date currentVaccinationDate = RestUtils.stringToDate(vaccinationDate);
-			List<Vaccination> vaccinatedList = sc
-					.getVaccinationService()
-					.findByCriteria(
-							mappId.getMappedId(),
-							vaccineId.shortValue(),
-							org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.VACCINATED,
-							0, 1500, false, new String[] { "idMapper" });
-			List<Vaccination> retroList = sc
-					.getVaccinationService()
-					.findByCriteria(
-							mappId.getMappedId(),
-							vaccineId.shortValue(),
-							org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.RETRO,
-							0, 1500, false, new String[] { "idMapper" });
+			
+			List<Vaccination> vaccinatedList = sc.getVaccinationService().findByCriteria(mappId.getMappedId(), vaccineId.shortValue(), org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.VACCINATED, 0, 1500, false, new String[] { "idMapper" });
+			List<Vaccination> retroList = sc.getVaccinationService().findByCriteria(mappId.getMappedId(), vaccineId.shortValue(), org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.RETRO, 0, 1500, false, new String[] { "idMapper" });
+			
 			vaccinatedList.addAll(retroList);
 			org.ird.unfepi.model.Vaccination currentVaccination = new org.ird.unfepi.model.Vaccination();
 			// setting received data vaccine id
@@ -307,12 +290,8 @@ public class ChildEnrollmentServiceHelper {
 							break;
 						}
 					}
-					short it = vaccinatedList.get(0).getVaccine()
-							.getVaccineId();// getPrerequisites().iterator();
-					List list = sc.getCustomQueryService()
-							.getDataBySQLMapResult(
-									"select * from vaccineprerequisite  where vaccinePrerequisiteId="
-											+ it);
+					short it = vaccinatedList.get(0).getVaccine().getVaccineId();// getPrerequisites().iterator();
+					List list = sc.getCustomQueryService().getDataBySQLMapResult("select * from vaccineprerequisite  where vaccinePrerequisiteId=" + it);
 					HashMap map = (HashMap) list.get(0);
 
 					if (map != null) {
@@ -320,30 +299,17 @@ public class ChildEnrollmentServiceHelper {
 						// get and set next vaccine id
 						short nextVaccineId = (Short) map.get("vaccineId");
 						// System.out.println(map.get("vaccineId")+"----");
-						Vaccine nextVaccine = sc.getVaccinationService()
-								.findVaccineById(nextVaccineId);
-						boolean birthGap = IMRUtils.validateBirthGap(
-								child.getBirthdate(), currentVaccinationDate,
-								nextVaccine.getVaccineId());
-						boolean birthMax = IMRUtils.validateMaxBirthGap(
-								nextVaccine.getVaccineId(), child.getBirthdate(),
-								currentVaccinationDate);
-						boolean preReqGap = IMRUtils.validatePreRequisiteGap(
-								nextVaccine.getVaccineId(), child.getBirthdate(),
-								vaccinatedList.get(0).getVaccinationDate(),
-								currentVaccinationDate);
+						Vaccine nextVaccine = sc.getVaccinationService().findVaccineById(nextVaccineId);
+						boolean birthGap = IMRUtils.validateBirthGap(child.getBirthdate(), currentVaccinationDate, nextVaccine.getVaccineId());
+						boolean birthMax = IMRUtils.validateMaxBirthGap(nextVaccine.getVaccineId(), child.getBirthdate(), currentVaccinationDate);
+						boolean preReqGap = IMRUtils.validatePreRequisiteGap(nextVaccine.getVaccineId(), child.getBirthdate(), vaccinatedList.get(0).getVaccinationDate(), currentVaccinationDate);
 						if (birthGap && birthMax & preReqGap) {
 							currentVaccination.setVaccineId(nextVaccineId);
 						} else {
 							if (dbVaccination != null) {
 								if (role.equalsIgnoreCase("Entrance")) {
 									
-									boolean preReq = IMRUtils
-											.validatePreRequisiteGap(
-													nextVaccineId,
-													child.getBirthdate(),
-													currentVaccinationDate,
-													dbVaccination.getVaccinationDate());
+									boolean preReq = IMRUtils.validatePreRequisiteGap(nextVaccineId, child.getBirthdate(), currentVaccinationDate, dbVaccination.getVaccinationDate());
 									if (preReq) {
 										if(dbVaccination.getVaccinationDate().getTime()>currentVaccinationDate.getTime()) {
 											dbVaccination.setVaccineId(nextVaccineId);
@@ -366,12 +332,7 @@ public class ChildEnrollmentServiceHelper {
 									}
 									sc.getCustomQueryService().update(dbVaccination);//TODO
 								} else if (role.equalsIgnoreCase("Exit")) {
-									boolean preReq = IMRUtils
-											.validatePreRequisiteGap(
-													nextVaccineId,
-													child.getBirthdate(),
-													currentVaccinationDate,
-													dbVaccination.getVaccinationDate());
+									boolean preReq = IMRUtils.validatePreRequisiteGap(nextVaccineId, child.getBirthdate(), currentVaccinationDate, dbVaccination.getVaccinationDate());
 									if (preReq) {
 										if(dbVaccination.getVaccinationDate().getTime()>currentVaccinationDate.getTime()) {
 											dbVaccination.setVaccineId(nextVaccineId);
@@ -444,8 +405,7 @@ public class ChildEnrollmentServiceHelper {
 			e.printStackTrace();
 			JSONObject errorjson = new JSONObject();
 			errorjson.put("id", childIdentifier);
-			errorjson.put("message", e.getMessage() != null ? e.getMessage()
-					: "");
+			errorjson.put("message", e.getMessage() != null ? e.getMessage() : "");
 			return errorjson;
 			}finally{
 				sc.closeSession();

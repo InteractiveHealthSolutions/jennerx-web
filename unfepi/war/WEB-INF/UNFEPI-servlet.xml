@@ -406,7 +406,7 @@
 	</property>
 	<property name="dataEntryForm">
 	    <bean class="org.ird.unfepi.DataEntryForm">
-	        <property name="formName" value="enrollment" />
+	        <property name="formName" value="enrollment2" />
         	<property name="formTitle" value="Enrollment (New)" />
         	<property name="permission" value="ADD_CHILDREN_DATA" />
     	</bean>

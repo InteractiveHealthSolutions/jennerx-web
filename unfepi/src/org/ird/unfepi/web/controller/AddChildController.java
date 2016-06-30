@@ -139,6 +139,12 @@ public class AddChildController extends DataEntryFormController
 			arrayVaccinesGap.addAll(vaccinesGap);
 			model.put("vaccines", IMRUtils.buildChildVaccineJSON(vaccineList, null) );
 			//model.put("vaccinesGap", arrayVaccinesGap );
+			
+			List<Vaccine> vaccinesL = sc.getCustomQueryService().getDataByHQL("FROM Vaccine where vaccine_entity like 'CHILD%' and isSupplementary = 0") ;
+			model.put("vaccineList", vaccinesL);
+			
+			model.put("vaccTest", "BcgPenta");
+			
 		}catch (Exception e) {
 			e.printStackTrace();
 			GlobalParams.FILELOGGER.error(formType.name(), e);

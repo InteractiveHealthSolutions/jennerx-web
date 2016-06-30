@@ -387,10 +387,10 @@ try{
 		Calendar actDuedateWrtBirthdate = Calendar.getInstance();
 		actDuedateWrtBirthdate.setTime(birthdate);
 		
-		List<VaccinationCenterVaccineDay> vcdl = new ArrayList<VaccinationCenterVaccineDay>();
-		if(vaccinationCenterId != null){
-			vcdl = sc.getVaccinationService().findVaccinationCenterVaccineDayByCriteria(vaccinationCenterId, vaccine.getVaccineId(), null, true);
-		}
+//		List<VaccinationCenterVaccineDay> vcdl = new ArrayList<VaccinationCenterVaccineDay>();
+//		if(vaccinationCenterId != null){
+//			vcdl = sc.getVaccinationService().findVaccinationCenterVaccineDayByCriteria(vaccinationCenterId, vaccine.getVaccineId(), null, true);
+//		}
 		
 		VaccineGap gap = getBirthdateGap(vaccine);
 		TimeIntervalUnit unit = null;
@@ -469,21 +469,21 @@ try{
 		}
 		
 		// Move date to closest allowed vaccine day for given center
-		boolean dayAllowed = false;
-		for (VaccinationCenterVaccineDay alvd : vcdl) {
-			if(calculatedDuedate.get(Calendar.DAY_OF_WEEK) == alvd.getId().getDayNumber()){
-				dayAllowed = true;
-				break;
-			}
-		}
+//		boolean dayAllowed = false;
+//		for (VaccinationCenterVaccineDay alvd : vcdl) {
+//			if(calculatedDuedate.get(Calendar.DAY_OF_WEEK) == alvd.getId().getDayNumber()){
+//				dayAllowed = true;
+//				break;
+//			}
+//		}
 		
-		if(!dayAllowed){
-			int firstAllowedDay = vcdl.size()>0?vcdl.get(0).getId().getDayNumber():2;//else monday
-			int currday = calculatedDuedate.get(Calendar.DAY_OF_WEEK);
-
-			int dayToAdd = firstAllowedDay >= currday ? (firstAllowedDay-currday) : (7-currday+firstAllowedDay);
-			calculatedDuedate .add(Calendar.DATE, Math.abs(dayToAdd));
-		}
+//		if(!dayAllowed){
+//			int firstAllowedDay = vcdl.size()>0?vcdl.get(0).getId().getDayNumber():2;//else monday
+//			int currday = calculatedDuedate.get(Calendar.DAY_OF_WEEK);
+//
+//			int dayToAdd = firstAllowedDay >= currday ? (firstAllowedDay-currday) : (7-currday+firstAllowedDay);
+//			calculatedDuedate .add(Calendar.DATE, Math.abs(dayToAdd));
+//		}
 
 		return calculatedDuedate.getTime();
 	}

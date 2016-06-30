@@ -1244,8 +1244,8 @@ public class ValidatorUtils {
 			return;
 		}
 
-		ArrayList<VaccineSchedule> defSch = VaccineSchedule.generateDefaultSchedule(child.getBirthdate(), centerVisit.getVisitDate(), centerVisit.getChildId(), centerVisit.getVaccinationCenterId(),
-				true);
+		ArrayList<VaccineSchedule> defSch = VaccineSchedule.generateDefaultSchedule( child.getBirthdate(), centerVisit.getVisitDate(), centerVisit.getChildId(), centerVisit.getVaccinationCenterId(),
+				true, null);
 		boolean anyScheduleVaccineRecceivedToday = false;
 		for (VaccineSchedule dfvsh : defSch) {
 			VaccineSchedule vsobj = null;

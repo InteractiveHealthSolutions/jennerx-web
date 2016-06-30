@@ -1,5 +1,6 @@
 <%@page import="org.ird.unfepi.model.Model.Gender"%>
 <%@page import="org.ird.unfepi.constants.WebGlobals"%>
+<%@ include file="/WEB-INF/template/include.jsp"%>
 	<tr>
         <td>Have You named Child? <span class="mendatory-field">*</span></td>
         <td><spring:bind path="command.childNamed">

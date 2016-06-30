@@ -28,6 +28,9 @@ window.onload = onloadSettingOfControls;
 
 function onloadSettingOfControls() 
 {
+	
+	console.log('${command.centerVisit.childId}');
+	
 	$('#birthdate').change(function() {
 		birthChanged($(this));
 	});
@@ -35,7 +38,7 @@ function onloadSettingOfControls()
 	DWRVaccineService.getSchedule('${command.centerVisit.uuid}', function(result) {
 		//alert(result);
 	//	vaccineScheduleGenerator(convertToDate($('#birthdate').val()), convertToDate($('#centerVisitDate').val()), '${command.centerVisit.childId}', '${command.centerVisit.vaccinationCenterId}', result, '${command.centerVisit.uuid}',true);
-		vaccineMSFScheduleGenerator('${command.centerVisit.childId}' ,convertToDate($('#birthdate').val()),${vaccines});
+// 		vaccineMSFScheduleGenerator('${command.centerVisit.childId}' ,convertToDate($('#birthdate').val()), ${vaccines} )
 	});
 }
 
@@ -48,12 +51,12 @@ function birthChanged(jqControl){
 		alert('Before entering birth date , please enter enrollment date.');
 	}
 	else{
-		vaccineMSFScheduleGenerator('${command.centerVisit.childId}' ,convertToDate($('#birthdate').val()),${vaccines});
+// 		vaccineMSFScheduleGenerator('${command.centerVisit.childId}' ,convertToDate($('#birthdate').val()),${vaccines});
 	}
 }
 //reset schedule
 function resetSchedule(jqControl){
-	vaccineMSFScheduleGenerator('${command.centerVisit.childId}' ,convertToDate($('#birthdate').val()),${vaccines});
+// 	vaccineMSFScheduleGenerator('${command.centerVisit.childId}' ,convertToDate($('#birthdate').val()),${vaccines});
 
 //	vaccineScheduleGenerator('', '','${command.centerVisit.childId}', null,null,'${command.centerVisit.uuid}');
 }
