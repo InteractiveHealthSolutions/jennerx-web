@@ -43,6 +43,7 @@ public class VaccineSchedule {
 		RETRO_DATE_MISSING,
 		VACCINATED,
 		SCHEDULED,
+		CURRENT_RETRO,
 		VACCINATED_EARLIER,
 		NOT_ALLOWED,
 	}
@@ -67,37 +68,34 @@ public class VaccineSchedule {
 	private Boolean expired;
 	private Boolean prerequisite_given_on_current_visit;
 	
-	public void printVaccineSchedule(VaccineSchedule vs){
+	public void printVaccineSchedule(){
 		
-		System.out.print(vs.getVaccine().getName()+ "\t");
-		System.out.print(vs.getBirthdate()+ "\t");
-		System.out.print(vs.getVisitdate()+ "\t");	
+		System.out.print(this.getVaccine().getName()+ "\t");
+		System.out.print(this.getBirthdate()+ "\t");
+		System.out.print(this.getVisitdate()+ "\t");	
 		
-//		System.out.print(Arrays.toString(vs.getPrerequisites().toArray())+ "\t");
-//		System.out.print(Arrays.asList(vs.getPrerequisites().toArray())+ "\t");
-//		System.out.print(vs.getPrerequisites().toArray()+ "\t");
-		System.out.print(vs.getPrerequisites()+ "\t");
-		if(vs.getBirthdate_gap().getVaccine() != null && vs.getBirthdate_gap().getVaccineGapType() != null){
-			System.out.print("[ " + vs.getBirthdate_gap().getVaccine().getName()+" " +  vs.getBirthdate_gap().getVaccineGapType().getName() + " ]"+"\t");
+		System.out.print(this.getPrerequisites()+ "\t");
+		if(this.getBirthdate_gap().getVaccine() != null && this.getBirthdate_gap().getVaccineGapType() != null){
+			System.out.print("[ " + this.getBirthdate_gap().getVaccine().getName()+" " +  this.getBirthdate_gap().getVaccineGapType().getName() + " ]"+"\t");
 			
 		} else {
 			System.out.println( "[]\t");
 		}
 		
-		System.out.print(vs.getSchedule_duedate()+ "\t");
-		System.out.print(vs.getAuto_calculated_date()+ "\t");
-		System.out.print(vs.getAssigned_duedate()+ "\t");
-		System.out.print(vs.getVaccination_date()+ "\t");
-		System.out.print(vs.getExpiry_date()+ "\t");
-		System.out.print(vs.getCenter()+ "\t");
-		System.out.print(vs.getStatus()+ "\t");
-		System.out.print(vs.getIs_current_suspect()+ "\t");
-		System.out.print(vs.getIs_retro_suspect()+ "\t");
-		System.out.print(vs.getVaccinationObjCurrentVisit()+ "\t");
-		System.out.print(vs.getChildId()+ "\t");
-		System.out.print(vs.getPrerequisite_passed()+ "\t");
-		System.out.print(vs.getExpired()+ "\t");
-		System.out.println(vs.getPrerequisite_given_on_current_visit()+ "\t");
+		System.out.print(this.getSchedule_duedate()+ "\t");
+		System.out.print(this.getAuto_calculated_date()+ "\t");
+		System.out.print(this.getAssigned_duedate()+ "\t");
+		System.out.print(this.getVaccination_date()+ "\t");
+		System.out.print(this.getExpiry_date()+ "\t");
+		System.out.print(this.getCenter()+ "\t");
+		System.out.print(this.getStatus()+ "\t");
+		System.out.print(this.getIs_current_suspect()+ "\t");
+		System.out.print(this.getIs_retro_suspect()+ "\t");
+		System.out.print(this.getVaccinationObjCurrentVisit()+ "\t");
+		System.out.print(this.getChildId()+ "\t");
+		System.out.print(this.getPrerequisite_passed()+ "\t");
+		System.out.print(this.getExpired()+ "\t");
+		System.out.println(this.getPrerequisite_given_on_current_visit()+ "\t");
 	}
 	
 	
@@ -118,7 +116,7 @@ public class VaccineSchedule {
 
 		ServiceContext sc = Context.getServices();
 		ArrayList<VaccineSchedule> schedule = new ArrayList<VaccineSchedule>();
-		schedule.addAll(scheduleRetro);
+//		schedule.addAll(scheduleRetro);
 		try {
 			String[] vids = Context.getSetting("child.vaccine-schedule.vaccines-list", null).split(",");
 			ArrayList<Short>  vis = new ArrayList<Short>();
@@ -185,7 +183,14 @@ public class VaccineSchedule {
 				
 				// if vaccine already given donot move forward just set few variables, status and goto next vaccine 
 				if(vvacc != null && vvacc.size() > 0){
-					status = VaccineStatusType.VACCINATED_EARLIER;
+					
+					if(vvacc.get(0).getVaccinationStatus() == VACCINATION_STATUS.UNFILLED){
+						status = VaccineStatusType.CURRENT_RETRO;
+					}
+					else{
+						status = VaccineStatusType.VACCINATED_EARLIER;
+					}
+					
 					asgnduedate = vvacc.get(0).getVaccinationDuedate();
 					vaccdate = vvacc.get(0).getVaccinationDate();
 					centid = vvacc.get(0).getVaccinationCenterId();
@@ -569,7 +574,6 @@ public class VaccineSchedule {
 
 			for (Vaccination va : retroVaccinationL) {
 				
-				System.out.println(va.getVaccineId() + "*******************");
 				VaccineSchedule schedule = new VaccineSchedule();
 				Vaccine vaccine = sc.getVaccinationService().findVaccineById(va.getVaccineId());
 				

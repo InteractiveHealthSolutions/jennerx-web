@@ -28,7 +28,7 @@ import com.mysql.jdbc.StringUtils;
 
 public class DWRVaccineService {
 		
-	public List<VaccineSchedule> getTested(String jsonArray/*, Date birthdate, Date centerVisitDate, Integer childId, int vaccinationCenterId, boolean ignoreCenter, String uuid*/){
+	public ArrayList<VaccineSchedule> getTested(String jsonArray/*, Date birthdate, Date centerVisitDate, Integer childId, int vaccinationCenterId, boolean ignoreCenter, String uuid*/){
 
 		HttpServletRequest req = WebContextFactory.get().getHttpServletRequest();
 		LoggedInUser user = UserSessionUtils.getActiveUser(req);
@@ -42,55 +42,49 @@ public class DWRVaccineService {
 			}
 		}
 
-		List<Vaccination> retroVaccinationL = new ArrayList<Vaccination>();
-		
-		Date birthdate = null;
-		Date centerVisitDate = null;
-		
 		try {
+			ArrayList<Vaccination> retroVaccinationL = new ArrayList<Vaccination>();
+			
+			Date birthdate = null;
+			Date centerVisitDate = null;
 
-			birthdate = new SimpleDateFormat("dd-MM-yyyy").parse("20-04-2016");
-			centerVisitDate = new SimpleDateFormat("dd-MM-yyyy").parse("29-06-2016"); 
+			birthdate = new SimpleDateFormat("dd-MM-yyyy").parse("26-06-2016");
+			centerVisitDate = new SimpleDateFormat("dd-MM-yyyy").parse("01-07-2016"); 
 
 			JSONArray array = new JSONArray(jsonArray); 
 
-			for(int i=0; i<array.length(); i++){
+			
+			int length = array.length();
+			System.out.println(length);
+			
+			for(int i=0; i < array.length(); i++){
 				
 				JSONObject jsonObject  = array.getJSONObject(i);
 				
 				Vaccination vaccination = new Vaccination();
 				vaccination.setVaccineId(Short.parseShort(jsonObject.getString("vaccineId")));
 				vaccination.setVaccinationDate(new SimpleDateFormat("dd-MM-yyyy").parse(jsonObject.getString("vaccinationDate")));
-				vaccination.setVaccinationStatus(VACCINATION_STATUS.RETRO);
+				vaccination.setVaccinationStatus(VACCINATION_STATUS.UNFILLED);
 				vaccination.setVaccinatorId(user.getUser().getMappedId());
 
 				retroVaccinationL.add(vaccination);
 			}
+			
+			ArrayList<VaccineSchedule> scheduleRetro = VaccineSchedule.validateVaccineHistory(retroVaccinationL, birthdate, centerVisitDate, null, null, true);
+			ArrayList<VaccineSchedule> scheduleCurrent = VaccineSchedule.generateDefaultSchedule(birthdate, centerVisitDate, null, null, true, scheduleRetro);
+			return  scheduleCurrent;
 		} catch (Exception e) {
 			e.printStackTrace();
+			
+			return null;
 		}
-
-		List<VaccineSchedule> schedule = VaccineSchedule.validateVaccineHistory(retroVaccinationL, birthdate, centerVisitDate, null, null, true);
-
-		for (VaccineSchedule vs : schedule) {
-			vs.printVaccineSchedule(vs);
-		}
-		
-		System.out.println("---------------------------------------------------------------------------------------------------------");
-		List<VaccineSchedule> scheduleDafault = generateDefaultSchedule(schedule, birthdate, centerVisitDate, null, null, true, null);
-		
-		for (VaccineSchedule vsd : scheduleDafault) {
-			vsd.printVaccineSchedule(vsd);
-		}
-		
-		return  schedule;
 	}
 	
 	public ArrayList<VaccineSchedule> generateDefaultSchedule(List<VaccineSchedule> scheduleRetro , Date birthdate, Date centerVisitDate, Integer childId, Integer vaccinationCenterId, boolean ignoreCenter, String uuid) 
 	{
 		HttpServletRequest req = WebContextFactory.get().getHttpServletRequest();
-		LoggedInUser user=UserSessionUtils.getActiveUser(req);
-		if(user==null){
+		LoggedInUser user = UserSessionUtils.getActiveUser(req);
+		if (user == null) {
 			try {
 				WebContextFactory.get().forwardToString("login.htm");
 			} catch (ServletException e) {
@@ -100,30 +94,8 @@ public class DWRVaccineService {
 			}
 		}
 		
-//		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-//		
-//		
-//		Date birthdate;
-//		try {
-//			birthdate = format.parse("2016-03-17");
-//		} catch (ParseException e) {
-//			birthdate = new Date();
-//			e.printStackTrace();
-//		}
-//		
-//		Date centerVisitDate = new Date();
-//		Integer childId = 5678;
-//		Integer vaccinationCenterId = null;
-//		boolean ignoreCenter = true ;
-//		String uuid = "poiuytrewq";
-		
 		ArrayList<VaccineSchedule> vsch = VaccineSchedule.generateDefaultSchedule(birthdate, centerVisitDate, childId, vaccinationCenterId, ignoreCenter, scheduleRetro);
-		System.out.println(VaccinationCenterVisit.VACCINE_SCHEDULE_KEY+uuid);
 		req.getSession().setAttribute(VaccinationCenterVisit.VACCINE_SCHEDULE_KEY+uuid, vsch);
-		
-		for (VaccineSchedule vaccineSchedule : vsch) {
-			vaccineSchedule.printVaccineSchedule(vaccineSchedule);
-		}
 		
 		return vsch;
 	}

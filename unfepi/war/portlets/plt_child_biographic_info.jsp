@@ -1,48 +1,28 @@
 <%@page import="org.ird.unfepi.model.Model.Gender"%>
 <%@page import="org.ird.unfepi.constants.WebGlobals"%>
 <%@ include file="/WEB-INF/template/include.jsp"%>
-	<tr>
-        <td>Have You named Child? <span class="mendatory-field">*</span></td>
-        <td><spring:bind path="command.childNamed">
-			<select id="childNamed" name="childNamed" onchange="childNamedChanged(this,'');" bind-value="${status.value}">
-				<option></option>
-				<option value="<%=WebGlobals.BOOLEAN_CONVERTER_TRUE_STRING%>">Yes</option>
-				<option value="<%=WebGlobals.BOOLEAN_CONVERTER_FALSE_STRING%>">No</option>
-			</select>
-			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
-		</spring:bind>
-		<script type="text/javascript">
-			<!--
-            function childNamedChanged(sel, prevname) {
-            	if(document.getElementById("childNamed").value == '<%=WebGlobals.BOOLEAN_CONVERTER_TRUE_STRING%>'){
-    				document.getElementById("childNamedtr").style.display = 'table-row';
-            		document.getElementById("childfirstName").value = prevname;
-            	}
-            	else{
-            		document.getElementById("childfirstName").value = 'NO NAME';
-    				document.getElementById("childNamedtr").style.display = 'none';
-            	}
-			}
-			
-			$( document ).ready(function() {
-				childNamedChanged(document.getElementById("childNamed"),document.getElementById("childfirstName").value);
-			});
-			
-		//-->
-		</script>
-		</td>
-    </tr>
+
     <c:set var="trueStrval" value="<%=WebGlobals.BOOLEAN_CONVERTER_TRUE_STRING%>"></c:set>
-	<tr id="childNamedtr" <c:if test="${command.childNamed != trueStrval}">style="display: none"</c:if> >
-        <td>Child Name <span class="mendatory-field">*</span></td>
+	<tr>
+        <td>First Name<span class="mendatory-field">*</span></td>
         <td><spring:bind path="command.${commandAdditionalPathStr}firstName">
-             <input type="text" id="childfirstName" name="${commandAdditionalPathStr}firstName" maxlength="30" value="<c:out value="${status.value}"/>"/>
+             <input type="text" id="childfirstName" name="${commandAdditionalPathStr}firstName" maxlength="30" 
+             		value="<c:out value="${status.value}"/>" class="requiredField"/>
              <span class="error-message"><c:out	value="${status.errorMessage}" /></span>
              </spring:bind>
 		</td>
     </tr>
     <tr>
-        <td><spring:message code="label.motherName"/><span class="mendatory-field">*</span></td>
+        <td>Last Name<span class="mendatory-field">*</span></td>
+        <td><spring:bind path="command.${commandAdditionalPathStr}lastName">
+             <input type="text" id="childlastName" name="${commandAdditionalPathStr}lastName" maxlength="30" 
+             		value="<c:out value="${status.value}"/>" class="requiredField"/>
+             <span class="error-message"><c:out	value="${status.errorMessage}" /></span>
+             </spring:bind>
+		</td>
+    </tr>
+    <tr>
+        <td><spring:message code="label.motherName"/></td>
         <td><spring:bind path="command.${commandAdditionalPathStr}motherFirstName">
              <input type="text" id="childfatherFirstName" name="${commandAdditionalPathStr}fatherFirstName" maxlength="30" value="<c:out value="${status.value}"/>"/>
              <br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
@@ -50,7 +30,7 @@
 		</td>
     </tr>
 	<tr>
-		<td>Gender <span class="mendatory-field">*</span></td>
+		<td>Gender</td>
 		<td><spring:bind path="command.${commandAdditionalPathStr}gender">
 			<select id="gender" name="${commandAdditionalPathStr}gender" bind-value="${status.value}" style="text-transform: capitalize">
 				<c:forEach items="<%=Gender.values()%>" var="gen_value">
@@ -64,7 +44,7 @@
 	<tr>
         <td>Child birthdate or age<span class="mendatory-field">*</span></td>
         <td><spring:bind path="command.birthdateOrAge">
-			<select id="birthdateOrAge" name="birthdateOrAge" onchange="birthdateOrAgeChanged(this);" bind-value="${status.value}">
+			<select id="birthdateOrAge" name="birthdateOrAge" onchange="birthdateOrAgeChanged(this);" bind-value="${status.value}" class="requiredField">
 				<option></option>
 				<option value="birthdate">birthdate</option>
 				<option value="age">Age</option>
@@ -110,7 +90,9 @@
 		<td>Birth Date <span class="mendatory-field">*</span></td>
         <td>
         <spring:bind path="command.${commandAdditionalPathStr}birthdate">
-        <input id="birthdate" name="${commandAdditionalPathStr}birthdate" maxDate="+0d" value="${status.value}" class="calendarbox"/>
+        <input id="birthdate" name="${commandAdditionalPathStr}birthdate" 
+        	   maxDate="+0d" value="${status.value}" class="calendarbox requiredFieldBirthDate"
+        	   onkeypress="return isDateDigit(event)" placeholder="mm-dd-yyyy"/>
         <span class="error-message"><c:out	value="${status.errorMessage}" /></span>
         </spring:bind>
         </td>
@@ -119,16 +101,20 @@
         <td>Age (insert 0 if not applicable)<span class="mendatory-field">*</span></td>
         <td>
         <spring:bind path="command.childagey">
-        <input type="text" id="childagey" name="childagey" size="1" maxlength="1" value="${status.value}" onchange="ageChanged();" class="numbersOnly"/>Years<br>
+        <input type="text" id="childagey" name="childagey" size="1" maxlength="1" value="${status.value}" 
+        	   onchange="ageChanged();" class="numbersOnly requiredFieldAge"/>Years<br>
         </spring:bind>
         <spring:bind path="command.childagem">
-        <input type="text" id="childagem" name="childagem" size="2" maxlength="2" value="${status.value}" onchange="ageChanged();" class="numbersOnly"/>Months<br>
+        <input type="text" id="childagem" name="childagem" size="2" maxlength="2" value="${status.value}" 
+        	   onchange="ageChanged();" class="numbersOnly requiredFieldAge"/>Months<br>
         </spring:bind>
         <spring:bind path="command.childagew">
-        <input type="text" id="childagew" name="childagew" size="2" maxlength="2" value="${status.value}" onchange="ageChanged();" class="numbersOnly"/>Weeks<br>
+        <input type="text" id="childagew" name="childagew" size="2" maxlength="2" value="${status.value}" 
+        	   onchange="ageChanged();" class="numbersOnly requiredFieldAge"/>Weeks<br>
         </spring:bind>
         <spring:bind path="command.childaged">
-        <input type="text" id="childaged" name="childaged" size="2" maxlength="2" value="${status.value}" onchange="ageChanged();" class="numbersOnly"/>Days<br>
+        <input type="text" id="childaged" name="childaged" size="2" maxlength="2" value="${status.value}" 
+        	   onchange="ageChanged();" class="numbersOnly requiredFieldAge"/>Days<br>
         </spring:bind>
 		<spring:bind path="command.${commandAdditionalPathStr}estimatedBirthdate">
 		<input type="hidden" id ="estimatedBirthdate" name="${commandAdditionalPathStr}estimatedBirthdate" value="${status.value}" class="numbersOnly">
