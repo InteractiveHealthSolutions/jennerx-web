@@ -62,7 +62,7 @@
 			<include method="getSchedule"/>
 			<include method="overrideSchedule"/>
 			<include method="validateVaccineScheduleDates"/>
-			<include method="getTested"/>
+			<include method="getVaccineSchedule"/>
 		</create>
 		<create creator="new" javascript="DWRAdminTaskService">
 			<param name="class" value="org.ird.unfepi.web.dwr.DWRAdminTaskService" />

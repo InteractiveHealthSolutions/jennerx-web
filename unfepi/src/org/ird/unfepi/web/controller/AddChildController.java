@@ -1,13 +1,11 @@
 package org.ird.unfepi.web.controller;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.PreRemove;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,18 +20,15 @@ import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Address;
 import org.ird.unfepi.model.Child;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
-import org.ird.unfepi.model.Vaccination;
 import org.ird.unfepi.model.Vaccine;
-import org.ird.unfepi.model.VaccineGap;
-import org.ird.unfepi.model.VaccinePrerequisite;
 import org.ird.unfepi.utils.UserSessionUtils;
 import org.ird.unfepi.web.utils.ControllerUIHelper;
 import org.ird.unfepi.web.utils.IMRUtils;
 import org.ird.unfepi.web.utils.VaccinationCenterVisit;
 import org.ird.unfepi.web.utils.VaccineSchedule;
+import org.ird.unfepi.web.utils.VaccineSchedule.VaccineStatusType;
 import org.ird.unfepi.web.validator.ChildValidator;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
@@ -58,7 +53,16 @@ public class AddChildController extends DataEntryFormController
 		try{
 			@SuppressWarnings("unchecked")
 			List<VaccineSchedule> vaccineSchedule = (List<VaccineSchedule>) request.getSession().getAttribute(VaccinationCenterVisit.VACCINE_SCHEDULE_KEY+ewr.getCenterVisit().getUuid());
-
+			
+			Iterator<VaccineSchedule> iter = vaccineSchedule.iterator();
+			while (iter.hasNext()) {
+				VaccineSchedule vsh = iter.next();
+				
+				if (vsh.getStatus().equals(VaccineStatusType.SCHEDULED.name()) || vsh.getStatus().equals(VaccineStatusType.NOT_ALLOWED.name()) || (vsh.getStatus() == null?true:vsh.getStatus().length()==0)) {
+					iter.remove();
+				}
+			}
+			
 			@SuppressWarnings("unused")
 			List<ChildIncentivization> lotteryRes = ControllerUIHelper.doEnrollment(DataEntrySource.WEB, childIdentifier, ewr.getChildNamed(), ch, 
 					ewr.getBirthdateOrAge(), ewr.getChildagey(), ewr.getChildagem(), ewr.getChildagew(), ewr.getChildaged(), 
@@ -66,20 +70,7 @@ public class AddChildController extends DataEntryFormController
 			
 			sc.commitTransaction();
 
-			String editmessage="Child Enrolled successfully. ";//\n Lottery Runner information : ";
-			/*for (ChildLotteryRunner childLotteryRunner : lotteryRes) 
-			{
-				editmessage += "\n"+childLotteryRunner.VACCINE_NAME + " lottery ";
-				if(childLotteryRunner.HAS_WON==null){
-					editmessage+=" errors ("+childLotteryRunner.LOTTERY_STATUS_ERRORS+")";
-				}
-				else if(childLotteryRunner.HAS_WON){
-					editmessage+=" won, CODE="+childLotteryRunner.VERIFICATION_CODE+":AMOUNT="+childLotteryRunner.AMOUNT.toString();
-				}
-				else {
-					editmessage+=" performed and not won";
-				}
-			}*/
+			String editmessage="Child Enrolled successfully. ";
 			
 			return new ModelAndView(new RedirectView("childDashboard.htm?action=search&editOrUpdateMessage="+editmessage+"&childId="+childIdentifier));
 		} 
@@ -143,18 +134,15 @@ public class AddChildController extends DataEntryFormController
 			List<Vaccine> vaccinesL = sc.getCustomQueryService().getDataByHQL("FROM Vaccine where vaccine_entity like 'CHILD%' and isSupplementary = 0") ;
 			model.put("vaccineList", vaccinesL);
 			
-			model.put("vaccTest", "BcgPenta");
 			
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			GlobalParams.FILELOGGER.error(formType.name(), e);
 			request.setAttribute("errorMessage", "An error occurred while retrieving reference data list. Error message is:"+e.getMessage());
-		}
-		finally{
+		} finally {
 			sc.closeSession();
 		}
 
-		
 		return model;
 	}
 

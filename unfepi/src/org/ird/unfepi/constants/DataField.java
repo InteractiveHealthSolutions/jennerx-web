@@ -6,6 +6,7 @@ public class DataField {
 
 	public static final String MAPPED_ID = "idMapper.mappedId";
 	public static final String PROGRAM_ID = "projectId";
+	public static final String CHILD_IDENTIFIER = "childIdentifier";
 
 	public static final String CHILD_DATE_ENROLLED = "child.dateEnrolled";
 	public static final String CHILD_NAMED = "childNamed";
@@ -13,6 +14,8 @@ public class DataField {
 	public static final String CHILD_LAST_NAME = "child.lastName";
 	public static final String CHILD_FATHER_FIRST_NAME = "child.fatherFirstName";
 	public static final String CHILD_FATHER_LAST_NAME = "child.fatherLastName";
+	public static final String CHILD_MOTHER_FIRST_NAME = "child.motherFirstName";
+	public static final String CHILD_MOTHER_LAST_NAME = "child.motherLastName";	
 	public static final String CHILD_NIC = "child.nic";
 	public static final String CHILD_GENDER = "child.gender";
 	public static final String CHILD_BIRTHDATE = "child.birthdate";

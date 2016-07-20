@@ -7,7 +7,7 @@
         <td>First Name<span class="mendatory-field">*</span></td>
         <td><spring:bind path="command.${commandAdditionalPathStr}firstName">
              <input type="text" id="childfirstName" name="${commandAdditionalPathStr}firstName" maxlength="30" 
-             		value="<c:out value="${status.value}"/>" class="requiredField"/>
+             		value="<c:out value="${status.value}"/>" class="requiredField" onkeypress="return isChar(event);" />
              <span class="error-message"><c:out	value="${status.errorMessage}" /></span>
              </spring:bind>
 		</td>
@@ -16,7 +16,7 @@
         <td>Last Name<span class="mendatory-field">*</span></td>
         <td><spring:bind path="command.${commandAdditionalPathStr}lastName">
              <input type="text" id="childlastName" name="${commandAdditionalPathStr}lastName" maxlength="30" 
-             		value="<c:out value="${status.value}"/>" class="requiredField"/>
+             		value="<c:out value="${status.value}"/>" class="requiredField" onkeypress="return isChar(event);" />
              <span class="error-message"><c:out	value="${status.errorMessage}" /></span>
              </spring:bind>
 		</td>
@@ -24,7 +24,8 @@
     <tr>
         <td><spring:message code="label.motherName"/></td>
         <td><spring:bind path="command.${commandAdditionalPathStr}motherFirstName">
-             <input type="text" id="childfatherFirstName" name="${commandAdditionalPathStr}fatherFirstName" maxlength="30" value="<c:out value="${status.value}"/>"/>
+             <input type="text" id="childmotherFirstName" name="${commandAdditionalPathStr}motherFirstName" maxlength="30" 
+             		value="<c:out value="${status.value}"/>"  onkeypress="return isChar(event);" />
              <br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
              </spring:bind>
 		</td>
@@ -92,7 +93,7 @@
         <spring:bind path="command.${commandAdditionalPathStr}birthdate">
         <input id="birthdate" name="${commandAdditionalPathStr}birthdate" 
         	   maxDate="+0d" value="${status.value}" class="calendarbox requiredFieldBirthDate"
-        	   onkeypress="return isDateDigit(event)" placeholder="mm-dd-yyyy"/>
+        	   onkeypress="return isDateDigit(event)" placeholder="dd-MM-yyyy"/>
         <span class="error-message"><c:out	value="${status.errorMessage}" /></span>
         </spring:bind>
         </td>

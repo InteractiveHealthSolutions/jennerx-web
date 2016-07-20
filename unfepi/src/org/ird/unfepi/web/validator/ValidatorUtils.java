@@ -250,18 +250,18 @@ public class ValidatorUtils {
 
 		ValidatorOutput vidop = validateChildProgramId(projectId, true, sc);
 		if (!vidop.STATUS().equals(ValidatorStatus.OK)) {
-			putError(dataEntrySource, vidop.MESSAGE(), mobileErrors, webErrors, DataField.PROGRAM_ID, useFieldPrefix);
+			putError(dataEntrySource, vidop.MESSAGE(), mobileErrors, webErrors, DataField.CHILD_IDENTIFIER, useFieldPrefix);
 		}
 
 		if (child.getDateEnrolled() == null || DateUtils.afterTodaysDate(child.getDateEnrolled())) {
 			putError(dataEntrySource, ErrorMessages.CHILD_DATE_ENROLLED_INVALID, mobileErrors, webErrors, DataField.CHILD_DATE_ENROLLED, useFieldPrefix);
 		}
 
-		if (StringUtils.isEmptyOrWhitespaceOnly(completeCourseFromCenter)) {
-			putError(dataEntrySource, ErrorMessages.COMPLETE_COURSE_FROM_CENTER_MISSING, mobileErrors, webErrors, DataField.CHILD_COMPLETE_COURSE_FROM_CENTER, useFieldPrefix);
-		}
+//		if (StringUtils.isEmptyOrWhitespaceOnly(completeCourseFromCenter)) {
+//			putError(dataEntrySource, ErrorMessages.COMPLETE_COURSE_FROM_CENTER_MISSING, mobileErrors, webErrors, DataField.CHILD_COMPLETE_COURSE_FROM_CENTER, useFieldPrefix);
+//		}
 
-		validateChildNIC(dataEntrySource, child.getMappedId(), child.getNic(), true, mobileErrors, webErrors, useFieldPrefix, sc);
+//		validateChildNIC(dataEntrySource, child.getMappedId(), child.getNic(), true, mobileErrors, webErrors, useFieldPrefix, sc);
 
 		boolean measles2Given = IMRUtils.isMeasles2Given(vaccineSchedule, child.getDateEnrolled());
 
@@ -271,7 +271,7 @@ public class ValidatorUtils {
 
 		validateAddress(dataEntrySource, address, mobileErrors, webErrors, useFieldPrefix);
 
-		validateReminderAndContactInfo(dataEntrySource, centerVisit.getPreference(), centerVisit.getContactPrimary(), centerVisit.getContactSecondary(), mobileErrors, webErrors, sc, useFieldPrefix);
+//		validateReminderAndContactInfo(dataEntrySource, centerVisit.getPreference(), centerVisit.getContactPrimary(), centerVisit.getContactSecondary(), mobileErrors, webErrors, sc, useFieldPrefix);
 	}
 
 	public static void validateWomenEnrollmentForm(DataEntrySource dataEntrySource, String projectId, Women women, String birthdateOrAge, String ageYears, String ageMonths, String ageWeeks,
@@ -360,12 +360,12 @@ public class ValidatorUtils {
 		// If Next Vaccine scheduled, A preference MUST be specified
 		// if(nextVaccines.size() > 0){
 		// Preference Approved reminder MUST be specified
-		if (preferences == null || preferences.getHasApprovedReminders() == null) {
-			putError(dataEntrySource, ErrorMessages.APPROVAL_REMINDERS_MISSING, mobileErrors, webErrors, DataField.CENTER_VISIT_CONTACT_PRIMARY, useFieldPrefix);
-		}// If reminders are approved then a contact number MUST be present
-		else if (preferences.getHasApprovedReminders() && (contactPrimary == null || StringUtils.isEmptyOrWhitespaceOnly(contactPrimary))) {
-			putError(dataEntrySource, ErrorMessages.CONTACT1_NUMBER_INVALID, mobileErrors, webErrors, DataField.CENTER_VISIT_CONTACT_PRIMARY, useFieldPrefix);
-		}
+//		if (preferences == null || preferences.getHasApprovedReminders() == null) {
+//			putError(dataEntrySource, ErrorMessages.APPROVAL_REMINDERS_MISSING, mobileErrors, webErrors, DataField.CENTER_VISIT_CONTACT_PRIMARY, useFieldPrefix);
+//		}// If reminders are approved then a contact number MUST be present
+//		else if (preferences.getHasApprovedReminders() && (contactPrimary == null || StringUtils.isEmptyOrWhitespaceOnly(contactPrimary))) {
+//			putError(dataEntrySource, ErrorMessages.CONTACT1_NUMBER_INVALID, mobileErrors, webErrors, DataField.CENTER_VISIT_CONTACT_PRIMARY, useFieldPrefix);
+//		}
 		// }// If No Next Vaccine, A preference SHOULD NOT be specified
 		// else if(nextVaccines.size() == 0
 		// && preferences != null && preferences.getHasApprovedReminders() !=
@@ -397,11 +397,11 @@ public class ValidatorUtils {
 			putError(dataEntrySource, ErrorMessages.CONTACT_NUMBER_ALREADY_ASSIGNED, mobileErrors, webErrors, DataField.CENTER_VISIT_CONTACT_SECONDARY, useFieldPrefix);
 		}
 
-		if (preferences == null || preferences.getHasApprovedLottery() == null) {
-			putError(dataEntrySource, ErrorMessages.VACCINATION_LOTTERY_MISSING, mobileErrors, webErrors, null, useFieldPrefix);
-		} else if (preferences.getHasApprovedLottery() && (contactPrimary == null || StringUtils.isEmptyOrWhitespaceOnly(contactPrimary))) {
-			putError(dataEntrySource, ErrorMessages.CONTACT1_NUMBER_INVALID, mobileErrors, webErrors, DataField.CENTER_VISIT_CONTACT_PRIMARY, useFieldPrefix);
-		}
+//		if (preferences == null || preferences.getHasApprovedLottery() == null) {
+//			putError(dataEntrySource, ErrorMessages.VACCINATION_LOTTERY_MISSING, mobileErrors, webErrors, null, useFieldPrefix);
+//		} else if (preferences.getHasApprovedLottery() && (contactPrimary == null || StringUtils.isEmptyOrWhitespaceOnly(contactPrimary))) {
+//			putError(dataEntrySource, ErrorMessages.CONTACT1_NUMBER_INVALID, mobileErrors, webErrors, DataField.CENTER_VISIT_CONTACT_PRIMARY, useFieldPrefix);
+//		}
 	}
 
 	/**
@@ -1038,14 +1038,23 @@ public class ValidatorUtils {
 			}
 		}
 
-		if (childNamed == null) {
-			putError(dataEntrySource, ErrorMessages.NAME_AVAILABLE, mobileErrors, webErrors, DataField.CHILD_NAMED, useFieldPrefix);
-		} else if (childNamed && (StringUtils.isEmptyOrWhitespaceOnly(child.getFirstName()) || !DataValidation.validate(REG_EX.NAME_CHARACTERS, child.getFirstName(), 3, 40))) {
-			putError(dataEntrySource, "Child`s " + ErrorMessages.NAME_INVALID, mobileErrors, webErrors, DataField.CHILD_FIRST_NAME, useFieldPrefix);
+//		if (childNamed == null) {
+//			putError(dataEntrySource, ErrorMessages.NAME_AVAILABLE, mobileErrors, webErrors, DataField.CHILD_NAMED, useFieldPrefix);
+//		} else if (childNamed && (StringUtils.isEmptyOrWhitespaceOnly(child.getFirstName()) || !DataValidation.validate(REG_EX.NAME_CHARACTERS, child.getFirstName(), 3, 40))) {
+//			putError(dataEntrySource, "Child`s " + ErrorMessages.NAME_INVALID, mobileErrors, webErrors, DataField.CHILD_FIRST_NAME, useFieldPrefix);
+//		}
+		
+		if (StringUtils.isEmptyOrWhitespaceOnly(child.getFirstName()) || !DataValidation.validate(REG_EX.NAME_CHARACTERS, child.getFirstName(), 3, 40)) {
+			putError(dataEntrySource, "Child`s first " + ErrorMessages.NAME_INVALID, mobileErrors, webErrors, DataField.CHILD_FIRST_NAME, useFieldPrefix);
 		}
+		
+		if (StringUtils.isEmptyOrWhitespaceOnly(child.getLastName()) || !DataValidation.validate(REG_EX.NAME_CHARACTERS, child.getLastName(), 3, 40)) {
+			putError(dataEntrySource, "Child`s last " + ErrorMessages.NAME_INVALID, mobileErrors, webErrors, DataField.CHILD_LAST_NAME, useFieldPrefix);
+		}
+		
 
-		if (StringUtils.isEmptyOrWhitespaceOnly(child.getFatherFirstName()) || !DataValidation.validate(REG_EX.NAME_CHARACTERS, child.getFatherFirstName(), 3, 40)) {
-			putError(dataEntrySource, "Father`s " + ErrorMessages.NAME_INVALID, mobileErrors, webErrors, DataField.CHILD_FATHER_FIRST_NAME, useFieldPrefix);
+		if (!DataValidation.validate(REG_EX.NAME_CHARACTERS, child.getMotherFirstName(), 3, 40)) {
+			putError(dataEntrySource, "Mother`s " + ErrorMessages.NAME_INVALID, mobileErrors, webErrors, DataField.CHILD_MOTHER_FIRST_NAME, useFieldPrefix);
 		}
 
 		if (child.getGender() == null || child.getGender().equals(Gender.UNKNOWN)) {
@@ -1187,26 +1196,28 @@ public class ValidatorUtils {
 	 *            ignored otherwise
 	 */
 	public static void validateAddress(DataEntrySource dataEntrySource, Address address, HashMap<String, String> mobileErrors, Errors error, boolean useFieldPrefix) {
-		if (StringUtils.isEmptyOrWhitespaceOnly(address.getTown())) {
-			putError(dataEntrySource, ErrorMessages.ADDRESS_TOWN_MISSING, mobileErrors, error, DataField.ADDRESS_TOWN, useFieldPrefix);
+		
+		if (StringUtils.isEmptyOrWhitespaceOnly(address.getAddress1())) {
+			putError(dataEntrySource, "village must be specified", mobileErrors, error, DataField.ADDRESS_ADDRESS1, useFieldPrefix);
 		}
-
-		if (StringUtils.isEmptyOrWhitespaceOnly(address.getUc())) {
-			putError(dataEntrySource, ErrorMessages.ADDRESS_UC_MISSING, mobileErrors, error, DataField.ADDRESS_UC, useFieldPrefix);
-		}
-
-		if (StringUtils.isEmptyOrWhitespaceOnly(address.getLandmark())) {
-		} else {
-			if (!DataValidation.validate(REG_EX.NO_SPECIAL_CHAR, address.getLandmark())) {
-				putError(dataEntrySource, ErrorMessages.ADDRESS_LANDMARK_INVALID, mobileErrors, error, DataField.ADDRESS_LANDMARK, useFieldPrefix);
-			}
-		}
-
-		if (address.getCityId() == null) {
-			putError(dataEntrySource, ErrorMessages.ADDRESS_CITY_MISSING, mobileErrors, error, DataField.ADDRESS_CITY_ID, useFieldPrefix);
-		} else if (address.getCityId() == WebGlobals.OTHER_OPTION_ID_IN_DB && StringUtils.isEmptyOrWhitespaceOnly(address.getCityName())) {
-			putError(dataEntrySource, ErrorMessages.ADDRESS_OTHER_CITY_MISSING, mobileErrors, error, DataField.ADDRESS_CITY_NAME, useFieldPrefix);
-		}
+		
+//		if (StringUtils.isEmptyOrWhitespaceOnly(address.getTown())) {
+//			putError(dataEntrySource, ErrorMessages.ADDRESS_TOWN_MISSING, mobileErrors, error, DataField.ADDRESS_TOWN, useFieldPrefix);
+//		}
+//		if (StringUtils.isEmptyOrWhitespaceOnly(address.getUc())) {
+//			putError(dataEntrySource, ErrorMessages.ADDRESS_UC_MISSING, mobileErrors, error, DataField.ADDRESS_UC, useFieldPrefix);
+//		}
+//		if (StringUtils.isEmptyOrWhitespaceOnly(address.getLandmark())) {
+//		} else {
+//			if (!DataValidation.validate(REG_EX.NO_SPECIAL_CHAR, address.getLandmark())) {
+//				putError(dataEntrySource, ErrorMessages.ADDRESS_LANDMARK_INVALID, mobileErrors, error, DataField.ADDRESS_LANDMARK, useFieldPrefix);
+//			}
+//		}
+//		if (address.getCityId() == null) {
+//			putError(dataEntrySource, ErrorMessages.ADDRESS_CITY_MISSING, mobileErrors, error, DataField.ADDRESS_CITY_ID, useFieldPrefix);
+//		} else if (address.getCityId() == WebGlobals.OTHER_OPTION_ID_IN_DB && StringUtils.isEmptyOrWhitespaceOnly(address.getCityName())) {
+//			putError(dataEntrySource, ErrorMessages.ADDRESS_OTHER_CITY_MISSING, mobileErrors, error, DataField.ADDRESS_CITY_NAME, useFieldPrefix);
+//		}
 	}
 
 	private static void validateVaccinationSchedule(DataEntrySource dataEntrySource, Child child, boolean isNewEnrollment, VaccinationCenterVisit centerVisit, List<VaccineSchedule> vaccineSchedule,
@@ -1247,6 +1258,7 @@ public class ValidatorUtils {
 		ArrayList<VaccineSchedule> defSch = VaccineSchedule.generateDefaultSchedule( child.getBirthdate(), centerVisit.getVisitDate(), centerVisit.getChildId(), centerVisit.getVaccinationCenterId(),
 				true, null);
 		boolean anyScheduleVaccineRecceivedToday = false;
+		boolean contraindication = false;
 		for (VaccineSchedule dfvsh : defSch) {
 			VaccineSchedule vsobj = null;
 			for (VaccineSchedule vs : vaccineSchedule) {
@@ -1295,9 +1307,9 @@ public class ValidatorUtils {
 					if (vsobj.getAssigned_duedate() == null) {
 						putError(dataEntrySource, dfvsh.getVaccine().getName() + " due date found empty for SCHEDULED vaccine which is not possible here. Contact program vendor!", mobileErrors,
 								error, null, useFieldPrefix);
-					} else if (vsobj.getAssigned_duedate().before(centerVisit.getVisitDate())) {
+					} /*else if (vsobj.getAssigned_duedate().before(centerVisit.getVisitDate())) {
 						putError(dataEntrySource, dfvsh.getVaccine().getName() + " due date should be after center visit date", mobileErrors, error, null, useFieldPrefix);
-					}
+					}*/
 
 					if (vsobj.getVaccination_date() != null || (!dataEntrySource.equals(DataEntrySource.MOBILE) && vsobj.getCenter() != null)) {
 						putError(dataEntrySource, dfvsh.getVaccine().getName()
@@ -1309,7 +1321,7 @@ public class ValidatorUtils {
 						putError(dataEntrySource, dfvsh.getVaccine().getName() + " prerequisite vaccine not given for SCHEDULED vaccine which is not possible. Contact program vendor!", mobileErrors,
 								error, null, useFieldPrefix);
 					}
-				} else if (vsobj.getStatus().equalsIgnoreCase(VaccineStatusType.VACCINATED.name())) {
+				} else if (vsobj.getStatus().equalsIgnoreCase(VaccineStatusType.VACCINATED.name()) || vsobj.getStatus().equalsIgnoreCase(VaccineStatusType.NOT_VACCINATED.name())) {
 					anyScheduleVaccineRecceivedToday = true;
 					if (!prereqpassed) {
 						putError(dataEntrySource, dfvsh.getVaccine().getName() + " prerequisite vaccine not given for VACCINATED vaccine which is not possible. Contact program vendor!", mobileErrors,
@@ -1319,8 +1331,8 @@ public class ValidatorUtils {
 					if ((vsobj.getVaccination_date() == null || !DateUtils.datesEqual(vsobj.getVaccination_date(), centerVisit.getVisitDate()))) {
 						putError(dataEntrySource, dfvsh.getVaccine().getName() + " vaccination date must be equal to center visit date", mobileErrors, error, null, useFieldPrefix);
 					}
-
-					if (vsobj.getCenter() == null || vsobj.getCenter() != centerVisit.getVaccinationCenterId()) {
+					
+					if (vsobj.getCenter() == null || (vsobj.getCenter().intValue() != centerVisit.getVaccinationCenterId().intValue())) {
 						putError(dataEntrySource, dfvsh.getVaccine().getName() + " vaccination center must be equal to current center", mobileErrors, error, null, useFieldPrefix);
 					}
 				} else if (vsobj.getStatus().toUpperCase().contains(VaccineStatusType.RETRO.name())) {
@@ -1351,27 +1363,26 @@ public class ValidatorUtils {
 			putError(dataEntrySource, ErrorMessages.VACCINATOR_MISSING, mobileErrors, error, DataField.CENTER_VISIT_VACCINATOR_ID, useFieldPrefix);
 		}
 
-		if (centerVisit.getVaccinationCenterId() != null) {
-			ValidatorOutput vepi = null;
-			if (isNewEnrollment) {
-				vepi = ValidatorUtils.validateNewEpiNumber(centerVisit.getEpiNumber(), centerVisit.getVaccinationCenterId(), false, sc);
-			} else if (!isNewEnrollment && centerVisit.getChildId() != null) {
-				vepi = ValidatorUtils.validateEpiNumber(centerVisit.getEpiNumber(), centerVisit.getVaccinationCenterId(), centerVisit.getChildId(), false, false/*
-																																								 * dataEntrySource
-																																								 * .
-																																								 * equals
-																																								 * (
-																																								 * DataEntrySource
-																																								 * .
-																																								 * MOBILE
-																																								 * )
-																																								 */);
-			}
-
-			if (!vepi.STATUS().equals(ValidatorStatus.OK)) {
-				putError(dataEntrySource, vepi.MESSAGE(), mobileErrors, error, DataField.CENTER_VISIT_EPI_NUMBER, useFieldPrefix);
-			}
-		}
+//		if (centerVisit.getVaccinationCenterId() != null) {
+//			ValidatorOutput vepi = null;
+//			if (isNewEnrollment) {
+//				vepi = ValidatorUtils.validateNewEpiNumber(centerVisit.getEpiNumber(), centerVisit.getVaccinationCenterId(), false, sc);
+//			} else if (!isNewEnrollment && centerVisit.getChildId() != null) {
+//				vepi = ValidatorUtils.validateEpiNumber(centerVisit.getEpiNumber(), centerVisit.getVaccinationCenterId(), centerVisit.getChildId(), false, false/*
+//																																								 * dataEntrySource
+//																																								 * .
+//																																								 * equals
+//																																								 * (
+//																																								 * DataEntrySource
+//																																								 * .
+//																																								 * MOBILE
+//																																								 * )
+//																																								 */);
+//			}
+//			if (!vepi.STATUS().equals(ValidatorStatus.OK)) {
+//				putError(dataEntrySource, vepi.MESSAGE(), mobileErrors, error, DataField.CENTER_VISIT_EPI_NUMBER, useFieldPrefix);
+//			}
+//		}
 	}
 
 	private static void validateWomenVaccinationSchedule(DataEntrySource dataEntrySource, Women women, boolean isNewEnrollment, WomenVaccinationCenterVisit centerVisit,

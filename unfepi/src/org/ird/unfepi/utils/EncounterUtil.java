@@ -744,11 +744,11 @@ public class EncounterUtil {
 		List c = sc.getCustomQueryService().getDataBySQL("select otherIdentifier, name from location where locationId="+address.getCityId());
 		
 		encr.add(createEncounterResult(e, ElementAddress.ADDRESS_LINE1, address.getAddress1(), null, null));
-		encr.add(createEncounterResult(e, ElementAddress.LANDMARK, address.getLandmark(), null, null));
-		encr.add(createEncounterResult(e, ElementAddress.TOWN, address.getTown(), null, null));
-		encr.add(createEncounterResult(e, ElementAddress.UC, address.getUc(), null, null));
-		encr.add(createEncounterResult(e, ElementAddress.CITY_ID, address.getCityId(), null, null));
-		encr.add(createEncounterResult(e, ElementAddress.CITY_NAME, ((Object[])c.get(0))[1], null, null));
-		encr.add(createEncounterResult(e, ElementAddress.CITY_OTHER, address.getCityName(), null, null));
+//		encr.add(createEncounterResult(e, ElementAddress.LANDMARK, address.getLandmark(), null, null));
+//		encr.add(createEncounterResult(e, ElementAddress.TOWN, address.getTown(), null, null));
+//		encr.add(createEncounterResult(e, ElementAddress.UC, address.getUc(), null, null));
+//		encr.add(createEncounterResult(e, ElementAddress.CITY_ID, address.getCityId(), null, null));
+//		encr.add(createEncounterResult(e, ElementAddress.CITY_NAME, ((Object[])c.get(0))[1], null, null));
+//		encr.add(createEncounterResult(e, ElementAddress.CITY_OTHER, address.getCityName(), null, null));
 	}
 }

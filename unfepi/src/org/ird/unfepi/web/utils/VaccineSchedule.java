@@ -46,6 +46,7 @@ public class VaccineSchedule {
 		CURRENT_RETRO,
 		VACCINATED_EARLIER,
 		NOT_ALLOWED,
+		NOT_VACCINATED,
 	}
 	private Vaccine vaccine;
 	private Date birthdate;
@@ -67,37 +68,7 @@ public class VaccineSchedule {
 	private Boolean prerequisite_passed;
 	private Boolean expired;
 	private Boolean prerequisite_given_on_current_visit;
-	
-	public void printVaccineSchedule(){
-		
-		System.out.print(this.getVaccine().getName()+ "\t");
-		System.out.print(this.getBirthdate()+ "\t");
-		System.out.print(this.getVisitdate()+ "\t");	
-		
-		System.out.print(this.getPrerequisites()+ "\t");
-		if(this.getBirthdate_gap().getVaccine() != null && this.getBirthdate_gap().getVaccineGapType() != null){
-			System.out.print("[ " + this.getBirthdate_gap().getVaccine().getName()+" " +  this.getBirthdate_gap().getVaccineGapType().getName() + " ]"+"\t");
-			
-		} else {
-			System.out.println( "[]\t");
-		}
-		
-		System.out.print(this.getSchedule_duedate()+ "\t");
-		System.out.print(this.getAuto_calculated_date()+ "\t");
-		System.out.print(this.getAssigned_duedate()+ "\t");
-		System.out.print(this.getVaccination_date()+ "\t");
-		System.out.print(this.getExpiry_date()+ "\t");
-		System.out.print(this.getCenter()+ "\t");
-		System.out.print(this.getStatus()+ "\t");
-		System.out.print(this.getIs_current_suspect()+ "\t");
-		System.out.print(this.getIs_retro_suspect()+ "\t");
-		System.out.print(this.getVaccinationObjCurrentVisit()+ "\t");
-		System.out.print(this.getChildId()+ "\t");
-		System.out.print(this.getPrerequisite_passed()+ "\t");
-		System.out.print(this.getExpired()+ "\t");
-		System.out.println(this.getPrerequisite_given_on_current_visit()+ "\t");
-	}
-	
+	private List<Short> prerequisiteFor;
 	
 	public VaccineSchedule() {
 	}
@@ -124,8 +95,10 @@ public class VaccineSchedule {
 				vis.add(Short.parseShort(vstr.trim()));
 			}
 			List<Vaccine> vaccinel = sc.getVaccinationService().getVaccinesById(vis.toArray(new Short[]{}), true, new String[]{"prerequisites"}, GlobalParams.SQL_VACCINE_BIRTHDATE_GAP_ORDER);
-
+			
+			
 			for (Vaccine vaccine : vaccinel) {
+								
 				VaccineSchedule vsch = new VaccineSchedule();
 				vsch.setVaccine(vaccine);
 				vsch.setPrerequisites(vaccine.getPrerequisites());
@@ -135,6 +108,10 @@ public class VaccineSchedule {
 				vsch.setExpiry_date(IMRUtils.calculateExpiryDate(vaccine, birthdate, sc));
 				vsch.setChildId(childId);
 				vsch.setVisitdate(centerVisitDate);
+				
+				List<Short> prerequisiteForVaccineIds =  sc.getCustomQueryService().getDataByHQL("select vaccinePrerequisiteId.vaccineId from VaccinePrerequisite where vaccinePrerequisiteId.vaccinePrerequisiteId = " + vaccine.getVaccineId());
+				vsch.setPrerequisiteFor(prerequisiteForVaccineIds);
+				
 				
 				Date schduedate = null;
 				VaccineStatusType status = null;
@@ -214,13 +191,17 @@ public class VaccineSchedule {
 						
 						Date minGraceDate = new Date(centerVisitDate.getTime()+(-minGracePeriod* 24 * 60 * 60 * 1000));
 						Date maxGraceDate = new Date(centerVisitDate.getTime()+(maxGracePeriod* 24 * 60 * 60 * 1000));
+						
 						current_suspect = (asgnduedate != null 
-								&& asgnduedate.compareTo(minGraceDate) >= 0
-								&& asgnduedate.compareTo(maxGraceDate) <= 0)
-							|| (schduedate.compareTo(minGraceDate) >= 0 && schduedate.compareTo(maxGraceDate) <= 0);
+								&& asgnduedate.compareTo(minGraceDate) >= 0 && asgnduedate.compareTo(maxGraceDate) <= 0)
+							    || (schduedate.compareTo(minGraceDate) >= 0 && schduedate.compareTo(maxGraceDate) <= 0);
 						
 						retro_suspect = (asgnduedate != null && asgnduedate.compareTo(minGraceDate) == -1)
 							|| (schduedate.compareTo(minGraceDate) == -1);
+						
+//						System.out.println("vaccine\tminGraceDate\tmaxGraceDate\tAssignDueDate\tschduedate\tcenterVisitDate\tcurrent_suspect\tretro_suspect");
+//						System.out.println(vaccine.getName()+"\t"+minGraceDate+"\t"+maxGraceDate+"\t"+asgnduedate+"\t"+schduedate+"\t"+centerVisitDate+"\t"+current_suspect+"\t"+retro_suspect);
+						
 					}
 					
 					// N/A or out of schedule or expiry date has passed
@@ -239,9 +220,11 @@ public class VaccineSchedule {
 						status = VaccineStatusType.VACCINATED;
 						vaccdate = centerVisitDate;
 						centid = vaccinationCenterId;
+						vsch.setCenter(vaccinationCenterId);
 					}
 					else if(retro_suspect){
 						status = VaccineStatusType.RETRO;
+						vsch.setCenter(vaccinationCenterId);
 					}
 					else if(prerequisite_passed){
 						status = VaccineStatusType.SCHEDULED;
@@ -562,7 +545,17 @@ public class VaccineSchedule {
 		this.prerequisite_given_on_current_visit = prerequisite_given_on_current_visit;
 	}
 
-	
+
+	public List<Short> getPrerequisiteFor() {
+		return prerequisiteFor;
+	}
+
+
+	public void setPrerequisiteFor(List<Short> prerequisiteFor) {
+		this.prerequisiteFor = prerequisiteFor;
+	}
+
+
 	//TODO JennerX
 	public static ArrayList<VaccineSchedule> validateVaccineHistory(List<Vaccination> retroVaccinationL,
 			Date birthdate, Date centerVisitDate, Integer childId, Integer vaccinationCenterId, boolean ignoreCenter) {
@@ -644,9 +637,8 @@ public class VaccineSchedule {
 						Date minGraceDate = new Date(centerVisitDate.getTime() + (-minGracePeriod * 24 * 60 * 60 * 1000));
 						Date maxGraceDate = new Date(centerVisitDate.getTime() + ( maxGracePeriod * 24 * 60 * 60 * 1000));
 
-						System.out.println("minGraceDate " + minGraceDate + " maxGraceDate "  + maxGraceDate + " "+ schedule.getVaccine().getName());
-						System.out.println("vaccination date " + va.getVaccinationDate());
-						
+//						System.out.println("minGraceDate " + minGraceDate + " maxGraceDate "  + maxGraceDate + " "+ schedule.getVaccine().getName());
+//						System.out.println("vaccination date " + va.getVaccinationDate());
 						
 						current_suspect = (asgnduedate != null && 
 								   asgnduedate.compareTo(minGraceDate) >= 0 && asgnduedate.compareTo(maxGraceDate) <= 0)

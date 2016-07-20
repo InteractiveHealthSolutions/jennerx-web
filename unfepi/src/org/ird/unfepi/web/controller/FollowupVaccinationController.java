@@ -2,6 +2,7 @@ package org.ird.unfepi.web.controller;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -18,10 +19,12 @@ import org.ird.unfepi.model.Child;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
 import org.ird.unfepi.model.LotterySms;
 import org.ird.unfepi.model.Vaccination;
+import org.ird.unfepi.model.Vaccine;
 import org.ird.unfepi.utils.UserSessionUtils;
 import org.ird.unfepi.web.utils.ControllerUIHelper;
 import org.ird.unfepi.web.utils.VaccinationCenterVisit;
 import org.ird.unfepi.web.utils.VaccineSchedule;
+import org.ird.unfepi.web.utils.VaccineSchedule.VaccineStatusType;
 import org.ird.unfepi.web.validator.VaccinationValidator;
 import org.ird.unfepi.web.validator.ValidatorUtils;
 import org.springframework.validation.BindException;
@@ -30,7 +33,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.mysql.jdbc.StringUtils;
-import com.sun.xml.internal.ws.api.ha.StickyFeature;
 
 public class FollowupVaccinationController extends DataEntryFormController
 {
@@ -48,29 +50,26 @@ public class FollowupVaccinationController extends DataEntryFormController
 			VaccinationCenterVisit centerVisit = (VaccinationCenterVisit) command;
 			List<VaccineSchedule> vaccineSchedule = (List<VaccineSchedule>) request.getSession().getAttribute(VaccinationCenterVisit.VACCINE_SCHEDULE_KEY+centerVisit.getUuid());
 			Child child = (Child) request.getSession().getAttribute("childfollowup");
+			
 			if(!StringUtils.isEmptyOrWhitespaceOnly(request.getParameter("cnic"))){
 				Child c = sc.getChildService().findChildById(child.getMappedId(), false, null);
 				c.setNic(request.getParameter("cnic"));
 				sc.getChildService().updateChild(c);
 			}
+			
+			Iterator<VaccineSchedule> iter = vaccineSchedule.iterator();
+			while (iter.hasNext()) {
+				VaccineSchedule vsh = iter.next();
+				if (vsh.getStatus().equals(VaccineStatusType.SCHEDULED.name()) || vsh.getStatus().equals(VaccineStatusType.NOT_ALLOWED.name()) || (vsh.getStatus() == null?true:vsh.getStatus().length()==0)) {
+					iter.remove();
+				}
+			}
+			
 			/*List<ChildLotteryRunner> lotteryRes = */ControllerUIHelper.doFollowup(DataEntrySource.WEB, centerVisit, vaccineSchedule, dateFormStart, user.getUser(), sc);
 			
 			sc.commitTransaction();
 
-			String editmessage="Child Followed up successfully. ";//\n Lottery Runner information : ";
-			/*for (ChildLotteryRunner childLotteryRunner : lotteryRes) 
-			{
-				editmessage += "\n"+childLotteryRunner.VACCINE_NAME + " lottery ";
-				if(childLotteryRunner.HAS_WON==null){
-					editmessage+=" errors ("+childLotteryRunner.LOTTERY_STATUS_ERRORS+")";
-				}
-				else if(childLotteryRunner.HAS_WON){
-					editmessage+=" won, CODE="+childLotteryRunner.VERIFICATION_CODE+":AMOUNT="+childLotteryRunner.AMOUNT.toString();
-				}
-				else {
-					editmessage+=" performed and not won";
-				}
-			}*/
+			String editmessage="Child Followed up successfully. ";
 			
 			return new ModelAndView(new RedirectView("childDashboard.htm?action=search&editOrUpdateMessage="+editmessage+"&childId="+child.getIdMapper().getIdentifiers().get(0).getIdentifier()));
 		}
@@ -109,7 +108,6 @@ public class FollowupVaccinationController extends DataEntryFormController
 	protected Object formBackingObject(HttpServletRequest request) throws Exception {
 		dateFormStart = new Date();
 		
-		
 		String child_id=request.getParameter("child_id");//child-program-id
 		VaccinationCenterVisit vcv = new VaccinationCenterVisit();
 		Child child = new Child();
@@ -120,10 +118,11 @@ public class FollowupVaccinationController extends DataEntryFormController
 		LotterySms prf = null;
 		try{
 			child = sc.getChildService().findChildById(Integer.parseInt(child_id), true, new String[]{"idMapper"});
-			isIncentivized = sc.getIncentiveService().findChildIncentiveByCriteria(child.getMappedId(), null, null, null, null, null, null, null, null, null, 0, 2, true, null).size()>0;
-			ControllerUIHelper.prepareFollowupDisplayObjects(request, child, sc);
+//			isIncentivized = sc.getIncentiveService().findChildIncentiveByCriteria(child.getMappedId(), null, null, null, null, null, null, null, null, null, 0, 2, true, null).size()>0;
+			ControllerUIHelper.prepareFollowupDisplayObjects(request, child, sc); //childfollowup
 			previousVaccination = ControllerUIHelper.getPreviousVaccination(child.getMappedId(), sc);
-			prf = sc.getChildService().findLotterySmsByChild(child.getMappedId(), false, 0, 10, null).get(0);
+//			prf = sc.getChildService().findLotterySmsByChild(child.getMappedId(), false, 0, 10, null).get(0);
+			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -134,15 +133,16 @@ public class FollowupVaccinationController extends DataEntryFormController
 			sc.closeSession();
 		}
 
-		vcv.setPreference(prf);
+//		vcv.setPreference(prf);
+		System.out.println("\n\n"+previousVaccination.getVaccine().getName() +" --------- \n\n");
 		vcv.setVaccinationCenterId(previousVaccination.getVaccinationCenterId());
 		vcv.setVaccinatorId(previousVaccination.getVaccinatorId());
-		vcv.setEpiNumber(previousVaccination.getEpiNumber());
+//		vcv.setEpiNumber(previousVaccination.getEpiNumber());
 		vcv.setChildId(child.getMappedId());
 		
-		if(StringUtils.isEmptyOrWhitespaceOnly(child.getNic())&&isIncentivized){
-		request.setAttribute("showcnic", true);
-		}
+//		if(StringUtils.isEmptyOrWhitespaceOnly(child.getNic())&&isIncentivized){
+//		request.setAttribute("showcnic", true);
+//		}
 
 		return vcv;
 	}
@@ -161,8 +161,11 @@ public class FollowupVaccinationController extends DataEntryFormController
 						sc.getVaccinationService().getAllVaccinationCenter(true, new String[]{"idMapper"}), 
 						sc.getVaccinationService().getAllVaccinator(0, Integer.MAX_VALUE, true, new String[]{"idMapper"}));
 
-				model.put("cnic", request.getParameter("cnic"));
-				model.put("showcnic", request.getAttribute("showcnic")!=null?request.getAttribute("showcnic"):request.getParameter("showcnic"));
+				List<Vaccine> vaccinesL = sc.getCustomQueryService().getDataByHQL("FROM Vaccine where vaccine_entity like 'CHILD%' and isSupplementary = 0") ;
+				model.put("vaccineList", vaccinesL);
+								
+//				model.put("cnic", request.getParameter("cnic"));
+//				model.put("showcnic", request.getAttribute("showcnic")!=null?request.getAttribute("showcnic"):request.getParameter("showcnic"));
 			}
 			catch (Exception e) {
 				e.printStackTrace();
