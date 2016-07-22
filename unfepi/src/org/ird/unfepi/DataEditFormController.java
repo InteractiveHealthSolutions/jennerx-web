@@ -2,48 +2,54 @@ package org.ird.unfepi;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.ird.unfepi.constants.WebGlobals;
 import org.springframework.beans.propertyeditors.CustomBooleanEditor;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
-import org.springframework.validation.BindException;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.SimpleFormController;
 
-public class DataEditFormController extends SimpleFormController{
+@Controller
+public class DataEditFormController {
+
 	private DataEditForm dataEditForm;
 
-	public void setDataEditForm (DataEditForm dataEditForm) {
+	DataEditFormController() {
+		this(new DataEditForm("", "", null));
+	}
+
+	public DataEditFormController(DataEditForm dataEditForm) {
 		this.dataEditForm = dataEditForm;
 	}
 
-	public DataEditForm getDataEditForm () {
+	public void setDataEditForm(DataEditForm dataEditForm) {
+		this.dataEditForm = dataEditForm;
+	}
+
+	public DataEditForm getDataEditForm() {
 		return dataEditForm;
 	}
-	
-	public void addModelAttribute(Map<String, Object> model, String name, Object attribute){
+
+	public void addModelAttribute(Map<String, Object> model, String name,
+			Object attribute) {
 		model.put(name, attribute);
 	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	protected final ModelAndView showForm(HttpServletRequest request,
-			HttpServletResponse response, BindException errors, Map controlModel) throws Exception {
-		if(controlModel == null){
-			controlModel = new HashMap();
-		}
-		controlModel.put("dataFormObject", getDataEditForm());
-		return super.showForm(request, response, errors, controlModel);
+
+	protected final ModelAndView showForm(ModelAndView modelAndView,
+			String viewName) {
+
+		modelAndView.addObject("dataFormObject", getDataEditForm());
+		modelAndView.setViewName(viewName);
+		return modelAndView;
 	}
-	
-	@Override
+
+	@InitBinder
 	protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat(WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA), true));
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat(WebGlobals.GLOBAL_DATE_FORMAT_JAVA), true));

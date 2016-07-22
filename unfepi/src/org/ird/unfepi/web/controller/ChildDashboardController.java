@@ -8,22 +8,33 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ird.unfepi.DataDisplayController;
+import org.ird.unfepi.DataViewForm;
+import org.ird.unfepi.constants.SystemPermissions;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.LoggedInUser;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Child;
 import org.ird.unfepi.utils.UserSessionUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.mysql.jdbc.StringUtils;
 
+@Controller
 public class ChildDashboardController extends DataDisplayController{
-
-	@Override
-	public ModelAndView handleRequest(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+	
+	ChildDashboardController(){
+		super("dataForm",new  DataViewForm("child_dashboard", "Child Dashboard", SystemPermissions.VIEW_CHILDREN_DATA, false));
+	}
+	
+	@RequestMapping(value="/childDashboard", method={RequestMethod.GET,RequestMethod.POST})
+	public ModelAndView handleRequest(HttpServletRequest req, HttpServletResponse resp){
+		
+		req.getSession().removeAttribute("VACCINE_SCHEDULE");		
 		Map<String, Object> model = new HashMap<String, Object>();
 		LoggedInUser user=UserSessionUtils.getActiveUser(req);
-		
 		String programId = req.getParameter("childId");
 		ServiceContext sc = Context.getServices();
 		try{
@@ -79,18 +90,17 @@ public class ChildDashboardController extends DataDisplayController{
 					map.put("childReminders", childreminders);
 					
 					addModelAttribute(model, "datalist", map);
-				}
-				else {
+				
+				} else {
 					addModelAttribute(model, "errorMessage", "No child found with given id.");
 				}
 			}
-			
 			return showForm(model);
-		}
-		catch (Exception e) {
+		
+		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		finally{
+		
+		} finally {
 			sc.closeSession();
 		}
 		return null;

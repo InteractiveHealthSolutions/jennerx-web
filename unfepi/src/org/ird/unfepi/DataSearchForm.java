@@ -9,7 +9,7 @@ public class DataSearchForm extends DataForm{
 	public DataSearchForm () {
 		super(serviceType);
 	}
-	DataSearchForm(String formName, String formTitle, SystemPermissions permission, boolean isInsertable){
+	public DataSearchForm(String formName, String formTitle, SystemPermissions permission, boolean isInsertable){
 		super(formName, formTitle, permission, serviceType, isInsertable);
 	}
 }

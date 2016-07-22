@@ -1,8 +1,5 @@
 package org.ird.unfepi.web.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,53 +11,82 @@ import org.ird.unfepi.utils.LoggerUtils;
 import org.ird.unfepi.utils.LoggerUtils.LogType;
 import org.ird.unfepi.utils.UserSessionUtils;
 import org.ird.unfepi.utils.reporting.LoggerUtil;
+import org.ird.unfepi.web.validator.LoginValidator;
 import org.quartz.SchedulerException;
-import org.springframework.validation.BindException;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.SimpleFormController;
-import org.springframework.web.servlet.view.RedirectView;
 
-public class LoginController extends SimpleFormController {
+@Controller
+public class LoginController {
 	
-	@Override
-	protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response, Object command, BindException errors)	throws Exception {
-		Credentials cr=(Credentials)command;
+	@RequestMapping(value="/login" , method = RequestMethod.GET)
+	public ModelAndView loginPage(HttpServletRequest request, ModelAndView modelView){
+		modelView.setViewName("login");
+		return modelView;
+	}
+	
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	protected String onSubmit(@ModelAttribute("credentials") Credentials credentials, BindingResult results, 
+							  HttpServletRequest request, HttpServletResponse response, Model model) {
+		
+		new LoginValidator().validate(credentials, results);
+		if (results.hasErrors()) {
+			return "login";
+		}
 		try{
 			if(!UserSessionUtils.isUserSessionActive(request))
 			{
-				UserSessionUtils.login(cr.getUsername(), Context.getAuthenticatedUser(cr.getUsername(), cr.getPassword()), request, response);
+				UserSessionUtils.login(credentials.getUsername(), Context.getAuthenticatedUser(credentials.getUsername(), credentials.getPassword()), request, response);
 				LoggerUtil.logIt(LoggerUtil.getJVMInfo());//TODO try moving it to some other event
 			}
-		}catch (SchedulerException e) {
+		} catch (SchedulerException e) {
+			
+			System.out.println("SchedulerException");
 			e.printStackTrace();
-		} 
-		catch (UserServiceException e) {
+			
+		} catch (UserServiceException e) {
+			
+			System.out.println("UserServiceException");
 			e.printStackTrace();
 			GlobalParams.FILELOGGER.error("Login Failure ", e);
 			request.getSession().setAttribute("logmessage", e.getMessage());
-			return new ModelAndView(new RedirectView("login.htm"));
-		}catch (Exception e) {
+			return "login";
+			
+		} catch (Exception e) {
+			
+			System.out.println("Exception");
 			e.printStackTrace();
 			GlobalParams.FILELOGGER.error("Login Failure ", e);
-			request.getSession().setAttribute("exceptionTrace",e);
-			return new ModelAndView(new RedirectView("exception.htm"));
-		}
+			request.getSession().setAttribute("exceptionTrace", e);
+			return "exception";
 			
-		GlobalParams.DBLOGGER.info("User "+cr.getUsername()+" logged in", LoggerUtils.getLoggerParams(LogType.LOGIN, null,null));
-		
-		return new ModelAndView(new RedirectView("mainpage.htm"));
-	}
-	@Override
-	protected Map referenceData(HttpServletRequest request) throws Exception {
-		Map< String, Object> model=new HashMap<String, Object>();
-		model.put("logmessage", request.getSession().getAttribute("logmessage"));
-		if(request.getParameter("logmessage")!=null){
-			model.put("logmessage", request.getParameter("logmessage"));
 		}
-		try{
-			request.getSession().removeAttribute("logmessage");
-		}catch (Exception e) {e.printStackTrace();}
 		
-		return model;
+		GlobalParams.DBLOGGER.info("User "+credentials.getUsername()+" logged in", LoggerUtils.getLoggerParams(LogType.LOGIN, null,null));
+		return "mainpage";
 	}
+	
+	@ModelAttribute("credentials")
+	protected Credentials backingObject() {
+		return new Credentials();
+	}
+	
+	@ModelAttribute
+	protected void referenceData(HttpServletRequest request, Model model) throws Exception {
+		model.addAttribute("logmessage", request.getSession().getAttribute("logmessage"));
+		if (request.getParameter("logmessage") != null) {
+			model.addAttribute("logmessage", request.getParameter("logmessage"));
+		}
+		try {
+			request.getSession().removeAttribute("logmessage");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

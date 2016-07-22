@@ -9,7 +9,7 @@ public class DataEntryForm extends DataForm{
 	public DataEntryForm () {
 		super(serviceType);
 	}
-	DataEntryForm(String formName, String formTitle, SystemPermissions permission){
+	public DataEntryForm(String formName, String formTitle, SystemPermissions permission){
 		super(formName, formTitle, permission, serviceType, false);
 	}
 }

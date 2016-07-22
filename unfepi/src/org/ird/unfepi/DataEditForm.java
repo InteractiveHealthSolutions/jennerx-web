@@ -9,7 +9,7 @@ public class DataEditForm extends DataForm{
 	public DataEditForm () {
 		super(serviceType);
 	}
-	DataEditForm(String formName, String formTitle, SystemPermissions permission){
+	public DataEditForm(String formName, String formTitle, SystemPermissions permission){
 		super(formName, formTitle, permission, serviceType, false);
 	}
 }

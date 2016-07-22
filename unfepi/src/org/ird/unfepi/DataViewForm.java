@@ -9,7 +9,7 @@ public class DataViewForm extends DataForm{
 	public DataViewForm () {
 		super(serviceType);
 	}
-	DataViewForm(String formName, String formTitle, SystemPermissions permission, boolean isInsertable){
+	public DataViewForm(String formName, String formTitle, SystemPermissions permission, boolean isInsertable){
 		super(formName, formTitle, permission, serviceType, isInsertable);
 	}
 }

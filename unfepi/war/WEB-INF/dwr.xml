@@ -24,7 +24,7 @@
 			<param name="exclude" value=""/>
 		</convert>
 		<convert converter="bean" match="org.ird.unfepi.model.VaccinePrerequisite">
-			<param name="exclude" value=""/>
+			<param name="exclude" value="prerequisite"/>
 		</convert>
 		<convert converter="bean" match="org.ird.unfepi.model.Vaccination">
 			<param name="exclude" value=""/>
@@ -77,6 +77,7 @@
 			<include method="getSummaryFollowupAgeAppropriateWRetro"/>
 			<include method="getSummaryFupByVaccinator"/>
 			<include method="getSummaryFupByCenter"/>
+			<include method="getDefaultersListChild"/>
 		</create>
 		<create creator="new" javascript="DWREntityService">
 			<param name="class" value="org.ird.unfepi.web.dwr.DWREntityService" />
@@ -130,6 +131,7 @@
 			<include method="getVaccinationCentersCountInCity"/>
 			<include method="isIdExists"/>
 			<include method="getAllVaccinationCenters"/>
+			<include method="getVaccinationCenter"/>
 		</create>
 		<create creator="new" javascript="DWRLotteryGeneratorService">
 			<param name="class" value="org.ird.unfepi.web.dwr.DWRLotteryGeneratorService" />
