@@ -76,10 +76,10 @@ function sendSearchFilter() {
 			//Append filter value
 
 			// IF filter is LIKE clause append '%%' for matching otherwise append wrap in ''
-			if($('#'+srfilters[i].ftype_id).val().contains('like')){
+			if($('#'+srfilters[i].ftype_id).val().toLowerCase().indexOf('like') != -1){
 				sf+=" '%"+$('#'+srfilters[i].val_id).val()+"%' ";
 			}
-			else if($('#'+srfilters[i].ftype_id).val().contains('between')){
+			else if($('#'+srfilters[i].ftype_id).val().toLowerCase().indexOf('between') != -1){
 				var start = $('#'+srfilters[i].val_id).val().substring(0, $('#'+srfilters[i].val_id).val().indexOf(" AND"));
 				var end = $('#'+srfilters[i].val_id).val().substring($('#'+srfilters[i].val_id).val().indexOf("AND ")+4);
 				sf+=" '"+start+"' AND '"+end+"' ";

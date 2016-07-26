@@ -1,9 +1,6 @@
 package org.ird.unfepi.web.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,17 +21,11 @@ import org.ird.unfepi.model.Child.STATUS;
 import org.ird.unfepi.model.ContactNumber;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
 import org.ird.unfepi.model.Model.ContactType;
-import org.ird.unfepi.model.Reminder.ReminderType;
-import org.ird.unfepi.model.ReminderSms;
-import org.ird.unfepi.model.ReminderSms.REMINDER_STATUS;
 import org.ird.unfepi.model.Vaccination;
-import org.ird.unfepi.model.Vaccination.VACCINATION_STATUS;
 import org.ird.unfepi.utils.IRUtils;
 import org.ird.unfepi.utils.LoggerUtils;
 import org.ird.unfepi.utils.LoggerUtils.LogType;
-import org.ird.unfepi.utils.UnfepiUtils;
 import org.ird.unfepi.utils.UserSessionUtils;
-import org.ird.unfepi.utils.date.DateUtils;
 import org.ird.unfepi.web.utils.ControllerUIHelper;
 import org.ird.unfepi.web.validator.ValidatorUtils;
 import org.springframework.stereotype.Controller;
@@ -46,27 +37,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.mysql.jdbc.StringUtils;
 
 @Controller
 @SessionAttributes("command")
 @RequestMapping("/editchild")
-public class EditChildController extends DataEditFormController{
+public class EditChildController extends DataEditFormController {
 	
 	public EditChildController() {
-		super(new  DataEditForm("child", "Child (Edit)", SystemPermissions.CORRECT_CHILDREN_DATA));
+		super(new DataEditForm("child", "Child (Edit)", SystemPermissions.CORRECT_CHILDREN_DATA));
 	}
 	
-	@RequestMapping(method=RequestMethod.GET)
-	public ModelAndView editChildView(HttpServletRequest request, ModelAndView modelAndView){
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView editChildView(HttpServletRequest request, ModelAndView modelAndView) {
 		modelAndView.addObject("command", formBackingObject(request));
 		return showForm(modelAndView, "dataForm");
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
 	public ModelAndView onSubmit(@ModelAttribute("command")ChildDataBean cb, BindingResult results, 
-									HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView) throws Exception {
+								 HttpServletRequest request, HttpServletResponse response, 
+								 ModelAndView modelAndView) throws Exception {
 
 		LoggedInUser user=UserSessionUtils.getActiveUser(request);
 		ServiceContext sc = Context.getServices();
@@ -80,7 +73,7 @@ public class EditChildController extends DataEditFormController{
 				ValidatorUtils.validateAddress(DataEntrySource.WEB, cb.getAddress(), null, results, true);
 			
 			} else if (editSection.equalsIgnoreCase("program")) {
-				ValidatorUtils.validateChildNIC(DataEntrySource.WEB, cb.getChild().getMappedId(), cb.getChild().getNic(), false, null, results, true, sc);
+//				ValidatorUtils.validateChildNIC(DataEntrySource.WEB, cb.getChild().getMappedId(), cb.getChild().getNic(), false, null, results, true, sc);
 				ValidatorUtils.validateChildStatus(DataEntrySource.WEB, cb.getChild(), null, results, true);
 				ValidatorUtils.validateReminderAndContactInfo(DataEntrySource.WEB, cb.getPreference(), cb.getContactPrimary(), cb.getContactSecondary(), null, results, sc, false);
 			
@@ -91,13 +84,12 @@ public class EditChildController extends DataEditFormController{
 			}
 		
 		} finally {
-			sc.closeSession();
+//			sc.closeSession();
 		}
 		
 		if(results.hasErrors()){
 			return showForm(modelAndView, "dataForm");
 		}
-		
 
 		String editSection = request.getParameter("editSection");
 		try {
@@ -124,31 +116,31 @@ public class EditChildController extends DataEditFormController{
 					
 					Child child = cb.getChild();
 					STATUS uneditedChildStatus = (STATUS) request.getSession().getAttribute("uneditedChildStatus"+child.getMappedId());
-					Boolean uneditedChildReminderPreference = (Boolean) request.getSession().getAttribute("uneditedChildReminderPreference"+child.getMappedId());
-					Boolean uneditedChildIncentivePreference = (Boolean) request.getSession().getAttribute("uneditedChildIncentivePreference"+child.getMappedId());
+//					Boolean uneditedChildReminderPreference = (Boolean) request.getSession().getAttribute("uneditedChildReminderPreference"+child.getMappedId());
+//					Boolean uneditedChildIncentivePreference = (Boolean) request.getSession().getAttribute("uneditedChildIncentivePreference"+child.getMappedId());
 					child.setEditor(user.getUser());
 					
 					//child terminated from followup? cancel all vaccine reminders
 					if (uneditedChildStatus.name().equalsIgnoreCase(STATUS.FOLLOW_UP.name())
 							&& child.getStatus().name().equalsIgnoreCase(STATUS.TERMINATED.name())) {
-						List<ReminderSms> reml = sc.getReminderService().findReminderSmsRecordByCriteria(child.getMappedId(), null, null, new ReminderType[]{ReminderType.NEXT_VACCINATION_REMINDER}, null, null, null, null, null, REMINDER_STATUS.SCHEDULED, false, 0, 100, false, null);
-					
-						for (ReminderSms reminderSms : reml) {
-							reminderSms.setReminderStatus(REMINDER_STATUS.CANCELLED);
-							reminderSms.setSmsCancelReason((reminderSms.getSmsCancelReason()==null?"":reminderSms.getSmsCancelReason())+new SimpleDateFormat("dd-MM-yy HH:mm").format(new Date())+" Child status "+child.getStatus()+";");
-							sc.getReminderService().updateReminderSmsRecord(reminderSms);
-						}
+//						List<ReminderSms> reml = sc.getReminderService().findReminderSmsRecordByCriteria(child.getMappedId(), null, null, new ReminderType[]{ReminderType.NEXT_VACCINATION_REMINDER}, null, null, null, null, null, REMINDER_STATUS.SCHEDULED, false, 0, 100, false, null);
+//					
+//						for (ReminderSms reminderSms : reml) {
+//							reminderSms.setReminderStatus(REMINDER_STATUS.CANCELLED);
+//							reminderSms.setSmsCancelReason((reminderSms.getSmsCancelReason()==null?"":reminderSms.getSmsCancelReason())+new SimpleDateFormat("dd-MM-yy HH:mm").format(new Date())+" Child status "+child.getStatus()+";");
+//							sc.getReminderService().updateReminderSmsRecord(reminderSms);
+//						}
 						
 						GlobalParams.DBLOGGER.info(IRUtils.convertToString(child), LoggerUtils.getLoggerParams(LogType.TRANSACTION_UPDATE, FormType.CHILD_BIOGRAPHIC_CORRECT, user.getUser().getUsername()));
 					}
 					
 					sc.getChildService().updateChild(child);
 
-					if(cb.getPreference().getHasApprovedReminders() != uneditedChildReminderPreference){
-						ControllerUIHelper.doChangePreference(cb.getPreference(), user.getUser(), sc);
-						
-						GlobalParams.DBLOGGER.info(IRUtils.convertToString(cb.getPreference()), LoggerUtils.getLoggerParams(LogType.TRANSACTION_UPDATE, FormType.CHANGE_PREFERENCE, user.getUser().getUsername()));
-					}
+//					if(cb.getPreference().getHasApprovedReminders() != uneditedChildReminderPreference){
+//						ControllerUIHelper.doChangePreference(cb.getPreference(), user.getUser(), sc);
+//						
+//						GlobalParams.DBLOGGER.info(IRUtils.convertToString(cb.getPreference()), LoggerUtils.getLoggerParams(LogType.TRANSACTION_UPDATE, FormType.CHANGE_PREFERENCE, user.getUser().getUsername()));
+//					}
 					
 					ControllerUIHelper.handleNonEnrollmentContactInfo(cb.getPreference(), cb.getContactPrimary(), cb.getContactSecondary(), user.getUser(), sc);
 					GlobalParams.DBLOGGER.info(IRUtils.convertToString(cb), LoggerUtils.getLoggerParams(LogType.TRANSACTION_UPDATE, FormType.CONTACT_NUMBER_CORRECT, user.getUser().getUsername()));
@@ -159,41 +151,41 @@ public class EditChildController extends DataEditFormController{
 						ved.setEditor(user.getUser());
 						sc.getVaccinationService().updateVaccinationRecord(ved);
 						
-						if (ved.getVaccinationStatus().equals(VACCINATION_STATUS.SCHEDULED)) {
-							List<ReminderSms> rsms=sc.getReminderService().findByCriteria(null, null, false, null, ved.getVaccinationRecordNum(), false, null); 	
-							//verify rsms are equal to daynums in arm
-							for (ReminderSms r : rsms) {
-								if (r.getReminderStatus().equals(REMINDER_STATUS.SCHEDULED)) {
-									int hour = r.getDueDate().getHours();
-									int min = r.getDueDate().getMinutes();
-									int sec = r.getDueDate().getSeconds();
-									
-									Calendar cal=Calendar.getInstance();
-									cal.setTime(new Date(ved.getVaccinationDuedate().getTime()));
-									cal.set(Calendar.HOUR_OF_DAY, hour);
-									cal.set(Calendar.MINUTE, min);
-									cal.set(Calendar.SECOND, sec);
-									cal.add(Calendar.DATE, r.getDayNumber());
-									
-									if (!DateUtils.datesEqual(r.getDueDate(), cal.getTime())) {
-										r.setDueDate(cal.getTime());
-										r.setEditor(user.getUser());
-										sc.getReminderService().updateReminderSmsRecord(r);
-									}
-								
-								} else {
-									r.setDescription((r.getDescription() == null?"":r.getDescription())+"-vaccination due date changed.");
-								}
-							}
-						}
+//						if (ved.getVaccinationStatus().equals(VACCINATION_STATUS.SCHEDULED)) {
+//							List<ReminderSms> rsms=sc.getReminderService().findByCriteria(null, null, false, null, ved.getVaccinationRecordNum(), false, null); 	
+//							//verify rsms are equal to daynums in arm
+//							for (ReminderSms r : rsms) {
+//								if (r.getReminderStatus().equals(REMINDER_STATUS.SCHEDULED)) {
+//									int hour = r.getDueDate().getHours();
+//									int min = r.getDueDate().getMinutes();
+//									int sec = r.getDueDate().getSeconds();
+//									
+//									Calendar cal=Calendar.getInstance();
+//									cal.setTime(new Date(ved.getVaccinationDuedate().getTime()));
+//									cal.set(Calendar.HOUR_OF_DAY, hour);
+//									cal.set(Calendar.MINUTE, min);
+//									cal.set(Calendar.SECOND, sec);
+//									cal.add(Calendar.DATE, r.getDayNumber());
+//									
+//									if (!DateUtils.datesEqual(r.getDueDate(), cal.getTime())) {
+//										r.setDueDate(cal.getTime());
+//										r.setEditor(user.getUser());
+//										sc.getReminderService().updateReminderSmsRecord(r);
+//									}
+//								
+//								} else {
+//									r.setDescription((r.getDescription() == null?"":r.getDescription())+"-vaccination due date changed.");
+//								}
+//							}
+//						}
 						GlobalParams.DBLOGGER.info(IRUtils.convertToString(ved), LoggerUtils.getLoggerParams(LogType.TRANSACTION_UPDATE, FormType.FOLLOWUP_CORRECT, user.getUser().getUsername()));
 					}
 				}
 				sc.commitTransaction();
 			}
 			String editmessage="Child Edited Successfully";
-			return new ModelAndView(UnfepiUtils.redirectView("childDashboard.htm","action=search&editOrUpdateMessage="+editmessage+"&childId="+request.getParameter("programId")));
-		
+			return new ModelAndView(new RedirectView("childDashboard.htm?action=search&editOrUpdateMessage="+editmessage+"&childId="+request.getParameter("programId")));
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			request.getSession().setAttribute("exceptionTrace", e);

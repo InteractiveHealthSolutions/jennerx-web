@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ird.unfepi.DataDisplayController;
+import org.ird.unfepi.DataSearchForm;
 import org.ird.unfepi.GlobalParams.SearchFilter;
+import org.ird.unfepi.constants.SystemPermissions;
 import org.ird.unfepi.constants.WebGlobals;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
@@ -18,14 +20,23 @@ import org.ird.unfepi.model.Encounter;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
 import org.ird.unfepi.utils.UnfepiUtils;
 import org.ird.unfepi.utils.date.DateUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import com.mysql.jdbc.StringUtils;
 
-public class ViewEncountersController extends DataDisplayController{
-
+@Controller
+public class ViewEncountersController extends DataDisplayController {
+	
+	ViewEncountersController(){
+		super("dataForm", new  DataSearchForm("encounter", "Encounters", SystemPermissions.VIEW_ENCOUNTERS, false));
+	}
+	
+	@RequestMapping(value="/viewEncounters", method={RequestMethod.GET,RequestMethod.POST})
 	public ModelAndView handleRequest(HttpServletRequest req,	HttpServletResponse resp) throws Exception {
+		
 		int totalRows=0;
 		Map<String, Object> model = new HashMap<String, Object>();
 		req.setAttribute("editOrUpdateMessage", req.getParameter("editOrUpdateMessage"));
@@ -76,7 +87,7 @@ public class ViewEncountersController extends DataDisplayController{
 			e.printStackTrace();
 			req.getSession().setAttribute("exceptionTrace",e);
 			sc.closeSession();//incase of error close session
-			return new ModelAndView(new RedirectView("exception.htm"));
+			return new ModelAndView("exception");
 		}
 		finally{
 			sc.closeSession();

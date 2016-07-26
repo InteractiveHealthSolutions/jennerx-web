@@ -17,6 +17,7 @@
 <%@page import="org.ird.unfepi.model.Model.Gender"%>
 <%@page import="org.ird.unfepi.constants.WebGlobals"%>
 
+
 <% boolean lotteryGeneratorForm = false;// TODO request.getAttribute("formType").equals(FormType.LOTTERY_GENERATOR_FORM_FILL);
 boolean enableBirthdateEdit = !lotteryGeneratorForm;%>
 
@@ -254,36 +255,10 @@ function submitFrm() {
 			</div> 
 		</td>
 	</tr>
-    <tr>
-		<td>Reminders approved? <span class="mendatory-field">*</span></td>
-		<td>
-			<spring:bind path="command.preference.hasApprovedReminders">
-				<input type="radio" id="hasApprovedRemindersYes"name="preference.hasApprovedReminders" <c:if test='${not empty status.value && status.value == true}'>checked = "checked"</c:if> value="<%=WebGlobals.BOOLEAN_CONVERTER_TRUE_STRING%>"/>Yes<br>
-				<input type="radio" id="hasApprovedRemindersNo" name="preference.hasApprovedReminders" <c:if test='${not empty status.value && status.value == false}'>checked = "checked"</c:if> value="<%=WebGlobals.BOOLEAN_CONVERTER_FALSE_STRING%>"/>No
-				<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
-			</spring:bind>
-		</td>
-	</tr>
 	<tr>
-		<td>Reminder mobile number</td>
+		<td>Contact Number</td>
 		<td><spring:bind path="command.contactPrimary">
 			<input type="text" id="contactPrimary" name="contactPrimary" maxlength="15" value="${status.value}" class="numbersOnly" />
-			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
-			</spring:bind>
-		</td>
-	</tr>
-	<tr>
-		<td>Other contact number</td>
-		<td><spring:bind path="command.contactSecondary">
-			<input type="text" id="contactSecondary" name="contactSecondary" maxlength="15" value="${status.value}" class="numbersOnly" />
-			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
-			</spring:bind>
-		</td>
-	</tr>
-	<tr>
-		<td>CNIC</td>
-		<td><spring:bind path="command.child.nic">
-			<input type="text" id="nic" name="child.nic" maxlength="13" value="${status.value}" class="numbersOnly" />
 			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
 		</td>

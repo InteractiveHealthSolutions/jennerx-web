@@ -9,21 +9,32 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ird.unfepi.DataDisplayController;
+import org.ird.unfepi.DataSearchForm;
 import org.ird.unfepi.GlobalParams.SearchFilter;
+import org.ird.unfepi.constants.SystemPermissions;
 import org.ird.unfepi.constants.WebGlobals;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.User;
 import org.ird.unfepi.model.User.UserStatus;
 import org.ird.unfepi.utils.UnfepiUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import com.mysql.jdbc.StringUtils;
 
-public class ViewUsersController extends DataDisplayController{
-
+@Controller
+public class ViewUsersController  extends DataDisplayController {
+	
+	ViewUsersController(){
+		super("dataForm", new  DataSearchForm("user", "Users", SystemPermissions.VIEW_USERS, true));
+	}
+	
+	@RequestMapping(value="/viewUsers", method={RequestMethod.GET,RequestMethod.POST})
 	public ModelAndView handleRequest(HttpServletRequest req,	HttpServletResponse resp) throws Exception {
+		
 		int totalRows=0;
 		Map<String, Object> model = new HashMap<String, Object>();
 		
@@ -78,7 +89,7 @@ public class ViewUsersController extends DataDisplayController{
 		catch (Exception e) {
 			e.printStackTrace();
 			req.getSession().setAttribute("exceptionTrace",e);
-			return new ModelAndView(new RedirectView("exception.htm"));
+			return new ModelAndView("exception");
 		}
 		finally{
 			sc.closeSession();

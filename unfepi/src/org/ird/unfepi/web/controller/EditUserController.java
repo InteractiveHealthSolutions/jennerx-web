@@ -1,17 +1,18 @@
 package org.ird.unfepi.web.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.ird.unfepi.DataEditForm;
 import org.ird.unfepi.DataEditFormController;
 import org.ird.unfepi.GlobalParams;
 import org.ird.unfepi.constants.ErrorMessages;
 import org.ird.unfepi.constants.FormType;
+import org.ird.unfepi.constants.SystemPermissions;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.LoggedInUser;
 import org.ird.unfepi.context.ServiceContext;
@@ -23,24 +24,53 @@ import org.ird.unfepi.utils.LoggerUtils;
 import org.ird.unfepi.utils.LoggerUtils.LogType;
 import org.ird.unfepi.utils.UserSessionUtils;
 import org.ird.unfepi.web.validator.UserValidator;
-import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-public class EditUserController extends DataEditFormController
-{
+@Controller
+@SessionAttributes("command")
+@RequestMapping("/edituser")
+public class EditUserController extends DataEditFormController {
+	
 	private static final FormType formType = FormType.USER_CORRECT;
 	
-	@Override
-	protected ModelAndView onSubmit(HttpServletRequest request,	HttpServletResponse response, 
-			Object command, BindException errors) throws Exception {
-		final String MESSAGE_USER_EDITED_SUCCESSFULLY="User data edited successfully.";
-
+	EditUserController(){
+		super(new DataEditForm("user", "User (Edit)", SystemPermissions.CORRECT_USERS));
+	}
+	
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView editUserView(HttpServletRequest request, ModelAndView modelAndView){
+		modelAndView.addObject("command", backingObject(request, modelAndView.getModelMap()));
+		return showForm(modelAndView, "dataForm");
+	}
+	
+	@RequestMapping(method=RequestMethod.POST)
+	public ModelAndView onSubmit(@ModelAttribute("command")User underEditUser, BindingResult results,
+								 HttpServletRequest request, HttpServletResponse response,
+								 ModelAndView modelAndView){
+		
 		LoggedInUser user=UserSessionUtils.getActiveUser(request);
+		if(user==null){
+			return new ModelAndView(new RedirectView("login.htm"));
+		}
 
-		String role=request.getParameter("userrole");
-		User underEditUser=(User) command;
+		new UserValidator().validateEdit(underEditUser.getIdMapper().getIdentifiers().get(0).getIdentifier(), 
+										 underEditUser, request.getParameter("userrole"), 
+										 user.getUser(), user.getUser().getIdMapper().getRole(), results);
+		
+		if(results.hasErrors()){
+			return showForm(modelAndView, "dataForm");
+		}
+		
+		final String MESSAGE_USER_EDITED_SUCCESSFULLY="User data edited successfully.";
+		String role = request.getParameter("userrole");
 		ServiceContext sc = Context.getServices();
 		try{
 			IdMapper idm = sc.getIdMapperService().findIdMapper(underEditUser.getMappedId());
@@ -55,6 +85,8 @@ public class EditUserController extends DataEditFormController
 			
 			GlobalParams.DBLOGGER.info(IRUtils.convertToString(underEditUser), LoggerUtils.getLoggerParams(LogType.TRANSACTION_UPDATE, formType, user.getUser().getUsername()));
 			GlobalParams.DBLOGGER.info(IRUtils.convertToString(idm), LoggerUtils.getLoggerParams(LogType.TRANSACTION_UPDATE, formType, user.getUser().getUsername()));
+			return new ModelAndView(new RedirectView("viewUsers.htm?editOrUpdateMessage="+MESSAGE_USER_EDITED_SUCCESSFULLY+"&action=search&userid="+underEditUser.getUsername()));
+			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -65,50 +97,16 @@ public class EditUserController extends DataEditFormController
 		finally{
 			sc.closeSession();
 		}
+	}
+	
+	public User backingObject(HttpServletRequest request, ModelMap model){
 		
-		return new ModelAndView(new RedirectView("viewUsers.htm?editOrUpdateMessage="+MESSAGE_USER_EDITED_SUCCESSFULLY+"&action=search&userid="+underEditUser.getUsername()));
-	}
-	
-	@Override
-	protected ModelAndView processFormSubmission(HttpServletRequest request, HttpServletResponse response, 
-			Object command, BindException errors) throws Exception 
-	{
-		LoggedInUser user=UserSessionUtils.getActiveUser(request);
-		if(user==null){
-			return new ModelAndView(new RedirectView("login.htm"));
-		}
-		UserValidator validator = (UserValidator) getValidator();
-		User userUnderEdit = (User)command;
-		validator.validateEdit(userUnderEdit.getIdMapper().getIdentifiers().get(0).getIdentifier(), userUnderEdit, request.getParameter("userrole"), user.getUser(), user.getUser().getIdMapper().getRole(), errors);
-		return super.processFormSubmission(request, response, command, errors);
-	}
-	
-	@Override
-	protected Object formBackingObject(HttpServletRequest request)
-			throws Exception {
 		User iruser = new User();
-
-		String rec=request.getParameter("editRecord");
 		ServiceContext sc = Context.getServices();
 		try{
-			iruser=sc.getUserService().findUser(rec, false, false, false, false, new String[]{"idMapper"});
-		}catch (Exception e) {
-			e.printStackTrace();
-			GlobalParams.FILELOGGER.error(formType.name(), e);
-			request.setAttribute("errorMessage", "An error occurred while retrieving User. Error message is:"+e.getMessage());
-		}finally{
-			sc.closeSession();
-		}
-		return iruser;
-	}
-	
-	@Override
-	protected Map referenceData(HttpServletRequest request, Object command,	Errors errors) throws Exception {
-		User underEditUser=(User) command;
-		Map<String, Object> model=new HashMap<String, Object>();
-		ServiceContext sc = Context.getServices();
-		try{
-			Role userUnderEditRole = sc.getIdMapperService().findIdMapper(underEditUser.getMappedId()).getRole();
+			iruser=sc.getUserService().findUser(request.getParameter("editRecord") , false, false, false, false, new String[]{"idMapper"});
+			
+			Role userUnderEditRole = sc.getIdMapperService().findIdMapper(iruser.getMappedId()).getRole();
 			LoggedInUser loggedinUser = UserSessionUtils.getActiveUser(request);
 			Role editorRole = sc.getIdMapperService().findIdMapper(loggedinUser .getUser().getMappedId()).getRole();
 
@@ -120,8 +118,7 @@ public class EditUserController extends DataEditFormController
 			boolean isUserAllowedToEdit = true;
 			
 			// DefaultAdmin User should only be editable by DefaultAdmin and its status and role should never be editable.
-			if(User.isUserDefaultAdministrator(underEditUser.getUsername(), userUnderEditRole.getRolename())
-					&& !loggedinUser.isDefaultAdministrator()){
+			if(User.isUserDefaultAdministrator(iruser.getUsername(), userUnderEditRole.getRolename()) && !loggedinUser.isDefaultAdministrator()){
 				isUserAllowedToEdit = false;
 				editErrorMessage += ErrorMessages.USER_ADMIN_EDITOR_NOT_AUTHORIZED;
 			}
@@ -133,21 +130,20 @@ public class EditUserController extends DataEditFormController
 				}
 			}
 			
-			model.put("userRole", userUnderEditRole);
-			model.put("allowedRoles", allowedRoles);
-			model.put("notAllowedRoles", notAllowedRoles);
-			model.put("isUserAllowedToEdit", isUserAllowedToEdit);
-			model.put("editErrorMessage", editErrorMessage);
-		}
-		catch (Exception e) {
+			model.addAttribute("userRole", userUnderEditRole);
+			model.addAttribute("allowedRoles", allowedRoles);
+			model.addAttribute("notAllowedRoles", notAllowedRoles);
+			model.addAttribute("isUserAllowedToEdit", isUserAllowedToEdit);
+			model.addAttribute("editErrorMessage", editErrorMessage);
+			
+		}catch (Exception e) {
 			e.printStackTrace();
 			GlobalParams.FILELOGGER.error(formType.name(), e);
-			request.setAttribute("errorMessage", "An error occurred while retrieving User. Error message is:"+e.getMessage());
+			request.setAttribute("errorMessage", "An error occurred while retrieving User. Error message is:" + e.getMessage());
 		}finally{
 			sc.closeSession();
 		}
-		
-		
-		return model;
+		return iruser;	
 	}
+
 }

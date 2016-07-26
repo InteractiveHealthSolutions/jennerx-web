@@ -11,20 +11,31 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.ird.unfepi.DataDisplayController;
+import org.ird.unfepi.DataSearchForm;
 import org.ird.unfepi.GlobalParams.SearchFilter;
+import org.ird.unfepi.constants.SystemPermissions;
 import org.ird.unfepi.constants.WebGlobals;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Location;
 import org.ird.unfepi.utils.UnfepiUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import com.mysql.jdbc.StringUtils;
 
-public class ViewLocationsController extends DataDisplayController{
-
+@Controller
+public class ViewLocationsController extends DataDisplayController {
+	
+	ViewLocationsController(){
+		super("dataForm",  new  DataSearchForm("location", "Locations", SystemPermissions.VIEW_LOCATIONS, true));
+	}
+	
+	@RequestMapping(value="/viewLocations", method={RequestMethod.GET,RequestMethod.POST})
 	public ModelAndView handleRequest(HttpServletRequest req,	HttpServletResponse resp) throws Exception {
+		
 		int totalRows=0;
 		Map<String, Object> model = new HashMap<String, Object>();
 		req.setAttribute("editOrUpdateMessage", req.getParameter("editOrUpdateMessage"));
@@ -63,10 +74,7 @@ public class ViewLocationsController extends DataDisplayController{
 					totalRows=Integer.parseInt(ss.createQuery("SELECT count(*) "+hqlWFilter.replaceAll(" FETCH ", " ")).list().get(0).toString());
 					
 					Query q = ss.createQuery(hql);
-					list = q.setReadOnly(true)
-							.setFirstResult(startRecord)
-							.setMaxResults(WebGlobals.DEFAULT_PAGING_MAX_PAGE_ITEMS)
-							.list();
+					list = q.setReadOnly(true).setFirstResult(startRecord).setMaxResults(WebGlobals.DEFAULT_PAGING_MAX_PAGE_ITEMS).list();
 				}
 				finally{
 					ss.close();
@@ -86,7 +94,7 @@ public class ViewLocationsController extends DataDisplayController{
 		catch (Exception e) {
 			e.printStackTrace();
 			req.getSession().setAttribute("exceptionTrace",e);
-			return new ModelAndView(new RedirectView("exception.htm"));
+			return new ModelAndView("exception");
 		}
 		finally{
 			sc.closeSession();

@@ -72,7 +72,7 @@ if(epWalletPerm){
 			<td style="padding: 0;margin: 0">
             <div style="width:140px; overflow: visible ;display: inline-block;padding: 0;margin: 0;">
             <c:forEach items="${map.contacts}" var="cont">
-            <a href="editcontactNumber.htm?coNum=${cont.contactNumberId}" class="linkiconXS iconedit"></a> ${fn:substring(cont.numberType,0,3)}- ${cont.number}
+            <a href="editcontactNumber.htm?coNum=${cont.contactNumberId}&programId=${map.vaccinator.idMapper.identifiers[0].identifier}" class="linkiconXS iconedit"></a> ${fn:substring(cont.numberType,0,3)}- ${cont.number}
             <br>
             </c:forEach>
             </div>

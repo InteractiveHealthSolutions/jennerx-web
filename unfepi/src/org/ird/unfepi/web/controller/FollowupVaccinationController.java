@@ -2,6 +2,7 @@ package org.ird.unfepi.web.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,7 @@ import org.ird.unfepi.utils.UserSessionUtils;
 import org.ird.unfepi.web.utils.ControllerUIHelper;
 import org.ird.unfepi.web.utils.VaccinationCenterVisit;
 import org.ird.unfepi.web.utils.VaccineSchedule;
+import org.ird.unfepi.web.utils.VaccineSchedule.VaccineStatusType;
 import org.ird.unfepi.web.validator.VaccinationValidator;
 import org.ird.unfepi.web.validator.ValidatorUtils;
 import org.springframework.stereotype.Controller;
@@ -71,6 +73,14 @@ public class FollowupVaccinationController extends DataEntryFormController{
 		try{
 			List<VaccineSchedule> vaccineSchedule = (List<VaccineSchedule>) request.getSession().getAttribute(VaccinationCenterVisit.VACCINE_SCHEDULE_KEY+centerVisit.getUuid());
 
+			Iterator<VaccineSchedule> iter = vaccineSchedule.iterator();
+			while (iter.hasNext()) {
+				VaccineSchedule vsh = iter.next();
+				if (vsh.getStatus().equals(VaccineStatusType.SCHEDULED.name()) || vsh.getStatus().equals(VaccineStatusType.NOT_ALLOWED.name()) || (vsh.getStatus() == null?true:vsh.getStatus().length()==0)) {
+					iter.remove();
+				}
+			}
+			
 			new VaccinationValidator().validateVaccinationForm(centerVisit, vaccineSchedule, results, request);
 
 			if(results.hasErrors()){

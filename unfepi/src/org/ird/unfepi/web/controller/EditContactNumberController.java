@@ -1,14 +1,13 @@
 package org.ird.unfepi.web.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.ird.unfepi.DataEditForm;
 import org.ird.unfepi.DataEditFormController;
 import org.ird.unfepi.GlobalParams;
 import org.ird.unfepi.constants.FormType;
+import org.ird.unfepi.constants.SystemPermissions;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.LoggedInUser;
 import org.ird.unfepi.context.ServiceContext;
@@ -16,104 +15,115 @@ import org.ird.unfepi.model.ContactNumber;
 import org.ird.unfepi.utils.IRUtils;
 import org.ird.unfepi.utils.LoggerUtils;
 import org.ird.unfepi.utils.LoggerUtils.LogType;
+import org.ird.unfepi.utils.UnfepiUtils;
 import org.ird.unfepi.utils.UserSessionUtils;
-import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
+import org.ird.unfepi.web.validator.ContactNumberValidator;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-public class EditContactNumberController extends DataEditFormController
-{
+@Controller
+@SessionAttributes("command")
+@RequestMapping("/editcontactNumber")
+public class EditContactNumberController extends DataEditFormController{
 	private static final FormType formType = FormType.CONTACT_NUMBER_CORRECT;
 	
-	@Override
-	protected ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)
-			throws Exception 
-	{
-		LoggedInUser user=UserSessionUtils.getActiveUser(request);
+	EditContactNumberController(){
+		super(new  DataEditForm("contact_number", "Contact Number (Edit)", SystemPermissions.CORRECT_CHILD_CONTACT_NUMBER));
+	}
+	
+	@RequestMapping(method=RequestMethod.GET)
+	public ModelAndView editChildView(HttpServletRequest request, ModelAndView modelAndView){
+		modelAndView.addObject("command", formBackingObject(request, modelAndView.getModelMap()));
+		return showForm(modelAndView, "dataForm");
+	}
+	
+	@RequestMapping(method=RequestMethod.POST)
+	public ModelAndView onSubmit(@ModelAttribute("command")ContactNumber con, BindingResult results, 
+			HttpServletRequest request,	HttpServletResponse response, ModelAndView modelAndView) throws Exception {
 		
-		ContactNumber con = (ContactNumber) command;
+		LoggedInUser user=UserSessionUtils.getActiveUser(request);
 		ServiceContext sc = Context.getServices();
+		try {		
+			new ContactNumberValidator().validate(con,results);		
+			if(results.hasErrors()){
+				return showForm(modelAndView, "dataForm");
+			}
 
-		try{
 			con.setEditor(user.getUser());
 			sc.getDemographicDetailsService().updateContactNumber(con);
 			sc.commitTransaction();
 			
 			GlobalParams.DBLOGGER.info(IRUtils.convertToString(con), LoggerUtils.getLoggerParams(LogType.TRANSACTION_UPDATE, formType, user.getUser().getUsername()));
-
 			String editmessage = "updated successfully";
-			
 			String entityRole = request.getParameter("entityRole");
-
+			
 			if(entityRole.equalsIgnoreCase("child")){
 				return new ModelAndView(new RedirectView("viewChildren.htm?action=search&editOrUpdateMessage="+editmessage +"&childid="+con.getIdMapper().getIdentifiers().get(0).getIdentifier()));
-			}
-			else if(entityRole.equalsIgnoreCase("storekeeper")){
-				return new ModelAndView(new RedirectView("viewStorekeepers.htm?action=search&editOrUpdateMessage="+editmessage +"&storekeeperid="+con.getIdMapper().getIdentifiers().get(0).getIdentifier()));
 			}
 			else if(entityRole.equalsIgnoreCase("vaccinator")){
 				return new ModelAndView(new RedirectView("viewVaccinators.htm?action=search&editOrUpdateMessage="+editmessage +"&vaccinatorid="+con.getIdMapper().getIdentifiers().get(0).getIdentifier()));
 			}
 			
 			return new ModelAndView(new RedirectView("viewChildren.htm?action=search&editOrUpdateMessage="+editmessage +"&childid="+con.getIdMapper().getIdentifiers().get(0).getIdentifier()));
-		}
-		catch (Exception e) {
+		
+		} catch (Exception e) {
 			e.printStackTrace();
 			GlobalParams.FILELOGGER.error(formType.name(), e);
 			request.getSession().setAttribute("exceptionTrace", e);
-			return new ModelAndView(new RedirectView("exception.htm"));
-		}
-		finally{
+			return new ModelAndView("exception");
+		
+		} finally {
 			sc.closeSession();
 		}
 	}
 	
-	@Override
-	protected Object formBackingObject(HttpServletRequest request) throws Exception 
+	protected ContactNumber formBackingObject(HttpServletRequest request, ModelMap model)
 	{
 		String conId=request.getParameter("coNum");
 		ContactNumber con = null;
 		ServiceContext sc = Context.getServices();
-		try{
+		try {
 			con = sc.getDemographicDetailsService().getContactNumberById(Integer.parseInt(conId), false, new String[]{"idMapper"});
-		}
-		catch (Exception e) {
+		
+		} catch (Exception e) {
 			e.printStackTrace();
 			GlobalParams.FILELOGGER.error(formType.name(), e);
 			request.setAttribute("errorMessagev", "An error occurred while retrieving contact number. Error message is:"+e.getMessage());
-		}
-		finally{
+		
+		} finally {
 			sc.closeSession();
 		}
 		return con;
 	}
-
-	@Override
-	protected Map referenceData(HttpServletRequest request, Object command,	Errors errors) throws Exception  
+	
+	@ModelAttribute
+	protected void referenceData(HttpServletRequest request, Model model) throws Exception  
 	{
-		Map<String, Object> model=new HashMap<String, Object>();
-		
-		ContactNumber con = (ContactNumber) command;
 		ServiceContext sc = Context.getServices();
-		try{
-			model.put("programId", con.getIdMapper().getIdentifiers().get(0).getIdentifier());
-			
+		try {
+			String programId = request.getParameter("programId");
+			model.addAttribute("programId", programId);			
 			String entityRole = request.getParameter("entityRole");
 			if(entityRole == null){
-				entityRole = sc.getIdMapperService().findIdMapper(con.getMappedId()).getRole().getRolename();
+				entityRole = sc.getIdMapperService().findIdMapper(programId).getRole().getRolename();
 			}
-			model.put("entityRole", entityRole);
-		}catch (Exception e) {
+			model.addAttribute("entityRole", entityRole);
+		
+		} catch (Exception e) {
 			e.printStackTrace();
 			GlobalParams.FILELOGGER.error(formType.name(), e);
 			request.setAttribute("errorMessagev", "An error occurred while reference data list. Error message is:"+e.getMessage());
-		}
-		finally{
+		
+		} finally {
 			sc.closeSession();
 		}
-		
-		return model;
 	}
 }

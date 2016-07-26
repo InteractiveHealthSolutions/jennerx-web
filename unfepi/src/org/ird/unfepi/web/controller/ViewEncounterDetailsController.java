@@ -8,18 +8,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ird.unfepi.DataDisplayController;
+import org.ird.unfepi.DataViewForm;
+import org.ird.unfepi.constants.SystemPermissions;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Encounter;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
+@Controller
 public class ViewEncounterDetailsController extends DataDisplayController{
-
+	
+	ViewEncounterDetailsController (){
+		super("popupForm", new  DataViewForm("encounter_details", "Encounter Details", SystemPermissions.VIEW_ENCOUNTERS, false));
+	}
+	
+	@RequestMapping(value="/encounterDetails", method={RequestMethod.GET,RequestMethod.POST})
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse arg1) throws Exception {
 		
 		ServiceContext sc = Context.getServices();
-
 		String encounterId = request.getParameter("encid");
 		String p1id = request.getParameter("p1");
 		String p2id = request.getParameter("p2");
@@ -35,7 +44,7 @@ public class ViewEncounterDetailsController extends DataDisplayController{
 		}catch (Exception e) {
 			e.printStackTrace();
 			request.getSession().setAttribute("exceptionTrace",e);
-			return new ModelAndView(new RedirectView("exception.htm"));		
+			return new ModelAndView("exception");		
 		}
 		finally{
 			sc.closeSession();

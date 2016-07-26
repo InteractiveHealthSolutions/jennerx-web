@@ -33,18 +33,18 @@ if(isAuth){
 			<th class="datahighlight"><%=((String)pageContext.getAttribute("coln")).replaceAll("(\\p{Ll})(\\p{Lu})","$1 $2")%></th>
 </c:forEach>
 			<th>BCG Date</th>
-			<th>Penta1 Date</th>
-			<th>Penta2 Date</th>
-			<th>Penta3 Date</th>
-			<th>Measles1 Date</th>
-			<th>Measles2 Date</th>
-			<th>OPV0 Date</th>
-			<th>OPV1 Date</th>
-			<th>OPV2 Date</th>
-			<th>OPV3 Date</th>
-			<th>PCV1 Date</th>
-			<th>PCV2 Date</th>
-			<th>PVC3 Date</th>
+			<th>DTC-Hib-HepB-1 Date</th>
+			<th>DTC-Hib-HepB-2 Date</th>
+			<th>DTC-Hib-HepB-3 Date</th>
+			<th>Rougeole1 Date</th>
+			<th>Rougeole2 Date</th>
+			<th>VPO-0 Date</th>
+			<th>VPO-1 Date</th>
+			<th>VPO-2 Date</th>
+			<th>VPO-3 Date</th>
+			<th>PCV-1 Date</th>
+			<th>PCV-2 Date</th>
+			<th>PCV-3 Date</th>
 		</tr>
     </thead>
     <tbody>

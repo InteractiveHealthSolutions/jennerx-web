@@ -254,6 +254,8 @@ public class ValidatorUtils {
 		}
 
 		if (child.getDateEnrolled() == null || DateUtils.afterTodaysDate(child.getDateEnrolled())) {
+			Date d = child.getDateEnrolled();
+			System.out.println(d);
 			putError(dataEntrySource, ErrorMessages.CHILD_DATE_ENROLLED_INVALID, mobileErrors, webErrors, DataField.CHILD_DATE_ENROLLED, useFieldPrefix);
 		}
 
@@ -1238,6 +1240,7 @@ public class ValidatorUtils {
 		}
 
 		boolean measles2Given = IMRUtils.isMeasles2Given(vaccineSchedule, child.getDateEnrolled());
+		//TODO -<>-
 		if (centerVisit.getVisitDate() == null || centerVisit.getVisitDate().after(new Date())) {
 			putError(dataEntrySource, ErrorMessages.VACCINATION_VISIT_DATE_INVALID, mobileErrors, error, DataField.CENTER_VISIT_VISIT_DATE, useFieldPrefix);
 			return;
@@ -1255,8 +1258,13 @@ public class ValidatorUtils {
 			return;
 		}
 
-		ArrayList<VaccineSchedule> defSch = VaccineSchedule.generateDefaultSchedule( child.getBirthdate(), centerVisit.getVisitDate(), centerVisit.getChildId(), centerVisit.getVaccinationCenterId(),
-				true, null);
+		ArrayList<VaccineSchedule> defSch = VaccineSchedule.generateDefaultSchedule( child.getBirthdate(), centerVisit.getVisitDate(), centerVisit.getChildId(), centerVisit.getVaccinationCenterId(), true, null);
+		
+		System.out.println("\n\ndefSch = VaccineSchedule.generateDefaultSchedule\n\n");
+		for (VaccineSchedule defSchvs : defSch) {
+			defSchvs.printVaccineSchedule();
+		}
+		
 		boolean anyScheduleVaccineRecceivedToday = false;
 		boolean contraindication = false;
 		for (VaccineSchedule dfvsh : defSch) {
@@ -1278,10 +1286,11 @@ public class ValidatorUtils {
 			// must be provided.
 			// or if vaccine has to be scheduled then a next date must be
 			// provided. it cant be left blank
-			if (dfvsh.getSchedule_duedate() != null && (dfvsh.getIs_retro_suspect() || dfvsh.getIs_current_suspect()) && prereqpassed && !dfvsh.getExpired()
-					&& (vsobj == null || StringUtils.isEmptyOrWhitespaceOnly(vsobj.getStatus()))) {
-				putError(dataEntrySource, dfvsh.getVaccine().getName() + " info and status must be provided. It cannot be left blank", mobileErrors, error, null, useFieldPrefix);
-			}
+//			TODO
+//			if (dfvsh.getSchedule_duedate() != null && 
+//			   (dfvsh.getIs_retro_suspect() || dfvsh.getIs_current_suspect()) && prereqpassed && !dfvsh.getExpired() && (vsobj == null || StringUtils.isEmptyOrWhitespaceOnly(vsobj.getStatus()))) {
+//				putError(dataEntrySource, dfvsh.getVaccine().getName() + " info and status must be provided. It cannot be left blank", mobileErrors, error, null, useFieldPrefix);
+//			}
 			if (vsobj != null) {
 				if (vsobj.getVaccination_date() != null
 						&& (vsobj.getVaccination_date().before(child.getBirthdate()) || DateUtils.differenceBetweenIntervals(vsobj.getVaccination_date(), centerVisit.getVisitDate(),
@@ -1513,13 +1522,12 @@ public class ValidatorUtils {
 			if (vaccination.getVaccinationStatus().equals(VACCINATION_STATUS.VACCINATED) && vaccination.getVaccinationCenterId() != null) {
 				ValidatorOutput vepi = null;
 				if (vaccination.getChildId() != null) {
-					vepi = ValidatorUtils.validateEpiNumber(vaccination.getEpiNumber(), vaccination.getVaccinationCenterId(), vaccination.getChildId(), false,
-							dataEntrySource.equals(DataEntrySource.MOBILE));
+//					vepi = ValidatorUtils.validateEpiNumber(vaccination.getEpiNumber(), vaccination.getVaccinationCenterId(), vaccination.getChildId(), false, dataEntrySource.equals(DataEntrySource.MOBILE));
 				}
 
-				if (!vepi.STATUS().equals(ValidatorStatus.OK)) {
-					putError(dataEntrySource, vaccination.getVaccine().getName() + ": " + vepi.MESSAGE(), mobileErrors, error, null, useFieldPrefix);
-				}
+//				if (!vepi.STATUS().equals(ValidatorStatus.OK)) {
+//					putError(dataEntrySource, vaccination.getVaccine().getName() + ": " + vepi.MESSAGE(), mobileErrors, error, null, useFieldPrefix);
+//				}
 			}
 		}
 	}

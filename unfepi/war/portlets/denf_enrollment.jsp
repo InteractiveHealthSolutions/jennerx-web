@@ -234,8 +234,7 @@ ul{
 
 <spring:hasBindErrors name="command">
 	<c:forEach var="error" items="${errors.allErrors}">
-		<p><spring:message message="${error}" /></p>
-		<br />
+		<p style="font-style: italic; color: red;font-size: small;"><spring:message message="${error}" /></p>
 	</c:forEach>
 </spring:hasBindErrors>
 

@@ -723,4 +723,35 @@ public class VaccineSchedule {
 		return scheduleL;
 	}
 	
+	public void printVaccineSchedule(){
+		
+		System.out.print(this.getVaccine().getName()+ "\t");
+		System.out.print(this.getBirthdate()+ "\t");
+		System.out.print(this.getVisitdate()+ "\t");	
+		
+		System.out.print(this.getPrerequisites()+ "\t");
+		if(this.getBirthdate_gap() != null){
+			if(this.getBirthdate_gap().getVaccine() != null && this.getBirthdate_gap().getVaccineGapType() != null){
+			System.out.print("[ " + this.getBirthdate_gap().getVaccine().getName()+" " +  this.getBirthdate_gap().getVaccineGapType().getName() + " ]"+"\t");
+			}
+		} else {
+			System.out.print( "[]\t");
+		}
+		
+		System.out.print(this.getSchedule_duedate()+ "\t");
+		System.out.print(this.getAuto_calculated_date()+ "\t");
+		System.out.print(this.getAssigned_duedate()+ "\t");
+		System.out.print(this.getVaccination_date()+ "\t");
+		System.out.print(this.getExpiry_date()+ "\t");
+		System.out.print(this.getCenter()+ "\t");
+		System.out.print(this.getStatus()+ "\t");
+		System.out.print(this.getIs_current_suspect()+ "\t");
+		System.out.print(this.getIs_retro_suspect()+ "\t");
+		System.out.print(this.getVaccinationObjCurrentVisit()+ "\t");
+		System.out.print(this.getChildId()+ "\t");
+		System.out.print(this.getPrerequisite_passed()+ "\t");
+		System.out.print(this.getExpired()+ "\t");
+		System.out.println(this.getPrerequisite_given_on_current_visit()+ "\t");
+	}
+	
 }

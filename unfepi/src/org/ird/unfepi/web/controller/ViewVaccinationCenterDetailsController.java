@@ -9,16 +9,26 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ird.unfepi.DataDisplayController;
+import org.ird.unfepi.DataViewForm;
+import org.ird.unfepi.constants.SystemPermissions;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.VaccinationCenter;
 import org.ird.unfepi.model.VaccinationCenterVaccineDay;
 import org.ird.unfepi.model.Vaccine;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
+@Controller
 public class ViewVaccinationCenterDetailsController extends DataDisplayController{
-
+	
+	ViewVaccinationCenterDetailsController(){
+		super("popupForm", new  DataViewForm("vaccination_center_details", "Vaccination Center Details", SystemPermissions.VIEW_VACCINATION_CENTERS, false));
+	}
+	
+	@RequestMapping(value="/vaccinationCenterDetails", method={RequestMethod.GET,RequestMethod.POST})
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse resp) throws Exception {
 		
 		ServiceContext sc = Context.getServices();
@@ -53,10 +63,11 @@ public class ViewVaccinationCenterDetailsController extends DataDisplayControlle
 		}catch (Exception e) {
 			e.printStackTrace();
 			request.getSession().setAttribute("exceptionTrace",e);
-			return new ModelAndView(new RedirectView("exception.htm"));		
+			return new ModelAndView("exception");		
 		}
 		finally{
 			sc.closeSession();
 		}
 	}
+
 }

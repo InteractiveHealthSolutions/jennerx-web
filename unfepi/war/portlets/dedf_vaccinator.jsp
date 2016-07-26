@@ -28,12 +28,19 @@ function submitThisForm() {
         <td>${command.idMapper.identifiers[0].identifier}
         </td>
     </tr>
+
 	<tr>
 		<td>Vaccination Center <span class="mendatory-field">*</span></td>
 		<td>
-            <select id="vaccinationCenterId" name="vaccinationCenterId">
-            	<option value="${vaccinationCenter.mappedId}">${vaccinationCenter.idMapper.identifiers[0].identifier} : ${vaccinationCenter.name}</option>
+			<spring:bind path="command.vaccinationCenterId">
+            <select id="vaccinationCenterId" name="vaccinationCenterId" bind-value="${status.value}">
+               	<option></option>
+            	<c:forEach items="${vaccinationCenters}" var="vcenter"> 
+            	<option value="${vcenter.mappedId}">${vcenter.idMapper.identifiers[0].identifier} : ${vcenter.name}</option>
+            	</c:forEach> 
             </select>
+            <span class="error-message"><c:out	value="${status.errorMessage}" /></span> 
+            </spring:bind>
 		</td>
 	</tr>
     <tr>

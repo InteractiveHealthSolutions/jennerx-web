@@ -3,9 +3,11 @@ package org.ird.unfepi.web.controller;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.ird.unfepi.ChildIncentivization;
 import org.ird.unfepi.DataEntryForm;
 import org.ird.unfepi.DataEntryFormController;
@@ -27,6 +29,7 @@ import org.ird.unfepi.web.utils.ControllerUIHelper;
 import org.ird.unfepi.web.utils.VaccinationCenterVisit;
 import org.ird.unfepi.web.utils.VaccineSchedule;
 import org.ird.unfepi.web.utils.VaccineSchedule.VaccineStatusType;
+import org.ird.unfepi.web.validator.ChildValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -60,6 +63,33 @@ public class AddChildController extends DataEntryFormController{
 								 HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView,
 								 HttpSession session) throws Exception {
 		
+		ewr.getChild().setDateEnrolled(ewr.getCenterVisit().getVisitDate());
+		@SuppressWarnings("unchecked")
+		List<VaccineSchedule> vaccineSchedule = (List<VaccineSchedule>) request.getSession().getAttribute(VaccinationCenterVisit.VACCINE_SCHEDULE_KEY+ewr.getCenterVisit().getUuid());
+		
+		for (VaccineSchedule vs : vaccineSchedule) {
+			vs.printVaccineSchedule();
+		}
+		
+		Iterator<VaccineSchedule> iter = vaccineSchedule.iterator();
+		while (iter.hasNext()) {
+			VaccineSchedule vsh = iter.next();
+			if (vsh.getStatus().equals(VaccineStatusType.SCHEDULED.name()) || vsh.getStatus().equals(VaccineStatusType.NOT_ALLOWED.name()) || (vsh.getStatus() == null?true:vsh.getStatus().length()==0)) {
+				iter.remove();
+			}
+		}
+		
+		
+		System.out.println("\n\n");
+		for (VaccineSchedule vs : vaccineSchedule) {
+			vs.printVaccineSchedule();
+		}
+		
+		new ChildValidator().validateEnrollment(ewr, vaccineSchedule, results);
+		if(results.hasErrors()){	
+			return showForm(modelAndView, "dataForm");	
+		}
+		
 		LoggedInUser user=UserSessionUtils.getActiveUser(request);
 		String childIdentifier = ewr.getChildIdentifier();
 		Child ch = ewr.getChild();
@@ -67,16 +97,7 @@ public class AddChildController extends DataEntryFormController{
 		Address addr = ewr.getAddress();
 		ServiceContext sc = Context.getServices();
 		try{
-			@SuppressWarnings("unchecked")
-			List<VaccineSchedule> vaccineSchedule = (List<VaccineSchedule>) request.getSession().getAttribute(VaccinationCenterVisit.VACCINE_SCHEDULE_KEY+ewr.getCenterVisit().getUuid());
 			
-			Iterator<VaccineSchedule> iter = vaccineSchedule.iterator();
-			while (iter.hasNext()) {
-				VaccineSchedule vsh = iter.next();
-				if (vsh.getStatus().equals(VaccineStatusType.SCHEDULED.name()) || vsh.getStatus().equals(VaccineStatusType.NOT_ALLOWED.name()) || (vsh.getStatus() == null?true:vsh.getStatus().length()==0)) {
-					iter.remove();
-				}
-			}
 			@SuppressWarnings("unused")
 			List<ChildIncentivization> lotteryRes = ControllerUIHelper.doEnrollment(DataEntrySource.WEB, childIdentifier, ewr.getChildNamed(), ch, 
 					ewr.getBirthdateOrAge(), ewr.getChildagey(), ewr.getChildagem(), ewr.getChildagew(), ewr.getChildaged(), 

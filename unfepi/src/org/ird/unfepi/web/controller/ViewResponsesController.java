@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ird.unfepi.DataDisplayController;
+import org.ird.unfepi.DataSearchForm;
 import org.ird.unfepi.GlobalParams;
 import org.ird.unfepi.GlobalParams.SearchFilter;
+import org.ird.unfepi.constants.SystemPermissions;
 import org.ird.unfepi.constants.WebGlobals;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
@@ -22,41 +24,55 @@ import org.ird.unfepi.model.Response.ResponseType;
 import org.ird.unfepi.utils.IRUtils;
 import org.ird.unfepi.utils.UnfepiUtils;
 import org.ird.unfepi.utils.date.DateUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import com.mysql.jdbc.StringUtils;
 
-public class ViewResponsesController extends DataDisplayController{
+@Controller
+public class ViewResponsesController extends DataDisplayController {
+	
+	ViewResponsesController(){
+		super("dataForm", new  DataSearchForm("response", "Responses", SystemPermissions.VIEW_REMINDERSMS, false));
+	}
+	
+	public enum TabRole {
+		CHILD("child", "caregiver"), 
+		STOREKEEPER("storekeeper", "storekeeper"), 
+		VACCINATOR("vaccinator", "vaccinator"), OTHER("other", "other"), 
+		CALLS("calls", "calls");
 
-	public enum TabRole{
-		CHILD("child","caregiver"),
-		STOREKEEPER("storekeeper","storekeeper"),
-		VACCINATOR("vaccinator","vaccinator"),
-		OTHER("other","other"),
-		CALLS("calls","calls");
-		
 		private String role;
 		private String title;
-		
-		public String ROLE(){return role;}
-		public String TITLE(){return title;}
+
+		public String ROLE() {
+			return role;
+		}
+
+		public String TITLE() {
+			return title;
+		}
+
 		private TabRole(String roleName, String tabTitle) {
 			role = roleName;
 			title = tabTitle;
 		}
-		
-		public static String findRoleFromTitle(String title){
+
+		public static String findRoleFromTitle(String title) {
 			for (TabRole tr : TabRole.values()) {
-				if(tr.TITLE().equalsIgnoreCase(title)){
+				if (tr.TITLE().equalsIgnoreCase(title)) {
 					return tr.ROLE();
 				}
 			}
 			return null;
 		}
-		
 	}
+	
+	@RequestMapping(value="/viewResponses", method={RequestMethod.GET,RequestMethod.POST})
 	public ModelAndView handleRequest(HttpServletRequest req,	HttpServletResponse resp) throws Exception {
+		
 		int totalRows=0;
 		Map<String, Object> model = new HashMap<String, Object>();
 		req.setAttribute("editOrUpdateMessage", req.getParameter("editOrUpdateMessage"));
@@ -128,9 +144,7 @@ public class ViewResponsesController extends DataDisplayController{
 			addModelAttribute(model, SearchFilter.RECIPIENT.FILTER_NAME(), recipient);
 			addModelAttribute(model, SearchFilter.DATE1_FROM.FILTER_NAME(), UnfepiUtils.setDateFilter(receiveDatefrom));
 			addModelAttribute(model, SearchFilter.DATE1_TO.FILTER_NAME(), UnfepiUtils.setDateFilter(receiveDateto));
-			
 			addModelAttribute(model, SearchFilter.ROLE_NAME.FILTER_NAME(), entityrole);
-
 			addModelAttribute(model, "datalist", list);
 			addModelAttribute(model, "totalRows", totalRows);
 			
@@ -140,12 +154,12 @@ public class ViewResponsesController extends DataDisplayController{
 			e.printStackTrace();
 			req.getSession().setAttribute("exceptionTrace",e);
 			sc.closeSession();//incase of error close session
-			return new ModelAndView(new RedirectView("exception.htm"));
+			return new ModelAndView("exception");
 		}
 		finally{
 			req.setAttribute("sc"	, sc);
 			/*sc.closeSession();*///will close after page have been loaded
 		}
 	}
-
+	
 }
