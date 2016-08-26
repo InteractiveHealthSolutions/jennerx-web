@@ -1,5 +1,6 @@
 package org.ird.unfepi.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -22,6 +23,14 @@ public class VaccinePrerequisite {
 	private Vaccine	prerequisite;
 	
 	private Boolean mandatory;
+	
+	@Column(nullable = false)
+	private Integer vaccinationcalendarId;
+	
+	@ManyToOne(fetch = FetchType.EAGER, targetEntity = VaccinationCalendar.class)
+	@JoinColumn(name = "vaccinationcalendarId", insertable = false, updatable = false)
+	@ForeignKey(name = "vaccineprerequisite_vaccinationcalendarId_vaccinationcalendar_calenderId_FK")
+	private VaccinationCalendar vaccinationCalendar;
 
 	public VaccinePrerequisiteId getVaccinePrerequisiteId() {
 		return vaccinePrerequisiteId;
@@ -49,5 +58,21 @@ public class VaccinePrerequisite {
 
 	public void setMandatory(Boolean mandatory) {
 		this.mandatory = mandatory;
+	}
+
+	public Integer getVaccinationcalendarId() {
+		return vaccinationcalendarId;
+	}
+
+	public void setVaccinationcalendarId(Integer vaccinationcalendarId) {
+		this.vaccinationcalendarId = vaccinationcalendarId;
+	}
+
+	public VaccinationCalendar getVaccinationCalendar() {
+		return vaccinationCalendar;
+	}
+
+	public void setVaccinationCalendar(VaccinationCalendar vaccinationCalendar) {
+		this.vaccinationCalendar = vaccinationCalendar;
 	}
 }

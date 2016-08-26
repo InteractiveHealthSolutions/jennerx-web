@@ -13,8 +13,6 @@ import org.ird.unfepi.model.ChildIncentive;
 import org.ird.unfepi.model.IncentiveStatus;
 import org.ird.unfepi.model.dao.DAOChildIncentive;
 
-import com.sun.java_cup.internal.runtime.virtual_parse_stack;
-
 public class DAOChildIncentiveImpl extends DAOHibernateImpl implements DAOChildIncentive{
 
 	private Session session;

@@ -42,6 +42,7 @@ import org.ird.unfepi.model.dao.DAOVariableSetting;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOAddressImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOArmImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOCalendarDayImpl;
+import org.ird.unfepi.model.dao.hibernatedimpl.DAOCenterProgramImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOChildImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOChildIncentiveImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOCommunicationNoteImpl;
@@ -52,6 +53,7 @@ import org.ird.unfepi.model.dao.hibernatedimpl.DAODirectQueryImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAODownloadableReportImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOEncounterImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOEncounterResultsImpl;
+import org.ird.unfepi.model.dao.hibernatedimpl.DAOHealthProgramImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOHibernateImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOIdMapperImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOIncentiveParamsImpl;
@@ -63,6 +65,7 @@ import org.ird.unfepi.model.dao.hibernatedimpl.DAOReminderImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOReminderSmsImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOResponseImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAORoleImpl;
+import org.ird.unfepi.model.dao.hibernatedimpl.DAORoundImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOSettingImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOStorekeeperImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOStorekeeperIncentiveEventImpl;
@@ -89,6 +92,7 @@ import org.ird.unfepi.service.CommunicationService;
 import org.ird.unfepi.service.CustomQueryService;
 import org.ird.unfepi.service.DemographicDetailsService;
 import org.ird.unfepi.service.EncounterService;
+import org.ird.unfepi.service.HealthProgramService;
 import org.ird.unfepi.service.IdMapperService;
 import org.ird.unfepi.service.IncentiveService;
 import org.ird.unfepi.service.LocationService;
@@ -106,6 +110,7 @@ import org.ird.unfepi.service.impl.CommunicationServiceImpl;
 import org.ird.unfepi.service.impl.CustomQueryServiceImpl;
 import org.ird.unfepi.service.impl.DemographicDetailsServiceImpl;
 import org.ird.unfepi.service.impl.EncounterServiceImpl;
+import org.ird.unfepi.service.impl.HealthProgramServiceImpl;
 import org.ird.unfepi.service.impl.IdMapperServiceImpl;
 import org.ird.unfepi.service.impl.IncentiveServiceImpl;
 import org.ird.unfepi.service.impl.LocationServiceImpl;
@@ -162,11 +167,18 @@ public class ServiceContext {
 	private WomenService womenService;
 	
 	private WomenVaccinationService womenVaccinationService;
+	
+	private HealthProgramService healthProgramService;
 
 	ServiceContext(SessionFactory sessionObj) 
 	{
 		session = sessionObj.openSession();
 		transaction = session.beginTransaction();
+		
+		DAOHealthProgramImpl hpdao = new DAOHealthProgramImpl(session);
+		DAOCenterProgramImpl cpdao = new DAOCenterProgramImpl(session);
+		DAORoundImpl rddao = new DAORoundImpl(session);
+		this.healthProgramService = new HealthProgramServiceImpl(this, hpdao, cpdao, rddao);
 
 		DAOUserImpl udao = new DAOUserImpl(session);
 		DAORoleImpl rdao = new DAORoleImpl(session);
@@ -399,6 +411,14 @@ public class ServiceContext {
 
 	public void setLocationService(LocationService locationService) {
 		this.locationService = locationService;
+	}
+
+	public HealthProgramService getHealthProgramService() {
+		return healthProgramService;
+	}
+
+	public void setHealthProgramService(HealthProgramService healthProgramService) {
+		this.healthProgramService = healthProgramService;
 	}
 	
 }

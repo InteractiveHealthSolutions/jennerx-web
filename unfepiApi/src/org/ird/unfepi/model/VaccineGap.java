@@ -42,6 +42,15 @@ public class VaccineGap {
 	
 	private Boolean mandatory;
 	
+	@Column(nullable = false)
+	private Integer vaccinationcalendarId;
+	
+	@ManyToOne(fetch = FetchType.EAGER, targetEntity = VaccinationCalendar.class)
+	@JoinColumn(name = "vaccinationcalendarId", insertable = false, updatable = false)
+	@ForeignKey(name = "vaccinegap_vaccinationcalendarId_vaccinationcalendar_calenderId_FK")
+	private VaccinationCalendar vaccinationCalendar;
+	
+	
 	public VaccineGap() {
 		
 	}
@@ -100,5 +109,21 @@ public class VaccineGap {
 
 	public void setMandatory(Boolean mandatory) {
 		this.mandatory = mandatory;
+	}
+
+	public Integer getVaccinationcalendarId() {
+		return vaccinationcalendarId;
+	}
+
+	public void setVaccinationcalendarId(Integer vaccinationcalendarId) {
+		this.vaccinationcalendarId = vaccinationcalendarId;
+	}
+
+	public VaccinationCalendar getVaccinationCalendar() {
+		return vaccinationCalendar;
+	}
+
+	public void setVaccinationCalendar(VaccinationCalendar vaccinationCalendar) {
+		this.vaccinationCalendar = vaccinationCalendar;
 	}
 }

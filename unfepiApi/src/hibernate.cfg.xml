@@ -94,6 +94,12 @@
 		<!-- Ahmed's Addition -->
 		<mapping class="org.ird.unfepi.model.Device" />
 		
+		<!-- Hera's Addition -->
+		<mapping class="org.ird.unfepi.model.HealthProgram"/>
+		<mapping class="org.ird.unfepi.model.CenterProgram"/>
+		<mapping class="org.ird.unfepi.model.Round"/>
+		<mapping class="org.ird.unfepi.model.VaccinationCalendar"/>		
+		
     </session-factory>
 </hibernate-configuration>
 

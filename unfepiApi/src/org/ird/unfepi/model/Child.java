@@ -164,6 +164,13 @@ public class Child implements java.io.Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastEditedDate;
 	
+	private Integer healthProgramId;
+
+	@ManyToOne(fetch = FetchType.EAGER, targetEntity = HealthProgram.class)
+	@JoinColumn(name = "healthProgramId", insertable = false, updatable = false)
+	@ForeignKey(name = "child_healthProgramId_healthprogram_programId_FK")
+	private HealthProgram healthProgram;
+	
 	public Child() {
 	}
 
@@ -712,6 +719,22 @@ public class Child implements java.io.Serializable {
 	public void setEditor(User editor){
 		setLastEditedByUserId(editor);
 		setLastEditedDate(new Date());
+	}
+
+	public Integer getHealthProgramId() {
+		return healthProgramId;
+	}
+
+	public void setHealthProgramId(Integer healthProgramId) {
+		this.healthProgramId = healthProgramId;
+	}
+
+	public HealthProgram getHealthProgram() {
+		return healthProgram;
+	}
+
+	public void setHealthProgram(HealthProgram healthProgram) {
+		this.healthProgram = healthProgram;
 	}
 	
 }

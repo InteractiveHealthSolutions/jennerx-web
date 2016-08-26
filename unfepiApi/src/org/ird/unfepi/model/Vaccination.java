@@ -60,7 +60,8 @@ public class Vaccination implements java.io.Serializable {
 		 * To make the process work, vaccination table would be filled with necessary data 
 		 * and a form would be logged as 'to be filled later' allowing lottery to take place with out followup form.
 		 */
-		UNFILLED("UNFILLED");
+		UNFILLED("UNFILLED"),
+		INVALID_DOSE("INVALID DOSE");
 		
 		private String stringValue;
 		private VACCINATION_STATUS(String stringValue) {
@@ -178,6 +179,13 @@ public class Vaccination implements java.io.Serializable {
 	
 	@Column(name="role")
 	private String role ;
+	
+	private Integer roundId;
+
+	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Round.class)
+	@JoinColumn(name = "roundId", insertable = false, updatable = false)
+	@ForeignKey(name = "vaccination_roundId_round_roundId_FK")
+	private Round round;
 	
 	public boolean isVoided() {
 		return voided;
@@ -570,6 +578,22 @@ public class Vaccination implements java.io.Serializable {
 	public void setEditor(User editor){
 		setLastEditedByUserId(editor);
 		setLastEditedDate(new Date());
+	}
+
+	public Integer getRoundId() {
+		return roundId;
+	}
+
+	public void setRoundId(Integer roundId) {
+		this.roundId = roundId;
+	}
+
+	public Round getRound() {
+		return round;
+	}
+
+	public void setRound(Round round) {
+		this.round = round;
 	}
 	
 }

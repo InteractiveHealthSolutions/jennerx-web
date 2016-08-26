@@ -65,7 +65,7 @@ public class VaccinationCenter {
 	@JoinColumn(name = "vaccinationCenterId")
 	@ForeignKey(name = "vaccinationcenter_mappedId_vaccinationcentervaccineday_vaccinationCenterId_FK")
 	private Set<VaccinationCenterVaccineDay> allowedVaccineDays;
-	
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateRegistered;
 	
