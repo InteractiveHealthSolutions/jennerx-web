@@ -119,8 +119,9 @@ public static final String GLOBAL_DATE_FORMAT_JAVA="dd-MM-yyyy";
 public static final String GLOBAL_DATETIME_FORMAT_JAVA="dd-MM-yyyy HH:mm";
 public static final String GLOBAL_DATE_FORMAT_JS="dd-mm-yy";
 public static final String GLOBAL_DATE_FORMAT_SQL="yyyy-MM-dd";
+public static final String GLOBAL_DATETIME_FORMAT_SQL ="yyyy-MM-dd HH:mm:ss";
 public static final SimpleDateFormat GLOBAL_JAVA_DATE_FORMAT = new SimpleDateFormat(GLOBAL_DATE_FORMAT_JAVA);
 public static final SimpleDateFormat GLOBAL_JAVA_DATETIME_FORMAT = new SimpleDateFormat(GLOBAL_DATETIME_FORMAT_JAVA);
 public static final SimpleDateFormat GLOBAL_SQL_DATE_FORMAT = new SimpleDateFormat(GLOBAL_DATE_FORMAT_SQL);
-
+public static final SimpleDateFormat GLOBAL_SQL_DATETIME_FORMAT = new SimpleDateFormat(GLOBAL_DATETIME_FORMAT_SQL);
 }

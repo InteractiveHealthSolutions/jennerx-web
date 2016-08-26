@@ -8,16 +8,21 @@ import java.util.List;
 import java.util.Map;
 
 import org.ird.unfepi.GlobalParams;
+import org.ird.unfepi.beans.EnrollmentWrapper;
 import org.ird.unfepi.constants.DataField;
 import org.ird.unfepi.constants.ErrorMessages;
 import org.ird.unfepi.constants.WebGlobals;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Address;
+import org.ird.unfepi.model.CenterProgram;
 import org.ird.unfepi.model.Child;
+import org.ird.unfepi.model.Round;
+import org.ird.unfepi.model.VaccinationCenter;
 import org.ird.unfepi.model.Child.STATUS;
 import org.ird.unfepi.model.ContactNumber;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
+import org.ird.unfepi.model.HealthProgram;
 import org.ird.unfepi.model.LotterySms;
 import org.ird.unfepi.model.Model.ContactTeleLineType;
 import org.ird.unfepi.model.Model.ContactType;
@@ -243,11 +248,11 @@ public class ValidatorUtils {
 	 *            dataEntrySource provided
 	 * */
 	public static void validateEnrollmentForm(DataEntrySource dataEntrySource, String projectId, Boolean childNamed, Child child, String birthdateOrAge, String ageYears, String ageMonths,
-			String ageWeeks, String ageDays, Address address, String completeCourseFromCenter, VaccinationCenterVisit centerVisit, List<VaccineSchedule> vaccineSchedule,
+			String ageWeeks, String ageDays, Address address, String completeCourseFromCenter, VaccinationCenterVisit centerVisit, List<VaccineSchedule> vaccineSchedule, 
 			HashMap<String, String> mobileErrors, Errors webErrors, ServiceContext sc) {
 		boolean useFieldPrefix = true; // We know for enrollment we have
 										// encapsulated entities
-
+		
 		ValidatorOutput vidop = validateChildProgramId(projectId, true, sc);
 		if (!vidop.STATUS().equals(ValidatorStatus.OK)) {
 			putError(dataEntrySource, vidop.MESSAGE(), mobileErrors, webErrors, DataField.CHILD_IDENTIFIER, useFieldPrefix);
@@ -255,9 +260,11 @@ public class ValidatorUtils {
 
 		if (child.getDateEnrolled() == null || DateUtils.afterTodaysDate(child.getDateEnrolled())) {
 			Date d = child.getDateEnrolled();
-			System.out.println(d);
+//			System.out.println(d);
 			putError(dataEntrySource, ErrorMessages.CHILD_DATE_ENROLLED_INVALID, mobileErrors, webErrors, DataField.CHILD_DATE_ENROLLED, useFieldPrefix);
 		}
+		
+		
 
 //		if (StringUtils.isEmptyOrWhitespaceOnly(completeCourseFromCenter)) {
 //			putError(dataEntrySource, ErrorMessages.COMPLETE_COURSE_FROM_CENTER_MISSING, mobileErrors, webErrors, DataField.CHILD_COMPLETE_COURSE_FROM_CENTER, useFieldPrefix);
@@ -1260,10 +1267,10 @@ public class ValidatorUtils {
 
 		ArrayList<VaccineSchedule> defSch = VaccineSchedule.generateDefaultSchedule( child.getBirthdate(), centerVisit.getVisitDate(), centerVisit.getChildId(), centerVisit.getVaccinationCenterId(), true, null);
 		
-		System.out.println("\n\ndefSch = VaccineSchedule.generateDefaultSchedule\n\n");
-		for (VaccineSchedule defSchvs : defSch) {
-			defSchvs.printVaccineSchedule();
-		}
+//		System.out.println("\n\ndefSch = VaccineSchedule.generateDefaultSchedule\n\n");
+//		for (VaccineSchedule defSchvs : defSch) {
+//			defSchvs.printVaccineSchedule();
+//		}
 		
 		boolean anyScheduleVaccineRecceivedToday = false;
 		boolean contraindication = false;
@@ -1350,10 +1357,11 @@ public class ValidatorUtils {
 								error, null, useFieldPrefix);
 					}
 
-					if (vsobj.getStatus().equalsIgnoreCase(VaccineStatusType.RETRO_DATE_MISSING.name()) && vsobj.getVaccination_date() != null) {
-						putError(dataEntrySource, dfvsh.getVaccine().getName() + " vaccination date found non null for RETRO_DATE_MISSING vaccine which is not possible. Contact program vendor!",
-								mobileErrors, error, null, useFieldPrefix);
-					} else if (vsobj.getStatus().equalsIgnoreCase(VaccineStatusType.RETRO.name())
+//					if (vsobj.getStatus().equalsIgnoreCase(VaccineStatusType.RETRO_DATE_MISSING.name()) && vsobj.getVaccination_date() != null) {
+//						putError(dataEntrySource, dfvsh.getVaccine().getName() + " vaccination date found non null for RETRO_DATE_MISSING vaccine which is not possible. Contact program vendor!",
+//								mobileErrors, error, null, useFieldPrefix);
+//					} else 
+					if (vsobj.getStatus().equalsIgnoreCase(VaccineStatusType.RETRO.name())
 							&& (vsobj.getVaccination_date() == null || vsobj.getVaccination_date().after(centerVisit.getVisitDate()))) {
 						putError(dataEntrySource, dfvsh.getVaccine().getName() + " non empty past vaccination date should be spcified for RETRO vaccine", mobileErrors, error, null, useFieldPrefix);
 					}
@@ -1586,5 +1594,35 @@ public class ValidatorUtils {
 		if (vaccination.getHasApprovedLottery() != null) {
 			putError(dataEntrySource, vaccination.getVaccine().getName() + ": " + ErrorMessages.VACCINATION_LOTTERY_APPROVAL_SHOULD_NOT_BE_SPECIFIED, mobileErrors, error, null, useFieldPrefix);
 		}
+	}
+	
+	public static void validateHealthProgram(DataEntrySource dataEntrySource, HealthProgram hp, String[] centersId, Errors error, boolean isNew){
+		
+		if(centersId == null){
+			putError(dataEntrySource, "select vaccination center(s) for the program", null, error, "", false);
+		}
+		else{
+			ServiceContext sc = Context.getServices();
+			
+			Integer hpId = null;
+			if (isNew && hp.getName() != null){
+				List<HealthProgram> hpL = sc.getCustomQueryService().getDataByHQL("from HealthProgram where name like '" + hp.getName() +"'");
+				if (hpL != null && hpL.size() > 0){
+					putError(dataEntrySource, "health program of this name already exist", null, error, "", false);
+					hpId = hpL.get(0).getProgramId();
+				}
+			}
+		}
+		
+		if(hp.getName() == null || StringUtils.isEmptyOrWhitespaceOnly(hp.getName())){
+			error.rejectValue("name", "", "invalid or empty program name");
+		}
+		
+		if(hp.getEnrollmentLimit() != null){
+			if (hp.getEnrollmentLimit() > Integer.MAX_VALUE || hp.getEnrollmentLimit() < 0) {
+				error.rejectValue("enrollmentLimit", "", "invalid enrollmentLimit");
+			}
+		}
+		
 	}
 }

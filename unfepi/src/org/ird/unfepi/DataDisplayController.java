@@ -35,8 +35,7 @@ public class DataDisplayController {
 		return dataForm;
 	}
 
-	public void addModelAttribute(Map<String, Object> model, String name,
-			Object attribute) {
+	public void addModelAttribute(Map<String, Object> model, String name,Object attribute) {
 		model.put(name, attribute);
 	}
 

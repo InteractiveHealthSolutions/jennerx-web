@@ -99,28 +99,28 @@ public class FirstSetupService {
 		JSONObject receivedJson;
 		try {
 			receivedJson = (JSONObject)parser.parse(json);
-		
-		Long lastRecord=(Long) receivedJson.get(RequestElements.LASTRECORD);
-		ChildServiceHelper childServiceHelper=new ChildServiceHelper();
-		org.json.JSONObject j=new org.json.JSONObject();
-		List<HashMap> map=childServiceHelper.getAllChildren(lastRecord);
-		j.put("allchildren",map );
-		int length=map.size()-1;
-		int size=length>0?length:0;
-		int mappedId=-2;
-		if(size>0){
-			mappedId=(Integer) map.get(size).get("mappedId");
-		}
-		j.put(RequestElements.LASTRECORD,mappedId );
-	return GZipper.compress(j.toString());
+
+			Long lastRecord=(Long) receivedJson.get(RequestElements.LASTRECORD);
+			ChildServiceHelper childServiceHelper=new ChildServiceHelper();
+			org.json.JSONObject j=new org.json.JSONObject();
+			List<HashMap> map=childServiceHelper.getAllChildren(lastRecord);
+			j.put("allchildren",map );
+			int length=map.size()-1;
+			int size=length>0?length:0;
+			int mappedId=-2;
+			if(size>0){
+				mappedId=(Integer) map.get(size).get("mappedId");
+			}
+			j.put(RequestElements.LASTRECORD,mappedId );
+			return GZipper.compress(j.toString());
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_INCORRECT_DATA_FORMAT_ERROR, null);
 
 		}
-		
-			}
+
+	}
 	
 	
 	@Path("/allvaccinations")

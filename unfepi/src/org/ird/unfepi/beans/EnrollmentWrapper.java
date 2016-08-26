@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.ird.unfepi.model.Address;
 import org.ird.unfepi.model.Child;
+import org.ird.unfepi.model.HealthProgram;
 import org.ird.unfepi.model.Identifier;
 import org.ird.unfepi.model.Vaccine;
 import org.ird.unfepi.web.utils.VaccinationCenterVisit;
@@ -103,4 +104,5 @@ public class EnrollmentWrapper {
 	public void setCenterVisit(VaccinationCenterVisit centerVisit) {
 		this.centerVisit = centerVisit;
 	}
+
 }

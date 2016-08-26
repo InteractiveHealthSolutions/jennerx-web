@@ -110,6 +110,36 @@ ul{
 		return false;
 	}
 	
+	function centerChanged() {
+		unSelecteHealthProgram();
+		getCenterProgram();		
+	}
+	
+	function unSelecteHealthProgram(){
+		$("#healthProgramId option:selected").removeAttr("selected");
+		$("#healthProgramId").val("");
+		$("#healthProgramId option").hide();
+	}
+	
+	function getCenterProgram(){
+		$.get( "addchild/programList/"+$('#vaccinationCenterId').val()+".htm" , function( data ) {
+			  
+			  if(data.replace(/\[|\]|\s/gi,"").split(",").toString().length == 0){
+				  alert("no health program found in '" + $('#vaccinationCenterId option:selected').text()+"'");
+			  }
+			  
+			  var current_Prog = data.replace(/\[|\]|\s/gi,"").split(",");
+			  
+			  $.each(current_Prog, function(index, value){
+				  $("#healthProgramId option").each(function(){
+					  if (value == $(this).attr("id").replace(/\D/g,"")){
+						  $('#hp'+value).show();
+					  }
+				  });
+			  });
+		});
+	}
+	
 	function subfrm() {
 		DWRVaccineService.overrideSchedule(vaccineScheduleList, '${command.uuid}', function(result) {
 							submitThisForm();
@@ -129,6 +159,13 @@ ul{
 
 <script type="text/javascript">
 	$(function() {
+		
+		$("#healthProgramId option").hide();
+		if($('#vaccinationCenterId').val().length != 0){
+			getCenterProgram();
+		}
+		
+		
 		$('.tab-section').hide();
 		$('#tabs a').click(function(event){
 			if(this.id == 't1'){
@@ -141,6 +178,13 @@ ul{
 			}
 			else if (this.id == 't2' || this.id == 't3'){
 				
+				var isEmptyField = false;
+				$(".requiredField").each(function(index, element) {
+					if ((element.value.length == 0) && (element.value.replace(/\s+/g, "").length == 0)) {
+						isEmptyField = true ;
+					}
+				});
+				
 				var diff = dateDifference(convertToDate($('#centerVisitDate').val()), convertToDate($('#birthdateinh').val()));
 				var isValidEnrollmentDate = (diff >= 0) ? true : false;
 				
@@ -151,6 +195,9 @@ ul{
 						 alert('visit Date should be greater than or equal to Birthdate');
 					 }
 				} 
+				else if(isEmptyField){
+					alert('fill all the required fields first');
+				}				
 				else {
 //					console.log('going to next page');
 					if (this.id == 't3') {
@@ -183,7 +230,7 @@ ul{
     	<td>Center Visit Date<span class="mendatory-field">*</span></td>
         <td>
         <spring:bind path="command.visitDate">
-        <input id="centerVisitDate" name="visitDate" value="${status.value}" maxDate="+0d" class="calendarbox" 
+        <input id="centerVisitDate" name="visitDate" value="${status.value}" maxDate="+0d" class="calendarbox requiredField" 
         	   onchange="centerVisitDateChanged();" onkeypress="return isDateDigit(event)" placeholder="dd-MM-yyyy"/>
 		<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 		</spring:bind>
@@ -192,7 +239,7 @@ ul{
     <tr>
 		<td>Vaccinator ID <span class="mendatory-field">*</span></td>
 		<td><spring:bind path="command.vaccinatorId">
-            <select id="vaccinatorId" name="vaccinatorId" bind-value="${status.value}">
+            <select id="vaccinatorId" name="vaccinatorId" bind-value="${status.value}" class="requiredField">
                 <option></option>
                 <c:forEach items="${vaccinators}" var="vaccinator"> 
                 <option value="${vaccinator.mappedId}">${vaccinator.idMapper.identifiers[0].identifier} : ${vaccinator.firstName}</option>
@@ -206,7 +253,7 @@ ul{
 		<td>Vaccination Center <span class="mendatory-field">*</span></td>
 		<td>
 			<spring:bind path="command.vaccinationCenterId">
-            <select id="vaccinationCenterId" name="vaccinationCenterId" bind-value="${status.value}" onchange="centerChanged();">
+            <select id="vaccinationCenterId" name="vaccinationCenterId" bind-value="${status.value}" onchange="centerChanged();" class="requiredField">
                	<option></option>
             	<c:forEach items="${vaccinationCenters}" var="vcenter"> 
             	<option value="${vcenter.mappedId}">${vcenter.idMapper.identifiers[0].identifier} : ${vcenter.name}</option>
@@ -216,6 +263,23 @@ ul{
             </spring:bind>
 		</td>
 	</tr>
+	
+	
+	<tr>
+		<td>Health Program<span class="mendatory-field">*</span></td>
+		<td><spring:bind path="command.healthProgramId">
+	            <select id="healthProgramId" name="healthProgramId" bind-value="${status.value}" class="requiredField">
+	               	<option id=""></option>
+	            	<c:forEach items="${healthprograms}" var="hprog"> 
+	            		<option id="hp${hprog.programId}" value="${hprog.programId}">${hprog.name}</option>
+	            	</c:forEach> 
+	            </select>
+	            <span class="error-message"><c:out	value="${status.errorMessage}" /></span> 
+            </spring:bind>
+		</td>
+	</tr>
+	
+	
 </table>
 </div>
 <div id="tab2" class="tab-section">

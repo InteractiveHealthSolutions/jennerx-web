@@ -1,14 +1,23 @@
 package org.ird.unfepi.rest.resources;
+import java.util.Date;
 import java.util.HashMap;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.ird.unfepi.constants.WebGlobals;
+import org.ird.unfepi.model.HealthProgram;
+import org.ird.unfepi.rest.elements.RequestElements;
 import org.ird.unfepi.rest.elements.ResponseStatus;
 import org.ird.unfepi.rest.helper.MetadataServiceHelper;
+import org.ird.unfepi.rest.helper.MetadataServiceHelper2;
 import org.ird.unfepi.rest.helper.ResponseBuilder;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 @Path("/metadata")
 public class MetadataService
@@ -18,34 +27,6 @@ public class MetadataService
 		String data=null;
 		return data;		
 	}
-	
-//	@GET
-//	@Produces("application/zip")
-//	@Consumes(MediaType.TEXT_PLAIN)
-//	public Response dowloadAll(@QueryParam(RequestElements.METADATA_TYPE) String dataRequest)
-//	{	
-//		MetadataServiceHelper helper = new MetadataServiceHelper();
-//		String metadata = helper.getMetadata(dataRequest);
-//		
-//		if(metadata == null)
-//			return Response.status(Response.Status.NO_CONTENT).build();
-//		
-//		File tempFile = helper.createTempFile(metadata);
-//		
-//		if(tempFile== null)
-//			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-//		
-//		File zipFile = helper.zipData(tempFile);
-//		
-//		if(zipFile!=null && zipFile.exists())
-//		{
-//			return Response.ok(zipFile, "application/zip").build();
-//		}
-//		else
-//		{
-//			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-//		}
-//	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)	
@@ -68,5 +49,89 @@ public class MetadataService
 		
 	}
 	
-
+//	@POST
+//	@Path("/vaccinePrerequisite")
+//	@Produces(MediaType.APPLICATION_JSON)
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	public String metadataVaccinePrerequisite(String jsonString){
+//		String response = "";
+//		try {
+//			JSONObject jsonObject = new JSONObject(jsonString);
+//			JSONArray jsonArray = jsonObject.getJSONArray(RequestElements.METADATA_VACCINEPREREQUISITE);
+//			response = MetadataServiceHelper2.fillVaccinePrerequisite(jsonArray);
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return response;
+//	}
+	
+	@POST
+	@Path("/vaccine")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public String metadataVaccine(String jsonString){
+		String response = "";
+		try {
+			JSONObject jsonObject = new JSONObject(jsonString);			
+			response = MetadataServiceHelper2.getVaccineMetadata(jsonObject);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return response;
+	}
+	
+	@POST
+	@Path("/location")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public String metadataVaccinationCentres(String jsonString){
+		String response = "";
+		try {
+			JSONObject jsonObject = new JSONObject(jsonString);
+			response = MetadataServiceHelper2.getLocationMetadata(jsonObject);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return response;
+	}
+	
+	@POST
+	@Path("/users")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public String metadataUser(String jsonString){
+		String response = "";
+		try {
+			JSONObject jsonObject = new JSONObject(jsonString);
+			JSONArray usersId = jsonObject.getJSONArray(RequestElements.METADATA_USERS+RequestElements.METADATA_IDS);
+			
+			String lastEditDateStr = jsonObject.getString(RequestElements.LAST_SYNC_TIME);
+			Date lastEditDate = WebGlobals.GLOBAL_SQL_DATETIME_FORMAT.parse(lastEditDateStr);
+						
+			response = MetadataServiceHelper2.fillUsers(lastEditDate, usersId);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return response;
+	}
+	
+	@POST
+	@Path("/healthprogram")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public String metadataHealthProgram(String jsonString){
+		String response = "";
+		try {
+			JSONObject jsonObject = new JSONObject(jsonString);
+			response = MetadataServiceHelper2.getHealthProgramMetadata(jsonObject);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return response;
+	}
 }

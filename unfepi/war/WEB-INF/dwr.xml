@@ -14,6 +14,8 @@
 			<param name="exclude" value="stackTrace"/>
 		</convert>
 		<convert converter="enum" match="org.ird.unfepi.model.Model$TimeIntervalUnit" />
+		<convert converter="enum" match="org.ird.unfepi.model.Vaccination$VACCINATION_STATUS" />
+		<convert match="org.ird.unfepi.model.Vaccination$TimelinessStatus" converter="enum"></convert>
 		<convert converter="bean" match="org.ird.unfepi.model.Vaccine">
 			<param name="include" value="vaccineId, name, fullName, shortName, minGracePeriodDays, maxGracePeriodDays, vaccineGaps"/>
 		</convert>
@@ -35,6 +37,11 @@
 		<convert converter="bean" match="org.ird.unfepi.model.CommunicationNote">
 			<param name="exclude" value="createdByUserId, "/>
 		</convert>
+		
+		<convert match="org.ird.unfepi.model.VaccinationCalendar" converter="bean"></convert>
+		<convert match="org.ird.unfepi.model.Round" converter="bean"></convert>
+		<convert match="org.ird.unfepi.model.User" converter="bean"></convert>
+		
 		<convert converter="enum" match="org.ird.unfepi.model.CommunicationNote$CommunicationEventType" />
 		<!-- <convert converter="bean" match="org.ird.unfepi.model.Child">
 			<param name="include" value="cellNoLatest,childId,firstName"/>

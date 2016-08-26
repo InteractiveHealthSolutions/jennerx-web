@@ -5,6 +5,8 @@ import java.util.List;
 import org.ird.unfepi.beans.EnrollmentWrapper;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
+import org.ird.unfepi.model.CenterProgram;
+import org.ird.unfepi.model.Round;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
 import org.ird.unfepi.web.utils.VaccineSchedule;
 import org.springframework.validation.Errors;
@@ -25,6 +27,16 @@ public class ChildValidator implements Validator{
 			ValidatorUtils.validateEnrollmentForm(DataEntrySource.WEB, ew.getChildIdentifier(), ew.getChildNamed(), ew.getChild(), 
 					ew.getBirthdateOrAge(), ew.getChildagey(), ew.getChildagem(), ew.getChildagew(), ew.getChildaged(), ew.getAddress(), 
 					ew.getCompleteCourseFromCenter(), ew.getCenterVisit(), vaccineSchedule, null, error, sc);
+			
+			CenterProgram centerProgram = (CenterProgram) sc.getCustomQueryService().getDataByHQL("from CenterProgram where vaccinationCenterId ="+ ew.getCenterVisit().getVaccinationCenterId() +" and healthProgramId =" + ew.getCenterVisit().getHealthProgramId()).get(0);
+			List<Round> roundL = sc.getCustomQueryService().getDataByHQL("from Round where centerProgramId =" + centerProgram.getCenterProgramId() +" and isActive = 1");
+			if(roundL == null || roundL.size() == 0){
+				error.reject("", null, "round info. not found for the selected health program in the selected vaccination center");
+			}
+			if(roundL != null && roundL.size() > 1){
+				error.reject("", null, "more than one round is active for the selected health program in the selected vaccination center");
+			}
+			
 		}
 		finally{
 			sc.closeSession();

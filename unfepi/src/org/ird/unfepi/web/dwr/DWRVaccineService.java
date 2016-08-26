@@ -43,6 +43,7 @@ public class DWRVaccineService {
 		}
 
 		try {
+			
 			ArrayList<Vaccination> retroVaccinationL = new ArrayList<Vaccination>();
 			
 			JSONArray array = new JSONArray(jsonArray); 
@@ -53,15 +54,35 @@ public class DWRVaccineService {
 				
 				Vaccination vaccination = new Vaccination();
 				vaccination.setVaccineId(Short.parseShort(jsonObject.getString("vaccineId")));
-				vaccination.setVaccinationDate(new SimpleDateFormat("dd-MM-yyyy").parse(jsonObject.getString("vaccinationDate")));
-				vaccination.setVaccinationStatus(VACCINATION_STATUS.UNFILLED);
+				
+				if(!jsonObject.isNull("vaccinationDate")){
+					vaccination.setVaccinationDate(new SimpleDateFormat("dd-MM-yyyy").parse(jsonObject.getString("vaccinationDate")));	
+					vaccination.setVaccinationStatus(VACCINATION_STATUS.RETRO);
+				}else{
+					vaccination.setVaccinationStatus(VACCINATION_STATUS.RETRO_DATE_MISSING);
+				}
+					
+				
+				
 				vaccination.setVaccinatorId(user.getUser().getMappedId());
-
+				
 				retroVaccinationL.add(vaccination);
 			}
 			
 			ArrayList<VaccineSchedule> scheduleRetro = VaccineSchedule.validateVaccineHistory(retroVaccinationL, birthdate, centerVisitDate, childId, vaccinationCenterId, true);
+			
+//			for (VaccineSchedule vaccineSchedule : scheduleRetro) {
+//				vaccineSchedule.printVaccineSchedule();
+//			}
+			
+			
+			
 			ArrayList<VaccineSchedule> scheduleCurrent = VaccineSchedule.generateDefaultSchedule(birthdate, centerVisitDate, childId, vaccinationCenterId, true, scheduleRetro);
+			
+			for (VaccineSchedule vs : scheduleCurrent) {
+				vs.printVaccineSchedule();
+			}
+			
 			
 			return scheduleCurrent;
 		} catch (Exception e) {

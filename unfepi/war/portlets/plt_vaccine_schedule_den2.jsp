@@ -30,21 +30,40 @@
 
 		function sendVaccinationHistory() {
 			jsonArray = [];
-			$("input[name='retro_date']").each(function(index, element) {
-				if (element.value.length > 0) {
-					var id = (element.id).match(/\d+/g);
-					jsonObject = {};
-					jsonObject["vaccineId"] = id.toString();
-					jsonObject["vaccineName"] = $('#retro_vaccine' + id).val();
-					jsonObject["vaccinationDate"] = element.value;
-					jsonArray.push(jsonObject);
-				}
+// 			$("input[name='retro_date']").each(function(index, element) {
+// 				if (element.value.length > 0) {
+// 					var id = (element.id).match(/\d+/g);
+// 					jsonObject = {};
+// 					jsonObject["vaccineId"] = id.toString();
+// 					jsonObject["vaccineName"] = $('#retro_vaccine' + id).val();
+// 					jsonObject["vaccinationDate"] = element.value;
+// 					jsonArray.push(jsonObject);
+// 				}
+// 			});
+
+			$("input[name ='retro_vaccine_in']:checked").each(function(index, element) {
+// 				console.log(index + "  " + element.id);
+				
+				var id = (element.id).match(/\d+/g);
+				jsonObject = {};
+				jsonObject["vaccineId"] = id.toString();
+				jsonObject["vaccineName"] = $('#retro_vaccine' + id).val();
+				
+// 				console.log($('#retro_date' + id).val() );
+				
+				if($('#retro_date' + id).val().length > 0){
+					jsonObject["vaccinationDate"] = $('#retro_date' + id).val();
+				}				
+				
+				console.log(jsonObject["vaccineId"] + " " + jsonObject["vaccineName"] + " " + jsonObject["vaccinationDate"] );
+				jsonArray.push(jsonObject);
+				
 			});
 
 // 			console.log(convertToDate($('#birthdate').val()) + " 1  " +convertToDate($('#centerVisitDate').val())+ " 2  " + '${command.centerVisit.childId}' + "  3  " + $('#vaccinationCenterId').val() + "  4  " + '${command.centerVisit.uuid}');
 			
 			DWRVaccineService.getVaccineSchedule(JSON.stringify(jsonArray), convertToDate($('#birthdate').val()), convertToDate($('#centerVisitDate').val()), '${command.centerVisit.childId}',  $('#vaccinationCenterId').val(), '${command.centerVisit.uuid}', {callback : function(resultList) {
-// 				console.log(resultList);
+				console.log(resultList);
 				vaccineScheduleList = resultList;
 // 				$.each(vaccineScheduleList, function(index, element){
 // 					console.log(element.vaccine.vaccineId +" : "+ element.vaccine.name  + "   --  " +  element.prerequisiteFor);
@@ -77,12 +96,12 @@
 					}					
 				}
 				
-				if(status == "CURRENT_RETRO"){
+				if(status == "CURRENT_RETRO" ||  status == "CURRENT_RETRO_DATE_MISSING"){
 					$(".vaccine_history").append("<tr id='tr"+vid+"'></tr>")
 					$("#tr"+vid).append("<td>"+name+"</td><!-- <td>"+status+"</td> --><td>"+dateStr+"</td>");
 					
-					vaccineScheduleList[index].<%=VaccineScheduleKey.status%> = "RETRO";
-					vaccineScheduleList[index].<%=VaccineScheduleKey.center%> = $('#vaccinationCenterId').val()
+					vaccineScheduleList[index].<%=VaccineScheduleKey.status%> = status.replace('CURRENT_','');
+					vaccineScheduleList[index].<%=VaccineScheduleKey.center%> = $('#vaccinationCenterId').val();
 				}
 			});
 		}
@@ -130,5 +149,16 @@
 				subfrm();
 			}
 		}
+		
+
+		$("input[name ='retro_vaccine_in']").change(function(){
+			var id = (this.id).match(/\d+/g);
+			if(this.checked){
+				$('#retro_date' + id).prop("disabled", false); 
+			} else{
+				$('#retro_date' + id).prop("disabled", true);
+				$('#retro_date' + id).val("");
+			}
+		});
 		
 </script>

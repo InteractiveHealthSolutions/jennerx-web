@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
+import org.ird.unfepi.model.CenterProgram;
+import org.ird.unfepi.model.Round;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
 import org.ird.unfepi.web.utils.VaccinationCenterVisit;
 import org.ird.unfepi.web.utils.VaccineSchedule;
@@ -26,6 +28,17 @@ public class VaccinationValidator implements Validator {
     	ServiceContext sc = Context.getServices();
 		try{
 			ValidatorUtils.validateFollowupForm(DataEntrySource.WEB, vaccineSchedule, centerVisit, null, errors, sc);
+			
+			CenterProgram centerProgram = (CenterProgram) sc.getCustomQueryService().getDataByHQL("from CenterProgram where vaccinationCenterId ="+ centerVisit.getVaccinationCenterId() +" and healthProgramId =" + centerVisit.getHealthProgramId()).get(0);
+			List<Round> roundL = sc.getCustomQueryService().getDataByHQL("from Round where centerProgramId =" + centerProgram.getCenterProgramId() +" and isActive = 1");
+			if(roundL == null || roundL.size() == 0){
+				errors.reject("", null, "round info. not found for the selected health program in the selected vaccination center");
+			}
+			if(roundL != null && roundL.size() > 1){
+				errors.reject("", null, "more than one round is active for the selected health program in the selected vaccination center");
+			}
+			
+			
 		}
 		finally{
 			sc.closeSession();

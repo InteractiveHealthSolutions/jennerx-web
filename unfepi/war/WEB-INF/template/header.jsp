@@ -30,6 +30,11 @@
 <script src="css/ui/jquery.ui.widget.js?v=${version_css_js}"></script> --%>
 <link rel="stylesheet" type="text/css" href="js/jquery.multiselect.css?v=${version_css_js}">
 <script type="text/javascript" src="js/jquery.multiselect.min.js?v=${version_css_js}"></script>
+
+<!-- <link rel="stylesheet" type="text/css" href="css/multi-select.css"> -->
+<!-- <script type="text/javascript" src="js/jquery.multi-select.js"></script> -->
+
+
 <script type="text/javascript" src="js/jquery.easyui.min.js?v=${version_css_js}"></script>
 <script type="text/javascript" src="dwrloader.js?v=${version_css_js}"></script>  
 

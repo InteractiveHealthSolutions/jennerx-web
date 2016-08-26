@@ -19,18 +19,17 @@ import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Child;
 import org.ird.unfepi.model.ContactNumber;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
+import org.ird.unfepi.model.HealthProgram;
 import org.ird.unfepi.model.LotterySms;
-import org.ird.unfepi.model.Model.ContactType;
+import org.ird.unfepi.model.Round;
 import org.ird.unfepi.model.Vaccination;
 import org.ird.unfepi.model.Vaccine;
-import org.ird.unfepi.utils.UnfepiUtils;
 import org.ird.unfepi.utils.UserSessionUtils;
 import org.ird.unfepi.web.utils.ControllerUIHelper;
 import org.ird.unfepi.web.utils.VaccinationCenterVisit;
 import org.ird.unfepi.web.utils.VaccineSchedule;
 import org.ird.unfepi.web.utils.VaccineSchedule.VaccineStatusType;
 import org.ird.unfepi.web.validator.VaccinationValidator;
-import org.ird.unfepi.web.validator.ValidatorUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -72,7 +71,6 @@ public class FollowupVaccinationController extends DataEntryFormController{
 		
 		try{
 			List<VaccineSchedule> vaccineSchedule = (List<VaccineSchedule>) request.getSession().getAttribute(VaccinationCenterVisit.VACCINE_SCHEDULE_KEY+centerVisit.getUuid());
-
 			Iterator<VaccineSchedule> iter = vaccineSchedule.iterator();
 			while (iter.hasNext()) {
 				VaccineSchedule vsh = iter.next();
@@ -82,7 +80,6 @@ public class FollowupVaccinationController extends DataEntryFormController{
 			}
 			
 			new VaccinationValidator().validateVaccinationForm(centerVisit, vaccineSchedule, results, request);
-
 			if(results.hasErrors()){
 				return showForm(modelAndView, "dataForm");	
 			}
@@ -93,8 +90,12 @@ public class FollowupVaccinationController extends DataEntryFormController{
 				c.setNic(request.getParameter("cnic"));
 				sc.getChildService().updateChild(c);
 			}
-			ControllerUIHelper.doFollowup(DataEntrySource.WEB, centerVisit, vaccineSchedule, dateFormStart, user.getUser(), sc);
 			
+			Integer centerProgramId = (Integer) sc.getCustomQueryService().getDataByHQL("select centerProgramId from CenterProgram where vaccinationCenterId ="+ centerVisit.getVaccinationCenterId() +" and healthProgramId =" + centerVisit.getHealthProgramId()).get(0);
+			List<Round> roundL = sc.getCustomQueryService().getDataByHQL("from Round where centerProgramId =" + centerProgramId +" and isActive = 1"); 
+			Integer roundId = roundL.get(0).getRoundId();
+			
+			ControllerUIHelper.doFollowup(DataEntrySource.WEB, centerVisit, vaccineSchedule, roundId, dateFormStart, user.getUser(), sc);
 			sc.commitTransaction();
 			
 			String editmessage="Child Followed up successfully. ";
@@ -125,7 +126,7 @@ public class FollowupVaccinationController extends DataEntryFormController{
 		try{
 			child = sc.getChildService().findChildById(Integer.parseInt(child_id), true, new String[]{"idMapper"});
 			ControllerUIHelper.prepareFollowupDisplayObjects(request, child, sc);
-			previousVaccination = ControllerUIHelper.getPreviousVaccination(child.getMappedId(), sc);
+			previousVaccination = ControllerUIHelper.getPreviousVaccination(child.getMappedId(), sc);			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -136,6 +137,7 @@ public class FollowupVaccinationController extends DataEntryFormController{
 			sc.closeSession();
 		}
 		
+		vcv.setHealthProgramId(previousVaccination.getRound().getCenterProgram().getHealthProgramId());
 		vcv.setVaccinationCenterId(previousVaccination.getVaccinationCenterId());
 		vcv.setVaccinatorId(previousVaccination.getVaccinatorId());
 		vcv.setChildId(child.getMappedId());
@@ -147,7 +149,10 @@ public class FollowupVaccinationController extends DataEntryFormController{
 	protected void referenceData(HttpServletRequest request, Model model) throws Exception 
 	{
 		ServiceContext sc = Context.getServices();
-		try{
+		try{	
+			List<HealthProgram> healthprograms = sc.getCustomQueryService().getDataByHQL("from HealthProgram");
+			model.addAttribute("healthprograms", healthprograms);			
+			
 			List<Vaccine> vaccinesL = sc.getCustomQueryService().getDataByHQL("FROM Vaccine where vaccine_entity like 'CHILD%' and isSupplementary = 0") ;
 			model.addAttribute("vaccineList", vaccinesL);
 			

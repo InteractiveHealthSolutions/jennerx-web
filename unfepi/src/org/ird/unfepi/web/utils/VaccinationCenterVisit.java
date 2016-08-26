@@ -17,6 +17,7 @@ public class VaccinationCenterVisit {
 	private String contactSecondary;
 	private LotterySms preference = new LotterySms();
 	private String uuid;
+	private Integer healthProgramId;
 
 	//private Date nextAssignedDate;
 	
@@ -114,5 +115,15 @@ public class VaccinationCenterVisit {
 	}
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
+	}
+
+
+	public Integer getHealthProgramId() {
+		return healthProgramId;
+	}
+
+
+	public void setHealthProgramId(Integer healthProgramId) {
+		this.healthProgramId = healthProgramId;
 	}
 }

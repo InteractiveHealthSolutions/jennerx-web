@@ -33,10 +33,13 @@ public class MetadataServiceHelper
 			fillVaccineGap(mainResponse);
 			fillVaccineGapType(mainResponse);
 			fillVaccinePrerequisite(mainResponse);
+			
 			fillUsers(mainResponse);
 			//fillAllChildren(mainResponse);
 		
 			//fillAllVaccinations(mainResponse);
+			fillHealthProgram(mainResponse);
+			
 			HashMap<String, Object> resp = new HashMap<String, Object>();
 			resp.put("METADATA", mainResponse);
 
@@ -138,8 +141,11 @@ public class MetadataServiceHelper
 
 	private static void fillVaccineGap(JSONObject mainResponse)
 	{
-		String[] columns = new String[] { RequestElements.METADATA_FIELD_VACCINEGAP_VACCINEGAPTYPEID, RequestElements.METADATA_FIELD_VACCINE_ID,
-				RequestElements.METADATA_FIELD_VACCINEGAP_GAPTIMEUNIT, RequestElements.METADATA_FIELD_VACCINEGAP_VALUE };
+		String[] columns = new String[] {
+				RequestElements.METADATA_FIELD_VACCINEGAP_VACCINEGAPTYPEID,		
+				RequestElements.METADATA_FIELD_VACCINE_ID,
+				RequestElements.METADATA_FIELD_VACCINEGAP_GAPTIMEUNIT,
+				RequestElements.METADATA_FIELD_VACCINEGAP_VALUE };
 		String table = "vaccinegap";
 		fetchMetaData(RequestElements.METADATA_VACCINEGAP, columns, table, mainResponse);
 	}
@@ -190,7 +196,13 @@ public class MetadataServiceHelper
 
 	}
 
-	
+	private static void fillHealthProgram(JSONObject mainResponse)
+	{
+		String[] columns = new String[] { RequestElements.METADATA_FIELD_HEALTHPROGRAM_ID,
+				RequestElements.METADATA_FIELD_HEALTHPROGRAM_NAME };
+		String table = "healthprogram";
+		fetchMetaData(/* "locationtype" */RequestElements.METADATA_HEALTHPROGRAM, columns, table, mainResponse);
+	}
 	
 	private static void fetchMetaDataByCustomQuery(String dataType , String query, String columns[], JSONObject container){
 		
@@ -297,4 +309,5 @@ public class MetadataServiceHelper
 		}
 		return null;
 	}
+	
 }

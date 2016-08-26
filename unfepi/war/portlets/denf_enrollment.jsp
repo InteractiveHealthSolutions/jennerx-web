@@ -125,10 +125,35 @@ ul{
 
 		return Math.floor(days);
 	}
-
+	
 	function centerChanged() {
-// 		$('#birthdate').val('');
-// 		resetSchedule($('#birthdate'));
+		unSelecteHealthProgram();
+		getCenterProgram();		
+	}
+	
+	function unSelecteHealthProgram(){
+		$("#healthProgramId option:selected").removeAttr("selected");
+		$("#healthProgramId").val("");
+		$("#healthProgramId option").hide();
+	}
+	
+	function getCenterProgram(){
+		$.get( "addchild/programList/"+$('#vaccinationCenterId').val()+".htm" , function( data ) {
+			  
+			  if(data.replace(/\[|\]|\s/gi,"").split(",").toString().length == 0){
+				  alert("no health program found in '" + $('#vaccinationCenterId option:selected').text()+"'");
+			  }
+			  
+			  var current_Prog = data.replace(/\[|\]|\s/gi,"").split(",");
+			  
+			  $.each(current_Prog, function(index, value){
+				  $("#healthProgramId option").each(function(){
+					  if (value == $(this).attr("id").replace(/\D/g,"")){
+						  $('#hp'+value).show();
+					  }
+				  });
+			  });
+		});
 	}
 
 	function birthChanged() {
@@ -164,6 +189,13 @@ ul{
 </ul>
 <script type="text/javascript">
 	$(function(){
+		
+		$("#healthProgramId option").hide();
+		
+		if($('#vaccinationCenterId').val().length != 0){
+			getCenterProgram();	
+		}
+		
 		$('.tab-section').hide();
 		
 		$('#tabs a').click(function(event){
@@ -238,6 +270,7 @@ ul{
 	</c:forEach>
 </spring:hasBindErrors>
 
+
 <form method="post" id="frm" name="frm" >
 <div id="tab1" class="tab-section" >
 <table class="denform-h">
@@ -283,6 +316,19 @@ ul{
 		</td>
 	</tr>
 	<tr>
+		<td>Health Program<span class="mendatory-field">*</span></td>
+		<td><spring:bind path="command.centerVisit.healthProgramId">
+	            <select id="healthProgramId" name="centerVisit.healthProgramId" bind-value="${status.value}" class="requiredField">
+	               	<option id=""></option>
+	            	<c:forEach items="${healthprograms}" var="hprog"> 
+	            		<option id="hp${hprog.programId}" value="${hprog.programId}">${hprog.name}</option>
+	            	</c:forEach> 
+	            </select>
+	            <span class="error-message"><c:out	value="${status.errorMessage}" /></span> 
+            </spring:bind>
+		</td>
+	</tr>
+	<tr>
     	<td><spring:message code="label.childIdentifier"></spring:message><span class="mendatory-field">*</span></td>
         <td>
         	<spring:bind path="command.childIdentifier">
@@ -314,7 +360,8 @@ ul{
 	<c:forEach var="va" items="${vaccineList}">
 	<tr>
 		<td><input id="retro_vaccine${va.vaccineId}" name="retro_vaccine" value="${va.fullName}" readonly="readonly" style="border: hidden;"/></td>
-		<td><input id="retro_date${va.vaccineId}" name="retro_date"  maxDate="+0d" class="calendarbox" placeholder="dd-MM-yyyy"/></td>  	
+		<td><input id="retro_vaccine_in${va.vaccineId}" name="retro_vaccine_in" type="checkbox" /></td>
+		<td><input id="retro_date${va.vaccineId}" name="retro_date"  maxDate="+0d" class="calendarbox" placeholder="dd-MM-yyyy" disabled /></td>  	
 	</tr>
 	</c:forEach>   
 </table>

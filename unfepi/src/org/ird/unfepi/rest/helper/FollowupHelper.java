@@ -183,7 +183,7 @@ public class FollowupHelper
 			}
 			if (mobileErrors.size() == 0)
 			{
-				ControllerUIHelper.doFollowup(DataEntrySource.MOBILE, centreVisit, schedule, new Date(), user, sc);
+				ControllerUIHelper.doFollowup(DataEntrySource.MOBILE, centreVisit, schedule, null, new Date(), user, sc);
 				sc.commitTransaction();
 				if (supplementary.size() > 0)
 				{

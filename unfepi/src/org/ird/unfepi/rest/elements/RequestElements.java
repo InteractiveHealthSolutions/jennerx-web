@@ -22,7 +22,9 @@ public class RequestElements
 	public static final String METADATA_VACCINATION_CENTRES = "centr";
 	public static final String METADATA_USER = "user";
 	public static final String METADATA_USERS = "users";
-
+	public static final String METADATA_IDS = "_ids";
+	public static final String METADATA_HEALTHPROGRAM = "healthprog";
+	
 	public static final String METADATA_FIELD_LOCATION_ID = "locationId";
 	public static final String METADATA_FIELD_LOCATION_NAME = "fullName";
 	public static final String METADATA_FIELD_LOCATION_PARENT = "parentLocation";
@@ -45,6 +47,11 @@ public class RequestElements
 
 	public static final String METADATA_FIELD_VACCINEPREREQUISITE_ID = "vaccinePrerequisiteId";
 	public static final String METADATA_FIELD_VACCINEPREREQUISITE_MANDATORY = "mandatory";
+	
+	public static final String METADATA_FIELD_HEALTHPROGRAM_ID = "programId";
+	public static final String METADATA_FIELD_HEALTHPROGRAM_NAME = "name";
+	
+	public static final String METADATA_FIELD_VACCINATIONCALENDAR_ID = "vaccinationcalendarId";
 
 	public static final String FETCH_FORM_TYPE = "ftfrmtp";
 	public static final String SUBMIT_FORM_TYPE = "sbfrmtp";
