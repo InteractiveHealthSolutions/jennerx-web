@@ -67,12 +67,10 @@
 				vaccineScheduleList = resultList;
 // 				$.each(vaccineScheduleList, function(index, element){
 // 					console.log(element.vaccine.vaccineId +" : "+ element.vaccine.name  + "   --  " +  element.prerequisiteFor);
-					
 // 				});
 				displaySchedule();
 				}
 			});
-
 		}
 		
 		function displaySchedule(){
@@ -84,21 +82,23 @@
 
 				var dateStr = $.datepicker.formatDate('dd-mm-yy', new Date(dueDate));
 				
+				console.log(vid + ' ' + name + '  ' + status + '  ' + dueDate);
+				
 				if(status == "VACCINATED" || status == "RETRO"){
 					$(".current_vaccine").append("<tr id='tr"+vid+"'></tr>")
-					$("#tr"+vid).append("<td>"+name+"</td><!-- <td>"+status+"</td> --><td>"+dateStr+"</td>");
+					$("#tr"+vid).append("<td>"+name+"</td><!-- <td>"+status+"</td> <td>"+dateStr+"</td>-->");
 					$("#tr"+vid).append("<td><button id='delbtn' onclick='delVaccine("+vid+")'>X</button></td>");
 					
 					if(status == "RETRO"){
 						vaccineScheduleList[index].<%=VaccineScheduleKey.status%> = "VACCINATED";
 						vaccineScheduleList[index].<%=VaccineScheduleKey.vaccination_date%> = convertToDate($('#centerVisitDate').val()) ;
 						vaccineScheduleList[index].<%=VaccineScheduleKey.center%> = $('#vaccinationCenterId').val()
-					}					
+					}	
 				}
 				
 				if(status == "CURRENT_RETRO" ||  status == "CURRENT_RETRO_DATE_MISSING"){
 					$(".vaccine_history").append("<tr id='tr"+vid+"'></tr>")
-					$("#tr"+vid).append("<td>"+name+"</td><!-- <td>"+status+"</td> --><td>"+dateStr+"</td>");
+					$("#tr"+vid).append("<td>"+name+"</td><!-- <td>"+status+"</td><td>"+dateStr+"</td> -->");
 					
 					vaccineScheduleList[index].<%=VaccineScheduleKey.status%> = status.replace('CURRENT_','');
 					vaccineScheduleList[index].<%=VaccineScheduleKey.center%> = $('#vaccinationCenterId').val();

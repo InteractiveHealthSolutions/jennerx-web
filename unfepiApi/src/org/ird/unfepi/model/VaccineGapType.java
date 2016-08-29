@@ -22,7 +22,7 @@ public class VaccineGapType {
 	
 	private String name;
 	
-	@Column(nullable = false)
+//	@Column(nullable = false)
 	private Integer vaccinationcalendarId;
 	
 	@ManyToOne(fetch = FetchType.EAGER, targetEntity = VaccinationCalendar.class)

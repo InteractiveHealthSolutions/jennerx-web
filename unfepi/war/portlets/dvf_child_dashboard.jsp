@@ -42,10 +42,10 @@ if(UserSessionUtils.getActiveUser(request).isDefaultAdministrator()){%>
     </td>
 </tr>
 <tr>
-<td colspan="2">Father Name : ${model.datalist.child.fatherFirstName} ${model.datalist.child.fatherLastName}</td>
+<td colspan="2">Mother Name : ${model.datalist.child.motherFirstName}</td>
 <td>Address : 
 <c:forEach items="${model.datalist.address}" var="add">
-${add.address1}  UC:${add.uc}, Town: ${add.town}
+ ${add.address1} <%-- UC:${add.uc}, Town: ${add.town} --%>
 <br>
 </c:forEach></td></tr>
 <tr><td colspan="2">Birthdate : <fmt:formatDate value="${model.datalist.child.birthdate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/> <c:if test="${model.datalist.child.estimatedBirthdate}">(approx)</c:if></td>
@@ -54,10 +54,10 @@ ${add.address1}  UC:${add.uc}, Town: ${add.town}
 ${fn:substring(cont.numberType,0,3)}- ${cont.number}<br>
 </c:forEach>
 </td>
-<tr>
-<td colspan="2">Incentive Scheme : ${model.datalist.childLotteries[0].arm.armName}</td>
-<td>CNIC : ${model.datalist.child.nic}</td>
-</tr>
+<!-- <tr> -->
+<%-- <td colspan="2">Incentive Scheme : ${model.datalist.childLotteries[0].arm.armName}</td> --%>
+<%-- <td>CNIC : ${model.datalist.child.nic}</td> --%>
+<!-- </tr> -->
 </table>
 <table class="right">
 <tr>

@@ -285,9 +285,10 @@ ul{
 <div id="tab2" class="tab-section">
 <table  class="denform-h">
 	<c:forEach var="va" items="${vaccineList}">
-	<tr>
+		<tr>
 		<td><input id="retro_vaccine${va.vaccineId}" name="retro_vaccine" value="${va.fullName}" readonly="readonly" style="border: hidden;"/></td>
-		<td><input id="retro_date${va.vaccineId}" name="retro_date"  maxDate="+0d" class="calendarbox" placeholder="dd-MM-yyyy"/></td>  	
+		<td><input id="retro_vaccine_in${va.vaccineId}" name="retro_vaccine_in" class="retro_vaccine_in" type="checkbox" /></td>
+		<td><input id="retro_date${va.vaccineId}" name="retro_vaccine_date" maxDate="+0d" class="calendarbox retro_vaccine_date" placeholder="dd-MM-yyyy" disabled /></td>  	
 	</tr>
 	</c:forEach>   
 </table>
@@ -321,17 +322,34 @@ ul{
 
 		function sendVaccinationHistory() {
 			jsonArray = [];
-			$("input[name='retro_date']").each(function(index, element) {
-				if (element.value.length > 0) {
-					var id = (element.id).match(/\d+/g);
-					jsonObject = {};
-					jsonObject["vaccineId"] = id.toString();
-					jsonObject["vaccineName"] = $('#retro_vaccine' + id).val();
-					jsonObject["vaccinationDate"] = element.value;
-					jsonArray.push(jsonObject);
-				}
+// 			$("input[name='retro_date']").each(function(index, element) {
+// 				if (element.value.length > 0) {
+// 					var id = (element.id).match(/\d+/g);
+// 					jsonObject = {};
+// 					jsonObject["vaccineId"] = id.toString();
+// 					jsonObject["vaccineName"] = $('#retro_vaccine' + id).val();
+// 					jsonObject["vaccinationDate"] = element.value;
+// 					jsonArray.push(jsonObject);
+// 				}
+// 			});
+			$("input[name ='retro_vaccine_in']:checked").each(function(index, element) {
+// 				console.log(index + "  " + element.id);
+				
+				var id = (element.id).match(/\d+/g);
+				jsonObject = {};
+				jsonObject["vaccineId"] = id.toString();
+				jsonObject["vaccineName"] = $('#retro_vaccine' + id).val();
+				
+// 				console.log($('#retro_date' + id).val() );
+				
+				if($('#retro_date' + id).val().length > 0){
+					jsonObject["vaccinationDate"] = $('#retro_date' + id).val();
+				}				
+				
+				console.log(jsonObject["vaccineId"] + " " + jsonObject["vaccineName"] + " " + jsonObject["vaccinationDate"] );
+				jsonArray.push(jsonObject);
+				
 			});
-
 			
 			DWRVaccineService.getVaccineSchedule(JSON.stringify(jsonArray), convertToDate($('#birthdateinh').val()), convertToDate($('#centerVisitDate').val()), '${command.childId}',  '${command.vaccinationCenterId}', '${command.uuid}', {callback : function(resultList) {
 // 				console.log(resultList);
@@ -357,7 +375,7 @@ ul{
 				
 				if(status == "VACCINATED" || status == "RETRO"){
 					$(".current_vaccine").append("<tr id='tr"+vid+"'></tr>")
-					$("#tr"+vid).append("<td>"+name+"</td><!-- <td>"+status+"</td> --><td>"+dateStr+"</td>");
+					$("#tr"+vid).append("<td>"+name+"</td><!-- <td>"+status+"</td> <td>"+dateStr+"</td> -->");
 					$("#tr"+vid).append("<td><button id='delbtn' onclick='delVaccine("+vid+")'>X</button></td>");
 					
 					if(status == "RETRO"){
@@ -367,9 +385,9 @@ ul{
 					}					
 				}
 				
-				if(status == "CURRENT_RETRO"){
+				if(status == "CURRENT_RETRO" ||  status == "CURRENT_RETRO_DATE_MISSING"){
 					$(".vaccine_history").append("<tr id='tr"+vid+"'></tr>")
-					$("#tr"+vid).append("<td>"+name+"</td><!-- <td>"+status+"</td> --><td>"+dateStr+"</td>");
+					$("#tr"+vid).append("<td>"+name+"</td><!-- <td>"+status+"</td> <td>"+dateStr+"</td> -->");
 					
 					vaccineScheduleList[index].<%=VaccineScheduleKey.status%> = "RETRO";
 					vaccineScheduleList[index].<%=VaccineScheduleKey.center%> = $('#vaccinationCenterId').val()
@@ -420,6 +438,16 @@ ul{
 				subfrm();
 			}
 		}
+		
+		$("input[name ='retro_vaccine_in']").change(function(){
+			var id = (this.id).match(/\d+/g);
+			if(this.checked){
+				$('#retro_date' + id).prop("disabled", false); 
+			} else{
+				$('#retro_date' + id).prop("disabled", true);
+				$('#retro_date' + id).val("");
+			}
+		});
 		
 </script>
 </form>

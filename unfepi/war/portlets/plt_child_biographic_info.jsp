@@ -56,6 +56,10 @@
 			<!--
             function birthdateOrAgeChanged(sel) {
             	if(document.getElementById("birthdateOrAge").value == 'birthdate'){
+            		
+            		$('.requiredFieldBirthDate').addClass("requiredField");
+            		$('.requiredFieldAge').removeClass("requiredField");
+            		
     				document.getElementById("birthdatetr").style.display = 'table-row';
     				document.getElementById("agetr").style.display = 'none';
     				document.getElementById("estimatedBirthdate").value = '<%=WebGlobals.BOOLEAN_CONVERTER_FALSE_STRING%>';
@@ -65,11 +69,15 @@
     				}
             	}
             	else if(document.getElementById("birthdateOrAge").value == 'age'){
+            		$('.requiredFieldBirthDate').removeClass("requiredField");
+            		$('.requiredFieldAge').addClass("requiredField");
             		document.getElementById("birthdatetr").style.display = 'none';
     				document.getElementById("agetr").style.display = 'table-row';
     				document.getElementById("estimatedBirthdate").value = '<%=WebGlobals.BOOLEAN_CONVERTER_TRUE_STRING%>';
             	}
             	else {
+            		$('.requiredFieldBirthDate').removeClass("requiredField");
+            		$('.requiredFieldAge').removeClass("requiredField");
             		document.getElementById("birthdatetr").style.display = 'none';
     				document.getElementById("agetr").style.display = 'none';
     				document.getElementById("estimatedBirthdate").value = '';
@@ -93,7 +101,8 @@
         <spring:bind path="command.${commandAdditionalPathStr}birthdate">
         <input id="birthdate" name="${commandAdditionalPathStr}birthdate" 
         	   maxDate="+0d" value="${status.value}" class="calendarbox requiredFieldBirthDate"
-        	   onkeypress="return isDateDigit(event)" placeholder="dd-MM-yyyy"/>
+        	   onkeypress="return isDateDigit(event)" placeholder="dd-MM-yyyy"
+        	   onclosehandler="birthDate_Changed"/>
         <span class="error-message"><c:out	value="${status.errorMessage}" /></span>
         </spring:bind>
         </td>

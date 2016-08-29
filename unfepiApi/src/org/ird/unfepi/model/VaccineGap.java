@@ -42,7 +42,7 @@ public class VaccineGap {
 	
 	private Boolean mandatory;
 	
-	@Column(nullable = false)
+//	@Column(nullable = false)
 	private Integer vaccinationcalendarId;
 	
 	@ManyToOne(fetch = FetchType.EAGER, targetEntity = VaccinationCalendar.class)
