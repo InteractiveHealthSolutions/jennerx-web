@@ -623,6 +623,26 @@ public class EncounterUtil {
 					if(vsh.getAuto_calculated_date()!= null)
 					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.SYSTEM_CALCULATED_DATE,  WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.format(vsh.getAuto_calculated_date()), group));
 				}
+				
+				else if(vsh.getStatus().equalsIgnoreCase(VaccineStatusType.INVALID_DOSE.name())){
+					vaccineVariablePrefix = "VACCINE_INVALID_"+vsh.getVaccine().getName().toUpperCase()+"_"+vsh.getVaccine().getVaccineId();
+					group = "VACCINE_INVALID_"+vsh.getVaccine().getName().toUpperCase();
+					
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINE_ID, vsh.getVaccinationObjCurrentVisit().getVaccineId(), group));
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINE_NAME, vsh.getVaccine().getName(), group));
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_TYPE, vsh.getStatus(), group));
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_RECORD_NUM, vsh.getVaccinationObjCurrentVisit().getVaccinationRecordNum(), group));
+					
+					if(vsh.getVaccinationObjCurrentVisit().getVaccinationDuedate()!= null)
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_DUE_DATE,  WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.format(vsh.getVaccinationObjCurrentVisit().getVaccinationDuedate()), group));
+					
+					if(vsh.getVaccinationObjCurrentVisit().getVaccinationDate()!= null)
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_DATE,  WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.format(vsh.getVaccinationObjCurrentVisit().getVaccinationDate()), group));
+					
+//					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_CENTER, vsh.getVaccinationObjCurrentVisit().getVaccinationCenterId(), group));
+//					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_CENTER_ID,  sc.getVaccinationService().findVaccinationCenterById(vsh.getVaccinationObjCurrentVisit().getVaccinationCenterId(), true, new String[]{"idMapper"}).getIdMapper().getIdentifiers().get(0).getIdentifier(), group));
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_STATUS, vsh.getVaccinationObjCurrentVisit().getVaccinationStatus(), group));
+				}
 			}
 		}
 	}

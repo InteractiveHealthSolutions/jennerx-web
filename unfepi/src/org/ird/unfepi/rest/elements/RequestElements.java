@@ -24,6 +24,8 @@ public class RequestElements
 	public static final String METADATA_USERS = "users";
 	public static final String METADATA_IDS = "_ids";
 	public static final String METADATA_HEALTHPROGRAM = "healthprog";
+	public static final String METADATA_ROUND = "round";
+	public static final String METADATA_CENTERPROGRAM = "centprog";
 	
 	public static final String METADATA_FIELD_LOCATION_ID = "locationId";
 	public static final String METADATA_FIELD_LOCATION_NAME = "fullName";
@@ -50,6 +52,20 @@ public class RequestElements
 	
 	public static final String METADATA_FIELD_HEALTHPROGRAM_ID = "programId";
 	public static final String METADATA_FIELD_HEALTHPROGRAM_NAME = "name";
+	
+	public static final String METADATA_FIELD_ROUND_ID = "roundId";
+	public static final String METADATA_FIELD_ROUND_NAME = "name";
+	public static final String METADATA_FIELD_ROUND_CENTERPROGRAMID = "centerProgramId";
+	public static final String METADATA_FIELD_ROUND_STARTDATE = "startDate";
+	public static final String METADATA_FIELD_ROUND_ENDDATE = "endDate";
+	public static final String METADATA_FIELD_ROUND_ISACTIVE = "isActive";
+	
+	public static final String METADATA_CENTERPROGRAM_CENTERPROGRAMID = "centerProgramId";
+	public static final String METADATA_CENTERPROGRAM_VACCINATIONCENTERID = "vaccinationCenterId";
+	public static final String METADATA_CENTERPROGRAM_HEALTHPROGRAMID = "healthProgramId";
+	public static final String METADATA_CENTERPROGRAM_STARTDATE = "startDate";
+	public static final String METADATA_CENTERPROGRAM_ENDDATE = "endDate";
+	public static final String METADATA_CENTERPROGRAM_ISACTIVE = "isActive";
 	
 	public static final String METADATA_FIELD_VACCINATIONCALENDAR_ID = "vaccinationcalendarId";
 

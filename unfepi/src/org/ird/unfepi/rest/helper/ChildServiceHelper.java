@@ -34,7 +34,7 @@ public class ChildServiceHelper {
 		return null; 
 	}
 	
-	public  List<HashMap> getAllChidrenVaccinations(long lastRecord){
+	public List<HashMap> getAllChidrenVaccinations(long lastRecord){
 		ServiceContext sc =Context.getServices();
 		//TODO divide in 10thoussand chunks
 		String query="SELECT v.vaccinationRecordNum vId,v.vaccinationCenterId centreid,v.vaccineId, v.lastEditedDate ,v.createdDate, "+
@@ -47,6 +47,21 @@ public class ChildServiceHelper {
 				List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
 		
 		return map;
+		}catch (Exception e)
+		{
+			e.printStackTrace();
+		}finally{
+			sc.closeSession();
+		}
+		return null;
+	}
+	
+	public List<HashMap> getallEncounters(long lastRecord){
+		ServiceContext sc =Context.getServices();
+		String query = "select encounterId, p1id, encounterType, locationId, dataEntrySource from encounter LIMIT " + lastRecord + ", 10000";
+		try{
+			List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
+			return map;
 		}catch (Exception e)
 		{
 			e.printStackTrace();
@@ -87,8 +102,7 @@ public class ChildServiceHelper {
 				+ "where v.voided=0 and v.lastEditedDate >='"
 				+ lastSyncedTime+"' order by identifier ASC ;";
 		try {
-			List<HashMap> map = sc.getCustomQueryService()
-					.getDataBySQLMapResult(query);
+			List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
 			
 			return map;
 		} catch (Exception e) {
@@ -99,6 +113,21 @@ public class ChildServiceHelper {
 		return null;
 	}
 	
+	public  List<HashMap> getNewEucounters(String lastSyncedTime) {
+		ServiceContext sc = Context.getServices();
+		
+		String query = "select encounterId, p1id, encounterType, locationId, dataEntrySource from encounter "
+				+ "where  dateEncounterEntered >='"+lastSyncedTime+"' ;";
+		try {
+			List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
+			return map;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sc.closeSession();
+		}
+		return null;
+	}
 	
 	
 

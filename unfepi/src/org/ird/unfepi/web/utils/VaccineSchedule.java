@@ -791,12 +791,14 @@ public class VaccineSchedule {
 						
 					}
 					else {
-						vaccdate = null; 
+//						vaccdate = null; 
+						vaccdate = va.getVaccinationDate();
 						status = VaccineStatusType.INVALID_DOSE;
 					}
 				}
 				else {
-					vaccdate = null; 
+//					vaccdate = null; 
+					vaccdate = va.getVaccinationDate();
 					status = VaccineStatusType.INVALID_DOSE;
 				}
 

@@ -20,6 +20,7 @@ public class ForceUpdateDumpServlet extends HttpServlet{
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		System.out.println("ForceUpdateDumpServlet called .. ");
 		doPost(req, resp);
 	}
 	@Override

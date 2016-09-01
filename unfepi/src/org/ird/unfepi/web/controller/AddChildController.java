@@ -80,10 +80,9 @@ public class AddChildController extends DataEntryFormController{
 		List<VaccineSchedule> vaccineSchedule = (List<VaccineSchedule>) request.getSession().getAttribute(VaccinationCenterVisit.VACCINE_SCHEDULE_KEY+ewr.getCenterVisit().getUuid());
 		ServiceContext sc = Context.getServices();
 		
-		for (VaccineSchedule vs : vaccineSchedule) {
-			vs.printVaccineSchedule();
-		}
-		
+//		for (VaccineSchedule vs : vaccineSchedule) {
+//			vs.printVaccineSchedule();
+//		}
 		
 		Iterator<VaccineSchedule> iter = vaccineSchedule.iterator();
 		while (iter.hasNext()) {
@@ -93,10 +92,10 @@ public class AddChildController extends DataEntryFormController{
 			}
 		}
 		
-		System.out.println("\n\n");
-		for (VaccineSchedule vs : vaccineSchedule) {
-			vs.printVaccineSchedule();
-		}
+//		System.out.println("\n\n");
+//		for (VaccineSchedule vs : vaccineSchedule) {
+//			vs.printVaccineSchedule();
+//		}
 		
 		System.out.println(ewr.getCenterVisit().getVaccinationCenterId() +"  " + ewr.getCenterVisit().getHealthProgramId());
 		new ChildValidator().validateEnrollment(ewr, vaccineSchedule, results);		

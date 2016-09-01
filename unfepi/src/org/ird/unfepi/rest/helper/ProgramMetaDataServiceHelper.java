@@ -51,6 +51,39 @@ public class ProgramMetaDataServiceHelper {
 		}
 	}
 	
+	public static String getLocationMetadata(JSONObject jsonObject){
+		
+		org.json.simple.JSONObject response = new org.json.simple.JSONObject();
+		
+		try {
+			JSONArray centerIds = jsonObject.optJSONArray(RequestElements.METADATA_VACCINATION_CENTRES+RequestElements.METADATA_IDS);
+
+			String lastEditDateStr = jsonObject.optString(RequestElements.LAST_SYNC_TIME);
+			Date lastEditDate = (!lastEditDateStr.trim().isEmpty()) ? WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.parse(lastEditDateStr) : null ;
+			
+			if(jsonObject.isNull("programId")){
+				throw new Exception("programId is not provided or null") ;
+			}
+			
+			fillVaccinationCentres(lastEditDate, centerIds, jsonObject, response);
+			fillLocation(jsonObject, response);
+			fillLocationType(jsonObject, response);
+
+			HashMap<String, Object> resp = new HashMap<String, Object>();
+			resp.put("METADATA", response);
+
+			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_SUCCESS, resp);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			GlobalParams.MOBILELOGGER.equals(e);
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("error", "Error in getting metadata");
+			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_INTERNAL_ERROR, map);
+	
+		}
+	}
+	
 	public static String getHealthProgramMetadata(JSONObject jsonObject){
 		
 		org.json.simple.JSONObject response = new org.json.simple.JSONObject();
@@ -72,7 +105,54 @@ public class ProgramMetaDataServiceHelper {
 			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_INTERNAL_ERROR, map);
 		}
 	}
+	
+	public static String getRoundMetadata(JSONObject jsonObject){
+		
+		org.json.simple.JSONObject response = new org.json.simple.JSONObject();
+		
+		try {
+			
+			if(jsonObject.isNull("programId")){
+				throw new Exception("programId is not provided or null") ;
+			}
+			
+			fillRound(jsonObject, response);
+			
+			HashMap<String, Object> resp = new HashMap<String, Object>();
+			resp.put("METADATA", response);
 
+			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_SUCCESS, resp);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			GlobalParams.MOBILELOGGER.equals(e);
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("error", "Error in getting metadata");
+			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_INTERNAL_ERROR, map);
+		}
+	}
+	
+	private static void fillRound(JSONObject json, org.json.simple.JSONObject response)
+	{
+		String[] columns = new String[] { RequestElements.METADATA_FIELD_ROUND_ID,
+				RequestElements. METADATA_FIELD_ROUND_NAME,
+				RequestElements.METADATA_CENTERPROGRAM_VACCINATIONCENTERID,
+				RequestElements.METADATA_CENTERPROGRAM_HEALTHPROGRAMID,
+				RequestElements.METADATA_FIELD_ROUND_ISACTIVE};
+		String table = "location";
+
+		Integer programId = json.optInt("programId");		
+		String query = "select r.roundId, r.name, cp.vaccinationCenterId, cp.healthProgramId, r.isActive from round r "
+				+ "join centerprogram cp on r.centerProgramId = cp.centerProgramId where cp.healthProgramId = "+ programId;
+		
+		if(json.has(RequestElements.METADATA_ROUND)){
+			fetchAndCompareMetaData(RequestElements.METADATA_ROUND, columns, table, query, response, json);
+		}
+		else{
+			fetchMetaDataByCustomQuery(RequestElements.METADATA_ROUND, query, columns, response);
+		}
+	}
+	
 	private static void fillVaccine(Date lastEditDate, JSONArray ids, org.json.simple.JSONObject response)
 	{
 		String[] columns = new String[] {
@@ -92,6 +172,67 @@ public class ProgramMetaDataServiceHelper {
 			}			
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	private static void fillVaccinationCentres(Date lastEditDate, JSONArray ids, JSONObject json, org.json.simple.JSONObject response)
+	{
+		String[] columns = new String[] {
+				RequestElements.METADATA_FIELD_VACCINATION_CENTRE_ID,
+				RequestElements.METADATA_FIELD_VACCINATION_CENTRE_NAME };
+		String table = "vaccinationcenter";
+		
+		Integer programId = json.optInt("programId");
+		
+		String sub_query = "SELECT " + RequestElements.METADATA_CENTERPROGRAM_VACCINATIONCENTERID 
+				+ " FROM centerprogram WHERE "+ RequestElements.METADATA_CENTERPROGRAM_HEALTHPROGRAMID + " = " + programId;
+		String query = "SELECT " + Arrays.toString(columns).replaceAll("\\[|\\]", "") + " FROM " + table
+				+ " WHERE " + RequestElements.METADATA_FIELD_VACCINATION_CENTRE_ID + " IN( " + sub_query + ")";
+		
+		if(json.has(RequestElements.METADATA_VACCINATION_CENTRES)){
+			fetchAndCompareMetaData(RequestElements.METADATA_VACCINATION_CENTRES, columns, table, query, response, json);
+		}
+		else{
+			fetchMetaDataByCustomQuery(RequestElements.METADATA_VACCINATION_CENTRES, query, columns, response);
+		}
+	}
+	
+	private static void fillLocation(JSONObject json, org.json.simple.JSONObject response)
+	{
+		String[] columns = new String[] { RequestElements.METADATA_FIELD_LOCATION_ID,
+				RequestElements.METADATA_FIELD_LOCATION_NAME,
+				RequestElements.METADATA_FIELD_LOCATION_PARENT,
+		"locationType" };
+		String table = "location";
+
+		Integer programId = json.optInt("programId");
+		
+		String query = "SELECT loc.locationId, loc.fullName, loc.parentLocation, loc.locationType from location AS loc, "
+				+ "(SELECT locationId from identifier where mappedId in"
+				+ "(SELECT vaccinationCenterId FROM centerprogram WHERE healthProgramId = "+ programId +") )AS temp "
+				+ "WHERE loc.locationId = temp.locationId";
+		
+		if(json.has(RequestElements.METADATA_LOCATION)){
+			fetchAndCompareMetaData(RequestElements.METADATA_LOCATION, columns, table, query, response, json);
+		}
+		else{
+			fetchMetaDataByCustomQuery(RequestElements.METADATA_LOCATION, query, columns, response);
+		}
+	}
+
+	private static void fillLocationType(JSONObject json, org.json.simple.JSONObject response) {
+		String[] columns = new String[] { 
+				RequestElements.METADATA_FIELD_LOCATION_TYPE_ID,
+				RequestElements.METADATA_FIELD_LOCATION_TYPE_NAME };
+		String table = "locationtype";
+
+		String query = "SELECT " + Arrays.toString(columns).replaceAll("\\[|\\]", "") + " FROM " + table ;
+		
+		if(json.has(RequestElements.METADATA_LOCATION_TYPE)){
+			fetchAndCompareMetaData(RequestElements.METADATA_LOCATION_TYPE, columns, table, query, response, json);
+		}
+		else{
+			fetchMetaDataByCustomQuery(RequestElements.METADATA_LOCATION_TYPE, query, columns, response);
 		}
 	}
 
@@ -166,10 +307,8 @@ public class ProgramMetaDataServiceHelper {
 		String[] columns = new String[] { 
 				RequestElements.METADATA_FIELD_HEALTHPROGRAM_ID,
 				RequestElements.METADATA_FIELD_HEALTHPROGRAM_NAME,
-				RequestElements.METADATA_FIELD_VACCINATIONCALENDAR_ID};
+				/*RequestElements.METADATA_FIELD_VACCINATIONCALENDAR_ID*/};
 		String table = "healthprogram";
-		
-//		Integer calendarId = json.optInt("calendarId");
 		
 		String query = "SELECT " + Arrays.toString(columns).replaceAll("\\[|\\]", "") + " FROM " + table;
 		
@@ -180,9 +319,8 @@ public class ProgramMetaDataServiceHelper {
 			fetchMetaDataByCustomQuery(RequestElements.METADATA_HEALTHPROGRAM, query, columns, response);
 		}
 
-//		fetchAndCompareMetaData(RequestElements.METADATA_HEALTHPROGRAM, columns, table, response, json);
 	}
-	
+
 	private static void fetchMetaDataByCustomQuery(String dataType , String query, String columns[], org.json.simple.JSONObject container){
 
 		try
@@ -350,11 +488,10 @@ public class ProgramMetaDataServiceHelper {
 			if (values.length() > 0) {
 				response.put(dataType + "_deleted", values);
 			}
-
-
+			
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.put(dataType+"_error", "no record found");
+			response.put(dataType+"_error", /*e.getMessage()*/"no record found");
 		}
 	}
 
