@@ -19,7 +19,7 @@ import org.json.simple.JSONObject;
 public class MetadataServiceHelper
 {
 
-	public static String getMetadata()
+	public String getMetadata()
 	{
 		try
 		{
@@ -58,56 +58,47 @@ public class MetadataServiceHelper
 
 	public String getMetadata(String dataType)
 	{
-		if (dataType == null)
+		try
+		{
+			if (dataType == null)
+				return null;
+	
+			JSONObject mainResponse = new JSONObject();
+	
+			if (dataType.equalsIgnoreCase(RequestElements.METADATA_LOCATION))
+			{
+				fillLocation(mainResponse);
+				fillLocationType(mainResponse);
+				fillVaccinationCentres(mainResponse);
+				
+				HashMap<String, Object> resp = new HashMap<String, Object>();
+				resp.put("METADATA", mainResponse);
+				return ResponseBuilder.buildResponse(ResponseStatus.STATUS_SUCCESS, resp);
+			}
+			else if (dataType.equalsIgnoreCase(RequestElements.METADATA_VACCINE))
+			{
+				fillVaccine(mainResponse);
+				fillVaccineGap(mainResponse);
+				fillVaccineGapType(mainResponse);
+				fillVaccinePrerequisite(mainResponse);
+				
+				HashMap<String, Object> resp = new HashMap<String, Object>();
+				resp.put("METADATA", mainResponse);
+				return ResponseBuilder.buildResponse(ResponseStatus.STATUS_SUCCESS, resp);
+			}
+			
+			
 			return null;
-
-		JSONObject mainResponse = new JSONObject();
-
-		if (dataType.equalsIgnoreCase(RequestElements.METADATA_LOCATION))
-		{
-			fillLocation(mainResponse);
 		}
-		else if (dataType.equalsIgnoreCase(RequestElements.METADATA_LOCATION_TYPE))
+		catch (Exception e)
 		{
-			fillLocationType(mainResponse);
+			e.printStackTrace();
+			GlobalParams.MOBILELOGGER.equals(e);
+		
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("error", "Error in getting metadata");
+			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_INTERNAL_ERROR, map);
 		}
-		else if (dataType.equalsIgnoreCase(RequestElements.METADATA_VACCINE))
-		{
-			fillVaccine(mainResponse);
-		}
-		else if (dataType.equalsIgnoreCase(RequestElements.METADATA_VACCINATION_CENTRES))
-		{
-			fillVaccinationCentres(mainResponse);
-		}
-
-		else if (dataType.equalsIgnoreCase(RequestElements.METADATA_VACCINE_SCHEDULE))
-		{
-			fillVaccine(mainResponse);
-		}
-
-		else if (dataType.equalsIgnoreCase(RequestElements.METADATA_USER))
-		{
-			fillUser(mainResponse);
-		}
-		else if (dataType.equalsIgnoreCase(RequestElements.METADATA_USERS))
-		{
-			fillUsers(mainResponse);
-		}
-		else if (dataType.equalsIgnoreCase(RequestElements.METADATA_ALL))
-		{
-			fillLocation(mainResponse);
-			fillLocationType(mainResponse);
-			fillVaccine(mainResponse);
-			fillVaccinationCentres(mainResponse);
-			fillVaccine(mainResponse);
-			fillUsers(mainResponse);
-			fillUser(mainResponse);
-		}
-
-		if (mainResponse != null && mainResponse.values().size() > 1)
-			return mainResponse.toJSONString();
-		else
-			return null;
 	}
 
 	private static void fillLocation(JSONObject mainResponse)

@@ -66,12 +66,12 @@ public class MetadataService
 //		return response;
 //	}
 	
-	@POST
+	@GET
 	@Path("/vaccine")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String metadataVaccine(String jsonString){
-		String response = "";
+		/*String response = "";
 		try {
 			JSONObject jsonObject = new JSONObject(jsonString);			
 			response = MetadataServiceHelper2.getVaccineMetadata(jsonObject);
@@ -79,15 +79,31 @@ public class MetadataService
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return response;
+		return response;*/
+		
+		MetadataServiceHelper helper = new MetadataServiceHelper();
+		
+		try
+		{
+			String metadata = helper.getMetadata(RequestElements.METADATA_VACCINE);
+			return metadata;
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			HashMap<String, Object>resp = new HashMap<String, Object>();
+			resp.put("error", "Error occured in fetching data");
+			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_FAILURE,resp);
+		}
+		
 	}
 	
-	@POST
+	@GET
 	@Path("/location")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String metadataVaccinationCentres(String jsonString){
-		String response = "";
+		/*String response = "";
 		try {
 			JSONObject jsonObject = new JSONObject(jsonString);
 			response = MetadataServiceHelper2.getLocationMetadata(jsonObject);
@@ -95,10 +111,25 @@ public class MetadataService
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return response;
+		return response;*/
+		
+		MetadataServiceHelper helper = new MetadataServiceHelper();
+		
+		try
+		{
+			String metadata = helper.getMetadata(RequestElements.METADATA_LOCATION);
+			return metadata;
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			HashMap<String, Object>resp = new HashMap<String, Object>();
+			resp.put("error", "Error occured in fetching data");
+			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_FAILURE,resp);
+		}
 	}
 	
-	@POST
+	@GET
 	@Path("/users")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -119,7 +150,7 @@ public class MetadataService
 		return response;
 	}
 	
-	@POST
+	@GET
 	@Path("/healthprogram")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
