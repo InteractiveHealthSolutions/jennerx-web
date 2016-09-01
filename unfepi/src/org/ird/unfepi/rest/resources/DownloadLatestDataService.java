@@ -1,10 +1,9 @@
 package org.ird.unfepi.rest.resources;
 
+import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -14,8 +13,8 @@ import org.ird.unfepi.model.Device;
 import org.ird.unfepi.rest.elements.RequestElements;
 import org.ird.unfepi.rest.helper.ChildServiceHelper;
 import org.ird.unfepi.rest.helper.DeviceServiceHelper;
-import org.ird.unfepi.rest.helper.RestUtils;
 import org.ird.unfepi.utils.GZipper;
+import org.json.JSONException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -23,7 +22,7 @@ import org.json.simple.parser.JSONParser;
 @Path("/update")
 public class DownloadLatestDataService {
 
-	
+
 	private Date lastSynced;
 
 	@Path("/children")
@@ -31,28 +30,27 @@ public class DownloadLatestDataService {
 	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String getUpdatedChildren(String json){
-	lastSynced=new Date();
+		lastSynced=new Date();
 		ChildServiceHelper childServiceHelper=new ChildServiceHelper();
-		JSONObject jsonObject=new JSONObject();
 		try {
-		JSONParser parser = new JSONParser();	
-		
-		JSONObject obj = (JSONObject)parser.parse(json);
+			JSONParser parser = new JSONParser();	
 
-	String lastEditDate=(String)obj.get(RequestElements.LAST_SYNC_TIME)	;
-		
-	
-	org.json.JSONObject j=new org.json.JSONObject();
-	j.put("allchildren",childServiceHelper.getUpdatedChildren(lastEditDate));
-	
-	
-	return GZipper.compress(j.toString());
+			JSONObject obj = (JSONObject)parser.parse(json);
+
+			String lastEditDate=(String)obj.get(RequestElements.LAST_SYNC_TIME)	;
+
+
+			org.json.JSONObject j=new org.json.JSONObject();
+			j.put("allchildren",childServiceHelper.getUpdatedChildren(lastEditDate));
+
+
+			return GZipper.compress(j.toString());
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	@Path("/vaccinations")
 	@POST
 	@Produces(MediaType.TEXT_PLAIN)
@@ -60,25 +58,45 @@ public class DownloadLatestDataService {
 	public String getUpdatedVaccinations(String json){
 		DeviceServiceHelper deviceServiceHelper=new DeviceServiceHelper();
 		ChildServiceHelper childServiceHelper=new ChildServiceHelper();
-		JSONObject jsonObject=new JSONObject();
 		try {
-		JSONParser parser = new JSONParser();	
-		
-		JSONObject obj = (JSONObject)parser.parse(json);
+			JSONParser parser = new JSONParser();	
 
-	String lastEditDate=(String)obj.get(RequestElements.LAST_SYNC_TIME)	;
-	
-	org.json.JSONObject j=new org.json.JSONObject();
-	j.put("allvaccinations",childServiceHelper.getUpdatedVaccinations(lastEditDate));
-	if(lastSynced==null){
-		lastSynced=new Date();
+			JSONObject obj = (JSONObject)parser.parse(json);
+
+			String lastEditDate=(String)obj.get(RequestElements.LAST_SYNC_TIME)	;
+
+			org.json.JSONObject j=new org.json.JSONObject();
+			j.put("allvaccinations",childServiceHelper.getUpdatedVaccinations(lastEditDate));
+			if(lastSynced==null){
+				lastSynced=new Date();
+			}
+			Long deviceId = (Long) obj.get(RequestElements.DEVICE_DEVICEID);
+			Device device= deviceServiceHelper.getDevice(deviceId);
+			device.setLastSyncDate(lastSynced);
+			deviceServiceHelper.updateDevice(device);
+
+			return GZipper.compress(j.toString());
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return null;
 	}
-	Long deviceId = (Long) obj.get(RequestElements.DEVICE_DEVICEID);
-	Device device= deviceServiceHelper.getDevice(deviceId);
-	device.setLastSyncDate(lastSynced);
-	deviceServiceHelper.updateDevice(device);
-	
-	return GZipper.compress(j.toString());
+
+	@Path("/encounters")
+	@POST
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getNewEncounters(String json) throws IOException, JSONException{
+		lastSynced=new Date();
+		ChildServiceHelper childServiceHelper=new ChildServiceHelper();
+		try {
+			JSONParser parser = new JSONParser();	
+			JSONObject obj = (JSONObject)parser.parse(json);
+			String lastEditDate=(String)obj.get(RequestElements.LAST_SYNC_TIME)	;
+
+			org.json.JSONObject j=new org.json.JSONObject();
+			j.put("allencounters",childServiceHelper.getNewEucounters(lastEditDate));
+
+			return GZipper.compress(j.toString());
 		}catch(Exception e){
 			e.printStackTrace();
 		}

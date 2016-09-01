@@ -10,7 +10,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.ird.unfepi.constants.WebGlobals;
-import org.ird.unfepi.model.HealthProgram;
 import org.ird.unfepi.rest.elements.RequestElements;
 import org.ird.unfepi.rest.elements.ResponseStatus;
 import org.ird.unfepi.rest.helper.MetadataServiceHelper;
