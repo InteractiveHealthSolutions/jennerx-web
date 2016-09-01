@@ -1,6 +1,7 @@
 package org.ird.unfepi.rest.resources;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -14,7 +15,7 @@ import org.json.JSONObject;
 @Path("/prog/metadata")
 public class ProgramMetaDataService {
 	
-	@POST
+	@GET
 	@Path("/vaccine")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -33,7 +34,7 @@ public class ProgramMetaDataService {
 		return response ;
 	}
 	
-	@POST
+	@GET
 	@Path("/healthprogram")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
