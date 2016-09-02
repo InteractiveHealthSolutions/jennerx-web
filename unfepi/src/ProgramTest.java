@@ -3,7 +3,9 @@ import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 import org.ird.unfepi.GlobalParams;
@@ -12,10 +14,12 @@ import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.CenterProgram;
 import org.ird.unfepi.model.HealthProgram;
 import org.ird.unfepi.model.Round;
+import org.ird.unfepi.model.Vaccination;
 import org.ird.unfepi.model.VaccinationCalendar;
 import org.ird.unfepi.model.VaccinationCenter;
 import org.ird.unfepi.rest.elements.RequestElements;
 import org.ird.unfepi.utils.IRUtils;
+import org.ird.unfepi.web.utils.IMRUtils;
 
 import net.jmatrix.eproperties.EProperties;
 
@@ -76,17 +80,17 @@ public class ProgramTest {
 //		
 //		sc.commitTransaction();
 		
-		String[] columns = new String[] {
-				RequestElements.METADATA_FIELD_VACCINE_ID,
-				RequestElements.METADATA_FIELD_VACCINE_NAME,
-				RequestElements.METADATA_FIELD_VACCINE_ISSUPPLEMENTARY,
-				RequestElements.METADATA_FIELD_VACCINE_ENTITY,
-				RequestElements.METADATA_FIELD_VACCINE_FULL_NAME };
-		
-		System.out.println(Arrays.toString(columns));
-		System.out.println(Arrays.toString(columns).replaceAll("\\[|\\]", ""));
-		
-		System.out.println("_*_*_*_*_*");
+//		String[] columns = new String[] {
+//				RequestElements.METADATA_FIELD_VACCINE_ID,
+//				RequestElements.METADATA_FIELD_VACCINE_NAME,
+//				RequestElements.METADATA_FIELD_VACCINE_ISSUPPLEMENTARY,
+//				RequestElements.METADATA_FIELD_VACCINE_ENTITY,
+//				RequestElements.METADATA_FIELD_VACCINE_FULL_NAME };
+//		
+//		System.out.println(Arrays.toString(columns));
+//		System.out.println(Arrays.toString(columns).replaceAll("\\[|\\]", ""));
+//		
+//		System.out.println("_*_*_*_*_*");
 
 	}
 }
