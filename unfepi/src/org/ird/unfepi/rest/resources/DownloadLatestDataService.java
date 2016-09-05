@@ -95,7 +95,7 @@ public class DownloadLatestDataService {
 
 			org.json.JSONObject j=new org.json.JSONObject();
 			j.put("allencounters",childServiceHelper.getNewEucounters(lastEditDate));
-
+			// return j.toString();
 			return GZipper.compress(j.toString());
 		}catch(Exception e){
 			e.printStackTrace();

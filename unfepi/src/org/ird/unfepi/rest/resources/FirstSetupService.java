@@ -172,6 +172,7 @@ public class FirstSetupService {
 			j.put("allencounters",map );
 			
 			j.put(RequestElements.LASTRECORD,lastRecord + map.size());
+			// return j.toString();
 			return GZipper.compress(j.toString());
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block

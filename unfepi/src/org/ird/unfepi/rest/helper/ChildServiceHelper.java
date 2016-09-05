@@ -58,7 +58,7 @@ public class ChildServiceHelper {
 	
 	public List<HashMap> getallEncounters(long lastRecord){
 		ServiceContext sc =Context.getServices();
-		String query = "select encounterId, p1id, encounterType, locationId, dataEntrySource from encounter LIMIT " + lastRecord + ", 10000";
+		String query = "select i.identifier, e.p2id, e.encounterType, e.locationId, e.dateEncounterEntered from encounter e inner join identifier i on e.p1id=i.mappedId LIMIT " + lastRecord + ", 10000";
 		try{
 			List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
 			return map;
@@ -116,8 +116,8 @@ public class ChildServiceHelper {
 	public  List<HashMap> getNewEucounters(String lastSyncedTime) {
 		ServiceContext sc = Context.getServices();
 		
-		String query = "select encounterId, p1id, encounterType, locationId, dataEntrySource from encounter "
-				+ "where  dateEncounterEntered >='"+lastSyncedTime+"' ;";
+		String query = "select i.identifier, e.p2id, e.encounterType, e.locationId, e.dateEncounterEntered from encounter e inner join identifier i on e.p1id=i.mappedId "
+				+ "where e.dateEncounterEntered >='"+lastSyncedTime+"' ;";
 		try {
 			List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
 			return map;
