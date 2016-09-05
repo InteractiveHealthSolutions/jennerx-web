@@ -2,6 +2,7 @@ package org.ird.unfepi.rest.resources;
 import java.util.Date;
 import java.util.HashMap;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -132,7 +133,8 @@ public class MetadataService
 	@Path("/users")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String metadataUser(String jsonString){
+	public String metadataUser(HttpServletRequest req) {
+		String jsonString = req.getParameter(RequestElements.METADATA_USERS);
 		String response = "";
 		try {
 			JSONObject jsonObject = new JSONObject(jsonString);
