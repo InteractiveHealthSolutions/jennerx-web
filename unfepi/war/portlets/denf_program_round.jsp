@@ -68,37 +68,37 @@ function validateFields(){
 		return false;
 	}
 	
-	var rp_ss_date;
-	var rp_se_date;
+// 	var rp_ss_date;
+// 	var rp_se_date;
 	
-	if( dateDifference(convertToDate($('#startDate').val()), '${centerprogram.startDate}') >= 0 ){
-		rp_ss_date = true;
-	}else{
-		rp_ss_date = false;
-		alert("round start date should be greater than or equal to program start date");
-	}	
-	if( dateDifference('${centerprogram.endDate}', convertToDate($('#startDate').val())) >= 0 ){
-		rp_se_date = true;
-	}else{
-		rp_se_date = false;
-		alert("round start date should be less than or equal to program end date");
-	}
+// 	if( dateDifference(convertToDate($('#startDate').val()), '${centerprogram.startDate}') >= 0 ){
+// 		rp_ss_date = true;
+// 	}else{
+// 		rp_ss_date = false;
+// 		alert("round start date should be greater than or equal to program start date");
+// 	}	
+// 	if( dateDifference('${centerprogram.endDate}', convertToDate($('#startDate').val())) >= 0 ){
+// 		rp_se_date = true;
+// 	}else{
+// 		rp_se_date = false;
+// 		alert("round start date should be less than or equal to program end date");
+// 	}
 	
-	var rp_es_date;
-	var rp_ee_date;
+// 	var rp_es_date;
+// 	var rp_ee_date;
 	
-	if( dateDifference(convertToDate($('#endDate').val()), '${centerprogram.startDate}') >= 0 ){
-		rp_es_date = true;
-	}else{
-		rp_es_date = false;
-		alert("round end date should be greater than or equal to program start date");
-	}	
-	if( dateDifference('${centerprogram.endDate}', convertToDate($('#endDate').val())) >= 0 ){
-		rp_ee_date = true;
-	}else{
-		rp_ee_date = false;
-		alert("round end date should be less than or equal to program end date");
-	}
+// 	if( dateDifference(convertToDate($('#endDate').val()), '${centerprogram.startDate}') >= 0 ){
+// 		rp_es_date = true;
+// 	}else{
+// 		rp_es_date = false;
+// 		alert("round end date should be greater than or equal to program start date");
+// 	}	
+// 	if( dateDifference('${centerprogram.endDate}', convertToDate($('#endDate').val())) >= 0 ){
+// 		rp_ee_date = true;
+// 	}else{
+// 		rp_ee_date = false;
+// 		alert("round end date should be less than or equal to program end date");
+// 	}
 	
 	
 	if(dateDifference(convertToDate($('#endDate').val()), convertToDate($('#startDate').val())) < 0 ){
@@ -127,8 +127,8 @@ function validateFields(){
 	} else {
 		validName = true;
 	}
-	
-	if(rp_ss_date && rp_se_date && rp_es_date && rp_ee_date && !isEmptyField && !is_end_date_passed && validName){
+// 	rp_ss_date && rp_se_date && rp_es_date && rp_ee_date && 
+	if( !isEmptyField && !is_end_date_passed && validName){
 		return true;
 	}	
 	
@@ -148,20 +148,29 @@ function submitThisForm() {
 
 <form method="post" id="frm" name="frm">
 <br>
-
 <table class="denform-h">
+<tr><td colspan="2">
+<spring:hasBindErrors name="command">
+	<c:forEach var="error" items="${errors.allErrors}">
+		<p style="font-style: italic; color: red;font-size: small;"><spring:message message="${error}" /></p>
+	</c:forEach>
+</spring:hasBindErrors>
+</td></tr>
+
 <tr><td colspan="2"><br></td></tr>
-<tr><td>Vaccination Center</td><td><b>${centerprogram.vaccinationCenter.name}</b></td></tr>
-<tr><td>Health Program</td><td><b>${centerprogram.healthProgram.name}</b></td></tr>
-<tr><td></td><td>[<fmt:formatDate value="${centerprogram.startDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/> : <fmt:formatDate value="${centerprogram.endDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/>]</td></tr>
-<tr><td>Round Name</td><td><input type="text" id="r_name" name="name" onkeypress="return isChar(event);" class="requiredField"> </td></tr>
-<tr><td>Start Date</td><td><input id="startDate" name="startDate" class="calendarbox" class="requiredField" onkeypress="return isDateDigit(event)"/></td></tr>
-<tr><td>End Date</td><td><input id="endDate" name="endDate" class="calendarbox" class="requiredField" onkeypress="return isDateDigit(event)"/></td></tr>
+<tr><td>Health Program</td><td>
+<input type="text" value="${healthprogram.name}" readonly/>
+<input type="hidden" name="healthProgramId" value="${healthprogram.programId}" /></td></tr>
+<tr><td>Round Name</td><td><input type="text" id="r_name" name="name" onkeypress="return isChar(event);" class="requiredField" value="${command.name}" > </td></tr>
+
+
+<tr><td>Start Date</td><td><input id="startDate" name="startDate" class="calendarbox" class="requiredField" onkeypress="return isDateDigit(event)" value="<fmt:formatDate value="${command.startDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/>"/></td></tr>
+<tr><td>End Date</td><td><input id="endDate" name="endDate" class="calendarbox" class="requiredField" onkeypress="return isDateDigit(event)" value="<fmt:formatDate value="${command.endDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/>"/></td></tr>
 <tr><td>Is Active</td>
 <td><select name="isActive" class="requiredField">
-<option value=""></option>
-<option value="<%=WebGlobals.BOOLEAN_CONVERTER_TRUE_STRING%>" >Yes</option>
-<option value="<%=WebGlobals.BOOLEAN_CONVERTER_FALSE_STRING%>">No</option>
+<option value="" <c:if test="${empty command.isActive}">selected="selected" </c:if>></option>
+<option value="<%=WebGlobals.BOOLEAN_CONVERTER_TRUE_STRING%>" <c:if test="${command.isActive == true}">selected="selected" </c:if> >Yes</option>
+<option value="<%=WebGlobals.BOOLEAN_CONVERTER_FALSE_STRING%>" <c:if test="${command.isActive == false}">selected="selected"</c:if> >No</option>
 </select></td></tr>
 <tr><td colspan="2" height="10px" style="border: none;"></td></tr>
 <tr><td colspan="2"><input type="button" id="submitBtn" value="Submit Data" onclick="subfrm();"></td></tr>

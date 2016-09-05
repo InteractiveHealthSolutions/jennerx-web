@@ -38,12 +38,19 @@ public class Round {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date endDate;
 
-	private Integer centerProgramId;
+/*	private Integer centerProgramId;
 
 	@ManyToOne(fetch = FetchType.EAGER, targetEntity = CenterProgram.class)
 	@JoinColumn(name = "centerProgramId", insertable = false, updatable = false)
 	@ForeignKey(name = "round_centerProgramId_centerprogram_centerProgramId_FK")
-	private CenterProgram centerProgram;
+	private CenterProgram centerProgram;*/
+	
+	private Integer healthProgramId;
+
+	@ManyToOne(fetch = FetchType.EAGER, targetEntity = HealthProgram.class)
+	@JoinColumn(name = "healthProgramId", insertable = false, updatable = false)
+	@ForeignKey(name = "centerprogram_healthProgramId_healthprogram_programId_FK")
+	private HealthProgram healthProgram;
 	
 	@Column(nullable = false)
 	private Boolean isActive;
@@ -96,7 +103,7 @@ public class Round {
 		this.endDate = endDate;
 	}
 
-	public Integer getCenterProgramId() {
+	/*public Integer getCenterProgramId() {
 		return centerProgramId;
 	}
 
@@ -110,6 +117,22 @@ public class Round {
 
 	public void setCenterProgram(CenterProgram centerProgram) {
 		this.centerProgram = centerProgram;
+	}*/
+
+	public Integer getHealthProgramId() {
+		return healthProgramId;
+	}
+
+	public void setHealthProgramId(Integer healthProgramId) {
+		this.healthProgramId = healthProgramId;
+	}
+
+	public HealthProgram getHealthProgram() {
+		return healthProgram;
+	}
+
+	public void setHealthProgram(HealthProgram healthProgram) {
+		this.healthProgram = healthProgram;
 	}
 
 	public Boolean getIsActive() {

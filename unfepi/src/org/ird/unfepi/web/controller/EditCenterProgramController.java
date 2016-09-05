@@ -44,8 +44,8 @@ public class EditCenterProgramController extends DataEditFormController{
 		LoggedInUser user = UserSessionUtils.getActiveUser(request);
 		
 		try {
-			cp.setLastEditedByUserId(user.getUser());
-			cp.setLastEditedDate(new Date());
+//			cp.setLastEditedByUserId(user.getUser());
+//			cp.setLastEditedDate(new Date());
 			sc.getCustomQueryService().update(cp);
 			sc.commitTransaction();
 			

@@ -1,7 +1,5 @@
 package org.ird.unfepi.model;
 
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,8 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.ForeignKey;
 
@@ -43,16 +39,16 @@ public class CenterProgram {
 	@ForeignKey(name = "centerprogram_healthProgramId_healthprogram_programId_FK")
 	private HealthProgram healthProgram;
 
-	@Temporal(TemporalType.TIMESTAMP)
+	/*@Temporal(TemporalType.TIMESTAMP)
 	private Date startDate;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date endDate;
+	private Date endDate;*/
 
 	@Column(nullable = false)
 	private Boolean isActive;
 
-	@Temporal(TemporalType.TIMESTAMP)
+	/*@Temporal(TemporalType.TIMESTAMP)
 	private Date terminateDate;
 
 	private String terminateReason;
@@ -71,7 +67,7 @@ public class CenterProgram {
 	private User lastEditedByUserId;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date lastEditedDate;
+	private Date lastEditedDate;*/
 
 	public Integer getCenterProgramId() {
 		return centerProgramId;
@@ -112,7 +108,7 @@ public class CenterProgram {
 	public void setHealthProgram(HealthProgram healthProgram) {
 		this.healthProgram = healthProgram;
 	}
-
+/*
 	public Date getStartDate() {
 		return startDate;
 	}
@@ -127,7 +123,7 @@ public class CenterProgram {
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
-	}
+	}*/
 
 	public Boolean getIsActive() {
 		return isActive;
@@ -137,7 +133,7 @@ public class CenterProgram {
 		this.isActive = isActive;
 	}
 
-	public Date getTerminateDate() {
+	/*public Date getTerminateDate() {
 		return terminateDate;
 	}
 
@@ -184,5 +180,5 @@ public class CenterProgram {
 	public void setLastEditedDate(Date lastEditedDate) {
 		this.lastEditedDate = lastEditedDate;
 	}
-
+*/
 }

@@ -48,6 +48,10 @@ public class EditHealthProgramController extends DataEditFormController {
 		LoggedInUser user = UserSessionUtils.getActiveUser(request);
 		String[] centersId = request.getParameterValues("vaccinationCenters");
 		
+		for (String string : centersId) {
+			System.out.println(string + " \t");
+		}
+		
 		new HealthProgramValidator().validateHealthProgramVaccinationCenters(hp, centersId, results, false);
 		if(results.hasErrors()){	
 			return showForm(modelAndView, "dataForm");	

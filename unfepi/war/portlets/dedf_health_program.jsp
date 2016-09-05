@@ -68,7 +68,7 @@ function submitThisForm() {
 			<td><select multiple="multiple" id="vaccinationCenters" name="vaccinationCenters" class="requiredField">
 					<c:forEach items="${vaccinationCenters}" var="center">
 						<c:forEach items="${centerProgram}" var="prog">
-							<c:if test="${prog.vaccinationCenter.mappedId == center.mappedId }">
+							<c:if test="${prog.vaccinationCenter.mappedId == center.mappedId && prog.isActive == true}">
 								<c:set var="found" value="true" />
 							</c:if>
 						</c:forEach>
