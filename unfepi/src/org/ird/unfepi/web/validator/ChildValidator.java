@@ -29,7 +29,7 @@ public class ChildValidator implements Validator{
 					ew.getCompleteCourseFromCenter(), ew.getCenterVisit(), vaccineSchedule, null, error, sc);
 			
 			CenterProgram centerProgram = (CenterProgram) sc.getCustomQueryService().getDataByHQL("from CenterProgram where vaccinationCenterId ="+ ew.getCenterVisit().getVaccinationCenterId() +" and healthProgramId =" + ew.getCenterVisit().getHealthProgramId()).get(0);
-			List<Round> roundL = sc.getCustomQueryService().getDataByHQL("from Round where centerProgramId =" + centerProgram.getCenterProgramId() +" and isActive = 1");
+			List<Round> roundL = sc.getCustomQueryService().getDataByHQL("from Round where healthProgramId =" + centerProgram.getHealthProgramId() +" and isActive = 1");
 			if(roundL == null || roundL.size() == 0){
 				error.reject("", null, "round info. not found for the selected health program in the selected vaccination center");
 			}
