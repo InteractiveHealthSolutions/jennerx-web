@@ -129,12 +129,11 @@ public class MetadataService
 		}
 	}
 	
-	@GET
+	@POST
 	@Path("/users")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String metadataUser(HttpServletRequest req) {
-		String jsonString = req.getParameter(RequestElements.METADATA_USERS);
+	public String metadataUser(String jsonString) {
 		String response = "";
 		try {
 			JSONObject jsonObject = new JSONObject(jsonString);
