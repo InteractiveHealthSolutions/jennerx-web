@@ -8,6 +8,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.ird.unfepi.constants.WebGlobals;
@@ -129,11 +130,11 @@ public class MetadataService
 		}
 	}
 	
-	@POST
+	@GET
 	@Path("/users")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String metadataUser(String jsonString) {
+	public String metadataUser(@QueryParam("users") String jsonString) {
 		String response = "";
 		try {
 			JSONObject jsonObject = new JSONObject(jsonString);
