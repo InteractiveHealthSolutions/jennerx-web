@@ -8,13 +8,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.ird.unfepi.DataEditForm;
 import org.ird.unfepi.DataEditFormController;
+import org.ird.unfepi.GlobalParams;
 import org.ird.unfepi.constants.SystemPermissions;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.LoggedInUser;
 import org.ird.unfepi.context.ServiceContext;
+import org.ird.unfepi.model.HealthProgram;
 import org.ird.unfepi.model.Round;
 import org.ird.unfepi.utils.UserSessionUtils;
+import org.ird.unfepi.web.validator.RoundValidator;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,13 +44,17 @@ public class EditRound  extends DataEditFormController{
 	public ModelAndView onSubmit(@ModelAttribute("command")Round round, BindingResult results,
 			HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView) throws Exception {
 		
+		new RoundValidator().validate(round, results);
+		if(results.hasErrors()){	
+			return showForm(modelAndView, "dataForm");	
+		}
+		
 		if ( round.getIsActive() == true){
 			activateRound();	
 		}
 		
 		ServiceContext sc = Context.getServices();
 		LoggedInUser user = UserSessionUtils.getActiveUser(request);
-		String centerId = request.getParameter("vaccinationCenterId");
 		String programId = request.getParameter("healthProgramId");
 		Integer roundId = Integer.parseInt(request.getParameter("roundId"));
 		
@@ -58,7 +66,7 @@ public class EditRound  extends DataEditFormController{
 			sc.getCustomQueryService().update(round);
 			sc.commitTransaction();
 			
-			return new ModelAndView(new RedirectView("viewHealthProgramRounds.htm?centerId="+centerId+"&programId="+programId));
+			return new ModelAndView(new RedirectView("viewHealthProgramRounds.htm?programId="+programId));
 			
 		} catch (Exception e) {
 			sc.rollbackTransaction();
@@ -101,13 +109,15 @@ public class EditRound  extends DataEditFormController{
 			try {
 				List<Round> roundL = sc.getCustomQueryService().getDataByHQL("from Round where roundId =" + roundId);
 				if (roundL == null || roundL.size() == 0) {
-					request.setAttribute("errorMessage", "Oops .. Some error occurred. HealthProgram Round was not found.");
+					request.setAttribute("errorMessage", "Oops .. Some error occurred. Round was not found.");
 				} else {
 					round = roundL.get(0);
+					
+					System.out.println(round.getHealthProgram().getName());
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				request.setAttribute("errorMessage", "Oops .. Some exception was thrown. Error message is:"+e.getMessage());
+				request.setAttribute("errorMessage","Oops .. Some exception was thrown. Error message is:"+ e.getMessage());
 			} finally {
 				sc.closeSession();
 			}

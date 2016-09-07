@@ -91,10 +91,13 @@ public class FollowupVaccinationController extends DataEntryFormController{
 				sc.getChildService().updateChild(c);
 			}
 			
-			Integer centerProgramId = (Integer) sc.getCustomQueryService().getDataByHQL("select centerProgramId from CenterProgram where vaccinationCenterId ="+ centerVisit.getVaccinationCenterId() +" and healthProgramId =" + centerVisit.getHealthProgramId()).get(0);
-			List<Round> roundL = sc.getCustomQueryService().getDataByHQL("from Round where centerProgramId =" + centerProgramId +" and isActive = 1"); 
-			Integer roundId = roundL.get(0).getRoundId();
+//			Integer centerProgramId = (Integer) sc.getCustomQueryService().getDataByHQL("select centerProgramId from CenterProgram where vaccinationCenterId ="+ centerVisit.getVaccinationCenterId() +" and healthProgramId =" + centerVisit.getHealthProgramId()).get(0);
+//			List<Round> roundL = sc.getCustomQueryService().getDataByHQL("from Round where centerProgramId =" + centerProgramId +" and isActive = 1"); 
+//			Integer roundId = roundL.get(0).getRoundId();
 			
+			Integer healthProgramId = centerVisit.getHealthProgramId();
+			Integer roundId = (Integer) sc.getCustomQueryService().getDataByHQL("select roundId from Round where isActive = true and healthProgramId = " + healthProgramId).get(0);
+						
 			ControllerUIHelper.doFollowup(DataEntrySource.WEB, centerVisit, vaccineSchedule, roundId, dateFormStart, user.getUser(), sc);
 			sc.commitTransaction();
 			
@@ -137,7 +140,7 @@ public class FollowupVaccinationController extends DataEntryFormController{
 			sc.closeSession();
 		}
 		
-		vcv.setHealthProgramId(previousVaccination.getRound().getCenterProgram().getHealthProgramId());
+		vcv.setHealthProgramId(previousVaccination.getRound().getHealthProgramId());
 		vcv.setVaccinationCenterId(previousVaccination.getVaccinationCenterId());
 		vcv.setVaccinatorId(previousVaccination.getVaccinatorId());
 		vcv.setChildId(child.getMappedId());

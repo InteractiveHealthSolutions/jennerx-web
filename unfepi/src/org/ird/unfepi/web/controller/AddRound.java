@@ -15,9 +15,11 @@ import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.LoggedInUser;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.CenterProgram;
+import org.ird.unfepi.model.HealthProgram;
 import org.ird.unfepi.model.Round;
 import org.ird.unfepi.model.VaccinationCenter;
 import org.ird.unfepi.utils.UserSessionUtils;
+import org.ird.unfepi.web.validator.RoundValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -38,9 +40,8 @@ public class AddRound extends DataEntryFormController {
 	
 	@RequestMapping(method=RequestMethod.GET)
 	public ModelAndView addHealthProgramView(HttpServletRequest request, ModelAndView modelAndView){
+		
 		modelAndView.addObject("command", new Round());
-//		modelAndView.addObject("center", request.getParameter("center"));
-//		modelAndView.addObject("program", request.getParameter("program"));
 		return showForm(modelAndView, "dataForm");		
 	}
 	
@@ -51,33 +52,31 @@ public class AddRound extends DataEntryFormController {
 		ServiceContext sc = Context.getServices();
 		LoggedInUser user = UserSessionUtils.getActiveUser(request);
 		
-		String centerId = request.getParameter("centerId");
+		new RoundValidator().validate(round, results);
+		if(results.hasErrors()){	
+			return showForm(modelAndView, "dataForm");	
+		}
+		
 		String programId = request.getParameter("programId");
 		
 		try {
-			List<CenterProgram> cpL = sc.getCustomQueryService().getDataByHQL("from CenterProgram where vaccinationCenterId = " + centerId + " and healthProgramId = " + programId);			
-			if(cpL == null || cpL.size() == 0){
-				throw new Exception("record not found for health program Id"+ programId + " in vaccination center Id" + centerId + " or vice versa \n");
-			} else {
-				
-				if ( round.getIsActive() == true){
-					List<Round> active_rounds = sc.getCustomQueryService().getDataByHQL("from Round where isActive = true");
-					
-					for (Round r : active_rounds) {
-						r.setIsActive(false);
-						sc.getCustomQueryService().update(r);
-					}
+			if ( round.getIsActive() == true){
+				List<Round> active_rounds = sc.getCustomQueryService().getDataByHQL("from Round where isActive = true and healthProgramId = " + programId);
+
+				for (Round r : active_rounds) {
+					r.setIsActive(false);
+					sc.getCustomQueryService().update(r);
 				}
-				
-				Integer cpId = cpL.get(0).getCenterProgramId();
-				round.setCenterProgramId(cpId);
-				round.setCreatedDate(new Date());
-				round.setCreatedByUserId(user.getUser());
-				sc.getCustomQueryService().save(round);
-				sc.commitTransaction();
 			}
-			
-			return new ModelAndView(new RedirectView("viewHealthProgramRounds.htm?centerId="+centerId+"&programId="+programId));
+
+			//Integer cpId = cpL.get(0).getCenterProgramId();
+			//round.setCenterProgramId(cpId);
+			round.setCreatedDate(new Date());
+			round.setCreatedByUserId(user.getUser());
+			sc.getCustomQueryService().save(round);
+			sc.commitTransaction();
+
+			return new ModelAndView(new RedirectView("viewHealthProgramRounds.htm?programId="+programId));
 		} catch (Exception e) {
 			sc.rollbackTransaction();
 			e.printStackTrace();
@@ -95,21 +94,18 @@ public class AddRound extends DataEntryFormController {
 	{
 		ServiceContext sc = Context.getServices();
 		try {
-			String centerId = request.getParameter("centerId");
 			String programId = request.getParameter("programId");
-			
-			List<CenterProgram> cpL = sc.getCustomQueryService().getDataByHQL("from CenterProgram where vaccinationCenterId = " + centerId + " and healthProgramId = " + programId);			
-			if(cpL == null || cpL.size() == 0){
-				throw new Exception("record not found for health program Id"+ programId + " in vaccination center Id" + centerId + " or vice versa \n");
-			} else {
-				model.addAttribute("centerprogram", cpL.get(0));
-			}
 
+			List<HealthProgram> records = sc.getCustomQueryService().getDataByHQL("from HealthProgram where programId = " + programId);
+			if(records != null && records.size() > 0){
+				model.addAttribute("healthprogram", records.get(0));
+			} else {
+				throw new Exception("healthprogram not found for programId " + programId);
+			}			
 		} catch (Exception e) {
 			e.printStackTrace();
 			GlobalParams.FILELOGGER.error(formType.name(), e);
 			request.setAttribute("errorMessagev", "An error occurred while retrieving reference data list. Error message is:"+e.getMessage());
-
 		} finally {
 			sc.closeSession();
 		}	

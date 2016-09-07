@@ -1280,9 +1280,9 @@ public class ControllerUIHelper {
 			cp.setHealthProgramId(hpId);
 			cp.setVaccinationCenterId(Integer.parseInt(centerId));
 			cp.setIsActive(true);
-			cp.setStartDate(new Date());
-			cp.setCreatedDate(new Date());
-			cp.setCreatedByUserId(user);
+//			cp.setStartDate(new Date());
+//			cp.setCreatedDate(new Date());
+//			cp.setCreatedByUserId(user);
 			sc.getHealthProgramService().saveCenterProgram(cp);
 		}
 	}
@@ -1295,20 +1295,31 @@ public class ControllerUIHelper {
 		List<String> centersIdL = new ArrayList<String>(Arrays.asList(centersId));
 		
 		for (Iterator<CenterProgram> cp_it = centerProgramL.iterator(); cp_it.hasNext();) {
+			
 			CenterProgram nextCp = cp_it.next();
 			for (Iterator<String> cId_it = centersIdL.iterator(); cId_it.hasNext();) {
 				String nextCid = cId_it.next();
 				if (nextCp.getVaccinationCenterId() == Integer.parseInt(nextCid)) {
-					cp_it.remove();
-					cId_it.remove();
+					
+						cId_it.remove();
+						if(nextCp.getIsActive() == true){
+							cp_it.remove();
+						}
+							
 				}
 			}
 		}
 		
 		for (CenterProgram cp : centerProgramL) {
-			cp.setIsActive(false);
-			cp.setLastEditedByUserId(user);
-			cp.setLastEditedDate(new Date());
+			
+			if(cp.getIsActive() == false){
+				cp.setIsActive(true);
+			}
+			else { 
+				cp.setIsActive(false);
+			}			
+//			cp.setLastEditedByUserId(user);
+//			cp.setLastEditedDate(new Date());
 			sc.getCustomQueryService().update(cp);
 		}
 		for (String centerId : centersIdL) {
@@ -1316,9 +1327,9 @@ public class ControllerUIHelper {
 			cp.setHealthProgramId(hp.getProgramId());
 			cp.setVaccinationCenterId(Integer.parseInt(centerId));
 			cp.setIsActive(true);
-			cp.setStartDate(new Date());
-			cp.setCreatedDate(new Date());
-			cp.setCreatedByUserId(user);
+//			cp.setStartDate(new Date());
+//			cp.setCreatedDate(new Date());
+//			cp.setCreatedByUserId(user);
 			sc.getHealthProgramService().saveCenterProgram(cp);
 		}
 	}

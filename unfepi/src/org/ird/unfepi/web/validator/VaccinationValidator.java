@@ -30,7 +30,7 @@ public class VaccinationValidator implements Validator {
 			ValidatorUtils.validateFollowupForm(DataEntrySource.WEB, vaccineSchedule, centerVisit, null, errors, sc);
 			
 			CenterProgram centerProgram = (CenterProgram) sc.getCustomQueryService().getDataByHQL("from CenterProgram where vaccinationCenterId ="+ centerVisit.getVaccinationCenterId() +" and healthProgramId =" + centerVisit.getHealthProgramId()).get(0);
-			List<Round> roundL = sc.getCustomQueryService().getDataByHQL("from Round where centerProgramId =" + centerProgram.getCenterProgramId() +" and isActive = 1");
+			List<Round> roundL = sc.getCustomQueryService().getDataByHQL("from Round where healthProgramId =" + centerProgram.getHealthProgramId()+" and isActive = 1");
 			if(roundL == null || roundL.size() == 0){
 				errors.reject("", null, "round info. not found for the selected health program in the selected vaccination center");
 			}

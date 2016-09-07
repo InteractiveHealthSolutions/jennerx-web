@@ -1,7 +1,7 @@
 <%@include file="/WEB-INF/template/include.jsp"%>
 
 <script type="text/javascript">
-<!--
+
 $(function(){
 	$('#isActive').keydown(false);
 });
@@ -49,41 +49,7 @@ function validateFields(){
 		return false;
 	}
 	
-	var rp_ss_date;
-	var rp_se_date;
-	
-	if( dateDifference(convertToDate($('#startDate').val()), '${command.centerProgram.startDate}') >= 0 ){
-		rp_ss_date = true;
-	}else{
-		rp_ss_date = false;
-		alert("round start date should be greater than or equal to program start date");
-		return false;
-	}	
-	if( dateDifference('${command.centerProgram.endDate}', convertToDate($('#startDate').val())) >= 0 ){
-		rp_se_date = true;
-	}else{
-		rp_se_date = false;
-		alert("round start date should be less than or equal to program end date");
-		return false;
-	}
-	
-	var rp_es_date;
-	var rp_ee_date;
-	
-	if( dateDifference(convertToDate($('#endDate').val()), '${command.centerProgram.startDate}') >= 0 ){
-		rp_es_date = true;
-	}else{
-		rp_es_date = false;
-		alert("round end date should be greater than or equal to program start date");
-		return false;
-	}	
-	if( dateDifference('${command.centerProgram.endDate}', convertToDate($('#endDate').val())) >= 0 ){
-		rp_ee_date = true;
-	}else{
-		rp_ee_date = false;
-		alert("round end date should be less than or equal to program end date");
-		return false;
-	}
+
 	
 	var is_end_date_passed = false;
 	
@@ -109,7 +75,8 @@ function validateFields(){
 		validName = true;
 	}
 	
-	if(rp_ss_date && rp_se_date && rp_es_date && rp_ee_date && !isEmptyField && !is_end_date_passed && validName){
+// 	rp_ss_date && rp_se_date && rp_es_date && rp_ee_date
+	if(!isEmptyField && !is_end_date_passed && validName){
 		return true;
 	}
 	
@@ -125,21 +92,25 @@ function subfrm(){
 function submitThisForm() {
 	document.getElementById("frm").submit();
 }
-//-->
 </script>
 
 <form method="post" id="frm" name="frm">
 <input type="hidden" name="roundId" value="${command.roundId}" />
-<input type="hidden" name="centerProgramId" value="${command.centerProgramId}" />
-<input type="hidden" name="vaccinationCenterId" value="${command.centerProgram.vaccinationCenterId}" />
-<input type="hidden" name="healthProgramId" value="${command.centerProgram.healthProgramId}" />
 <br>
 <table class="denform-h">
 <tr><td colspan="2"><br></td></tr>
-<tr><td>Vaccination Center</td><td><b>${command.centerProgram.vaccinationCenter.name}</b></td></tr>
-<tr><td>Health Program</td><td><b>${command.centerProgram.healthProgram.name}</b></td></tr>
-<tr><td></td><td>[<fmt:formatDate value="${command.centerProgram.startDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/> : <fmt:formatDate value="${command.centerProgram.endDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/>]</td></tr>
-<tr><td>Round Name</td><td><input type="text" name="name" value="${command.name}" onkeypress="return isCharOrDigit(event)" class="requiredField" > </td></tr>
+<tr><td colspan="2">
+<spring:hasBindErrors name="command">
+	<c:forEach var="error" items="${errors.allErrors}">
+		<p style="font-style: italic; color: red;font-size: small;"><spring:message message="${error}" /></p>
+	</c:forEach>
+</spring:hasBindErrors>
+</td></tr>
+
+<tr><td>Health Program</td><td>
+<input type="text" name="healthProgram.name" value="${command.healthProgram.name}" readonly/>
+<input type="hidden" name="healthProgramId" value="${command.healthProgramId}" class="requiredField"/></td></tr>
+<tr><td>Round Name</td><td><input type="text" name="name" id="r_name" value="${command.name}" onkeypress="return isCharOrDigit(event)" class="requiredField" > </td></tr>
 <tr><td>Start Date</td><td><input id="startDate" name="startDate" value="<fmt:formatDate value="${command.startDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/>" class="calendarbox requiredField" onkeypress="return isDateDigit(event)"/></td></tr>
 <tr><td>End Date</td><td><input id="endDate" name="endDate" value="<fmt:formatDate value="${command.endDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/>" class="calendarbox requiredField" onkeypress="return isDateDigit(event)"/></td></tr>
 <tr><td>Is Active</td>

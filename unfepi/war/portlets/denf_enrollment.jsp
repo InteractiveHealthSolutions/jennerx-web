@@ -127,32 +127,31 @@ ul{
 	}
 	
 	function centerChanged() {
-		unSelecteHealthProgram();
-		getCenterProgram();		
 	}
 	
-	function unSelecteHealthProgram(){
-		$("#healthProgramId option:selected").removeAttr("selected");
-		$("#healthProgramId").val("");
-		$("#healthProgramId option").hide();
+	function healthProgramChanged(){
+		unSelecteSites();
+		getSites();
 	}
 	
-	function getCenterProgram(){
-		$.get( "addchild/programList/"+$('#vaccinationCenterId').val()+".htm" , function( data ) {
-			  
-			  if(data.replace(/\[|\]|\s/gi,"").split(",").toString().length == 0){
-				  alert("no health program found in '" + $('#vaccinationCenterId option:selected').text()+"'");
-			  }
-			  
-			  var current_Prog = data.replace(/\[|\]|\s/gi,"").split(",");
-			  
-			  $.each(current_Prog, function(index, value){
-				  $("#healthProgramId option").each(function(){
-					  if (value == $(this).attr("id").replace(/\D/g,"")){
-						  $('#hp'+value).show();
+	function unSelecteSites(){
+		$("#vaccinationCenterId option:selected").removeAttr("selected");
+		$("#vaccinationCenterId").val("");
+		$("#vaccinationCenterId option").hide();
+	}
+	
+	function getSites(){
+		$.get( "addchild/siteList/"+$('#healthProgramId').val()+".htm" , function( data ) {
+			
+			var centers = $.parseJSON(data);
+			$.each(centers, function(index, value){
+				$("#vaccinationCenterId option").each(function(){
+					 if (value == $(this).attr("id").replace(/\D/g,"")){
+						  $('#vc'+value).show();
 					  }
-				  });
-			  });
+				});
+			});
+			
 		});
 	}
 
@@ -160,18 +159,11 @@ ul{
 	}
 
 	function centerVisitDateChanged() {
-// 		$('#vaccinationCenterId').val('');
-		$('#birthdate').val('');
-		
-		// 	DWRVaccineService.overrideSchedule(null, '${command.centerVisit.uuid}', function(result) {
-		// 		console.log(result);
-		// 	});
-		
+		$('#birthdate').val('');		
 	}
 	
 	function birthDate_Changed() {
 		
-		console.log("birthDateChanged called .... ");
 		$(".retro_vaccine_in").each(function(index, element) {
 			$(this).prop('checked', false);
 		});
@@ -203,10 +195,10 @@ ul{
 <script type="text/javascript">
 	$(function(){
 		
-		$("#healthProgramId option").hide();
-		
-		if($('#vaccinationCenterId').val().length != 0){
-			getCenterProgram();	
+		$("#vaccinationCenterId option").hide();
+
+		if($('#healthProgramId').val().length != 0){
+			getSite();	
 		}
 		
 		$('.tab-section').hide();
@@ -313,13 +305,27 @@ ul{
             </spring:bind>
 		</td>
 	</tr>
+	
+	<tr>
+		<td>Health Program<span class="mendatory-field">*</span></td>
+		<td><spring:bind path="command.centerVisit.healthProgramId">
+	            <select id="healthProgramId" name="centerVisit.healthProgramId" bind-value="${status.value}" onchange="healthProgramChanged();" class="requiredField">
+	               	<option id=""></option>
+	            	<c:forEach items="${healthprograms}" var="hp"> 
+	            		<option id="hp${hp.programId}" value="${hp.programId}">${hp.name}</option>
+	            	</c:forEach> 
+	            </select>
+	            <span class="error-message"><c:out	value="${status.errorMessage}" /></span> 
+            </spring:bind>
+		</td>
+	</tr>
 	<tr>
 		<td><spring:message code="label.vaccinationCenter"/><span class="mendatory-field">*</span></td>
 		<td><spring:bind path="command.centerVisit.vaccinationCenterId">
 	            <select id="vaccinationCenterId" name="centerVisit.vaccinationCenterId" bind-value="${status.value}" onchange="centerChanged();" class="requiredField">
-	               	<option></option>
+	               	<option id=""></option>
 	            	<c:forEach items="${vaccinationCenters}" var="vcenter"> 
-	            	<option value="${vcenter.mappedId}">${vcenter.idMapper.identifiers[0].identifier} : ${vcenter.name}</option>
+	            	<option id="vc${vcenter.mappedId}" value="${vcenter.mappedId}">${vcenter.idMapper.identifiers[0].identifier} : ${vcenter.name}</option>
 	            	</c:forEach> 
 	            </select>
 	            <span class="error-message"><c:out	value="${status.errorMessage}" /></span> 
@@ -328,19 +334,8 @@ ul{
 			</script>
 		</td>
 	</tr>
-	<tr>
-		<td>Health Program<span class="mendatory-field">*</span></td>
-		<td><spring:bind path="command.centerVisit.healthProgramId">
-	            <select id="healthProgramId" name="centerVisit.healthProgramId" bind-value="${status.value}" class="requiredField">
-	               	<option id=""></option>
-	            	<c:forEach items="${healthprograms}" var="hprog"> 
-	            		<option id="hp${hprog.programId}" value="${hprog.programId}">${hprog.name}</option>
-	            	</c:forEach> 
-	            </select>
-	            <span class="error-message"><c:out	value="${status.errorMessage}" /></span> 
-            </spring:bind>
-		</td>
-	</tr>
+	
+	
 	<tr>
     	<td><spring:message code="label.childIdentifier"></spring:message><span class="mendatory-field">*</span></td>
         <td>

@@ -136,14 +136,16 @@ public class ProgramMetaDataServiceHelper {
 	{
 		String[] columns = new String[] { RequestElements.METADATA_FIELD_ROUND_ID,
 				RequestElements. METADATA_FIELD_ROUND_NAME,
-				RequestElements.METADATA_CENTERPROGRAM_VACCINATIONCENTERID,
 				RequestElements.METADATA_CENTERPROGRAM_HEALTHPROGRAMID,
 				RequestElements.METADATA_FIELD_ROUND_ISACTIVE};
-		String table = "location";
+		String table = "round";
 
 		Integer programId = json.optInt("programId");		
-		String query = "select r.roundId, r.name, cp.vaccinationCenterId, cp.healthProgramId, r.isActive from round r "
-				+ "join centerprogram cp on r.centerProgramId = cp.centerProgramId where cp.healthProgramId = "+ programId;
+//		String query = "select r.roundId, r.name, cp.vaccinationCenterId, cp.healthProgramId, r.isActive from round r "
+//				+ "join centerprogram cp on r.centerProgramId = cp.centerProgramId where cp.healthProgramId = "+ programId;
+		
+		String query = "SELECT " + Arrays.toString(columns).replaceAll("\\[|\\]", "") + " FROM " + table
+				+ " WHERE " + RequestElements.METADATA_CENTERPROGRAM_HEALTHPROGRAMID + " = " + programId;
 		
 		if(json.has(RequestElements.METADATA_ROUND)){
 			fetchAndCompareMetaData(RequestElements.METADATA_ROUND, columns, table, query, response, json);
@@ -185,9 +187,12 @@ public class ProgramMetaDataServiceHelper {
 		Integer programId = json.optInt("programId");
 		
 		String sub_query = "SELECT " + RequestElements.METADATA_CENTERPROGRAM_VACCINATIONCENTERID 
-				+ " FROM centerprogram WHERE "+ RequestElements.METADATA_CENTERPROGRAM_HEALTHPROGRAMID + " = " + programId;
+				+ " FROM centerprogram WHERE "+ RequestElements.METADATA_CENTERPROGRAM_HEALTHPROGRAMID + " = " + programId 
+				+ " and isActive = true";
 		String query = "SELECT " + Arrays.toString(columns).replaceAll("\\[|\\]", "") + " FROM " + table
 				+ " WHERE " + RequestElements.METADATA_FIELD_VACCINATION_CENTRE_ID + " IN( " + sub_query + ")";
+		
+		System.out.println("\n" + query);
 		
 		if(json.has(RequestElements.METADATA_VACCINATION_CENTRES)){
 			fetchAndCompareMetaData(RequestElements.METADATA_VACCINATION_CENTRES, columns, table, query, response, json);
@@ -209,8 +214,10 @@ public class ProgramMetaDataServiceHelper {
 		
 		String query = "SELECT loc.locationId, loc.fullName, loc.parentLocation, loc.locationType from location AS loc, "
 				+ "(SELECT locationId from identifier where mappedId in"
-				+ "(SELECT vaccinationCenterId FROM centerprogram WHERE healthProgramId = "+ programId +") )AS temp "
-				+ "WHERE loc.locationId = temp.locationId";
+				+ "(SELECT vaccinationCenterId FROM centerprogram WHERE healthProgramId = "+ programId +" and isActive = true) )AS temp "
+				+ "WHERE loc.locationId = temp.locationId GROUP BY loc.locationId";
+		
+		System.out.println("\n" + query);
 		
 		if(json.has(RequestElements.METADATA_LOCATION)){
 			fetchAndCompareMetaData(RequestElements.METADATA_LOCATION, columns, table, query, response, json);
