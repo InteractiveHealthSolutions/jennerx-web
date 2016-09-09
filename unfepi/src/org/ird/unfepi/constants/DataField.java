@@ -71,6 +71,7 @@ public class DataField {
 	public static final String VACCINATOR_QUALIFICATION = "vaccinator.qualification";
 	
 	public static final String ADDRESS_ADDRESS1 = "address.address1";
+	public static final String ADDRESS_ADDRESS2 = "address.address2";
 	public static final String ADDRESS_TOWN = "address.town";
 	public static final String ADDRESS_UC = "address.uc";
 	public static final String ADDRESS_LANDMARK = "address.landmark";

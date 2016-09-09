@@ -1053,20 +1053,25 @@ public class ValidatorUtils {
 //			putError(dataEntrySource, "Child`s " + ErrorMessages.NAME_INVALID, mobileErrors, webErrors, DataField.CHILD_FIRST_NAME, useFieldPrefix);
 //		}
 		
-		if (StringUtils.isEmptyOrWhitespaceOnly(child.getFirstName()) || !DataValidation.validate(REG_EX.NAME_CHARACTERS, child.getFirstName(), 3, 40)) {
+		if (StringUtils.isEmptyOrWhitespaceOnly(child.getFirstName()) || !DataValidation.validate(REG_EX.NAME_CHARACTERS, child.getFirstName(), 2, 30)) {
 			putError(dataEntrySource, "Child`s first " + ErrorMessages.NAME_INVALID, mobileErrors, webErrors, DataField.CHILD_FIRST_NAME, useFieldPrefix);
 		}
 		
-		if (StringUtils.isEmptyOrWhitespaceOnly(child.getLastName()) || !DataValidation.validate(REG_EX.NAME_CHARACTERS, child.getLastName(), 3, 40)) {
+//		if(child.getFirstName().split("\\s").length > 2){
+//			putError(dataEntrySource, "Child`s first " + "Name must have only one space", mobileErrors, webErrors, DataField.CHILD_FIRST_NAME, useFieldPrefix);
+//		}
+		
+		if (StringUtils.isEmptyOrWhitespaceOnly(child.getLastName()) || !DataValidation.validate(REG_EX.NAME_CHARACTERS, child.getLastName(), 2, 30)) {
 			putError(dataEntrySource, "Child`s last " + ErrorMessages.NAME_INVALID, mobileErrors, webErrors, DataField.CHILD_LAST_NAME, useFieldPrefix);
 		}
 		
-
-		if (!DataValidation.validate(REG_EX.NAME_CHARACTERS, child.getMotherFirstName(), 3, 40)) {
-			putError(dataEntrySource, "Mother`s " + ErrorMessages.NAME_INVALID, mobileErrors, webErrors, DataField.CHILD_MOTHER_FIRST_NAME, useFieldPrefix);
+		if(child.getMotherFirstName() != null && child.getMotherFirstName().length() > 0){
+			if (!DataValidation.validate(REG_EX.NAME_CHARACTERS, child.getMotherFirstName(), 2, 30)) {
+				putError(dataEntrySource, "Mother`s " + ErrorMessages.NAME_INVALID, mobileErrors, webErrors, DataField.CHILD_MOTHER_FIRST_NAME, useFieldPrefix);
+			}
 		}
 
-		if (child.getGender() == null || child.getGender().equals(Gender.UNKNOWN)) {
+		if (child.getGender() != null && child.getGender().equals(Gender.UNKNOWN)) {
 			putError(dataEntrySource, ErrorMessages.GENDER_INVALID, mobileErrors, webErrors, DataField.CHILD_GENDER, useFieldPrefix);
 		}
 	}
@@ -1208,6 +1213,13 @@ public class ValidatorUtils {
 		
 		if (StringUtils.isEmptyOrWhitespaceOnly(address.getAddress1())) {
 			putError(dataEntrySource, "village must be specified", mobileErrors, error, DataField.ADDRESS_ADDRESS1, useFieldPrefix);
+		}
+		if (StringUtils.isEmptyOrWhitespaceOnly(address.getAddress2())) {
+			putError(dataEntrySource, "location must be specified", mobileErrors, error, DataField.ADDRESS_ADDRESS2, useFieldPrefix);
+		}
+		
+		if (address.getAddress1().length() > 15 || address.getAddress1().length() < 3 ) {
+			putError(dataEntrySource, "invalid length, should have 3 to 15 characters", mobileErrors, error, DataField.ADDRESS_ADDRESS1, useFieldPrefix);
 		}
 		
 //		if (StringUtils.isEmptyOrWhitespaceOnly(address.getTown())) {

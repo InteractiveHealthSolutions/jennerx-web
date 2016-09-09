@@ -1,27 +1,13 @@
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 import java.util.Properties;
+
+import net.jmatrix.eproperties.EProperties;
 
 import org.ird.unfepi.GlobalParams;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
-import org.ird.unfepi.model.CenterProgram;
-import org.ird.unfepi.model.HealthProgram;
-import org.ird.unfepi.model.Round;
-import org.ird.unfepi.model.Vaccination;
-import org.ird.unfepi.model.VaccinationCalendar;
-import org.ird.unfepi.model.VaccinationCenter;
-import org.ird.unfepi.rest.elements.RequestElements;
 import org.ird.unfepi.utils.IRUtils;
-import org.ird.unfepi.web.utils.IMRUtils;
-
-import net.jmatrix.eproperties.EProperties;
 
 
 public class ProgramTest {
@@ -91,6 +77,10 @@ public class ProgramTest {
 //		System.out.println(Arrays.toString(columns).replaceAll("\\[|\\]", ""));
 //		
 //		System.out.println("_*_*_*_*_*");
+		
+		String str = /*"    apple mango banana orange"*/ "a  b ";
+		System.out.println(str.indexOf(' '));
+		System.out.println(Arrays.toString(str.split("\\s")) + " length- " + str.split("\\s").length);
 
 	}
 }
