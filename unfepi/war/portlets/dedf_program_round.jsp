@@ -54,11 +54,12 @@ function validateFields(){
 	var is_end_date_passed = false;
 	
 // 	var dateStr = $.datepicker.formatDate('dd-mm-yy', new Date());
-	
-	if (dateDifference(convertToDate($.datepicker.formatDate('dd-mm-yy', new Date())), convertToDate($('#endDate').val())) > 0 ){
-		is_end_date_passed = true; 
-		alert("end date has passed !");
-		return false;
+	if($('#endDate').val().length > 0 ){
+		if (dateDifference(convertToDate($.datepicker.formatDate('dd-mm-yy', new Date())), convertToDate($('#endDate').val())) > 0 ){
+			is_end_date_passed = true; 
+			alert("end date has passed !");
+			return false;
+		}
 	}
 	
 	if(dateDifference(convertToDate($('#endDate').val()), convertToDate($('#startDate').val())) < 0 ){
@@ -107,13 +108,13 @@ function submitThisForm() {
 </spring:hasBindErrors>
 </td></tr>
 
-<tr><td>Health Program</td><td>
+<tr><td>Health Program<span class="mendatory-field">*</span></td><td>
 <input type="text" name="healthProgram.name" value="${command.healthProgram.name}" readonly/>
 <input type="hidden" name="healthProgramId" value="${command.healthProgramId}" class="requiredField"/></td></tr>
-<tr><td>Round Name</td><td><input type="text" name="name" id="r_name" value="${command.name}" onkeypress="return isCharOrDigit(event)" class="requiredField" > </td></tr>
-<tr><td>Start Date</td><td><input id="startDate" name="startDate" value="<fmt:formatDate value="${command.startDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/>" class="calendarbox requiredField" onkeypress="return isDateDigit(event)"/></td></tr>
-<tr><td>End Date</td><td><input id="endDate" name="endDate" value="<fmt:formatDate value="${command.endDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/>" class="calendarbox requiredField" onkeypress="return isDateDigit(event)"/></td></tr>
-<tr><td>Is Active</td>
+<tr><td>Round Name<span class="mendatory-field">*</span></td><td><input type="text" name="name" id="r_name" value="${command.name}" onkeypress="return isCharOrDigit(event)" class="requiredField" > </td></tr>
+<tr><td>Start Date<span class="mendatory-field">*</span></td><td><input id="startDate" name="startDate" value="<fmt:formatDate value="${command.startDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/>" class="calendarbox requiredField" onkeypress="return isDateDigit(event)"/></td></tr>
+<tr><td>End Date<span class="mendatory-field">*</span></td><td><input id="endDate" name="endDate" value="<fmt:formatDate value="${command.endDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/>" class="calendarbox requiredField" onkeypress="return isDateDigit(event)"/></td></tr>
+<tr><td>Is Active<span class="mendatory-field">*</span></td>
 <td><select id="isActive" name="isActive" class="requiredField">
 <option value="" <c:if test="${empty command.isActive}">selected="selected" </c:if>></option>
 <option value="<%=WebGlobals.BOOLEAN_CONVERTER_TRUE_STRING%>" <c:if test="${command.isActive == true}">selected="selected" </c:if>>Yes</option>

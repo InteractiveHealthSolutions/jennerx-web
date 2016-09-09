@@ -74,7 +74,7 @@ ul{
 }
 
 #submitBtn, #RealContraindication{
-	width: 130px;
+	width: auto;
     height: 30px;
     cursor: pointer;
     background: transparent;

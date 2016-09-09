@@ -29,6 +29,7 @@ public class ViewHealthProgramController extends DataDisplayController  {
 	@RequestMapping(value="/viewHealthProgram.htm", method={RequestMethod.GET,RequestMethod.POST})
 	public ModelAndView handleRequest(HttpServletRequest req,	HttpServletResponse resp) throws Exception {
 		
+		int totalRows=0;
 		ServiceContext sc = Context.getServices();
 		Map<String, Object> model = new HashMap<String, Object>();
 		
@@ -42,7 +43,9 @@ public class ViewHealthProgramController extends DataDisplayController  {
 			programMap.put(hp, cpRecords);
 		}
 		
+		totalRows=hpRecords.size();
 		addModelAttribute(model, "healthprograms", programMap);
+		addModelAttribute(model, "totalRows", totalRows);
 		
 		return showForm(model);
 	}

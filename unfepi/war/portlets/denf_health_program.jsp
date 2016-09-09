@@ -47,31 +47,44 @@ function submitThisForm() {
 		</spring:hasBindErrors>
 		</td></tr>
 		
-		<tr><td colspan="2" height="10px" style="border: none;"></td></tr>
+<!-- 		<tr><td colspan="2" height="10px" style="border: none;"></td></tr> -->
 		<tr>
 			<td>Name<span class="mendatory-field">*</span></td>
-			<td><input type="text" name="name" onkeypress="return isChar(event);"/></td>
+			<td><input type="text" name="name" value="${command.name}" style="width:219px" onkeypress="return isChar(event);"/></td>
 		</tr>
 		<tr>
 			<td>Description</td>
-			<td><textarea rows="2" cols="20" name="description"></textarea></td>
+			<td><textarea rows="2" cols="29" name="description">${command.description}</textarea></td>
 		</tr>
-		<tr>
-			<td>Enrollment Limit</td>
-			<td><input type="number" name="enrollmentLimit" min="0" onkeypress="return isDigit(event);"/></td>
-		</tr>
+<!-- 		<tr> -->
+<!-- 			<td>Enrollment Limit</td> -->
+<!-- 			<td><input type="number" name="enrollmentLimit" min="0" onkeypress="return isDigit(event);"/></td> -->
+<!-- 		</tr> -->
 		
-		<tr><td colspan="2" height="10px" style="border: none;"></td></tr>
+<!-- 		<tr><td colspan="2" height="10px" style="border: none;"></td></tr> -->
 
 		<tr>
-			<td>Vaccination Centers<span class="mendatory-field">*</span></td>
+			<td>Sites<span class="mendatory-field">*</span></td>
 			<td><select multiple="multiple" id="vaccinationCenters" name="vaccinationCenters" class="requiredField">
 					<c:forEach items="${vaccinationCenters}" var="center">
-						<option value="${center.mappedId}">${center.idMapper.identifiers[0].identifier} : ${center.name}</option>
+						<option id="${center.mappedId}" value="${center.mappedId}">${center.idMapper.identifiers[0].identifier} : ${center.name}</option>
 					</c:forEach>
 			</select></td>
 		<script type="text/javascript">
+		
 			$(function() {
+				var selected_vc = ${centers_selected}
+				console.log($.type(selected_vc));
+				if($.type(selected_vc) != 'undefined'){
+	 				$.each(selected_vc, function(index, value){
+					$("#vaccinationCenters option").each(function(){
+						 if (value == $(this).attr("id").replace(/\D/g,"")){
+							 $(this).attr('selected', 'selected');
+						  }
+						});
+					});
+				}
+				
 				$('#vaccinationCenters').multiselect({
 // 				selectedList: '${fn:length(vaccinationCenters)}'
 				});

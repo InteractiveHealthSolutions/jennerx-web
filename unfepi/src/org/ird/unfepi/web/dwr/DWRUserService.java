@@ -1,6 +1,7 @@
 package org.ird.unfepi.web.dwr;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 
@@ -67,6 +68,8 @@ public class DWRUserService {
 		try {
 			User u=sc.getUserService().findUserByUsername(username);
 			u.setClearTextPassword(newPwd);
+			u.setLastEditedDate(new Date());
+			u.setLastEditedByUserId(user.getUser());
 			
 			sc.getUserService().updateUser(u);
 			sc.commitTransaction();

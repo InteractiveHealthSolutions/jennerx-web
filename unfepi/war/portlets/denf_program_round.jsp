@@ -41,15 +41,12 @@ function isDateDigit(e) {
 
 function dateDifference(firstDate, secondDate) {
 	
-// 	console.log('firstDate-secondDate' + firstDate + '  ' + secondDate);
 	var startDay = new Date(firstDate);
 	var endDay = new Date(secondDate);
-// 	console.log('startDay-endDay' + startDay + '  ' + endDay);
 	var millisecondsPerDay = 1000 * 60 * 60 * 24;
 	var millisBetween = startDay.getTime() - endDay.getTime();
 	var days = millisBetween / millisecondsPerDay;
 	
-// 	console.log(Math.floor(days));
 	return Math.floor(days);
 }
 
@@ -68,39 +65,6 @@ function validateFields(){
 		return false;
 	}
 	
-// 	var rp_ss_date;
-// 	var rp_se_date;
-	
-// 	if( dateDifference(convertToDate($('#startDate').val()), '${centerprogram.startDate}') >= 0 ){
-// 		rp_ss_date = true;
-// 	}else{
-// 		rp_ss_date = false;
-// 		alert("round start date should be greater than or equal to program start date");
-// 	}	
-// 	if( dateDifference('${centerprogram.endDate}', convertToDate($('#startDate').val())) >= 0 ){
-// 		rp_se_date = true;
-// 	}else{
-// 		rp_se_date = false;
-// 		alert("round start date should be less than or equal to program end date");
-// 	}
-	
-// 	var rp_es_date;
-// 	var rp_ee_date;
-	
-// 	if( dateDifference(convertToDate($('#endDate').val()), '${centerprogram.startDate}') >= 0 ){
-// 		rp_es_date = true;
-// 	}else{
-// 		rp_es_date = false;
-// 		alert("round end date should be greater than or equal to program start date");
-// 	}	
-// 	if( dateDifference('${centerprogram.endDate}', convertToDate($('#endDate').val())) >= 0 ){
-// 		rp_ee_date = true;
-// 	}else{
-// 		rp_ee_date = false;
-// 		alert("round end date should be less than or equal to program end date");
-// 	}
-	
-	
 	if(dateDifference(convertToDate($('#endDate').val()), convertToDate($('#startDate').val())) < 0 ){
 		alert('end date sholud be greater than or equal to start date');
 		return false;
@@ -109,14 +73,15 @@ function validateFields(){
 	if(dateDifference(convertToDate($('#endDate').val()), convertToDate($('#startDate').val())) < 0 ){
 		alert('end date sholud be greater than or equal to start date');
 		return false;
-	}
-	
+	}	
 	var is_end_date_passed = false;
 	
-	if (dateDifference(convertToDate($.datepicker.formatDate('dd-mm-yy', new Date())), convertToDate($('#endDate').val())) > 0 ){
-		is_end_date_passed = true; 
-		alert("end date has passed !");
-		return false;
+	if($('#endDate').val().length > 0 ){
+		if (dateDifference(convertToDate($.datepicker.formatDate('dd-mm-yy', new Date())), convertToDate($('#endDate').val())) > 0 ){
+			is_end_date_passed = true; 
+			alert("end date has passed !");
+			return false;
+		}
 	}
 	
 	var validName = false;
@@ -158,15 +123,15 @@ function submitThisForm() {
 </td></tr>
 
 <tr><td colspan="2"><br></td></tr>
-<tr><td>Health Program</td><td>
+<tr><td>Health Program<span class="mendatory-field">*</span></td><td>
 <input type="text" value="${healthprogram.name}" readonly/>
 <input type="hidden" name="healthProgramId" value="${healthprogram.programId}" /></td></tr>
-<tr><td>Round Name</td><td><input type="text" id="r_name" name="name" onkeypress="return isChar(event);" class="requiredField" value="${command.name}" > </td></tr>
+<tr><td>Round Name<span class="mendatory-field">*</span></td><td><input type="text" id="r_name" name="name" onkeypress="return isChar(event);" class="requiredField" value="${command.name}" > </td></tr>
 
 
-<tr><td>Start Date</td><td><input id="startDate" name="startDate" class="calendarbox" class="requiredField" onkeypress="return isDateDigit(event)" value="<fmt:formatDate value="${command.startDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/>"/></td></tr>
-<tr><td>End Date</td><td><input id="endDate" name="endDate" class="calendarbox" class="requiredField" onkeypress="return isDateDigit(event)" value="<fmt:formatDate value="${command.endDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/>"/></td></tr>
-<tr><td>Is Active</td>
+<tr><td>Start Date<span class="mendatory-field">*</span></td><td><input id="startDate" name="startDate" class="calendarbox requiredField" onkeypress="return isDateDigit(event)" value="<fmt:formatDate value="${command.startDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/>"/></td></tr>
+<tr><td>End Date<span class="mendatory-field">*</span></td><td><input id="endDate" name="endDate" class="calendarbox requiredField" onkeypress="return isDateDigit(event)" value="<fmt:formatDate value="${command.endDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/>"/></td></tr>
+<tr><td>Is Active<span class="mendatory-field">*</span></td>
 <td><select name="isActive" class="requiredField">
 <option value="" <c:if test="${empty command.isActive}">selected="selected" </c:if>></option>
 <option value="<%=WebGlobals.BOOLEAN_CONVERTER_TRUE_STRING%>" <c:if test="${command.isActive == true}">selected="selected" </c:if> >Yes</option>

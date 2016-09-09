@@ -159,19 +159,32 @@ ul{
 	}
 
 	function centerVisitDateChanged() {
-		$('#birthdate').val('');		
+		$('#birthdate').val('');
+		
+		
+		var difvh = dateDifference(new Date(), convertToDate($('#centerVisitDate').val()));
+		
+		$(".retro_vaccine_date").each(function(index, element) {
+
+			console.log(index + "  " + element + " " + $(this));
+			$(this).datepicker({
+			});
+			
+// 			console.log(difvh + " ---");
+// 			$(this).attr('maxDate', '-'+difvh+'d');
+			
+			
+			
+		});
 	}
 	
 	function birthDate_Changed() {
-		
 		$(".retro_vaccine_in").each(function(index, element) {
 			$(this).prop('checked', false);
 		});
-		
 		$(".retro_vaccine_date").each(function(index, element) {
 			$(this).val('');
 		});
-
 	}
 
 	function subfrm() {
@@ -184,8 +197,6 @@ ul{
 		document.getElementById("frm").submit();
 	}
 </script>
-
-
 
 <ul id="tabs">
     <li><a id="t1" href="#tab1">biodata</a></li>
@@ -369,7 +380,7 @@ ul{
 	<tr>
 		<td><input id="retro_vaccine${va.vaccineId}" name="retro_vaccine" value="${va.fullName}" readonly="readonly" style="border: hidden;"/></td>
 		<td><input id="retro_vaccine_in${va.vaccineId}" name="retro_vaccine_in" class="retro_vaccine_in" type="checkbox" /></td>
-		<td><input id="retro_date${va.vaccineId}" name="retro_vaccine_date" maxDate="+0d" class="calendarbox retro_vaccine_date" placeholder="dd-MM-yyyy" disabled /></td>  	
+		<td><input id="retro_date${va.vaccineId}" name="retro_vaccine_date" class="calendarbox retro_vaccine_date" placeholder="dd-MM-yyyy" disabled /></td>  	
 	</tr>
 	</c:forEach>   
 </table>

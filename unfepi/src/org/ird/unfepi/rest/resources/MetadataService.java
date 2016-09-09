@@ -138,12 +138,13 @@ public class MetadataService
 		String response = "";
 		try {
 			JSONObject jsonObject = new JSONObject(jsonString);
-			JSONArray usersId = jsonObject.getJSONArray(RequestElements.METADATA_USERS+RequestElements.METADATA_IDS);
-			
-			String lastEditDateStr = jsonObject.getString(RequestElements.LAST_SYNC_TIME);
-			Date lastEditDate = WebGlobals.GLOBAL_SQL_DATETIME_FORMAT.parse(lastEditDateStr);
+//			JSONArray usersId = jsonObject.getJSONArray(RequestElements.METADATA_USERS+RequestElements.METADATA_IDS);
+//			
+//			String lastEditDateStr = jsonObject.getString(RequestElements.LAST_SYNC_TIME);
+//			Date lastEditDate = WebGlobals.GLOBAL_SQL_DATETIME_FORMAT.parse(lastEditDateStr);
 						
-			response = MetadataServiceHelper2.fillUsers(lastEditDate, usersId);
+//			response = MetadataServiceHelper2.fillUsers(lastEditDate, usersId);
+			response = MetadataServiceHelper2.getUsersMetadata(jsonObject);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

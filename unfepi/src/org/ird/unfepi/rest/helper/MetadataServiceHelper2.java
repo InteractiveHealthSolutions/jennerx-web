@@ -15,6 +15,34 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class MetadataServiceHelper2 {
+	
+
+	public static String getUsersMetadata(JSONObject jsonObject){
+
+		org.json.simple.JSONObject response = new org.json.simple.JSONObject();
+
+		try {
+			JSONArray usersId = jsonObject.getJSONArray(RequestElements.METADATA_USERS+RequestElements.METADATA_IDS);
+			
+			String lastEditDateStr = jsonObject.getString(RequestElements.LAST_SYNC_TIME);
+			Date lastEditDate = WebGlobals.GLOBAL_SQL_DATETIME_FORMAT.parse(lastEditDateStr);
+
+			fillUsers(lastEditDate, usersId, response);
+
+			HashMap<String, Object> resp = new HashMap<String, Object>();
+			resp.put("METADATA", response);
+
+			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_SUCCESS, resp);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			GlobalParams.MOBILELOGGER.equals(e);
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("error", "Error in getting metadata");
+			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_INTERNAL_ERROR, map);
+		}
+	}
+	
 
 	public static String getVaccineMetadata(JSONObject jsonObject){
 
@@ -190,10 +218,10 @@ public class MetadataServiceHelper2 {
 		fetchAndCompareMetaData(RequestElements.METADATA_HEALTHPROGRAM, columns, table, response, json);
 	}
 	
-	public static String fillUsers(Date lastEditDate_c, JSONArray identifiers)
+	public static void fillUsers(Date lastEditDate_c, JSONArray identifiers, org.json.simple.JSONObject response)
 	{
 		ServiceContext sc = Context.getServices();
-		org.json.simple.JSONObject response = new org.json.simple.JSONObject();
+//		org.json.simple.JSONObject response = new org.json.simple.JSONObject();
 
 		String[] columns = new String[] {RequestElements.METADATA_USER_USERNAME, RequestElements.METADATA_USER_PASSWORD, RequestElements.METADATA_USER_IDENTIFIER,
 				RequestElements.METADATA_USER_STATUS, RequestElements.METADATA_USER_CREATEDDATE, RequestElements.METADATA_USER_LASTEDITDATE };
@@ -212,18 +240,20 @@ public class MetadataServiceHelper2 {
 		List<String> records1 = sc.getCustomQueryService().getDataBySQL(query1);
 		List records2 = sc.getCustomQueryService().getDataBySQL(query2);
 		try{			
-			for (String str : records1){
-				int index = -1;				
-				for(int i = 0 ;  i < identifiers.length() ; i++) {
-					if(identifiers.getString(i).equals(str)){
+			
+			for (int i = 0; i < identifiers.length(); i++) {
+				int index = -1;
+				for (String str : records1) {
+					if (identifiers.getString(i).equals(str)) {
 						index = i;
 						break;
 					}
 				}
-				if(index != -1){
+				if (index != -1) {
 					identifiers.remove(index);
+					i--;
 				}
-			}			
+			}
 
 			ResponseBuilder.buildMetadataResponse(response, RequestElements.METADATA_USERS, columns, records2);
 			response.put(RequestElements.METADATA_USERS+"_deleted", identifiers);
@@ -231,8 +261,7 @@ public class MetadataServiceHelper2 {
 		} catch(Exception e){
 			e.printStackTrace();
 		}
-
-		return response.toString();
+//		return response.toString();
 	}
 
 	//	public static String fillVaccinePrerequisite(JSONArray jsonArray)
@@ -296,36 +325,35 @@ public class MetadataServiceHelper2 {
 	}
 
 	private static void findDeletedIds(String dataType, String[] columns, String table, JSONArray ids, String column, org.json.simple.JSONObject container)
-	{
+ {
 		ServiceContext sc = Context.getServices();
-		try
-		{
+		try {
 			if (container == null)
 				container = new org.json.simple.JSONObject();
 
 			String query = CustomQueryBuilder.queryWhereIn(table, ids.toString().replaceAll("\\[|\\]", ""), column);
 			List results = sc.getCustomQueryService().getDataBySQL(query);
 
-			for (Object obj : results){
-				int index = -1;				
-				for(int i = 0 ;  i < ids.length() ; i++) {
-					if(ids.getString(i).equals(obj.toString())){
+			for (int i = 0; i < ids.length(); i++) {
+				int index = -1;
+				for (Object obj : results) {
+					if (ids.getString(i).equals(obj.toString())) {
 						index = i;
 						break;
 					}
 				}
-				if(index != -1){
+				if (index != -1) {
 					ids.remove(index);
+					i--;
 				}
 			}
 
-			container.put(dataType+"_deleted", ids);
-		}
-		catch (Exception e)
-		{
+			container.put(dataType + "_deleted", ids);
+		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			sc.closeSession();
 		}
-		finally{sc.closeSession();}
 	}
 
 	private static void fetchAndCompareMetaData(String dataType, String[] _columns, String _table, org.json.simple.JSONObject response, JSONObject requestjson){

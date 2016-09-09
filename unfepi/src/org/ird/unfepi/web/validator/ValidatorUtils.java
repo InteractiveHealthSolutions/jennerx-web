@@ -1605,12 +1605,21 @@ public class ValidatorUtils {
 			ServiceContext sc = Context.getServices();
 			
 			Integer hpId = null;
-			if (isNew && hp.getName() != null){
-				List<HealthProgram> hpL = sc.getCustomQueryService().getDataByHQL("from HealthProgram where name like '" + hp.getName() +"'");
+			List<HealthProgram> hpL = null;
+			if (isNew && hp.getName() != null){	
+				
+				if(hp.getProgramId() == null){
+					hpL = sc.getCustomQueryService().getDataByHQL("from HealthProgram where name like '" + hp.getName() +"'"); 
+				}
+				else if(hp.getProgramId() != null){
+					hpL = sc.getCustomQueryService().getDataByHQL("from HealthProgram where name like '" + hp.getName() +"' and programId != " + hp.getProgramId());
+				}
+				
 				if (hpL != null && hpL.size() > 0){
-					putError(dataEntrySource, "health program of this name already exist", null, error, "", false);
+					putError(dataEntrySource, "health program of this name already exist", null, error, "name", false);
 					hpId = hpL.get(0).getProgramId();
 				}
+				
 			}
 		}
 		
@@ -1622,6 +1631,9 @@ public class ValidatorUtils {
 			if (hp.getEnrollmentLimit() > Integer.MAX_VALUE || hp.getEnrollmentLimit() < 0) {
 				error.rejectValue("enrollmentLimit", "", "invalid enrollmentLimit");
 			}
+		}
+		if (StringUtils.isEmptyOrWhitespaceOnly(hp.getName()) || !DataValidation.validate(REG_EX.NAME_CHARACTERS, hp.getName())) {
+			error.rejectValue("name", "", ErrorMessages.NAME_INVALID);
 		}
 		
 	}

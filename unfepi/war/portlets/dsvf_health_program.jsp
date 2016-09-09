@@ -7,8 +7,8 @@
 				<th></th>
 				<th>Name</th>
 				<th>Description</th>
-				<th>Enrollment Limit</th>
-				<th>current Enrollment count</th>
+<!-- 				<th>Enrollment Limit</th> -->
+<!-- 				<th>current Enrollment count</th> -->
 				<th>Vaccination Center</th>
 				<th>edit</th>
 			</tr>
@@ -19,8 +19,8 @@
 					<td>${map.key.programId}</td>
 					<td>${map.key.name}</td>
 					<td>${map.key.description}</td>
-					<td>${map.key.enrollmentLimit}</td>
-					<td></td>
+<%-- 					<td>${map.key.enrollmentLimit}</td> --%>
+<!-- 					<td></td> -->
 					<td><c:forEach var="centerpro" items="${map.value}">
 							<c:choose>
 								<c:when test="${centerpro.isActive == 'true'}">

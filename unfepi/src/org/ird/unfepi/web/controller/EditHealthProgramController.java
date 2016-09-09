@@ -1,5 +1,6 @@
 package org.ird.unfepi.web.controller;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,9 +53,9 @@ public class EditHealthProgramController extends DataEditFormController {
 			System.out.println(string + " \t");
 		}
 		
-		new HealthProgramValidator().validateHealthProgramVaccinationCenters(hp, centersId, results, false);
+		new HealthProgramValidator().validateHealthProgramVaccinationCenters(hp, centersId, results, true);
 		if(results.hasErrors()){	
-			return showForm(modelAndView, "dataForm");	
+			return showForm(modelAndView.addObject("centers_selected", Arrays.asList(centersId)), "dataForm");	
 		}
 		
 		try {

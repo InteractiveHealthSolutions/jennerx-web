@@ -35,6 +35,7 @@ function submitThisForm() {
 //-->
 </script>
 
+
 <form method="post" id="frm" name="frm">
 	<br>
 	
@@ -50,21 +51,20 @@ function submitThisForm() {
 		<tr><td colspan="2" height="10px" style="border: none;"></td></tr>
 		<tr>
 			<td>Name<span class="mendatory-field">*</span></td>
-			<td><input type="text" name="name" onkeypress="return isChar(event);" value="${command.name}"/></td>
+			<td><input type="text" name="name" style="width:219px" onkeypress="return isChar(event);" value="${command.name}"/></td>
 		</tr>
 		<tr>
 			<td>Description</td>
-			<td><textarea rows="2" cols="20" name="description">${command.description}</textarea></td>
+			<td><textarea rows="2" cols="29" name="description">${command.description}</textarea></td>
 		</tr>
-		<tr>
-			<td>Enrollment Limit</td>
-			<td><input type="number" name="enrollmentLimit" min="0" onkeypress="return isDigit(event);" value="${command.enrollmentLimit}"/></td>
-		</tr>
-		
-		<tr><td colspan="2" height="10px" style="border: none;"></td></tr>
+<!-- 		<tr> -->
+<!-- 			<td>Enrollment Limit</td> -->
+<%-- 			<td><input type="number" name="enrollmentLimit" min="0" onkeypress="return isDigit(event);" value="${command.enrollmentLimit}"/></td> --%>
+<!-- 		</tr> -->
+<!-- 		<tr><td colspan="2" height="10px" style="border: none;"></td></tr> -->
 
 		<tr>
-			<td>Vaccination Centers<span class="mendatory-field">*</span></td>
+			<td>Sites<span class="mendatory-field">*</span></td>
 			<td><select multiple="multiple" id="vaccinationCenters" name="vaccinationCenters" class="requiredField">
 					<c:forEach items="${vaccinationCenters}" var="center">
 						<c:forEach items="${centerProgram}" var="prog">
@@ -72,20 +72,33 @@ function submitThisForm() {
 								<c:set var="found" value="true" />
 							</c:if>
 						</c:forEach>
-						<option value="${center.mappedId}" <c:if test="${found}">selected="selected"</c:if>>
+						<option id="${center.mappedId}" value="${center.mappedId}" <c:if test="${found}">selected="selected"</c:if>>
 							${center.idMapper.identifiers[0].identifier} : ${center.name}</option>
 							<c:remove var="found"/>
 					</c:forEach>
 			</select></td>
 			<script type="text/javascript">
 				$(function() {
+					
+					var selected_vc = ${centers_selected}
+					console.log($.type(selected_vc));
+					if($.type(selected_vc) != 'undefined'){
+		 				$.each(selected_vc, function(index, value){
+						$("#vaccinationCenters option").each(function(){
+							 if (value == $(this).attr("id").replace(/\D/g,"")){
+								 $(this).attr('selected', 'selected');
+							  }
+							});
+						});
+					}
+					
 					$('#vaccinationCenters').multiselect({
 					// 				selectedList: '${fn:length(vaccinationCenters)}'
 					});
 				});
 			</script>
 		</tr>
-		<tr><td colspan="2" height="10px" style="border: none;"></td></tr>
+<!-- 		<tr><td colspan="2" height="10px" style="border: none;"></td></tr> -->
 		<tr>
 			<td colspan="2"><input type="button" id="submitBtn" value="Submit Data" onclick="subfrm();"></td>
 		</tr>

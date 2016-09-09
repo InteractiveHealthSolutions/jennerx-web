@@ -63,14 +63,14 @@ public class AddChildController extends DataEntryFormController{
 	@RequestMapping(value="/siteList/{programId}" , method=RequestMethod.GET)
 	public @ResponseBody String getSiteList(@PathVariable Integer programId, Model model){
 		ServiceContext sc = Context.getServices();
-		List<String> current_centers = sc.getCustomQueryService().getDataBySQL("select mappedId from VaccinationCenter where mappedId in (SELECT vaccinationCenterId FROM centerprogram WHERE healthProgramId = "+ programId + "  and isActive = true)");
+		List<String> current_centers = sc.getCustomQueryService().getDataBySQL("select mappedId from vaccinationcenter where mappedId in (SELECT vaccinationCenterId FROM centerprogram WHERE healthProgramId = "+ programId + "  and isActive = true)");
 		return current_centers.toString();
 	}
 	
 	@RequestMapping(value="/locationList/{programId}" , method=RequestMethod.GET)
 	public @ResponseBody String getLocationList(@PathVariable Integer programId, Model model){
 		ServiceContext sc = Context.getServices();
-		List<String> current_centers = sc.getCustomQueryService().getDataBySQL("select mappedId from VaccinationCenter where mappedId in (SELECT vaccinationCenterId FROM centerprogram WHERE healthProgramId = "+ programId + "  and isActive = true)");
+		List<String> current_centers = sc.getCustomQueryService().getDataBySQL("select mappedId from vaccinationcenter where mappedId in (SELECT vaccinationCenterId FROM centerprogram WHERE healthProgramId = "+ programId + "  and isActive = true)");
 		return current_centers.toString();
 	}
 		
