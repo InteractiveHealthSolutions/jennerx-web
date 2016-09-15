@@ -237,7 +237,7 @@ if(permed){
    	 <tr><td>Vaccination center</td><td><c:out value="${rec.center.idMapper.identifiers[0].identifier} : ${rec.center.name}"></c:out></td></tr> 
 <%-- 	 <tr><td>EPI number</td><td><c:out value="${rec.vaccination.epiNumber}"></c:out></td></tr>  --%>
 	 <tr><td>Vaccinator</td><td><c:out value="${rec.vaccinator.idMapper.identifiers[0].identifier} : ${rec.vaccinator.firstName}"></c:out></td></tr>
-     <tr><td>Timeliness</td><td><c:out value="${rec.vaccination.timelinessStatus}"/><c:if test="${not empty rec.vaccination.timelinessFactor}">(${rec.vaccination.timelinessFactor})</c:if></td></tr>
+<%--      <tr><td>Timeliness</td><td><c:out value="${rec.vaccination.timelinessStatus}"/><c:if test="${not empty rec.vaccination.timelinessFactor}">(${rec.vaccination.timelinessFactor})</c:if></td></tr> --%>
 <%-- <tr><td>Reason untimely vaccination</td> <td><c:out value="${rec.vaccination.reasonNotTimelyVaccination}"></c:out></td></tr>
      <tr><td>Other reason untimely vaccination</td> <td><c:out value="${rec.vaccination.reasonNotTimelyVaccinationOther}"></c:out></td></tr> --%>
      <%-- <tr><td>Weight</td> <td><c:out value="${rec.vaccination.weight}"></c:out></td></tr>

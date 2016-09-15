@@ -155,26 +155,29 @@ ul{
 		});
 	}
 
-	function birthChanged() {
+	function birthChanged(jqControl){
+		if($('#centerVisitDate').val() == '' || $('#vaccinationCenterId').val() == ''){
+			//reset age inputs
+			$('input[name^="childage"]').val('');
+			//reset birthdate input
+			$('#birthdate').val('');
+// 			alert('Tareekh pedaish say pehlay Enrollment ki tareekh aur Center ka indraj zaroori hy.');
+		}
+// 		else{
+// 			vaccineScheduleGenerator(convertToDate(jqControl.val()), convertToDate($('#centerVisitDate').val()), '${command.centerVisit.childId}', $('#vaccinationCenterId').val(), null,'${command.centerVisit.uuid}',true);
+// 		}
 	}
 
 	function centerVisitDateChanged() {
 		$('#birthdate').val('');
 		
 		
-		var difvh = dateDifference(new Date(), convertToDate($('#centerVisitDate').val()));
+		var max = dateDifference(new Date(), convertToDate($('#centerVisitDate').val())) + 1;
+// 		var min = dateDifference(new Date(), convertToDate($('#birthdate').val()));
 		
 		$(".retro_vaccine_date").each(function(index, element) {
-
-			console.log(index + "  " + element + " " + $(this));
-			$(this).datepicker({
-			});
-			
-// 			console.log(difvh + " ---");
-// 			$(this).attr('maxDate', '-'+difvh+'d');
-			
-			
-			
+			$(this).datepicker("option", "maxDate", '-'+max+'d');
+// 			$(this).datepicker("option", "minDate", '-'+min+'d');
 		});
 	}
 	
@@ -184,6 +187,14 @@ ul{
 		});
 		$(".retro_vaccine_date").each(function(index, element) {
 			$(this).val('');
+		});
+		
+// 		var max = dateDifference(new Date(), convertToDate($('#centerVisitDate').val()));
+		var min = dateDifference(new Date(), convertToDate($('#birthdate').val()));
+		
+		$(".retro_vaccine_date").each(function(index, element) {
+// 			$(this).datepicker("option", "maxDate", '-'+max+'d');
+			$(this).datepicker("option", "minDate", '-'+min+'d');
 		});
 	}
 
@@ -209,7 +220,7 @@ ul{
 		$("#vaccinationCenterId option").hide();
 
 		if($('#healthProgramId').val().length != 0){
-			getSite();	
+			getSites();	
 		}
 		
 		$('.tab-section').hide();
@@ -280,11 +291,11 @@ ul{
 </script>
 
 
-<spring:hasBindErrors name="command">
-	<c:forEach var="error" items="${errors.allErrors}">
-		<p style="font-style: italic; color: red;font-size: small;"><spring:message message="${error}" /></p>
-	</c:forEach>
-</spring:hasBindErrors>
+<%-- <spring:hasBindErrors name="command"> --%>
+<%-- 	<c:forEach var="error" items="${errors.allErrors}"> --%>
+<%-- 		<p style="font-style: italic; color: red;font-size: small;"><spring:message message="${error}" /></p> --%>
+<%-- 	</c:forEach> --%>
+<%-- </spring:hasBindErrors> --%>
 
 
 <form method="post" id="frm" name="frm" >

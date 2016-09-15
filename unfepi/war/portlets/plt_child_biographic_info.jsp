@@ -34,8 +34,11 @@
 		<td>Gender</td>
 		<td><spring:bind path="command.${commandAdditionalPathStr}gender">
 			<select id="gender" name="${commandAdditionalPathStr}gender" bind-value="${status.value}" style="text-transform: capitalize">
+				<option value=""></option>
 				<c:forEach items="<%=Gender.values()%>" var="gen_value">
-					<option value="${gen_value}">${fn:toLowerCase(gen_value)}</option>
+					<c:if test="${!fn:containsIgnoreCase(gen_value, 'unknown')}">
+						<option value="${gen_value}">${fn:toLowerCase(gen_value)}</option>
+					</c:if>
 				</c:forEach>
 			</select>
 			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
@@ -163,6 +166,15 @@
 				dateEnrolled.add(-parseInt($('input[name^="childaged"]').val())).days();
 
 				document.getElementById("birthdate").value=dateEnrolled.toString(globalDOf);
+				
+// 				var max = dateDifference(new Date(), convertToDate($('#centerVisitDate').val()));
+				var min = dateDifference(new Date(), convertToDate($('#birthdate').val()));
+				
+				$(".retro_vaccine_date").each(function(index, element) {
+//		 			$(this).datepicker("option", "maxDate", '-'+max+'d');
+					$(this).datepicker("option", "minDate", '-'+min+'d');
+				});
+				
 				
 				var allset = true;
 				for ( var i = 0; i < ageips.length; i++) {
