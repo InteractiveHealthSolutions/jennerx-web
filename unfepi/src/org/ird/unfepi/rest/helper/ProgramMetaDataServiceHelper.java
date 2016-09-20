@@ -137,7 +137,9 @@ public class ProgramMetaDataServiceHelper {
 		String[] columns = new String[] { RequestElements.METADATA_FIELD_ROUND_ID,
 				RequestElements. METADATA_FIELD_ROUND_NAME,
 				RequestElements.METADATA_CENTERPROGRAM_HEALTHPROGRAMID,
-				RequestElements.METADATA_FIELD_ROUND_ISACTIVE};
+				RequestElements.METADATA_FIELD_ROUND_ISACTIVE,
+				RequestElements.METADATA_FIELD_ROUND_STARTDATE,
+				RequestElements.METADATA_FIELD_ROUND_ENDDATE};
 		String table = "round";
 
 		Integer programId = json.optInt("programId");		

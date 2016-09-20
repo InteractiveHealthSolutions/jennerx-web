@@ -385,7 +385,13 @@ public class ChildEnrollmentServiceHelper {
 				status = org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.VACCINATED;
 			} else if(vaccinationStatus.equalsIgnoreCase("retro")){
 				status=org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.RETRO;
-			} else {
+			} else if(vaccinationStatus.equalsIgnoreCase("Retro Date Missing")) {
+				status = org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.RETRO_DATE_MISSING;
+			} else if(vaccinationStatus.equalsIgnoreCase("Invalid Dose")) {
+				status = org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.INVALID_DOSE;
+			} else if(vaccinationStatus.equalsIgnoreCase("Not Given")) {
+				status = org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.NOT_GIVEN;
+			} else if(vaccinationStatus.equalsIgnoreCase("Not Vaccinated")) {
 				status = org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.NOT_VACCINATED;
 			}
 			currentVaccination.setVaccinationStatus(status);

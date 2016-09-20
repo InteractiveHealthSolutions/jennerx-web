@@ -14,12 +14,16 @@ import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.rest.elements.RequestElements;
 import org.ird.unfepi.rest.elements.ResponseStatus;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.simple.JSONObject;
+
+import com.google.gson.JsonObject;
 
 public class MetadataServiceHelper
 {
 
-	public String getMetadata()
+	public String getMetadata(int programId)
 	{
 		try
 		{
@@ -39,7 +43,7 @@ public class MetadataServiceHelper
 		
 			//fillAllVaccinations(mainResponse);
 			fillHealthProgram(mainResponse);
-			
+			fillRounds(programId, mainResponse);
 			HashMap<String, Object> resp = new HashMap<String, Object>();
 			resp.put("METADATA", mainResponse);
 
@@ -56,7 +60,7 @@ public class MetadataServiceHelper
 		}
 	}
 
-	public String getMetadata(String dataType)
+	public String getMetadata(String dataType, int programId)
 	{
 		try
 		{
@@ -70,7 +74,6 @@ public class MetadataServiceHelper
 				fillLocation(mainResponse);
 				fillLocationType(mainResponse);
 				fillVaccinationCentres(mainResponse);
-				
 				HashMap<String, Object> resp = new HashMap<String, Object>();
 				resp.put("METADATA", mainResponse);
 				return ResponseBuilder.buildResponse(ResponseStatus.STATUS_SUCCESS, resp);
@@ -81,6 +84,7 @@ public class MetadataServiceHelper
 				fillVaccineGap(mainResponse);
 				fillVaccineGapType(mainResponse);
 				fillVaccinePrerequisite(mainResponse);
+				fillRounds(programId, mainResponse);
 				
 				HashMap<String, Object> resp = new HashMap<String, Object>();
 				resp.put("METADATA", mainResponse);
@@ -193,6 +197,23 @@ public class MetadataServiceHelper
 				RequestElements.METADATA_FIELD_HEALTHPROGRAM_NAME };
 		String table = "healthprogram";
 		fetchMetaData(/* "locationtype" */RequestElements.METADATA_HEALTHPROGRAM, columns, table, mainResponse);
+	}
+	
+	private static void fillRounds(int programId, JSONObject mainResponse) {
+		org.json.JSONObject jsonObject = new org.json.JSONObject() ;
+		try {
+			jsonObject.put("programId", programId);
+			String response = ProgramMetaDataServiceHelper.getRoundMetadata(jsonObject);
+			org.json.JSONObject obj = new org.json.JSONObject(response);
+			JSONArray arr = obj.getJSONArray("params");
+			org.json.JSONObject re = arr.getJSONObject(0).getJSONObject("METADATA").getJSONObject(RequestElements.METADATA_ROUND);
+			mainResponse.put("round", re);
+			
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		
 	}
 	
 	private static void fetchMetaDataByCustomQuery(String dataType , String query, String columns[], JSONObject container){

@@ -31,13 +31,13 @@ public class MetadataService
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)	
-	public String downloadAll()
+	public String downloadAll(@QueryParam("programId") int programId)
 	{	
 		MetadataServiceHelper helper = new MetadataServiceHelper();
 		
 		try
 		{
-			String metadata = helper.getMetadata();
+			String metadata = helper.getMetadata(programId);
 			return metadata;
 		}
 		catch (Exception e)
@@ -68,10 +68,10 @@ public class MetadataService
 //	}
 	
 	@GET
-	@Path("/vaccine")
+	@Path("/metadata")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String metadataVaccine(String jsonString){
+	public String metadataVaccine(String jsonString, @QueryParam("programId") int programId){
 		/*String response = "";
 		try {
 			JSONObject jsonObject = new JSONObject(jsonString);			
@@ -86,7 +86,7 @@ public class MetadataService
 		
 		try
 		{
-			String metadata = helper.getMetadata(RequestElements.METADATA_VACCINE);
+			String metadata = helper.getMetadata(RequestElements.METADATA_VACCINE, programId);
 			return metadata;
 		}
 		catch (Exception e)
@@ -118,7 +118,7 @@ public class MetadataService
 		
 		try
 		{
-			String metadata = helper.getMetadata(RequestElements.METADATA_LOCATION);
+			String metadata = helper.getMetadata(RequestElements.METADATA_LOCATION, 0);
 			return metadata;
 		}
 		catch (Exception e)

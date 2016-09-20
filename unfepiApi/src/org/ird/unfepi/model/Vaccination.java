@@ -49,9 +49,10 @@ public class Vaccination implements java.io.Serializable {
 		
 		SCHEDULED("SCHEDULED"),
 		VACCINATED("VACCINATED"),
-		NOT_VACCINATED("NOT VACCINATED"),
+		NOT_VACCINATED("NOT_VACCINATED"),
+		NOT_GIVEN("NOT_GIVEN"),
 		RETRO("RETRO"),
-		RETRO_DATE_MISSING("RETRO DATE MISSING"),
+		RETRO_DATE_MISSING("RETRO_DATE_MISSING"),
 		/**
 		 * Entry might be a result of unfilled form, or incomplete process that partially filled the table data
 		 * to make some other process work that can not work without a vaccination in place.
@@ -61,7 +62,7 @@ public class Vaccination implements java.io.Serializable {
 		 * and a form would be logged as 'to be filled later' allowing lottery to take place with out followup form.
 		 */
 		UNFILLED("UNFILLED"),
-		INVALID_DOSE("INVALID DOSE");
+		INVALID_DOSE("INVALID_DOSE");
 		
 		private String stringValue;
 		private VACCINATION_STATUS(String stringValue) {
