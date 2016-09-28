@@ -381,18 +381,25 @@ public class ChildEnrollmentServiceHelper {
 
 			// this is done because of limit possibilities in jennerX app
 			org.ird.unfepi.model.Vaccination.VACCINATION_STATUS status = null;
-			if (vaccinationStatus.equalsIgnoreCase("vaccinated")) {
+			if (vaccinationStatus.equalsIgnoreCase("VACCINATED")) {
 				status = org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.VACCINATED;
-			} else if(vaccinationStatus.equalsIgnoreCase("retro")){
+			
+			} else if(vaccinationStatus.equalsIgnoreCase("RETRO")){
 				status=org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.RETRO;
-			} else if(vaccinationStatus.equalsIgnoreCase("Retro Date Missing")) {
+			
+			} else if(vaccinationStatus.equalsIgnoreCase("RETRO_DATE_MISSING")) {
 				status = org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.RETRO_DATE_MISSING;
-			} else if(vaccinationStatus.equalsIgnoreCase("Invalid Dose")) {
+			
+			} else if(vaccinationStatus.equalsIgnoreCase("INVALID_DOSE")) {
 				status = org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.INVALID_DOSE;
-			} else if(vaccinationStatus.equalsIgnoreCase("Not Given")) {
+			
+			} else if(vaccinationStatus.equalsIgnoreCase("NOT_GIVEN")) {
 				status = org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.NOT_GIVEN;
-			} else if(vaccinationStatus.equalsIgnoreCase("Not Vaccinated")) {
+			
+			} else if(vaccinationStatus.equalsIgnoreCase("NOT_VACCINATED")) {
 				status = org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.NOT_VACCINATED;
+			} else{
+				status = null;
 			}
 			currentVaccination.setVaccinationStatus(status);
 			if (vaccinatorId != null) {
