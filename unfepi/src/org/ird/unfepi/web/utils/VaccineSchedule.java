@@ -621,8 +621,15 @@ public class VaccineSchedule {
 
 			for (Vaccination va : retroVaccinationL) {
 				
+				
+				
 				VaccineSchedule schedule = new VaccineSchedule();
 				Vaccine vaccine = sc.getVaccinationService().findVaccineById(va.getVaccineId());
+				
+				System.out.print(va.getVaccineId() + "   -vaccine id- -prerequisites- " );
+				for (VaccinePrerequisite vp : vaccine.getPrerequisites()) {
+					System.out.print(vp.getVaccinePrerequisiteId().getVaccineId() + " " + vp.getVaccinePrerequisiteId().getVaccinePrerequisiteId() + " , ");
+				}
 				
 				schedule.setVaccine(vaccine);
 				schedule.setPrerequisites(vaccine.getPrerequisites());
@@ -642,6 +649,9 @@ public class VaccineSchedule {
 				boolean retro_suspect = false;
 				boolean prerequisite_passed = false;
 				boolean prerequisite_given_today = false;
+				
+				boolean prerequisite_passed_db = false;
+				
 				boolean isexpired = false;
 				
 				boolean is_retro_history = false;
@@ -676,13 +686,24 @@ public class VaccineSchedule {
 					// if not given
 					prerequisite_passed = IMRUtils.passVaccinePrerequisiteCheck(schedule, scheduleL);
 					prerequisite_given_today = IMRUtils.isPrerequisiteVaccinatedOnCurrentVisit(schedule, scheduleL);
-
+					
+					Vaccination preReqVaccineDb = null;
+					if(!prerequisite_passed){
+						preReqVaccineDb = IMRUtils.passVaccinePrerequisiteCheckDb(schedule);
+						if(preReqVaccineDb != null){
+							prerequisite_passed_db = true;
+						}
+					}
+					
 					if(pvacc!=null && pvacc.size() > 0){
 						asgnduedate = pvacc.get(0).getVaccinationDuedate();
 					}
 					else if(prerequisite_passed){
 						Date prevVaccDate = IMRUtils.getPrerequisiteVaccineDate(schedule, scheduleL);
 						asgnduedate = IMRUtils.calculateVaccineDuedate(vaccine, birthdate, prevVaccDate, null, ignoreCenter?null:vaccinationCenterId, sc);
+					}
+					else if(prerequisite_passed_db){
+						asgnduedate = IMRUtils.calculateVaccineDuedate(vaccine, birthdate, preReqVaccineDb.getVaccinationDate(), null, ignoreCenter?null:vaccinationCenterId, sc);
 					}
 
 					//calculate retro/current status only if vaccine belong to schedule
@@ -841,10 +862,6 @@ public class VaccineSchedule {
 		
 		return scheduleL;
 	}
-	
-	
-	
-	
 	
 	public void printVaccineSchedule(){
 		

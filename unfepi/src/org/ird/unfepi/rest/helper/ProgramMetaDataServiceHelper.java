@@ -28,9 +28,17 @@ public class ProgramMetaDataServiceHelper {
 			String lastEditDateStr = jsonObject.optString(RequestElements.LAST_SYNC_TIME);
 			Date lastEditDate = (!lastEditDateStr.trim().isEmpty()) ? WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.parse(lastEditDateStr) : null ;
 			
-			if(jsonObject.isNull("calendarId")){
-				throw new Exception("calendarId is not provided or null") ;
+			if(jsonObject.isNull("programId")){
+				throw new Exception("programId is not provided or null") ;
 			}
+			
+			Integer programId = jsonObject.optInt("programId");
+			
+			ServiceContext sc = Context.getServices();
+			Integer calendarId = (Integer) sc.getCustomQueryService().getDataByHQL("select vaccinationcalendarId from HealthProgram where programId = "+ programId).get(0);
+			jsonObject.put("calendarId", calendarId);
+			
+//			System.out.println("calendarId " + calendarId);
 			
 			fillVaccine(lastEditDate, vaccinesId, response);
 			fillVaccineGap(jsonObject, response);

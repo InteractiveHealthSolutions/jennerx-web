@@ -20,6 +20,7 @@ import org.ird.unfepi.model.Reminder;
 import org.ird.unfepi.model.Reminder.ReminderType;
 import org.ird.unfepi.model.ReminderSms;
 import org.ird.unfepi.model.ReminderSms.REMINDER_STATUS;
+import org.ird.unfepi.model.Vaccination.VACCINATION_STATUS;
 import org.ird.unfepi.model.User;
 import org.ird.unfepi.model.Vaccination;
 import org.ird.unfepi.model.VaccinationCenterVaccineDay;
@@ -123,7 +124,25 @@ public class IMRUtils {
 		return true;
 	}
 	
-	
+	public static Vaccination passVaccinePrerequisiteCheckDb(VaccineSchedule vaccineSch){
+		
+		ServiceContext sc = Context.getServices();
+		boolean prerequisitefound = false;
+		for (VaccinePrerequisite prereq : vaccineSch.getPrerequisites()) {
+			String query = "select * from vaccination where vaccineId = " + prereq.getVaccinePrerequisiteId().getVaccinePrerequisiteId()
+					+" and childId = "+ vaccineSch.getChildId() + " and vaccinationStatus in (" + "\"" + VaccineStatusType.VACCINATED + "\",\"" + VaccineStatusType.RETRO + "\",\"" + VaccineStatusType.RETRO_DATE_MISSING + "\"" + ")";
+			
+			List<Vaccination> records = sc.getCustomQueryService().getDataBySQL(query);
+			System.out.println("dblist size " + records.size() + " prereq " + prereq.getVaccinePrerequisiteId().getVaccinePrerequisiteId());
+			
+			if(records.size() > 0 ){
+				prerequisitefound = true ;
+				return records.get(0);
+			}
+		}
+		
+		return null;
+	}
 	
 public static boolean validateBirthGap(Date birthDate, Date vaccinatedDate,short vaccineId) {
 	//VaccineGap gapFromBirth=new VaccineGap();
