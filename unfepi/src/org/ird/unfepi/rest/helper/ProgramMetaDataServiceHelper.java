@@ -140,7 +140,7 @@ public class ProgramMetaDataServiceHelper {
 		}
 	}
 	
-	private static void fillRound(JSONObject json, org.json.simple.JSONObject response)
+	public static void fillRound(JSONObject json, org.json.simple.JSONObject response)
 	{
 		String[] columns = new String[] { RequestElements.METADATA_FIELD_ROUND_ID,
 				RequestElements. METADATA_FIELD_ROUND_NAME,
@@ -202,8 +202,6 @@ public class ProgramMetaDataServiceHelper {
 		String query = "SELECT " + Arrays.toString(columns).replaceAll("\\[|\\]", "") + " FROM " + table
 				+ " WHERE " + RequestElements.METADATA_FIELD_VACCINATION_CENTRE_ID + " IN( " + sub_query + ")";
 		
-		System.out.println("\n" + query);
-		
 		if(json.has(RequestElements.METADATA_VACCINATION_CENTRES)){
 			fetchAndCompareMetaData(RequestElements.METADATA_VACCINATION_CENTRES, columns, table, query, response, json);
 		}
@@ -212,7 +210,7 @@ public class ProgramMetaDataServiceHelper {
 		}
 	}
 	
-	private static void fillLocation(JSONObject json, org.json.simple.JSONObject response)
+	public static void fillLocation(JSONObject json, org.json.simple.JSONObject response)
 	{
 		String[] columns = new String[] { RequestElements.METADATA_FIELD_LOCATION_ID,
 				RequestElements.METADATA_FIELD_LOCATION_NAME,
@@ -237,7 +235,7 @@ public class ProgramMetaDataServiceHelper {
 		}
 	}
 
-	private static void fillLocationType(JSONObject json, org.json.simple.JSONObject response) {
+	public static void fillLocationType(JSONObject json, org.json.simple.JSONObject response) {
 		String[] columns = new String[] { 
 				RequestElements.METADATA_FIELD_LOCATION_TYPE_ID,
 				RequestElements.METADATA_FIELD_LOCATION_TYPE_NAME };

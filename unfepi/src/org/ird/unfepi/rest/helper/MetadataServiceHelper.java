@@ -30,9 +30,9 @@ public class MetadataServiceHelper
 		{
 			JSONObject mainResponse = new JSONObject();
 
-			fillLocation(mainResponse);
+			/*fillLocation(mainResponse);
 			fillLocationType(mainResponse);
-			fillVaccinationCentres(mainResponse);
+			fillVaccinationCentres(mainResponse);*/
 
 			/*fillVaccine(mainResponse);
 			fillVaccineGap(mainResponse);
@@ -40,6 +40,7 @@ public class MetadataServiceHelper
 			fillVaccinePrerequisite(mainResponse);*/
 			
 			org.json.JSONObject jsonObject = new org.json.JSONObject();
+			jsonObject.put("programId", programId);
 			ServiceContext sc = Context.getServices();
 			Integer calendarId = (Integer) sc.getCustomQueryService().getDataByHQL("select vaccinationcalendarId from HealthProgram where programId = "+ programId).get(0);
 			jsonObject.put("calendarId", calendarId);
@@ -51,8 +52,11 @@ public class MetadataServiceHelper
 			ProgramMetaDataServiceHelper.fillVaccineGapType(jsonObject, mainResponse);
 			ProgramMetaDataServiceHelper.fillVaccinePrerequisite(jsonObject, mainResponse);
 			
+			ProgramMetaDataServiceHelper.fillVaccinationCentres(null, null, jsonObject, mainResponse);
+			ProgramMetaDataServiceHelper.fillLocation(jsonObject, mainResponse);
+			ProgramMetaDataServiceHelper.fillLocationType(jsonObject, mainResponse);
 			
-			
+			ProgramMetaDataServiceHelper.fillRound(jsonObject, mainResponse);
 			
 			
 			
