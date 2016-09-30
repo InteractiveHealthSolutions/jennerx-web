@@ -154,6 +154,21 @@ ul{
 			
 		});
 	}
+	
+// 	function getLocations(){
+// 		$.get( "addchild/locationList/"+$('#healthProgramId').val()+".htm" , function( data ) {
+			
+// 			var locations = $.parseJSON(data);
+// 			$.each(locations, function(index, value){
+// 				$("#vaccinationCenterId option").each(function(){
+// 					 if (value == $(this).attr("id").replace(/\D/g,"")){
+// 						  $('#vc'+value).show();
+// 					  }
+// 				});
+// 			});
+			
+// 		});
+// 	}
 
 	function birthChanged(jqControl){
 		if($('#centerVisitDate').val() == '' || $('#vaccinationCenterId').val() == ''){

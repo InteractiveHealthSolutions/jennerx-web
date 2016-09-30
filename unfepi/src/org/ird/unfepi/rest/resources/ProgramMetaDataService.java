@@ -20,12 +20,12 @@ public class ProgramMetaDataService {
 	@Path("/vaccine")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String metadataVaccine(String jsonString, @QueryParam("calendarId") String calendarId){
+	public String metadataVaccine(String jsonString, @QueryParam("programId") String programId){
 		String response = "";
 		try {
 			
 			JSONObject jsonObject = (jsonString.isEmpty()) ? new JSONObject() : new JSONObject(jsonString) ;	
-			jsonObject.put("calendarId", calendarId);
+			jsonObject.put("programId", programId);
 			
 			response = ProgramMetaDataServiceHelper.getVaccineMetadata(jsonObject); 
 			
