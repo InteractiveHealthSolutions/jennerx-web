@@ -45,7 +45,7 @@ public class ProgramMetaDataService {
 			
 			JSONObject jsonObject = (jsonString.isEmpty()) ? new JSONObject() : new JSONObject(jsonString) ;	
 			jsonObject.put("programId", programId);
-			
+			System.out.println("metadata - locations");
 			response = ProgramMetaDataServiceHelper.getLocationMetadata(jsonObject); 
 			
 		} catch (Exception e) {
