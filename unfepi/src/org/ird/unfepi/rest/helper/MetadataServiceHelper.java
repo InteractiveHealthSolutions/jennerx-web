@@ -14,6 +14,7 @@ import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.rest.elements.RequestElements;
 import org.ird.unfepi.rest.elements.ResponseStatus;
+import org.ird.unfepi.rest.resources.ProgramMetaDataService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.simple.JSONObject;
@@ -33,10 +34,27 @@ public class MetadataServiceHelper
 			fillLocationType(mainResponse);
 			fillVaccinationCentres(mainResponse);
 
-			fillVaccine(mainResponse);
+			/*fillVaccine(mainResponse);
 			fillVaccineGap(mainResponse);
 			fillVaccineGapType(mainResponse);
-			fillVaccinePrerequisite(mainResponse);
+			fillVaccinePrerequisite(mainResponse);*/
+			
+			org.json.JSONObject jsonObject = new org.json.JSONObject();
+			ServiceContext sc = Context.getServices();
+			Integer calendarId = (Integer) sc.getCustomQueryService().getDataByHQL("select vaccinationcalendarId from HealthProgram where programId = "+ programId).get(0);
+			jsonObject.put("calendarId", calendarId);
+			
+//			System.out.println("calendarId " + calendarId);
+			
+			ProgramMetaDataServiceHelper.fillVaccine(null, null, mainResponse);
+			ProgramMetaDataServiceHelper.fillVaccineGap(jsonObject, mainResponse);
+			ProgramMetaDataServiceHelper.fillVaccineGapType(jsonObject, mainResponse);
+			ProgramMetaDataServiceHelper.fillVaccinePrerequisite(jsonObject, mainResponse);
+			
+			
+			
+			
+			
 			
 			fillUsers(mainResponse);
 			//fillAllChildren(mainResponse);

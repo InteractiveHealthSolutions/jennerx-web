@@ -165,7 +165,7 @@ public class ProgramMetaDataServiceHelper {
 		}
 	}
 	
-	private static void fillVaccine(Date lastEditDate, JSONArray ids, org.json.simple.JSONObject response)
+	public static void fillVaccine(Date lastEditDate, JSONArray ids, org.json.simple.JSONObject response)
 	{
 		String[] columns = new String[] {
 				RequestElements.METADATA_FIELD_VACCINE_ID,
@@ -187,7 +187,7 @@ public class ProgramMetaDataServiceHelper {
 		}
 	}
 	
-	private static void fillVaccinationCentres(Date lastEditDate, JSONArray ids, JSONObject json, org.json.simple.JSONObject response)
+	public static void fillVaccinationCentres(Date lastEditDate, JSONArray ids, JSONObject json, org.json.simple.JSONObject response)
 	{
 		String[] columns = new String[] {
 				RequestElements.METADATA_FIELD_VACCINATION_CENTRE_ID,
@@ -253,7 +253,7 @@ public class ProgramMetaDataServiceHelper {
 		}
 	}
 
-	private static void fillVaccineGap(JSONObject json, org.json.simple.JSONObject response)
+	public static void fillVaccineGap(JSONObject json, org.json.simple.JSONObject response)
 	{
 		String[] columns = new String[] {
 				RequestElements.METADATA_FIELD_VACCINEGAP_VACCINEGAPTYPEID,	
@@ -276,7 +276,7 @@ public class ProgramMetaDataServiceHelper {
 		}
 	}
 
-	private static void fillVaccineGapType(JSONObject json, org.json.simple.JSONObject response)
+	public static void fillVaccineGapType(JSONObject json, org.json.simple.JSONObject response)
 	{
 		String[] columns = new String[] {
 				RequestElements.METADATA_FIELD_VACCINEGAP_VACCINEGAPTYPEID,
@@ -297,7 +297,7 @@ public class ProgramMetaDataServiceHelper {
 		}
 	}
 
-	private static void fillVaccinePrerequisite(JSONObject json, org.json.simple.JSONObject response) {
+	public static void fillVaccinePrerequisite(JSONObject json, org.json.simple.JSONObject response) {
 
 		String[] columns = new String[] {
 				RequestElements.METADATA_FIELD_VACCINE_ID,
