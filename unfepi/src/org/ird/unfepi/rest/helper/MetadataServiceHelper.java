@@ -65,7 +65,7 @@ public class MetadataServiceHelper
 		
 			//fillAllVaccinations(mainResponse);
 			fillHealthProgram(mainResponse);
-			fillRounds(programId, mainResponse);
+			// fillRounds(programId, mainResponse);
 			HashMap<String, Object> resp = new HashMap<String, Object>();
 			resp.put("METADATA", mainResponse);
 
@@ -102,11 +102,18 @@ public class MetadataServiceHelper
 			}
 			else if (dataType.equalsIgnoreCase(RequestElements.METADATA_VACCINE))
 			{
+				org.json.JSONObject jsonObject = new org.json.JSONObject();
+				jsonObject.put("programId", programId);
+				ServiceContext sc = Context.getServices();
+				Integer calendarId = (Integer) sc.getCustomQueryService().getDataByHQL("select vaccinationcalendarId from HealthProgram where programId = "+ programId).get(0);
+				jsonObject.put("calendarId", calendarId);
+				
 				fillVaccine(mainResponse);
 				fillVaccineGap(mainResponse);
 				fillVaccineGapType(mainResponse);
 				fillVaccinePrerequisite(mainResponse);
-				fillRounds(programId, mainResponse);
+				// fillRounds(programId, mainResponse);
+				ProgramMetaDataServiceHelper.fillRound(jsonObject, mainResponse);
 				
 				HashMap<String, Object> resp = new HashMap<String, Object>();
 				resp.put("METADATA", mainResponse);
@@ -221,7 +228,7 @@ public class MetadataServiceHelper
 		fetchMetaData(/* "locationtype" */RequestElements.METADATA_HEALTHPROGRAM, columns, table, mainResponse);
 	}
 	
-	private static void fillRounds(int programId, JSONObject mainResponse) {
+	/*private static void fillRounds(int programId, JSONObject mainResponse) {
 		org.json.JSONObject jsonObject = new org.json.JSONObject() ;
 		try {
 			jsonObject.put("programId", programId);
@@ -236,7 +243,7 @@ public class MetadataServiceHelper
 		}
 		
 		
-	}
+	}*/
 	
 	private static void fetchMetaDataByCustomQuery(String dataType , String query, String columns[], JSONObject container){
 		
