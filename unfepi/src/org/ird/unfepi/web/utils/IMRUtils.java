@@ -124,25 +124,68 @@ public class IMRUtils {
 		return true;
 	}
 	
-	public static Vaccination passVaccinePrerequisiteCheckDb(VaccineSchedule vaccineSch){
-		
-		ServiceContext sc = Context.getServices();
-		boolean prerequisitefound = false;
-		for (VaccinePrerequisite prereq : vaccineSch.getPrerequisites()) {
-			String query = "select * from vaccination where vaccineId = " + prereq.getVaccinePrerequisiteId().getVaccinePrerequisiteId()
-					+" and childId = "+ vaccineSch.getChildId() + " and vaccinationStatus in (" + "\"" + VaccineStatusType.VACCINATED + "\",\"" + VaccineStatusType.RETRO + "\",\"" + VaccineStatusType.RETRO_DATE_MISSING + "\"" + ")";
-			
-			List<Vaccination> records = sc.getCustomQueryService().getDataBySQL(query);
-			System.out.println("dblist size " + records.size() + " prereq " + prereq.getVaccinePrerequisiteId().getVaccinePrerequisiteId());
-			
-			if(records.size() > 0 ){
-				prerequisitefound = true ;
-				return records.get(0);
-			}
+	public static boolean isOverAgedVaccination(VaccineSchedule vaccineSch, List<VaccineSchedule> schedule) {
+		// if no prerequisite defined 
+		if(vaccineSch.getPrerequisites() == null || vaccineSch.getPrerequisites().size() == 0){
+			return false;
 		}
 		
-		return null;
+		System.out.println("----------------------");
+		System.out.println("current vaccine " + vaccineSch.getVaccine().getName() + " " +vaccineSch.getVaccine().getVaccineId());
+		
+		// if any pre-req is mandatory and not satified block it
+		for (VaccinePrerequisite prereq : vaccineSch.getPrerequisites()) 
+		{
+			if(prereq.getMandatory() != null && prereq.getMandatory())
+			{
+				
+				for (VaccineSchedule vaccineSchedule : schedule) {
+					if(prereq.getVaccinePrerequisiteId().getVaccinePrerequisiteId() == vaccineSchedule.getVaccine().getVaccineId()){
+						
+						System.out.print("preReq " + prereq.getVaccinePrerequisiteId().getVaccinePrerequisiteId() + " " + vaccineSchedule.getVaccine().getName() + " "+vaccineSchedule.getVaccine().getVaccineId());
+						if(vaccineSchedule.getVaccine().getPrerequisites() != null && vaccineSchedule.getVaccine().getPrerequisites().size() > 0){
+							
+							System.out.print(" size " +vaccineSchedule.getVaccine().getPrerequisites().size());
+								
+							for (VaccinePrerequisite prereqee : vaccineSchedule.getVaccine().getPrerequisites()) {
+								System.out.println(" " + prereqee.getVaccinePrerequisiteId().getVaccinePrerequisiteId());
+							}
+								
+							isOverAgedVaccination(vaccineSchedule, schedule);
+						}
+						System.out.println();
+						Date preReqVaccDate = vaccineSchedule.getVaccination_date();
+						
+						System.out.println("preReqVaccDate " + preReqVaccDate );
+					}
+				}
+				
+			}
+			
+		}
+		
+		return true;
 	}
+	
+//	public static Vaccination passVaccinePrerequisiteCheckDb(VaccineSchedule vaccineSch){
+//		
+//		ServiceContext sc = Context.getServices();
+//		boolean prerequisitefound = false;
+//		for (VaccinePrerequisite prereq : vaccineSch.getPrerequisites()) {
+//			String query = "select * from vaccination where vaccineId = " + prereq.getVaccinePrerequisiteId().getVaccinePrerequisiteId()
+//					+" and childId = "+ vaccineSch.getChildId() + " and vaccinationStatus in (" + "\"" + VaccineStatusType.VACCINATED + "\",\"" + VaccineStatusType.RETRO + "\",\"" + VaccineStatusType.RETRO_DATE_MISSING + "\"" + ")";
+//			
+//			List<Vaccination> records = sc.getCustomQueryService().getDataBySQL(query);
+//			System.out.println("dblist size " + records.size() + " prereq " + prereq.getVaccinePrerequisiteId().getVaccinePrerequisiteId());
+//			
+//			if(records.size() > 0 ){
+//				prerequisitefound = true ;
+//				return records.get(0);
+//			}
+//		}
+//		
+//		return null;
+//	}
 	
 public static boolean validateBirthGap(Date birthDate, Date vaccinatedDate,short vaccineId) {
 	//VaccineGap gapFromBirth=new VaccineGap();
@@ -406,11 +449,6 @@ try{
 		Calendar actDuedateWrtBirthdate = Calendar.getInstance();
 		actDuedateWrtBirthdate.setTime(birthdate);
 		
-//		List<VaccinationCenterVaccineDay> vcdl = new ArrayList<VaccinationCenterVaccineDay>();
-//		if(vaccinationCenterId != null){
-//			vcdl = sc.getVaccinationService().findVaccinationCenterVaccineDayByCriteria(vaccinationCenterId, vaccine.getVaccineId(), null, true);
-//		}
-		
 		VaccineGap gap = getBirthdateGap(vaccine);
 		TimeIntervalUnit unit = null;
 		
@@ -487,23 +525,6 @@ try{
 			calculatedDuedate.setTime(actDuedateWrtPreviousEvent.getTime());
 		}
 		
-		// Move date to closest allowed vaccine day for given center
-//		boolean dayAllowed = false;
-//		for (VaccinationCenterVaccineDay alvd : vcdl) {
-//			if(calculatedDuedate.get(Calendar.DAY_OF_WEEK) == alvd.getId().getDayNumber()){
-//				dayAllowed = true;
-//				break;
-//			}
-//		}
-		
-//		if(!dayAllowed){
-//			int firstAllowedDay = vcdl.size()>0?vcdl.get(0).getId().getDayNumber():2;//else monday
-//			int currday = calculatedDuedate.get(Calendar.DAY_OF_WEEK);
-//
-//			int dayToAdd = firstAllowedDay >= currday ? (firstAllowedDay-currday) : (7-currday+firstAllowedDay);
-//			calculatedDuedate .add(Calendar.DATE, Math.abs(dayToAdd));
-//		}
-
 		return calculatedDuedate.getTime();
 	}
 	
@@ -537,7 +558,13 @@ try{
 		
 		return calculatedDate.getTime();
 	}
-/*	
+
+	public static Date calculateOverAgedDate(Vaccine vaccine, Date birthdate, ServiceContext sc){
+		
+		return null; 
+	}
+	
+	/*	
 	public static Date calculateNextVaccinationDateExceptM2(Date previousMileStoneDate, Date vaccinationDate, int vaccinationCenterId,String vaccineName)
 	{
 		Calendar actNextAssignedDate=Calendar.getInstance();

@@ -40,23 +40,15 @@ public class ViewHealthProgramRoundController extends DataDisplayController{
 		ServiceContext sc = Context.getServices();
 		Map<String, Object> model = new HashMap<String, Object>();
 		
-//		String centerId = req.getParameter("centerId");
 		String programId = req.getParameter("programId");
 		
-		if(!StringUtils.isEmptyOrWhitespaceOnly(programId)/* && !StringUtils.isEmptyOrWhitespaceOnly(centerId)*/){
+		if(!StringUtils.isEmptyOrWhitespaceOnly(programId)){
 			
 			List<CenterProgram> centerProgramL = sc.getCustomQueryService().getDataByHQL("from CenterProgram where healthProgramId = "+Integer.parseInt(programId) + " and isActive = true");
-//			List<Round> roundL = null;
-//			if(centerProgramL != null && centerProgramL.size() > 0 ){
-//				Integer centerProgramId = centerProgramL.get(0).getCenterProgramId();
-//				roundL = sc.getCustomQueryService().getDataByHQL("from Round where centerProgramId = " + centerProgramId );
-//			}
-			
 			List<Round> roundL = sc.getCustomQueryService().getDataByHQL("from Round where healthProgramId = " + programId );
 			
 			addModelAttribute(model, "centerPrograms", centerProgramL );
 			addModelAttribute(model, "rounds", roundL);
-//			addModelAttribute(model, "centerId", centerId);
 			addModelAttribute(model, "programId", programId);
 		}
 		return showForm(model);
@@ -67,9 +59,6 @@ public class ViewHealthProgramRoundController extends DataDisplayController{
 	{
 		ServiceContext sc = Context.getServices();
 		try {
-//			List<VaccinationCenter> centeres = sc.getVaccinationService().getAllVaccinationCenter(true, new String[]{"idMapper"});
-//			model.addAttribute("vaccinationCenters", centeres);
-			
 			List<HealthProgram> programs = sc.getCustomQueryService().getDataByHQL("from HealthProgram");
 			model.addAttribute("healthPrograms", programs);
 			

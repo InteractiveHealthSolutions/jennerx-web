@@ -75,6 +75,7 @@ public class ControllerUIHelper {
 		Integer pvcnum = null;
 		if (pvcnum == null) {
 			String sql = "select vaccinationRecordNum from vaccination " + " where childid=" + childid + " " + " and vaccinationdate is not null "
+					+ " and vaccinationStatus != 'INVALID_DOSE' "
 					+ " order by vaccinationdate desc,vaccinationRecordNum asc limit 1";
 			List<Integer> lis = sc.getCustomQueryService().getDataBySQL(sql);
 			pvcnum = lis.size() == 0 ? null : lis.get(0);

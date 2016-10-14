@@ -1279,24 +1279,24 @@ public class ValidatorUtils {
 
 		ArrayList<VaccineSchedule> defSch = VaccineSchedule.generateDefaultSchedule( child.getBirthdate(), centerVisit.getVisitDate(), centerVisit.getChildId(), centerVisit.getVaccinationCenterId(), true, null);
 		
-//		System.out.println("\n\ndefSch = VaccineSchedule.generateDefaultSchedule\n\n");
-//		for (VaccineSchedule defSchvs : defSch) {
-//			defSchvs.printVaccineSchedule();
-//		}
+		System.out.println("\n\ndefSch = VaccineSchedule.generateDefaultSchedule\n\n");
+		for (VaccineSchedule defSchvs : defSch) {
+			defSchvs.printVaccineSchedule();
+		}
 		
 		boolean anyScheduleVaccineRecceivedToday = false;
 		boolean contraindication = false;
 		for (VaccineSchedule dfvsh : defSch) {
 			VaccineSchedule vsobj = null;
 			for (VaccineSchedule vs : vaccineSchedule) {
-				if (dfvsh.getVaccine().getName().equalsIgnoreCase(vs.getVaccine().getName())) {
+				if (dfvsh.getVaccine().getName().equalsIgnoreCase(vs.getVaccine().getName()) && !vs.getStatus().equalsIgnoreCase(VaccineStatusType.INVALID_DOSE.name())) {
 					vsobj = vs;
 					break;
 				}
 			}
 
-			if (dfvsh.getStatus() != null && dfvsh.getStatus().equalsIgnoreCase(VaccineStatusType.VACCINATED_EARLIER.name())) {
-				continue;// if vaccinated earlier skip any validation
+			if (dfvsh.getStatus() != null && (dfvsh.getStatus().equalsIgnoreCase(VaccineStatusType.VACCINATED_EARLIER.name()))) {
+				continue;// if vaccinated earlier or invalid dose skip any validation
 			}
 
 			boolean prereqpassed = IMRUtils.passVaccinePrerequisiteCheck(dfvsh, vaccineSchedule);

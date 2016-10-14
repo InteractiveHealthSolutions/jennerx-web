@@ -90,7 +90,7 @@ public class VaccineSchedule {
 		ServiceContext sc = Context.getServices();
 		ArrayList<VaccineSchedule> schedule = new ArrayList<VaccineSchedule>();
 		ArrayList<VaccineSchedule> invalid_schedule = new ArrayList<VaccineSchedule>();
-//		schedule.addAll(scheduleRetro);
+
 		try {
 			String[] vids = Context.getSetting("child.vaccine-schedule.vaccines-list", null).split(",");
 			ArrayList<Short>  vis = new ArrayList<Short>();
@@ -147,22 +147,7 @@ public class VaccineSchedule {
 						throw new IllegalStateException(pvacc.size()+" vaccinations found Pending for "+vaccine.getName()+" for child "+childId);
 					}
 				}
-				
-//				if(scheduleRetro != null && scheduleRetro.size() > 0){
-//					for (VaccineSchedule vsr : scheduleRetro) {
-//						
-//						if(vsr.getVaccine().getVaccineId() == vaccine.getVaccineId()){
-//							if(vvacc != null)
-//								vvacc.add(vsr.getVaccinationHistory());
-//							else{
-//								vvacc = new ArrayList<Vaccination>();
-//								vvacc.add(vsr.getVaccinationHistory());
-//							}
-//						}
-//						
-//					}
-//				}
-				
+			
 				if(scheduleRetro != null && scheduleRetro.size() > 0){
 					for (VaccineSchedule vsr : scheduleRetro) {
 						
@@ -184,10 +169,6 @@ public class VaccineSchedule {
 						else if(vsr.getVaccine().getVaccineId() == vaccine.getVaccineId() && vsr.getVaccinationHistory().getVaccinationStatus() == VACCINATION_STATUS.INVALID_DOSE){
 							invalid_schedule.add(vsr);
 							break;
-//							 vsch.setStatus(vsr.getVaccinationHistory().getVaccinationStatus().name());
-//							 vsch.setVaccination_date(vsr.getVaccinationHistory().getVaccinationDate() );
-//							 schedule.add(vsch);
-//							 break;
 						 }
 					}
 				}
@@ -196,13 +177,7 @@ public class VaccineSchedule {
 				// if vaccine already given donot move forward just set few variables, status and goto next vaccine 
 				if(vvacc != null && vvacc.size() > 0){
 					
-//					if(vvacc.get(0).getVaccinationStatus() == VACCINATION_STATUS.UNFILLED){
-//						status = VaccineStatusType.CURRENT_RETRO;
-//					}
-//					else{
-//						status = VaccineStatusType.VACCINATED_EARLIER;
-//					}
-					
+			
 					if(has_vaccination_history){
 						if( vvacc.get(0).getVaccinationStatus() == VACCINATION_STATUS.RETRO ) status = VaccineStatusType.CURRENT_RETRO;
 						if( vvacc.get(0).getVaccinationStatus() == VACCINATION_STATUS.RETRO_DATE_MISSING ) status = VaccineStatusType.CURRENT_RETRO_DATE_MISSING;
@@ -297,13 +272,14 @@ public class VaccineSchedule {
 			sc.closeSession();
 		}
 		
+		schedule.addAll(invalid_schedule);
+		
 //		System.out.println("\n ---------\n");
-//		for (VaccineSchedule ivs : invalid_schedule) {
+//		for (VaccineSchedule ivs : schedule) {
 //			ivs.printVaccineSchedule();
 //		}
 //		System.out.println("\n ---------\n");
 		
-		schedule.addAll(invalid_schedule);
 		
 		return schedule;
 	}
@@ -621,15 +597,8 @@ public class VaccineSchedule {
 
 			for (Vaccination va : retroVaccinationL) {
 				
-				
-				
 				VaccineSchedule schedule = new VaccineSchedule();
 				Vaccine vaccine = sc.getVaccinationService().findVaccineById(va.getVaccineId());
-				
-				System.out.print(va.getVaccineId() + "   -vaccine id- -prerequisites- " );
-				for (VaccinePrerequisite vp : vaccine.getPrerequisites()) {
-					System.out.print(vp.getVaccinePrerequisiteId().getVaccineId() + " " + vp.getVaccinePrerequisiteId().getVaccinePrerequisiteId() + " , ");
-				}
 				
 				schedule.setVaccine(vaccine);
 				schedule.setPrerequisites(vaccine.getPrerequisites());
@@ -649,8 +618,6 @@ public class VaccineSchedule {
 				boolean retro_suspect = false;
 				boolean prerequisite_passed = false;
 				boolean prerequisite_given_today = false;
-				
-				boolean prerequisite_passed_db = false;
 				
 				boolean isexpired = false;
 				
@@ -687,14 +654,6 @@ public class VaccineSchedule {
 					prerequisite_passed = IMRUtils.passVaccinePrerequisiteCheck(schedule, scheduleL);
 					prerequisite_given_today = IMRUtils.isPrerequisiteVaccinatedOnCurrentVisit(schedule, scheduleL);
 					
-					Vaccination preReqVaccineDb = null;
-					if(!prerequisite_passed){
-						preReqVaccineDb = IMRUtils.passVaccinePrerequisiteCheckDb(schedule);
-						if(preReqVaccineDb != null){
-							prerequisite_passed_db = true;
-						}
-					}
-					
 					if(pvacc!=null && pvacc.size() > 0){
 						asgnduedate = pvacc.get(0).getVaccinationDuedate();
 					}
@@ -702,10 +661,7 @@ public class VaccineSchedule {
 						Date prevVaccDate = IMRUtils.getPrerequisiteVaccineDate(schedule, scheduleL);
 						asgnduedate = IMRUtils.calculateVaccineDuedate(vaccine, birthdate, prevVaccDate, null, ignoreCenter?null:vaccinationCenterId, sc);
 					}
-					else if(prerequisite_passed_db){
-						asgnduedate = IMRUtils.calculateVaccineDuedate(vaccine, birthdate, preReqVaccineDb.getVaccinationDate(), null, ignoreCenter?null:vaccinationCenterId, sc);
-					}
-
+					
 					//calculate retro/current status only if vaccine belong to schedule
 					if(schduedate != null){
 						int minGracePeriod = schedule.getVaccine().getMinGracePeriodDays();
@@ -714,9 +670,6 @@ public class VaccineSchedule {
 						Date minGraceDate = new Date(centerVisitDate.getTime() + (-minGracePeriod * 24 * 60 * 60 * 1000));
 						Date maxGraceDate = new Date(centerVisitDate.getTime() + ( maxGracePeriod * 24 * 60 * 60 * 1000));
 
-//						System.out.println("minGraceDate " + minGraceDate + " maxGraceDate "  + maxGraceDate + " "+ schedule.getVaccine().getName());
-//						System.out.println("vaccination date " + va.getVaccinationDate());
-						
 						current_suspect = (asgnduedate != null && 
 								   asgnduedate.compareTo(minGraceDate) >= 0 && asgnduedate.compareTo(maxGraceDate) <= 0)
 								|| (schduedate.compareTo(minGraceDate) >= 0 && schduedate.compareTo(maxGraceDate) <= 0);
@@ -744,24 +697,6 @@ public class VaccineSchedule {
 							va.setVaccinationStatus(VACCINATION_STATUS.RETRO);
 						}
 						
-						//if vaccdate >= assigndate or scheduledate
-//							if((va.getVaccinationDate() != null && asgnduedate != null)&&
-//									(va.getVaccinationDate().compareTo(asgnduedate) >= 0 
-//									&& va.getVaccinationDate().compareTo(schduedate) >= 0)){
-//								
-//								if(schedule.getExpiry_date() != null && va.getVaccinationDate().before(schedule.getExpiry_date())
-//										&& va.getVaccinationDate().before(centerVisitDate)
-//										&& !va.getVaccinationDate().before(birthdate)){
-//									current_suspect = false;
-//									retro_suspect = true;
-//									
-//									vaccdate = va.getVaccinationDate();
-//									//TODO
-//									va.setVaccinationDuedate(schduedate);
-//									schedule.setVaccinationHistory(va);
-//								}
-//							}
-					}
 
 					// N/A or out of schedule or expiry date has passed
 					if(schduedate == null){
@@ -796,12 +731,8 @@ public class VaccineSchedule {
 						status = VaccineStatusType.SCHEDULED;
 					}
 				}
-				
-//				if(status != VaccineStatusType.RETRO || status != VaccineStatusType.RETRO_DATE_MISSING){
-////					status = VaccineStatusType.INVALID_DOSE;
-//				}
-				
-				if(is_retro_history /*&& (status == VaccineStatusType.RETRO || status == VaccineStatusType.VACCINATED)*/){
+
+					if(is_retro_history /*&& (status == VaccineStatusType.RETRO || status == VaccineStatusType.VACCINATED)*/){
 					
 					status = (va.getVaccinationStatus() == VACCINATION_STATUS.RETRO_DATE_MISSING) ? VaccineStatusType.RETRO_DATE_MISSING : VaccineStatusType.RETRO ;
 					
@@ -851,7 +782,11 @@ public class VaccineSchedule {
 //				System.out.println(schedule.getStatus() + " " + schedule.getVaccination_date() + " " + schedule.getVaccine().getName());
 //				System.out.print(is_retro_history + "   - ");
 //				schedule.printVaccineSchedule();
+			
+				}
+			
 			}
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -859,6 +794,12 @@ public class VaccineSchedule {
 		} finally {
 			sc.closeSession();
 		}
+		
+//		System.out.println("\n ***********\n");
+//		for (VaccineSchedule ivs : scheduleL) {
+//			ivs.printVaccineSchedule();
+//		}
+//		System.out.println("\n ***********\n");
 		
 		return scheduleL;
 	}

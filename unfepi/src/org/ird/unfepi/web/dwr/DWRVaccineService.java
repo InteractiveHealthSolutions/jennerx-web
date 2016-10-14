@@ -74,7 +74,7 @@ public class DWRVaccineService {
 //			for (VaccineSchedule vaccineSchedule : scheduleRetro) {
 //				vaccineSchedule.printVaccineSchedule();
 //			}
-			
+//			System.out.println("\n-=-=-=-=-=-=-\n");
 			ArrayList<VaccineSchedule> scheduleCurrent = VaccineSchedule.generateDefaultSchedule(birthdate, centerVisitDate, childId, vaccinationCenterId, true, scheduleRetro);
 			
 //			for (VaccineSchedule vs : scheduleCurrent) {
