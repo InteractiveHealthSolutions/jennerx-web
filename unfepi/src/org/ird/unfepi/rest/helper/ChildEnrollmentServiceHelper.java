@@ -272,10 +272,12 @@ public class ChildEnrollmentServiceHelper {
 			User lastEditorUser = sc.getUserService().findUser(lastEditor);
 			Date currentVaccinationDate = RestUtils.stringToDate(vaccinationDate);
 			
-			List<Vaccination> vaccinatedList = sc.getVaccinationService().findByCriteria(mappId.getMappedId(), vaccineId.shortValue(), org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.VACCINATED, 0, 1500, false, new String[] { "idMapper" });
-			List<Vaccination> retroList = sc.getVaccinationService().findByCriteria(mappId.getMappedId(), vaccineId.shortValue(), org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.RETRO, 0, 1500, false, new String[] { "idMapper" });
+			List<Vaccination> vaccinatedList 		= sc.getVaccinationService().findByCriteria(mappId.getMappedId(), vaccineId.shortValue(), org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.VACCINATED, 0, 1500, false, new String[] { "idMapper" });
+			List<Vaccination> retroList 			= sc.getVaccinationService().findByCriteria(mappId.getMappedId(), vaccineId.shortValue(), org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.RETRO, 0, 1500, false, new String[] { "idMapper" });
+			List<Vaccination> retroDateMissingList 	= sc.getVaccinationService().findByCriteria(mappId.getMappedId(), vaccineId.shortValue(), org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.RETRO_DATE_MISSING, 0, 1500, false, new String[] { "idMapper" });
 			
 			vaccinatedList.addAll(retroList);
+			vaccinatedList.addAll(retroDateMissingList);
 			org.ird.unfepi.model.Vaccination currentVaccination = new org.ird.unfepi.model.Vaccination();
 			// setting received data vaccine id
 			currentVaccination.setVaccineId(Short.valueOf(vaccineId.toString()));
