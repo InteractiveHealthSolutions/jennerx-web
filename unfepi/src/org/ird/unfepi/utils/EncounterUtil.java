@@ -136,6 +136,18 @@ public class EncounterUtil {
 		CITY_NAME,
 		CITY_OTHER,
 	}
+	
+	public enum  ElementVaccine{
+		VACCINE_ID,
+		VACCINE_NAME,
+		VACCINE_SHORTNAME,
+		VACCINE_FULLNAME,
+		VACCINE_MIN_GRACE_PERIOD_DAYS,
+		VACCINE_MAX_GRACE_PERIOD_DAYS,
+		VACCINE_DESCRIPTION
+	}
+	
+	
 	public static String getElementValueFromEncResult(String element, List<EncounterResults> encreslist){
 		for (EncounterResults encounterResults : encreslist) {
 			if(encounterResults.getId().getElement().equalsIgnoreCase(element)){
@@ -451,6 +463,24 @@ public class EncounterUtil {
 		List<EncounterResults> encr = new ArrayList<EncounterResults>();
 		
 		populateIncentiveEncounter(e, encr, dataEntryUser, incentiveDateRangeFrom, incentiveDateRangeTo);
+		
+		saveEncounterResults(encr, sc);
+	}
+	
+	public static void createVaccineRegistrationEncounter(Vaccine vaccine,
+			DataEntrySource dataEntrySource, Date formStartDate, User dataEntryUser, ServiceContext sc)
+	{
+		Encounter e = saveEncounter(vaccine.getVaccineId(), dataEntryUser.getMappedId(), null, vaccine.getCreatedDate(), formStartDate, null, dataEntryUser.getMappedId(), EncounterType.VACCINE_REG, dataEntrySource, sc);
+
+		List<EncounterResults> encr = new ArrayList<EncounterResults>();
+
+		encr.add(createEncounterResult(e, ElementVaccine.VACCINE_ID, vaccine.getVaccineId(), null, null));
+		encr.add(createEncounterResult(e, ElementVaccine.VACCINE_NAME, vaccine.getName(), null, null));
+		encr.add(createEncounterResult(e, ElementVaccine.VACCINE_SHORTNAME, vaccine.getShortName(), null, null));
+		encr.add(createEncounterResult(e, ElementVaccine.VACCINE_FULLNAME, vaccine.getFullName(), null, null));
+		encr.add(createEncounterResult(e, ElementVaccine.VACCINE_MAX_GRACE_PERIOD_DAYS, vaccine.getMaxGracePeriodDays(), null, null));
+		encr.add(createEncounterResult(e, ElementVaccine.VACCINE_MIN_GRACE_PERIOD_DAYS, vaccine.getMinGracePeriodDays(), null, null));
+		encr.add(createEncounterResult(e, ElementVaccine.VACCINE_DESCRIPTION, vaccine.getDescription(), null, null));
 		
 		saveEncounterResults(encr, sc);
 	}

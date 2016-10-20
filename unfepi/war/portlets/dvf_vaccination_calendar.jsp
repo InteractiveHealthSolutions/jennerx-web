@@ -12,14 +12,31 @@
 				</c:forEach>
 			</select></td>
 			<td><a onclick="searchData()" class="searchButton"></a></td>
-		</tr>
-	</table>
+			<td><a id="addvaccineButton" onclick="addCalendarVaccine()"  class="easyui-linkbutton" data-options="iconCls:'icon-add'" style="float: right;">Add Vaccine</a></td>
+		</tr>			
+		<script>
+			function addCalendarVaccine() {
+				window.location = "addCalendarVaccine.htm";
+			}
+		</script>
 
+
+	</table>
 </div>
 <script type="text/javascript">
 	function searchData() {
 		window.location = "viewVaccinationCalendar.htm?calendarId=" + $('#vaccinationCalendar').val();
 	}
+	
+	$(function(){
+		
+// 		$("#addvaccineButton").hide();
+		
+// 		if($('#vaccinationCalendar').val().length() != 0 ){
+// 			$("#addvaccineButton").show();
+// 		}
+	});
+	
 </script>
 <div class="dvwform">
 	<table>
@@ -35,10 +52,11 @@
 			<th>Vaccine Expiry Gap</th>
 			<th>Over Age Gap</th>
 			<th>Prerequsites</th>
+			<th></th>
 		</tr>
-		
+
 		<c:forEach items="${model.data}" var="data">
-		<tr>
+			<tr>
 				<td>${data.key.vaccineId}</td>
 				<td>${data.key.name}</td>
 				<td>${data.key.minGracePeriodDays}</td>
@@ -49,16 +67,15 @@
 				<td>${data.value['Standard Gap']}</td>
 				<td>${data.value['Vaccine Expiry Gap']}</td>
 				<td>${data.value['Over Age Gap']}</td>
-				<td>
-				<c:forEach items="${model.prerequisites}" var="preq">
-					<c:if test="${data.key.vaccineId == preq.vaccineId}">
+				<td><c:forEach items="${model.prerequisites}" var="preq">
+						<c:if test="${data.key.vaccineId == preq.vaccineId}">
 						${preq.prerequisites}
 					</c:if>
-				</c:forEach>
-				</td>
-		</tr>
+					</c:forEach></td>
+				<td><a href="" class="linkiconS iconedit"></a></td>
+			</tr>
 		</c:forEach>
-		
+
 	</table>
 </div>
 <script>

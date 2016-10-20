@@ -46,6 +46,23 @@ public class DWRVaccineService {
 			
 			ArrayList<Vaccination> retroVaccinationL = new ArrayList<Vaccination>();
 			
+			if(childId != null){
+				ServiceContext sc = Context.getServices();
+				List<Vaccination> list = sc.getCustomQueryService().getDataByHQL("from Vaccination where childId = " + childId);
+				
+				if(list != null && list.size() > 0 ){
+					retroVaccinationL.addAll(list);
+				}
+				
+//				System.out.println("\n\t-- before validate history \t---\n");
+//				for (Vaccination vaccination : list) {
+//					System.out.println(vaccination.getVaccineId() + " " + vaccination.getVaccinationRecordNum() 
+//									+ " " + vaccination.getVaccinationDate() + "  " + vaccination.getChildId());
+//				}
+			}
+			
+			
+			
 			JSONArray array = new JSONArray(jsonArray); 
 			
 			for(int i=0; i < array.length(); i++){
@@ -62,8 +79,6 @@ public class DWRVaccineService {
 					vaccination.setVaccinationStatus(VACCINATION_STATUS.RETRO_DATE_MISSING);
 				}
 					
-				
-				
 				vaccination.setVaccinatorId(user.getUser().getMappedId());
 				
 				retroVaccinationL.add(vaccination);
@@ -79,8 +94,7 @@ public class DWRVaccineService {
 			
 //			for (VaccineSchedule vs : scheduleCurrent) {
 //				vs.printVaccineSchedule();
-//			}
-			
+//			}			
 			
 			return scheduleCurrent;
 		} catch (Exception e) {
