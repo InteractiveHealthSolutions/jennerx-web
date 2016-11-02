@@ -12,6 +12,8 @@ public class VaccineGapId implements Serializable{
 	
 	private short vaccineGapTypeId;
 	
+	private Integer vaccinationcalendarId;
+	
 	public VaccineGapId() {
 		
 	}
@@ -30,6 +32,14 @@ public class VaccineGapId implements Serializable{
 
 	public void setVaccineGapTypeId(short vaccineGapTypeId) {
 		this.vaccineGapTypeId = vaccineGapTypeId;
+	}
+
+	public Integer getVaccinationcalendarId() {
+		return vaccinationcalendarId;
+	}
+
+	public void setVaccinationcalendarId(Integer vaccinationcalendarId) {
+		this.vaccinationcalendarId = vaccinationcalendarId;
 	}
 
 }

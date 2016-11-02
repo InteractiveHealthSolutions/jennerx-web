@@ -16,7 +16,7 @@
 		</tr>			
 		<script>
 			function addCalendarVaccine() {
-				window.location = "addCalendarVaccine.htm";
+				window.location = "addCalendarVaccine.htm?calendarId="+$('#vaccinationCalendar').val();
 			}
 		</script>
 
@@ -30,11 +30,13 @@
 	
 	$(function(){
 		
-// 		$("#addvaccineButton").hide();
+		$("#addvaccineButton").hide();
 		
-// 		if($('#vaccinationCalendar').val().length() != 0 ){
-// 			$("#addvaccineButton").show();
-// 		}
+		console.log($('#vaccinationCalendar').val().length);
+		
+		if($('#vaccinationCalendar').val().length != 0 ){
+			$("#addvaccineButton").show();
+		}
 	});
 	
 </script>
@@ -72,7 +74,7 @@
 						${preq.prerequisites}
 					</c:if>
 					</c:forEach></td>
-				<td><a href="" class="linkiconS iconedit"></a></td>
+				<td><a href="editCalendarVaccine.htm?calendarId=${model.calenderId}&cvaccineId=${data.key.vaccineId}" class="linkiconS iconedit"></a></td>
 			</tr>
 		</c:forEach>
 

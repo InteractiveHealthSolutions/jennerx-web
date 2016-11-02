@@ -18,4 +18,6 @@ public interface DAO {
 	Object merge(Object objectinstance);
 
 	void update(Object objectinstance);
+	
+	void saveOrUpdate(Object objectinstance);
 }

@@ -11,6 +11,8 @@ public class VaccinePrerequisiteId implements Serializable{
 	private short vaccineId;
 	
 	private short vaccinePrerequisiteId;
+	
+	private Integer vaccinationcalendarId;
 
 	public VaccinePrerequisiteId() {
 		
@@ -30,5 +32,13 @@ public class VaccinePrerequisiteId implements Serializable{
 
 	public void setVaccinePrerequisiteId(short vaccinePrerequisiteId) {
 		this.vaccinePrerequisiteId = vaccinePrerequisiteId;
+	}
+
+	public Integer getVaccinationcalendarId() {
+		return vaccinationcalendarId;
+	}
+
+	public void setVaccinationcalendarId(Integer vaccinationcalendarId) {
+		this.vaccinationcalendarId = vaccinationcalendarId;
 	}
 }

@@ -60,4 +60,10 @@ public class CustomQueryServiceImpl implements CustomQueryService{
 	public void update(Object objectinstance) {
 		dao.update(objectinstance);
 	}
+
+	@Override
+	public void saveOrUpdate(Object objectinstance) {
+		dao.saveOrUpdate(objectinstance);
+		
+	}
 }

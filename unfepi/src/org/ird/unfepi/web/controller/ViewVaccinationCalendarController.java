@@ -63,7 +63,7 @@ public class ViewVaccinationCalendarController extends DataDisplayController {
 			}
 			model.put("data", data);
 			model.put("prerequisites", prerequisiteL);
-			
+			addModelAttribute(model, "calenderId", calendarId);
 		}
 		return showForm(model);
 	}

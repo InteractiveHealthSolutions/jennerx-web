@@ -57,4 +57,10 @@ public class DAOHibernateImpl implements DAO{
 	public void update(Object objectinstance) {
 		session.update(objectinstance);
 	}
+
+	@Override
+	public void saveOrUpdate(Object objectinstance) {
+		session.saveOrUpdate(objectinstance);
+		
+	}
 }

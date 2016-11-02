@@ -10,28 +10,15 @@ import org.ird.unfepi.model.VaccinePrerequisite;
 
 public class VaccineRegistrationWrapper {
 	
-	private Vaccine vaccine;
 	private List<VaccineGap> vaccineGapList;
-	private List<VaccinePrerequisite> vaccinePrerequisiteList;
-	private VaccinationCalendar vaccinationCalendar;;
+//	private List<VaccinePrerequisite> vaccinePrerequisiteList;
+	private String[] vaccinePrerequisites;
+	private Integer vaccinationCalendarId;
+	private Integer vaccineId;
 	
 	public VaccineRegistrationWrapper(){
-		vaccine = new Vaccine();
-	}
+	}	
 	
-	
-	/**
-	 * @return the vaccine
-	 */
-	public Vaccine getVaccine() {
-		return vaccine;
-	}
-	/**
-	 * @param vaccine the vaccine to set
-	 */
-	public void setVaccine(Vaccine vaccine) {
-		this.vaccine = vaccine;
-	}
 	/**
 	 * @return the vaccineGapList
 	 */
@@ -44,34 +31,42 @@ public class VaccineRegistrationWrapper {
 	public void setVaccineGapList(List<VaccineGap> vaccineGapList) {
 		this.vaccineGapList = vaccineGapList;
 	}
-	/**
-	 * @return the vaccinePrerequisiteList
-	 */
-	public List<VaccinePrerequisite> getVaccinePrerequisiteList() {
-		return vaccinePrerequisiteList;
-	}
-	/**
-	 * @param vaccinePrerequisiteList the vaccinePrerequisiteList to set
-	 */
-	public void setVaccinePrerequisiteList(
-			List<VaccinePrerequisite> vaccinePrerequisiteList) {
-		this.vaccinePrerequisiteList = vaccinePrerequisiteList;
-	}
+//	/**
+//	 * @return the vaccinePrerequisiteList
+//	 */
+//	public List<VaccinePrerequisite> getVaccinePrerequisiteList() {
+//		return vaccinePrerequisiteList;
+//	}
+//	/**
+//	 * @param vaccinePrerequisiteList the vaccinePrerequisiteList to set
+//	 */
+//	public void setVaccinePrerequisiteList(
+//			List<VaccinePrerequisite> vaccinePrerequisiteList) {
+//		this.vaccinePrerequisiteList = vaccinePrerequisiteList;
+//	}
 
-
-	/**
-	 * @return the vaccinationCalendar
-	 */
-	public VaccinationCalendar getVaccinationCalendar() {
-		return vaccinationCalendar;
+	public String[] getVaccinePrerequisites() {
+		return vaccinePrerequisites;
 	}
 
+	public void setVaccinePrerequisites(String[] vaccinePrerequisites) {
+		this.vaccinePrerequisites = vaccinePrerequisites;
+	}
 
-	/**
-	 * @param vaccinationCalendar the vaccinationCalendar to set
-	 */
-	public void setVaccinationCalendar(VaccinationCalendar vaccinationCalendar) {
-		this.vaccinationCalendar = vaccinationCalendar;
+	public Integer getVaccinationCalendarId() {
+		return vaccinationCalendarId;
+	}
+
+	public void setVaccinationCalendarId(Integer vaccinationCalendarId) {
+		this.vaccinationCalendarId = vaccinationCalendarId;
+	}
+
+	public Integer getVaccineId() {
+		return vaccineId;
+	}
+
+	public void setVaccineId(Integer vaccineId) {
+		this.vaccineId = vaccineId;
 	}
 
 }

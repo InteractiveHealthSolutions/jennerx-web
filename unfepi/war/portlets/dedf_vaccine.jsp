@@ -26,35 +26,35 @@ function submitThisForm() {
 		<tr>
 			<td>Name<span class="mendatory-field">*</span></td>
 			<td colspan="2"><spring:bind path="command.name">
-					<input id="vaccineName" name="vaccine.name" value="${status.value}" maxlength="15" readonly="readonly"/> <br>
+					<input id="vaccineName" name="name" value="${status.value}" maxlength="15" readonly="readonly"/> <br>
 					<span class="error-message"><c:out value="${status.errorMessage}" /></span>
 				</spring:bind></td>
 		</tr>
 		<tr>
 			<td>Short Name<span class="mendatory-field">*</span></td>
 			<td colspan="2"><spring:bind path="command.shortName">
-					<input id="vaccineShortName" name="vaccine.shortName" value="${status.value}" maxlength="15"/> <br>
+					<input id="vaccineShortName" name="shortName" value="${status.value}" maxlength="10"/> <br>
 					<span class="error-message"><c:out value="${status.errorMessage}" /></span>
 				</spring:bind></td>
 		</tr>
 		<tr>
 			<td>Full Name</td>
 			<td colspan="2"><spring:bind path="command.fullName">
-					<input id="vaccineFullName" name="vaccine.fullName" value="${status.value}" maxlength="30"/> <br>
+					<input id="vaccineFullName" name="fullName" value="${status.value}" maxlength="30"/> <br>
 					<span class="error-message"><c:out value="${status.errorMessage}" /></span>
 				</spring:bind></td>
 		</tr>
 		<tr>
 			<td>min Grace Period Days</td>
 			<td colspan="2"><spring:bind path="command.minGracePeriodDays">
-					<input id="minGracePeriodDays" name="vaccine.minGracePeriodDays" value="${status.value}" maxlength="2" onkeypress="return isDigit(event);"/> <br>
+					<input id="minGracePeriodDays" name="minGracePeriodDays" value="${status.value}" maxlength="2" onkeypress="return isDigit(event);"/> <br>
 					<span class="error-message"><c:out value="${status.errorMessage}" /></span>
 				</spring:bind></td>
 		</tr>
 		<tr>
 			<td>max Grace Period Days</td>
 			<td colspan="2"><spring:bind path="command.maxGracePeriodDays">
-					<input id="maxGracePeriodDays" name="vaccine.maxGracePeriodDays" value="${status.value}" maxlength="2" 
+					<input id="maxGracePeriodDays" name="maxGracePeriodDays" value="${status.value}" maxlength="2" 
 					onkeypress="return isDigit(event);" /> <br>
 					<span class="error-message"><c:out value="${status.errorMessage}" /></span>
 				</spring:bind></td>
@@ -62,7 +62,7 @@ function submitThisForm() {
 		<tr>
 		<td>Description</td>
 		<td><spring:bind path="command.description">
-			<textarea name="description" maxlength="255"></textarea>
+			<textarea name="description" maxlength="255">${status.value}</textarea>
 			<br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
 		</td>

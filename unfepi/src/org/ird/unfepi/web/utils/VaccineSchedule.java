@@ -683,11 +683,11 @@ public class VaccineSchedule {
 						int maxGracePeriod = schedule.getVaccine().getMaxGracePeriodDays();
 
 						Date minGraceDate = new Date(centerVisitDate.getTime() + (-minGracePeriod * 24 * 60 * 60 * 1000));
-						Date maxGraceDate = new Date(centerVisitDate.getTime() + ( maxGracePeriod * 24 * 60 * 60 * 1000));
+//						Date maxGraceDate = new Date(centerVisitDate.getTime() + ( maxGracePeriod * 24 * 60 * 60 * 1000));
 
 						current_suspect = (asgnduedate != null && 
-								   asgnduedate.compareTo(minGraceDate) >= 0 && asgnduedate.compareTo(maxGraceDate) <= 0)
-								|| (schduedate.compareTo(minGraceDate) >= 0 && schduedate.compareTo(maxGraceDate) <= 0);
+								   asgnduedate.compareTo(minGraceDate) >= 0 /*&& asgnduedate.compareTo(maxGraceDate) <= 0*/)
+								|| (schduedate.compareTo(minGraceDate) >= 0 /*&& schduedate.compareTo(maxGraceDate) <= 0*/);
 
 						retro_suspect = (asgnduedate != null && asgnduedate.compareTo(minGraceDate) == -1)
 								|| (schduedate.compareTo(minGraceDate) == -1);

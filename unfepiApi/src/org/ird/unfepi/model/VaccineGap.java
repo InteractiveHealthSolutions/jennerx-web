@@ -30,6 +30,11 @@ public class VaccineGap {
 	@ForeignKey(name = "vaccinegap_vaccineId_vaccine_vaccineId_FK")
 	private Vaccine	vaccine;
 	
+	@ManyToOne(fetch = FetchType.EAGER, targetEntity = VaccinationCalendar.class)
+	@JoinColumn(name = "vaccinationcalendarId", insertable = false, updatable = false)
+	@ForeignKey(name = "vaccinegap_vaccinationcalendarId_vaccinationcalendar_calenderId_FK")
+	private VaccinationCalendar vaccinationCalendar;
+	
 	@Enumerated(EnumType.STRING)
 	@Column(length = 20)
 	private TimeIntervalUnit gapTimeUnit;
@@ -41,15 +46,6 @@ public class VaccineGap {
 	private short priority;
 	
 	private Boolean mandatory;
-	
-//	@Column(nullable = false)
-	private Integer vaccinationcalendarId;
-	
-	@ManyToOne(fetch = FetchType.EAGER, targetEntity = VaccinationCalendar.class)
-	@JoinColumn(name = "vaccinationcalendarId", insertable = false, updatable = false)
-	@ForeignKey(name = "vaccinegap_vaccinationcalendarId_vaccinationcalendar_calenderId_FK")
-	private VaccinationCalendar vaccinationCalendar;
-	
 	
 	public VaccineGap() {
 		
@@ -109,14 +105,6 @@ public class VaccineGap {
 
 	public void setMandatory(Boolean mandatory) {
 		this.mandatory = mandatory;
-	}
-
-	public Integer getVaccinationcalendarId() {
-		return vaccinationcalendarId;
-	}
-
-	public void setVaccinationcalendarId(Integer vaccinationcalendarId) {
-		this.vaccinationcalendarId = vaccinationcalendarId;
 	}
 
 	public VaccinationCalendar getVaccinationCalendar() {

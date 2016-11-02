@@ -65,7 +65,7 @@ function submitThisForm() {
 		<tr>
 		<td>Description</td>
 		<td><spring:bind path="command.description">
-			<textarea name="description" maxlength="255"></textarea>
+			<textarea name="description" maxlength="255">${status.value}</textarea>
 			<br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
 		</td>
