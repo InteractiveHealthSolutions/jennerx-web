@@ -10,6 +10,7 @@ import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.ird.unfepi.model.VaccinationCenter;
@@ -137,6 +138,22 @@ public class DAOVaccinationCenterImpl extends DAOHibernateImpl implements DAOVac
 			for (String mapping : mappingsToJoin) {
 				cri.setFetchMode(mapping, FetchMode.JOIN);
 			}
+		
+		List<VaccinationCenter> list = cri.list();
+		setLAST_QUERY_TOTAL_ROW_COUNT(list.size());
+		return list;
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<VaccinationCenter> getAllOrdered(boolean readonly, String[] mappingsToJoin) {
+		Criteria cri = session.createCriteria(VaccinationCenter.class).setReadOnly(readonly);
+
+		if(mappingsToJoin != null)
+			for (String mapping : mappingsToJoin) {
+				cri.setFetchMode(mapping, FetchMode.JOIN);
+			}
+		
+		cri.addOrder(Order.asc("name"));
 		
 		List<VaccinationCenter> list = cri.list();
 		setLAST_QUERY_TOTAL_ROW_COUNT(list.size());

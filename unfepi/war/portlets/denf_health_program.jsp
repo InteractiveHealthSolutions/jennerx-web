@@ -67,7 +67,7 @@ function submitThisForm() {
 			<td>Sites<span class="mendatory-field">*</span></td>
 			<td><select multiple="multiple" id="vaccinationCenters" name="vaccinationCenters" class="requiredField">
 					<c:forEach items="${vaccinationCenters}" var="center">
-						<option id="${center.mappedId}" value="${center.mappedId}">${center.idMapper.identifiers[0].identifier} : ${center.name}</option>
+						<option id="${center.mappedId}" value="${center.mappedId}"> ${center.name}</option>
 					</c:forEach>
 			</select></td>
 		<script type="text/javascript">

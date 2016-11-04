@@ -362,7 +362,7 @@ ul{
 	            <select id="vaccinationCenterId" name="centerVisit.vaccinationCenterId" bind-value="${status.value}" onchange="centerChanged();" class="requiredField">
 	               	<option id=""></option>
 	            	<c:forEach items="${vaccinationCenters}" var="vcenter"> 
-	            	<option id="vc${vcenter.mappedId}" value="${vcenter.mappedId}">${vcenter.idMapper.identifiers[0].identifier} : ${vcenter.name}</option>
+	            	<option id="vc${vcenter.mappedId}" value="${vcenter.mappedId}">${vcenter.name}</option>
 	            	</c:forEach> 
 	            </select>
 	            <span class="error-message"><c:out	value="${status.errorMessage}" /></span> 

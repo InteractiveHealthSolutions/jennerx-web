@@ -57,6 +57,7 @@
 		</script>
 <!-- 		<tr><td colspan="5" class="headerrow-light left">Rounds</td></tr> -->
 		<tr>
+<!-- 		<th></th> -->
 		<th>Name</th>
 		<th>Start Date</th>
 		<th>End Date</th>
@@ -66,6 +67,7 @@
 		<c:if test="${not empty model.rounds}">
 		<c:forEach var="round" items="${model.rounds}">
 		<tr>
+<%-- 		<td>${round.roundId}</td> --%>
 		<td>${round.name}</td>
 		<td><fmt:formatDate value="${round.startDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>
 		<td><fmt:formatDate value="${round.endDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td>

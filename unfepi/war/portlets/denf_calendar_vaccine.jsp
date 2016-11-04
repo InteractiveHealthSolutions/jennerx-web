@@ -18,30 +18,25 @@ function subfrm() {
 		return false;
 	}
 	
-	var gapsEmpty = true;
-	var gapsFieldEmpty = true;
+	var emptyGapCount = 0;
+	var emptyGapFieldCount = 0;
 	
-	$("input[id^='gap_in'").each(function(index, element){
-		
-// 		gapsEmpty = true;
-// 		gapsFieldEmpty = true;
-		
-		if($(this).prop('checked') != false){
-			gapsEmpty = false;
+	$("input[id^='gap_in'").each(function(index, element){		
+		if($(this).prop('checked')){
 			var id = (element.id).match(/\d+/g);
-			
-			if($('#gap_value'+id).val().length > 0 && $('#gap_unit'+id).val().length > 0 ){
-				gapsFieldEmpty = false;
+			if($('#gap_value'+id).val().length <= 0 || $('#gap_unit'+id).val().length <= 0 ){
+				emptyGapFieldCount++;
+				emptyGapCount++ ;
 			}
 		}
 	});
 	
-	if(gapsEmpty && $('#vaccinePrerequisites').val() == null){
+	if(emptyGapCount > 0 && $('#vaccinePrerequisites').val() == null){
 		alert("fill/select atleast one gap or prerequisite");
 		return false;
 	}
 	
-	if(!gapsEmpty && gapsFieldEmpty ){
+	if(emptyGapCount > 0 && emptyGapFieldCount > 0 ){
 		alert("fill the selected gap values ");
 		return false;
 	}

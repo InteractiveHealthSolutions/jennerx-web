@@ -44,7 +44,7 @@ public class ViewHealthProgramRoundController extends DataDisplayController{
 		
 		if(!StringUtils.isEmptyOrWhitespaceOnly(programId)){
 			
-			List<CenterProgram> centerProgramL = sc.getCustomQueryService().getDataByHQL("from CenterProgram where healthProgramId = "+Integer.parseInt(programId) + " and isActive = true");
+			List<CenterProgram> centerProgramL = sc.getCustomQueryService().getDataByHQL("from CenterProgram where healthProgramId = "+Integer.parseInt(programId) + " and isActive = true order by vaccinationCenter.name");
 			List<Round> roundL = sc.getCustomQueryService().getDataByHQL("from Round where healthProgramId = " + programId );
 			
 			addModelAttribute(model, "centerPrograms", centerProgramL );
@@ -59,7 +59,7 @@ public class ViewHealthProgramRoundController extends DataDisplayController{
 	{
 		ServiceContext sc = Context.getServices();
 		try {
-			List<HealthProgram> programs = sc.getCustomQueryService().getDataByHQL("from HealthProgram");
+			List<HealthProgram> programs = sc.getCustomQueryService().getDataByHQL("from HealthProgram order by name");
 			model.addAttribute("healthPrograms", programs);
 			
 		} catch (Exception e) {

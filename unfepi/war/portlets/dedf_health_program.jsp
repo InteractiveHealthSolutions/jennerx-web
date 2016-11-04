@@ -73,7 +73,7 @@ function submitThisForm() {
 							</c:if>
 						</c:forEach>
 						<option id="${center.mappedId}" value="${center.mappedId}" <c:if test="${found}">selected="selected"</c:if>>
-							${center.idMapper.identifiers[0].identifier} : ${center.name}</option>
+							 ${center.name}</option>
 							<c:remove var="found"/>
 					</c:forEach>
 			</select></td>

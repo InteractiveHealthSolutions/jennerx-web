@@ -152,6 +152,8 @@ public class FollowupVaccinationController extends DataEntryFormController{
 	protected void referenceData(HttpServletRequest request, Model model) throws Exception 
 	{
 		ServiceContext sc = Context.getServices();
+		
+		String child_id=request.getParameter("child_id");
 		try{	
 			List<HealthProgram> healthprograms = sc.getCustomQueryService().getDataByHQL("from HealthProgram");
 			model.addAttribute("healthprograms", healthprograms);			
@@ -159,7 +161,7 @@ public class FollowupVaccinationController extends DataEntryFormController{
 			List<Vaccine> vaccinesL = sc.getCustomQueryService().getDataByHQL("FROM Vaccine where vaccine_entity like 'CHILD%' and isSupplementary = 0") ;
 			model.addAttribute("vaccineList", vaccinesL);
 			
-			model.addAttribute("vaccinationCenters", sc.getVaccinationService().getAllVaccinationCenter(true, new String[]{"idMapper"}));
+			model.addAttribute("vaccinationCenters", sc.getVaccinationService().getAllVaccinationCenterOrdered(true, new String[]{"idMapper"}));
 			model.addAttribute("vaccinators", sc.getVaccinationService().getAllVaccinator(0, Integer.MAX_VALUE, true, new String[]{"idMapper"}));
 		}
 		catch (Exception e) {

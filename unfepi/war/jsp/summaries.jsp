@@ -36,7 +36,7 @@ var paramMap = new Object();
 paramMap['<%=DWRParamsGeneral.vaccinationCenter.name()%>'] = "";
 
 DWRVaccinationCenterService.getAllVaccinationCenters({async: true, callback: function (data) {
-	//alert(JSON.stringify(data));
+// 	alert(JSON.stringify(data.length));
 	for ( var i = 0; i < data.length; i++) {
 		//alert("<option value='"+data[i].id+"'>"+data[i].text+"</option>");
 		$("#vaccinationCentercombo").append("<option value='"+data[i].id+"'>"+data[i].text+"</option>");

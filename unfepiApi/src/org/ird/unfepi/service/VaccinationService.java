@@ -121,4 +121,6 @@ public interface VaccinationService {
 	VaccinationCenterVaccineDay mergeUpdateVaccinationCenterVaccineDay(VaccinationCenterVaccineDay vaccinationCenterVaccineDay);
 
 	void deleteVaccinationCenterVaccineDay(VaccinationCenterVaccineDay vaccinationCenterVaccineDay);
+
+	List<VaccinationCenter> getAllVaccinationCenterOrdered(boolean readonly, String[] mappingsToJoin);
 }

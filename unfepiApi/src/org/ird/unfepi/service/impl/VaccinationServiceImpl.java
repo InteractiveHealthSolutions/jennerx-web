@@ -255,6 +255,12 @@ public class VaccinationServiceImpl implements VaccinationService{
 	}
 	
 	@Override
+	public List<VaccinationCenter> getAllVaccinationCenterOrdered(boolean readonly, String[] mappingsToJoin) {
+		List<VaccinationCenter> list = daovacccenter.getAllOrdered(readonly, mappingsToJoin);
+		return list;
+	}
+	
+	@Override
 	public VaccinationCenter findVaccinationCenterById(int mappedId,
 			boolean readonly, String[] mappingsToJoin) {
 		VaccinationCenter obj = daovacccenter.findById(mappedId, readonly, mappingsToJoin);

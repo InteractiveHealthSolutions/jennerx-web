@@ -82,7 +82,7 @@ public class AddHealthProgramController extends DataEntryFormController{
 	{
 		ServiceContext sc = Context.getServices();
 		try {
-			List<VaccinationCenter> centeres = sc.getVaccinationService().getAllVaccinationCenter(true, new String[]{"idMapper"});
+			List<VaccinationCenter> centeres = sc.getVaccinationService().getAllVaccinationCenterOrdered(true, new String[]{"idMapper"});
 			model.addAttribute("vaccinationCenters", centeres);
 
 		} catch (Exception e) {

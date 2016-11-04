@@ -44,4 +44,6 @@ public interface DAOVaccinationCenter extends DAO{
 			String nameLike, CenterType centerType, int firstResult,
 			int fetchsize, boolean readonly, String[] mappingsToJoin);
 
+	List<VaccinationCenter> getAllOrdered(boolean readonly, String[] mappingsToJoin);
+
 }

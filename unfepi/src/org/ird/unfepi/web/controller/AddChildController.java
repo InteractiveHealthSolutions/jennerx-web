@@ -1,5 +1,6 @@
 package org.ird.unfepi.web.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -158,15 +159,16 @@ public class AddChildController extends DataEntryFormController{
 	{
 		ServiceContext sc = Context.getServices();
 		try {
-			List<VaccinationCenter> centeres = sc.getVaccinationService().getAllVaccinationCenter(true, new String[]{"idMapper"});
+//			List<VaccinationCenter> centeres = sc.getVaccinationService().getAllVaccinationCenter(true, new String[]{"idMapper"});
+			List<VaccinationCenter> centeres = sc.getVaccinationService().getAllVaccinationCenterOrdered(true, new String[]{"idMapper"});		
 			model.addAttribute("vaccinationCenters", centeres);
 			List<Vaccinator> vaccinators = sc.getVaccinationService().getAllVaccinator(0, Integer.MAX_VALUE, true, new String[]{"idMapper"});
 			model.addAttribute("vaccinators", vaccinators);	
 			List<Vaccine> vaccinesL = sc.getCustomQueryService().getDataByHQL("FROM Vaccine where vaccine_entity like 'CHILD%' and isSupplementary = 0") ;
 			model.addAttribute("vaccineList", vaccinesL);
-			List<HealthProgram> healthprograms = sc.getCustomQueryService().getDataByHQL("from HealthProgram");
+			List<HealthProgram> healthprograms = sc.getCustomQueryService().getDataByHQL("from HealthProgram order by name");
 			model.addAttribute("healthprograms", healthprograms);
-			List<Location> locations = sc.getCustomQueryService().getDataByHQL("from Location");
+			List<Location> locations = sc.getCustomQueryService().getDataByHQL("from Location order by name");
 			model.addAttribute("locations", locations);
 		} catch (Exception e) {
 			e.printStackTrace();

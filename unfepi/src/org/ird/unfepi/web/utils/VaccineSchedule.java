@@ -224,7 +224,14 @@ public class VaccineSchedule {
 //						System.out.println("vaccine\tminGraceDate\tmaxGraceDate\tAssignDueDate\tschduedate\tcenterVisitDate\tcurrent_suspect\tretro_suspect");
 //						System.out.println(vaccine.getName()+"\t"+minGraceDate+"\t"+maxGraceDate+"\t"+asgnduedate+"\t"+schduedate+"\t"+centerVisitDate+"\t"+current_suspect+"\t"+retro_suspect);
 						
+						if(asgnduedate != null && centerVisitDate.compareTo(new Date(asgnduedate.getTime()+(-minGracePeriod* 24 * 60 * 60 * 1000))) < 0){
+							current_suspect = false;
+						}
+					
 					}
+					
+					
+					
 					
 					// N/A or out of schedule or expiry date has passed
 					if(schduedate == null){

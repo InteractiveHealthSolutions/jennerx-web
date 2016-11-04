@@ -1,8 +1,11 @@
 package org.ird.unfepi.web.controller;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,12 +36,13 @@ public class ViewHealthProgramController extends DataDisplayController  {
 		ServiceContext sc = Context.getServices();
 		Map<String, Object> model = new HashMap<String, Object>();
 		
-		Map<HealthProgram, List<CenterProgram>> programMap = new HashMap<HealthProgram, List<CenterProgram>>();
+		Map<HealthProgram, List<CenterProgram>> programMap = new LinkedHashMap<HealthProgram, List<CenterProgram>>();
 		
-		List<HealthProgram> hpRecords = sc.getCustomQueryService().getDataByHQL("from HealthProgram");
+		List<HealthProgram> hpRecords = sc.getCustomQueryService().getDataByHQL("from HealthProgram ");
 		
 		for (HealthProgram hp : hpRecords) {
-			List<CenterProgram> cpRecords = sc.getCustomQueryService().getDataByHQL("from CenterProgram where healthProgramId = "+ hp.getProgramId());
+			List<CenterProgram> cpRecords = sc.getCustomQueryService().getDataByHQL(
+					"from CenterProgram where healthProgramId = "+ hp.getProgramId() + " order by vaccinationCenter.name");
 			
 			programMap.put(hp, cpRecords);
 		}

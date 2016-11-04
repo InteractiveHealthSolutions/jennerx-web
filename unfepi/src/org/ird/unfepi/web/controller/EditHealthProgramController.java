@@ -108,7 +108,7 @@ public class EditHealthProgramController extends DataEditFormController {
 		String programId = request.getParameter("programId");
 		
 		try {
-			List<VaccinationCenter> centeres = sc.getVaccinationService().getAllVaccinationCenter(true, new String[]{"idMapper"});
+			List<VaccinationCenter> centeres = sc.getVaccinationService().getAllVaccinationCenterOrdered(true, new String[]{"idMapper"});
 			model.addAttribute("vaccinationCenters", centeres);
 			
 			List<CenterProgram> cpList = sc.getCustomQueryService().getDataByHQL("from CenterProgram where healthProgramId = " + programId);

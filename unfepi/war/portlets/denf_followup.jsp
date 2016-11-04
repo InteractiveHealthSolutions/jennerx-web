@@ -110,33 +110,32 @@ ul{
 		return false;
 	}
 	
-	function centerChanged() {
-		unSelecteHealthProgram();
-		getCenterProgram();		
+	function centerChanged() {	
 	}
 	
-	function unSelecteHealthProgram(){
-		$("#healthProgramId option:selected").removeAttr("selected");
-		$("#healthProgramId").val("");
-		$("#healthProgramId option").hide();
+	function healthProgramChanged(){
+		unSelecteSites();
+		getSites();
+	}	
+	function unSelecteSites(){
+		$("#vaccinationCenterId option:selected").removeAttr("selected");
+		$("#vaccinationCenterId").val("");
+		$("#vaccinationCenterId option").hide();
 	}
 	
-	function getCenterProgram(){
-		$.get( "addchild/programList/"+$('#vaccinationCenterId').val()+".htm" , function( data ) {
-			  
-			  if(data.replace(/\[|\]|\s/gi,"").split(",").toString().length == 0){
-				  alert("no health program found in '" + $('#vaccinationCenterId option:selected').text()+"'");
-			  }
-			  
-			  var current_Prog = data.replace(/\[|\]|\s/gi,"").split(",");
-			  
-			  $.each(current_Prog, function(index, value){
-				  $("#healthProgramId option").each(function(){
-					  if (value == $(this).attr("id").replace(/\D/g,"")){
-						  $('#hp'+value).show();
+	function getSites(){
+		$.get( "addchild/siteList/"+$('#healthProgramId').val()+".htm" , function( data ) {
+			
+			var centers = $.parseJSON(data);
+			console.log(centers);
+			$.each(centers, function(index, value){
+				$("#vaccinationCenterId option").each(function(){
+					 if (value == $(this).attr("id").replace(/\D/g,"")){
+						  $('#vc'+value).show();
 					  }
-				  });
-			  });
+				});
+			});
+			
 		});
 	}
 	
@@ -160,9 +159,10 @@ ul{
 <script type="text/javascript">
 	$(function() {
 		
-		$("#healthProgramId option").hide();
-		if($('#vaccinationCenterId').val().length != 0){
-			getCenterProgram();
+		$("#vaccinationCenterId option").hide();
+
+		if($('#healthProgramId').val().length != 0){
+			getSites();	
 		}
 		
 		
@@ -250,25 +250,9 @@ ul{
 		</td>
 	</tr>
 	<tr>
-		<td>Vaccination Center <span class="mendatory-field">*</span></td>
-		<td>
-			<spring:bind path="command.vaccinationCenterId">
-            <select id="vaccinationCenterId" name="vaccinationCenterId" bind-value="${status.value}" onchange="centerChanged();" class="requiredField">
-               	<option></option>
-            	<c:forEach items="${vaccinationCenters}" var="vcenter"> 
-            	<option value="${vcenter.mappedId}">${vcenter.idMapper.identifiers[0].identifier} : ${vcenter.name}</option>
-            	</c:forEach> 
-            </select>
-            <span class="error-message"><c:out	value="${status.errorMessage}" /></span> 
-            </spring:bind>
-		</td>
-	</tr>
-	
-	
-	<tr>
 		<td>Health Program<span class="mendatory-field">*</span></td>
 		<td><spring:bind path="command.healthProgramId">
-	            <select id="healthProgramId" name="healthProgramId" bind-value="${status.value}" class="requiredField">
+	            <select id="healthProgramId" name="healthProgramId" bind-value="${status.value}" onchange="healthProgramChanged();"  class="requiredField">
 	               	<option id=""></option>
 	            	<c:forEach items="${healthprograms}" var="hprog"> 
 	            		<option id="hp${hprog.programId}" value="${hprog.programId}">${hprog.name}</option>
@@ -278,7 +262,20 @@ ul{
             </spring:bind>
 		</td>
 	</tr>
-	
+	<tr>
+		<td>Site<span class="mendatory-field">*</span></td>
+		<td>
+			<spring:bind path="command.vaccinationCenterId">
+            <select id="vaccinationCenterId" name="vaccinationCenterId" bind-value="${status.value}" onchange="centerChanged();" class="requiredField">
+               	<option id=""></option>
+            	<c:forEach items="${vaccinationCenters}" var="vcenter"> 
+            	<option id="vc${vcenter.mappedId}" value="${vcenter.mappedId}">${vcenter.name}</option>
+            	</c:forEach> 
+            </select>
+            <span class="error-message"><c:out	value="${status.errorMessage}" /></span> 
+            </spring:bind>
+		</td>
+	</tr>
 	
 </table>
 </div>
