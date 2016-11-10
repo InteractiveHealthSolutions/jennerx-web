@@ -14,6 +14,7 @@ import org.ird.unfepi.context.LoggedInUser;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.CenterProgram;
 import org.ird.unfepi.model.HealthProgram;
+import org.ird.unfepi.model.VaccinationCalendar;
 import org.ird.unfepi.model.VaccinationCenter;
 import org.ird.unfepi.utils.UserSessionUtils;
 import org.ird.unfepi.web.utils.ControllerUIHelper;
@@ -113,6 +114,10 @@ public class EditHealthProgramController extends DataEditFormController {
 			
 			List<CenterProgram> cpList = sc.getCustomQueryService().getDataByHQL("from CenterProgram where healthProgramId = " + programId);
 			model.addAttribute("centerProgram", cpList);
+			
+			List<VaccinationCalendar> vaccinationCalendars = sc.getCustomQueryService().getDataByHQL("from VaccinationCalendar");
+			model.addAttribute("vaccinationCalendars", vaccinationCalendars);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			request.setAttribute("errorMessagev", "An error occurred while retrieving reference data list. Error message is:"+e.getMessage());

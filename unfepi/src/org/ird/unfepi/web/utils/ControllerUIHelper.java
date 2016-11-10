@@ -133,13 +133,13 @@ public class ControllerUIHelper {
 		int closestgap = 999999999;
 		List<Vaccine> enrVacc = new ArrayList<Vaccine>();
 		for (VaccineSchedule vsh : vaccineSchedule) {
-			if (vsh.getVaccination_date() != null && vsh.getStatus().equalsIgnoreCase(VaccineStatusType.VACCINATED.toString()) && IMRUtils.getBirthdateGap(vsh.getVaccine().getVaccineId()) != null) {
+			if (vsh.getVaccination_date() != null && vsh.getStatus().equalsIgnoreCase(VaccineStatusType.VACCINATED.toString()) && IMRUtils.getBirthdateGap(vsh.getVaccine().getVaccineId(), null) != null) {
 				// what should have been the date of vaccination wrt schedule
 				// chart
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(birthdate);
-				short gaptovvac = IMRUtils.getBirthdateGap(vsh.getVaccine().getVaccineId()).getValue();
-				TimeIntervalUnit unit = IMRUtils.getBirthdateGap(vsh.getVaccine().getVaccineId()).getGapTimeUnit();
+				short gaptovvac = IMRUtils.getBirthdateGap(vsh.getVaccine().getVaccineId(),null).getValue();
+				TimeIntervalUnit unit = IMRUtils.getBirthdateGap(vsh.getVaccine().getVaccineId(),null).getGapTimeUnit();
 				if (unit.equals(TimeIntervalUnit.DAY)) {
 					cal.add(Calendar.DATE, gaptovvac);
 
@@ -1281,9 +1281,6 @@ public class ControllerUIHelper {
 			cp.setHealthProgramId(hpId);
 			cp.setVaccinationCenterId(Integer.parseInt(centerId));
 			cp.setIsActive(true);
-//			cp.setStartDate(new Date());
-//			cp.setCreatedDate(new Date());
-//			cp.setCreatedByUserId(user);
 			sc.getHealthProgramService().saveCenterProgram(cp);
 		}
 	}
@@ -1296,31 +1293,19 @@ public class ControllerUIHelper {
 		List<String> centersIdL = new ArrayList<String>(Arrays.asList(centersId));
 		
 		for (Iterator<CenterProgram> cp_it = centerProgramL.iterator(); cp_it.hasNext();) {
-			
 			CenterProgram nextCp = cp_it.next();
 			for (Iterator<String> cId_it = centersIdL.iterator(); cId_it.hasNext();) {
 				String nextCid = cId_it.next();
 				if (nextCp.getVaccinationCenterId() == Integer.parseInt(nextCid)) {
-					
-						cId_it.remove();
-						if(nextCp.getIsActive() == true){
-							cp_it.remove();
-						}
-							
+					nextCp.setIsActive(true);
+					sc.getHealthProgramService().saveCenterProgram(nextCp);
+					cId_it.remove();
+					cp_it.remove();
 				}
 			}
 		}
-		
 		for (CenterProgram cp : centerProgramL) {
-			
-			if(cp.getIsActive() == false){
-				cp.setIsActive(true);
-			}
-			else { 
-				cp.setIsActive(false);
-			}			
-//			cp.setLastEditedByUserId(user);
-//			cp.setLastEditedDate(new Date());
+			cp.setIsActive(false);
 			sc.getCustomQueryService().update(cp);
 		}
 		for (String centerId : centersIdL) {
@@ -1328,9 +1313,6 @@ public class ControllerUIHelper {
 			cp.setHealthProgramId(hp.getProgramId());
 			cp.setVaccinationCenterId(Integer.parseInt(centerId));
 			cp.setIsActive(true);
-//			cp.setStartDate(new Date());
-//			cp.setCreatedDate(new Date());
-//			cp.setCreatedByUserId(user);
 			sc.getHealthProgramService().saveCenterProgram(cp);
 		}
 	}

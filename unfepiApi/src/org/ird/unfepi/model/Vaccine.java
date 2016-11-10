@@ -5,6 +5,8 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,6 +19,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.ForeignKey;
+import org.ird.unfepi.model.Model.VaccineEntity;
 
 @Entity
 @Table (name = "vaccine")
@@ -25,7 +28,7 @@ public class Vaccine implements java.io.Serializable {
 	private static final long serialVersionUID = 9015418858974117077L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
     /*@Column(columnDefinition = "SMALLINT NOT NULL AUTO_INCREMENT")*/
 	private short vaccineId;
 	
@@ -78,6 +81,10 @@ public class Vaccine implements java.io.Serializable {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date voidedDate;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(length = 20)
+	private VaccineEntity vaccine_entity;
 	
 	public Vaccine() {
 	}
@@ -237,6 +244,14 @@ public class Vaccine implements java.io.Serializable {
 		setVoidedDate(new Date());
 		setVoidReason(voidReason);
 		setVoided(true);
+	}
+
+	public VaccineEntity getVaccine_entity() {
+		return vaccine_entity;
+	}
+
+	public void setVaccine_entity(VaccineEntity vaccine_entity) {
+		this.vaccine_entity = vaccine_entity;
 	}
 	
 }

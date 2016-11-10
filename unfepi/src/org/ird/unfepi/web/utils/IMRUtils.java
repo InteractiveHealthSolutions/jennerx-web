@@ -20,10 +20,8 @@ import org.ird.unfepi.model.Reminder;
 import org.ird.unfepi.model.Reminder.ReminderType;
 import org.ird.unfepi.model.ReminderSms;
 import org.ird.unfepi.model.ReminderSms.REMINDER_STATUS;
-import org.ird.unfepi.model.Vaccination.VACCINATION_STATUS;
 import org.ird.unfepi.model.User;
 import org.ird.unfepi.model.Vaccination;
-import org.ird.unfepi.model.VaccinationCenterVaccineDay;
 import org.ird.unfepi.model.Vaccine;
 import org.ird.unfepi.model.VaccineGap;
 import org.ird.unfepi.model.VaccineGapId;
@@ -90,7 +88,7 @@ public class IMRUtils {
 		return measles2Given;
 	}
 	
-	public static boolean passVaccinePrerequisiteCheck(VaccineSchedule vaccineSch, List<VaccineSchedule> schedule) {
+	public static boolean passVaccinePrerequisiteCheck(VaccineSchedule vaccineSch, List<VaccineSchedule> schedule, Integer calendarId) {
 		// if no prerequisite defined pass
 		if(vaccineSch.getPrerequisites() == null || vaccineSch.getPrerequisites().size() == 0){
 			return true;
@@ -99,26 +97,27 @@ public class IMRUtils {
 		// if any pre-req is mandatory and not satified block it
 		for (VaccinePrerequisite prereq : vaccineSch.getPrerequisites()) 
 		{
-			if(prereq.getMandatory() != null && prereq.getMandatory())
-			{
-				boolean prereqVaccineFoundInlist = false;// if prereq not in given schedule say prereq not satisfied
-				
-				for (VaccineSchedule vaccineSchedule : schedule) {
-					if(prereq.getVaccinePrerequisiteId().getVaccinePrerequisiteId() == vaccineSchedule.getVaccine().getVaccineId()){
-						prereqVaccineFoundInlist = true;
-						if(!vaccineSchedule.getStatus().equalsIgnoreCase(VaccineStatusType.RETRO_DATE_MISSING.name()) 
-							&& vaccineSchedule.getVaccination_date() == null){
-							return false;
+			if(prereq.getVaccinePrerequisiteId().getVaccinationcalendarId() == calendarId){
+				if(prereq.getMandatory() != null && prereq.getMandatory())
+				{
+					boolean prereqVaccineFoundInlist = false;// if prereq not in given schedule say prereq not satisfied
+					
+					for (VaccineSchedule vaccineSchedule : schedule) {
+						if(prereq.getVaccinePrerequisiteId().getVaccinePrerequisiteId() == vaccineSchedule.getVaccine().getVaccineId()){
+							prereqVaccineFoundInlist = true;
+							if(!vaccineSchedule.getStatus().equalsIgnoreCase(VaccineStatusType.RETRO_DATE_MISSING.name()) 
+								&& vaccineSchedule.getVaccination_date() == null){
+								return false;
+							}
 						}
 					}
-				}
-				
-				//if vaccine is mandatory and vaccine is missing from schedule say Prereq not satisfied
-				if(!prereqVaccineFoundInlist){
-					return false;
+					
+					//if vaccine is mandatory and vaccine is missing from schedule say Prereq not satisfied
+					if(!prereqVaccineFoundInlist){
+						return false;
+					}
 				}
 			}
-			
 		}
 		
 		return true;
@@ -357,31 +356,35 @@ try{
 	}
 	
 	
-	public static Date getPrerequisiteVaccineDate(VaccineSchedule vaccineSch, List<VaccineSchedule> schedule) {
+	public static Date getPrerequisiteVaccineDate(VaccineSchedule vaccineSch, List<VaccineSchedule> schedule, Integer calendarId) {
 		if(vaccineSch.getPrerequisites() == null || vaccineSch.getPrerequisites().size() == 0){
 			return null;
 		}
 		//for now it assumes that only one prereq is possible
 		for (VaccinePrerequisite prereq : vaccineSch.getPrerequisites()) {
 			for (VaccineSchedule vaccineSchedule : schedule) {
-				if(prereq.getVaccinePrerequisiteId().getVaccinePrerequisiteId() == vaccineSchedule.getVaccine().getVaccineId()){
-					return vaccineSchedule.getVaccination_date();
+				if(prereq.getVaccinePrerequisiteId().getVaccinationcalendarId() == calendarId){
+					if(prereq.getVaccinePrerequisiteId().getVaccinePrerequisiteId() == vaccineSchedule.getVaccine().getVaccineId()){
+						return vaccineSchedule.getVaccination_date();
+					}
 				}
 			}
 		}
 		
 		return null;
 	}
-	public static boolean isPrerequisiteVaccinatedOnCurrentVisit(VaccineSchedule vaccineSch, List<VaccineSchedule> schedule) {
+	public static boolean isPrerequisiteVaccinatedOnCurrentVisit(VaccineSchedule vaccineSch, List<VaccineSchedule> schedule, Integer calendarId) {
 		if(vaccineSch.getPrerequisites() == null || vaccineSch.getPrerequisites().size() == 0){
 			return false;
 		}
 		for (VaccinePrerequisite prereq : vaccineSch.getPrerequisites()) {
 			for (VaccineSchedule vaccineSchedule : schedule) {
-				if(prereq.getVaccinePrerequisiteId().getVaccinePrerequisiteId() == vaccineSchedule.getVaccine().getVaccineId()
-						&& vaccineSchedule.getStatus().equalsIgnoreCase(VaccineStatusType.VACCINATED.name())
-						&& vaccineSchedule.getVaccination_date() != null && DateUtils.datesEqual(vaccineSchedule.getVaccination_date(), vaccineSch.getVisitdate())){
-					return true;
+				if(prereq.getVaccinePrerequisiteId().getVaccinationcalendarId() == calendarId){
+					if(prereq.getVaccinePrerequisiteId().getVaccinePrerequisiteId() == vaccineSchedule.getVaccine().getVaccineId()
+							&& vaccineSchedule.getStatus().equalsIgnoreCase(VaccineStatusType.VACCINATED.name())
+							&& vaccineSchedule.getVaccination_date() != null && DateUtils.datesEqual(vaccineSchedule.getVaccination_date(), vaccineSch.getVisitdate())){
+						return true;
+					}
 				}
 			}
 		}
@@ -392,30 +395,36 @@ try{
 		return Context.getSetting("vaccine.next-vaccine."+currentVaccine.trim().toLowerCase(), "Not Found");
 	}
 	
-	public static VaccineGap getBirthdateGap(Vaccine vaccine){
+	public static VaccineGap getBirthdateGap(Vaccine vaccine, Integer calendarId){
 		for (VaccineGap gap : vaccine.getVaccineGaps()) {
-			if(gap.getVaccineGapType().getName().toLowerCase().contains("birthdate")){
-				return gap;
+			if(gap.getId().getVaccinationcalendarId() == calendarId){
+				if(gap.getVaccineGapType().getName().toLowerCase().contains("birthdate")){
+					return gap;
+				}
 			}
 		}
 		return null;
 	}
 	
-	public static VaccineGap getVaccineExpiryGap(Vaccine vaccine){
+	public static VaccineGap getVaccineExpiryGap(Vaccine vaccine, Integer calendarId){
 		for (VaccineGap gap : vaccine.getVaccineGaps()) {
-			if(gap.getVaccineGapType().getName().toLowerCase().contains("expir")){
-				return gap;
+			if(gap.getId().getVaccinationcalendarId() == calendarId){
+				if(gap.getVaccineGapType().getName().toLowerCase().contains("expir")){
+					return gap;
+				}
 			}
 		}
 		return null;
 	}
 	
-	public static VaccineGap getBirthdateGap(short vaccineId){
+	public static VaccineGap getBirthdateGap(short vaccineId, Integer calendarId){
 		ServiceContext sc = Context.getServices();
 		try{
 			for (VaccineGap gap : Utils.initializeAndUnproxy(sc.getVaccinationService().findVaccineById(vaccineId).getVaccineGaps())) {
-				if(gap.getVaccineGapType().getName().toLowerCase().contains("birthdate")){
-					return gap;
+				if(gap.getId().getVaccinationcalendarId() == calendarId){
+					if(gap.getVaccineGapType().getName().toLowerCase().contains("birthdate")){
+						return gap;
+					}
 				}
 			}
 		}
@@ -425,31 +434,35 @@ try{
 		return null;
 	}
 	
-	public static VaccineGap getStandardGap(Vaccine vaccine){
+	public static VaccineGap getStandardGap(Vaccine vaccine, Integer calendarId){
 		for (VaccineGap gap : vaccine.getVaccineGaps()) {
-			if(gap.getVaccineGapType().getName().toLowerCase().contains("standard")){
-				return gap;
+			if(gap.getId().getVaccinationcalendarId() == calendarId){
+				if(gap.getVaccineGapType().getName().toLowerCase().contains("standard")){
+					return gap;
+				}
 			}
 		}
 		return null;
 	}
 	
-	public static VaccineGap getPreviousVaccineGap(Vaccine vaccine){
+	public static VaccineGap getPreviousVaccineGap(Vaccine vaccine, Integer calendarId){
 		for (VaccineGap gap : vaccine.getVaccineGaps()) {
-			if(gap.getVaccineGapType().getName().toLowerCase().contains("previous vaccine")){
-				return gap;
+			if(gap.getId().getVaccinationcalendarId() == calendarId){
+				if(gap.getVaccineGapType().getName().toLowerCase().contains("previous vaccine")){
+					return gap;
+				}
 			}
 		}
 		return null;
 	}
-	public static Date calculateVaccineDuedate(Vaccine vaccine, Date birthdate, Date prereqVaccineDate, Date previousVaccineDate, Integer vaccinationCenterId, ServiceContext sc)
+	public static Date calculateVaccineDuedate(Vaccine vaccine, Date birthdate, Date prereqVaccineDate, Date previousVaccineDate, Integer vaccinationCenterId, Integer calendarId, ServiceContext sc)
 	{
 		Calendar calculatedDuedate = Calendar.getInstance();
 		// Calculate date for next vaccine wrt birthdate first.
 		Calendar actDuedateWrtBirthdate = Calendar.getInstance();
 		actDuedateWrtBirthdate.setTime(birthdate);
 		
-		VaccineGap gap = getBirthdateGap(vaccine);
+		VaccineGap gap = getBirthdateGap(vaccine, calendarId);
 		TimeIntervalUnit unit = null;
 		
 		if(gap != null){
@@ -471,7 +484,7 @@ try{
 		
 		// Calculate date for next vaccine wrt previous vaccination date first.
 		Calendar actDuedateWrtPrevVDate = null;
-		gap = getPreviousVaccineGap(vaccine);
+		gap = getPreviousVaccineGap(vaccine, calendarId);
 		if(gap != null && prereqVaccineDate != null){
 			actDuedateWrtPrevVDate = Calendar.getInstance();
 			actDuedateWrtPrevVDate.setTime(prereqVaccineDate);
@@ -494,7 +507,7 @@ try{
 		
 		// Calculate date for next vaccine wrt previous vaccination date first.
 		Calendar actDuedateWrtPreviousEvent = null;
-		gap = getStandardGap(vaccine);
+		gap = getStandardGap(vaccine, calendarId);
 		if (gap != null && previousVaccineDate != null) {
 			actDuedateWrtPreviousEvent = Calendar.getInstance();
 			actDuedateWrtPreviousEvent.setTime(previousVaccineDate);
@@ -528,12 +541,12 @@ try{
 		return calculatedDuedate.getTime();
 	}
 	
-	public static Date calculateExpiryDate(Vaccine vaccine, Date birthdate, ServiceContext sc)
+	public static Date calculateExpiryDate(Vaccine vaccine, Date birthdate, Integer calendarId, ServiceContext sc)
 	{
 		Calendar calculatedDate = Calendar.getInstance();
 		calculatedDate.setTime(birthdate);
 		
-		VaccineGap gap = getVaccineExpiryGap(vaccine);
+		VaccineGap gap = getVaccineExpiryGap(vaccine, calendarId);
 		TimeIntervalUnit unit = null;
 		
 		if(gap != null){

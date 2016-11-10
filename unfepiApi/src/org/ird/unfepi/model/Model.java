@@ -94,4 +94,9 @@ public class Model {
 		/** The YEAR. */
 		YEAR;
 	}
+	
+	public enum VaccineEntity{
+		CHILD_COMPULSORY,
+		CHILD_SUPPLEMENTARY;
+	}
 }

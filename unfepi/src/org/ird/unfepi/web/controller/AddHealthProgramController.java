@@ -15,6 +15,7 @@ import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.LoggedInUser;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.HealthProgram;
+import org.ird.unfepi.model.VaccinationCalendar;
 import org.ird.unfepi.model.VaccinationCenter;
 import org.ird.unfepi.utils.UserSessionUtils;
 import org.ird.unfepi.web.utils.ControllerUIHelper;
@@ -84,6 +85,9 @@ public class AddHealthProgramController extends DataEntryFormController{
 		try {
 			List<VaccinationCenter> centeres = sc.getVaccinationService().getAllVaccinationCenterOrdered(true, new String[]{"idMapper"});
 			model.addAttribute("vaccinationCenters", centeres);
+			
+			List<VaccinationCalendar> vaccinationCalendars = sc.getCustomQueryService().getDataByHQL("from VaccinationCalendar");
+			model.addAttribute("vaccinationCalendars", vaccinationCalendars);
 
 		} catch (Exception e) {
 			e.printStackTrace();

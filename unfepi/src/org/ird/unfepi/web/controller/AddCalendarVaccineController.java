@@ -37,7 +37,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 
 @Controller
-@SessionAttributes("command")
+//@SessionAttributes("command")
 @RequestMapping("/addCalendarVaccine")
 public class AddCalendarVaccineController extends DataEntryFormController{
 	
@@ -57,29 +57,6 @@ public class AddCalendarVaccineController extends DataEntryFormController{
 	@RequestMapping(method=RequestMethod.POST)
 	public ModelAndView onSubmit(@ModelAttribute("command")VaccineRegistrationWrapper wrapper, BindingResult results,
 								 HttpServletRequest request, HttpServletResponse response,ModelAndView modelAndView) throws Exception {
-		
-		System.out.println(wrapper.getVaccinationCalendarId());
-		System.out.println(wrapper.getVaccineId());
-		if(wrapper.getVaccineGapList() !=null && wrapper.getVaccineGapList().size() >0){
-			for(VaccineGap vp :wrapper.getVaccineGapList()){
-				
-				if(vp.getValue() == 0 && vp.getGapTimeUnit() == null && vp.getId() == null){
-					
-				}
-				else{
-					System.out.println("gap "+vp.getValue() + " " + vp.getGapTimeUnit()
-							+" "+ vp.getId().getVaccineId()+" "
-							+" "+ vp.getId().getVaccineGapTypeId()+" "
-							+" "+ vp.getId().getVaccinationcalendarId()+" ");
-					System.out.println("---");
-				}
-			}
-		}
-		if(wrapper.getVaccinePrerequisites() != null && wrapper.getVaccinePrerequisites().length >0){
-			for (String string : wrapper.getVaccinePrerequisites()) {
-				System.out.println("preReq" +string);
-			}
-		}
 		
 		if(wrapper.getVaccineGapList() !=null && wrapper.getVaccineGapList().size() >0){
 			for (Iterator<VaccineGap> iterator = wrapper.getVaccineGapList().iterator(); iterator.hasNext();) {

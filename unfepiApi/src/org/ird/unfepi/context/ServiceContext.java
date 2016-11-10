@@ -10,6 +10,7 @@ import org.ird.unfepi.model.dao.DAO;
 import org.ird.unfepi.model.dao.DAOAddress;
 import org.ird.unfepi.model.dao.DAOArm;
 import org.ird.unfepi.model.dao.DAOCalendarDay;
+import org.ird.unfepi.model.dao.DAOCalendarVaccine;
 import org.ird.unfepi.model.dao.DAOChildIncentive;
 import org.ird.unfepi.model.dao.DAOCommunicationNote;
 import org.ird.unfepi.model.dao.DAOContactNumber;
@@ -42,6 +43,7 @@ import org.ird.unfepi.model.dao.DAOVariableSetting;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOAddressImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOArmImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOCalendarDayImpl;
+import org.ird.unfepi.model.dao.hibernatedimpl.DAOCalendarVaccineImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOCenterProgramImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOChildImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOChildIncentiveImpl;
@@ -87,6 +89,7 @@ import org.ird.unfepi.model.dao.hibernatedimpl.DAOVaccineImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOVariableSettingImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOWomenImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOWomenVaccinationImpl;
+import org.ird.unfepi.service.CalendarVaccineService;
 import org.ird.unfepi.service.ChildService;
 import org.ird.unfepi.service.CommunicationService;
 import org.ird.unfepi.service.CustomQueryService;
@@ -105,6 +108,7 @@ import org.ird.unfepi.service.UserSmsService;
 import org.ird.unfepi.service.VaccinationService;
 import org.ird.unfepi.service.WomenService;
 import org.ird.unfepi.service.WomenVaccinationService;
+import org.ird.unfepi.service.impl.CalendarVaccineServiceImpl;
 import org.ird.unfepi.service.impl.ChildServiceImpl;
 import org.ird.unfepi.service.impl.CommunicationServiceImpl;
 import org.ird.unfepi.service.impl.CustomQueryServiceImpl;
@@ -169,6 +173,8 @@ public class ServiceContext {
 	private WomenVaccinationService womenVaccinationService;
 	
 	private HealthProgramService healthProgramService;
+	
+	private CalendarVaccineService calendarVaccineService;
 
 	ServiceContext(SessionFactory sessionObj) 
 	{
@@ -278,6 +284,9 @@ public class ServiceContext {
 		DAOUserSms daousms = new DAOUserSmsImpl(session);
 		
 		this.userSmsService = new UserSmsServiceImpl(daousms);
+		
+		DAOCalendarVaccineImpl daocalVac = new DAOCalendarVaccineImpl(session);
+		this.calendarVaccineService = new CalendarVaccineServiceImpl(daocalVac);
 	}
 	
 	public void beginTransaction(){
@@ -419,6 +428,14 @@ public class ServiceContext {
 
 	public void setHealthProgramService(HealthProgramService healthProgramService) {
 		this.healthProgramService = healthProgramService;
+	}
+
+	public CalendarVaccineService getCalendarVaccineService() {
+		return calendarVaccineService;
+	}
+
+	public void setCalendarVaccineService(CalendarVaccineService calendarVaccineService) {
+		this.calendarVaccineService = calendarVaccineService;
 	}
 	
 }

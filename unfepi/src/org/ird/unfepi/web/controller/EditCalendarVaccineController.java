@@ -1,17 +1,16 @@
 package org.ird.unfepi.web.controller;
 
-import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ird.unfepi.DataEditForm;
 import org.ird.unfepi.DataEditFormController;
-import org.ird.unfepi.GlobalParams;
 import org.ird.unfepi.beans.VaccineRegistrationWrapper;
 import org.ird.unfepi.constants.SystemPermissions;
 import org.ird.unfepi.context.Context;
@@ -48,81 +47,85 @@ public class EditCalendarVaccineController extends DataEditFormController{
 		modelAndView.addObject("command", formBackingObject(request));
 		return showForm(modelAndView, "dataForm");		
 	}
-	
+
 	@RequestMapping(method=RequestMethod.POST)
 	public ModelAndView onSubmit(@ModelAttribute("command")VaccineRegistrationWrapper wrapper, BindingResult results,
-								 HttpServletRequest request, HttpServletResponse response,ModelAndView modelAndView) throws Exception {
-		
+			HttpServletRequest request, HttpServletResponse response,ModelAndView modelAndView) throws Exception {
+
 		if(wrapper.getVaccineGapList() !=null && wrapper.getVaccineGapList().size() >0){
 			for (Iterator<VaccineGap> iterator = wrapper.getVaccineGapList().iterator(); iterator.hasNext();) {
 				VaccineGap vaccineGap = iterator.next();
+				
+				System.out.println(" vaccine gap " + vaccineGap.getValue() + "  "  + vaccineGap.getGapTimeUnit());
+				
 				if(vaccineGap.getValue() == 0 && vaccineGap.getGapTimeUnit() == null) {
 					iterator.remove();
 				}
 			}
 		}
-		
+
 		new CalendarVaccineValidator().validate(wrapper, results, false);
 		if(results.hasErrors()){	
 			System.out.println(results.toString());
-			
-			if(wrapper.getVaccinePrerequisites() != null){
-				modelAndView.addObject("preReq_selected", Arrays.asList(wrapper.getVaccinePrerequisites()));
-			}
 			modelAndView.addObject("binding_errors", true);
 			return showForm(modelAndView, "dataForm");	
 		}
-		
+
 		LoggedInUser user = UserSessionUtils.getActiveUser(request);
 		ServiceContext sc = Context.getServices();
 		try {
+			
+			ServiceContext _sc = Context.getServices();
+			List<VaccineGap> vacGaps_deL =	_sc.getCustomQueryService().getDataByHQL("from VaccineGap where vaccineId = " + wrapper.getVaccineId() + " and vaccinationcalendarId = " + wrapper.getVaccinationCalendarId());
+			for (VaccineGap vg : vacGaps_deL) {
+				_sc.getCalendarVaccineService().deleteVaccineGap(vg);
+			}
+			List<VaccinePrerequisite> vacPreq_deL = _sc.getCustomQueryService().getDataByHQL("from VaccinePrerequisite where vaccinePrerequisiteId.vaccineId = " + wrapper.getVaccineId() + " and vaccinePrerequisiteId.vaccinationcalendarId = " + wrapper.getVaccinationCalendarId());
+			for (VaccinePrerequisite vpr : vacPreq_deL) {
+				_sc.getCalendarVaccineService().deleteVaccinePrerequisite(vpr);
+			}
+			_sc.commitTransaction();
+			_sc.closeSession();
 			
 			if(wrapper.getVaccineGapList() !=null && wrapper.getVaccineGapList().size() >0){
 				for(VaccineGap vp :wrapper.getVaccineGapList()){
 					sc.getCustomQueryService().saveOrUpdate(vp);
 				}
 			}
-			
 			if(wrapper.getVaccinePrerequisites() != null && wrapper.getVaccinePrerequisites().length >0){
 				for (String preq : wrapper.getVaccinePrerequisites()) {
-					
+
 					VaccinePrerequisiteId vpr_id = new VaccinePrerequisiteId();
 					vpr_id.setVaccineId(wrapper.getVaccineId().shortValue());
 					vpr_id.setVaccinePrerequisiteId(Short.parseShort(preq));
 					vpr_id.setVaccinationcalendarId(wrapper.getVaccinationCalendarId());
-					
+
 					VaccinePrerequisite vpr = new VaccinePrerequisite();
 					vpr.setVaccinePrerequisiteId(vpr_id);
-					
+
 					sc.getCustomQueryService().saveOrUpdate(vpr);
 				}
 			}
-			
 			sc.commitTransaction();
-//			EncounterUtil.createVaccineRegistrationEncounter(vaccine, DataEntrySource.WEB, dateFormStart, user.getUser(), sc);
-//			GlobalParams.DBLOGGER.info(IRUtils.convertToString(vaccine), LoggerUtils.getLoggerParams(LogType.TRANSACTION_INSERT, formType, user.getUser().getUsername()));
 			
 			String calendarId = request.getParameter("calendarId");
 			return new ModelAndView(new RedirectView("viewVaccinationCalendar.htm?calendarId="+calendarId));
-			
+
 		} catch (Exception e) {
 			sc.rollbackTransaction();
 			e.printStackTrace();
 			request.getSession().setAttribute("exceptionTrace", e);
 			return new ModelAndView("exception");
-		
+
 		} finally {
 			sc.closeSession();
 		}
 	}
-	
+
 	protected VaccineRegistrationWrapper formBackingObject(HttpServletRequest request)
 	{
 		String calendarId = request.getParameter("calendarId");
 		String vaccineId = request.getParameter("cvaccineId");
-		
-		System.out.println("vaccineId vaccineId " + vaccineId);
-		
 		VaccineRegistrationWrapper vrw = new VaccineRegistrationWrapper();
 		if(calendarId != null){
 			vrw.setVaccinationCalendarId(Integer.parseInt(calendarId));
@@ -132,20 +135,38 @@ public class EditCalendarVaccineController extends DataEditFormController{
 		}
 		return vrw;
 	}
-	
+
 	@ModelAttribute
 	protected void referenceData(HttpServletRequest request, Model model) throws Exception 
 	{
 		ServiceContext sc = Context.getServices();
 		try {
-			List<VaccinationCalendar> vaccinationCalendarL = sc.getCustomQueryService().getDataByHQL("from VaccinationCalendar") ;
-			model.addAttribute("vaccinationCalendarList" , vaccinationCalendarL);
+			
+			String calendarId = request.getParameter("calendarId");
+			String vaccineId = request.getParameter("cvaccineId");
+			
+			List<VaccineGap> vaccineGapList= sc.getCustomQueryService().getDataByHQL("from VaccineGap where vaccineId = " + vaccineId + " and vaccinationcalendarId = " + calendarId);
+			model.addAttribute("vaccineGapList" , vaccineGapList);
 			List<VaccineGapType> vaccineGapTypeL = sc.getCustomQueryService().getDataByHQL("from VaccineGapType") ;
 			model.addAttribute("vaccineGapTypeList" , vaccineGapTypeL);
-			
+			List<VaccinationCalendar> vaccinationCalendarL = sc.getCustomQueryService().getDataByHQL("from VaccinationCalendar") ;
+			model.addAttribute("vaccinationCalendarList" , vaccinationCalendarL);
+			List<Short> vpRecords = sc.getCustomQueryService().getDataByHQL("select vaccinePrerequisiteId.vaccinePrerequisiteId from VaccinePrerequisite where vaccinePrerequisiteId.vaccineId = " + vaccineId + " and vaccinePrerequisiteId.vaccinationcalendarId = " + calendarId);
+			model.addAttribute("preReq_selected",vpRecords);
 			List<HashMap> vaccineL = sc.getCustomQueryService().getDataBySQLMapResult("SELECT * FROM vaccine where vaccine_entity like 'CHILD%' OR vaccine_entity is null ORDER BY vaccineId "); 
 			model.addAttribute("vaccineList" , vaccineL);
 			
+			Map<VaccineGapType, VaccineGap> map = new LinkedHashMap<VaccineGapType, VaccineGap>();
+			for (VaccineGapType vgt : vaccineGapTypeL) {
+				map.put(vgt, null);
+				for (VaccineGap vg : vaccineGapList) {
+					if(vgt.getVaccineGapTypeId() == vg.getId().getVaccineGapTypeId()){
+						map.put(vgt, vg);
+					}
+				}
+			}
+			model.addAttribute("map" , map);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			request.setAttribute("errorMessagev", "An error occurred while retrieving reference data list. Error message is:"+e.getMessage());
@@ -154,3 +175,4 @@ public class EditCalendarVaccineController extends DataEditFormController{
 		}	
 	}
 }
+

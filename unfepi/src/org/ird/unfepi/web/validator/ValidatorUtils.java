@@ -8,17 +8,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.ird.unfepi.GlobalParams;
-import org.ird.unfepi.beans.EnrollmentWrapper;
 import org.ird.unfepi.constants.DataField;
 import org.ird.unfepi.constants.ErrorMessages;
-import org.ird.unfepi.constants.WebGlobals;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Address;
-import org.ird.unfepi.model.CenterProgram;
 import org.ird.unfepi.model.Child;
-import org.ird.unfepi.model.Round;
-import org.ird.unfepi.model.VaccinationCenter;
 import org.ird.unfepi.model.Child.STATUS;
 import org.ird.unfepi.model.ContactNumber;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
@@ -35,7 +30,6 @@ import org.ird.unfepi.model.Vaccination.VACCINATION_STATUS;
 import org.ird.unfepi.model.VaccinationCenter.CenterType;
 import org.ird.unfepi.model.Vaccinator;
 import org.ird.unfepi.model.Women;
-import org.ird.unfepi.model.WomenVaccination.WOMEN_VACCINATION_STATUS;
 import org.ird.unfepi.utils.UserSessionUtils;
 import org.ird.unfepi.utils.Utils;
 import org.ird.unfepi.utils.date.DateUtils;
@@ -1277,12 +1271,14 @@ public class ValidatorUtils {
 			return;
 		}
 
-		ArrayList<VaccineSchedule> defSch = VaccineSchedule.generateDefaultSchedule( child.getBirthdate(), centerVisit.getVisitDate(), centerVisit.getChildId(), centerVisit.getVaccinationCenterId(), true, null);
+		ArrayList<VaccineSchedule> defSch = VaccineSchedule.generateDefaultSchedule( child.getBirthdate(), centerVisit.getVisitDate(), centerVisit.getChildId(), centerVisit.getVaccinationCenterId(), true, null, centerVisit.getHealthProgramId());
 		
-		System.out.println("\n\ndefSch = VaccineSchedule.generateDefaultSchedule\n\n");
-		for (VaccineSchedule defSchvs : defSch) {
-			defSchvs.printVaccineSchedule();
-		}
+//		System.out.println("\n\ndefSch = VaccineSchedule.generateDefaultSchedule\n\n");
+//		for (VaccineSchedule defSchvs : defSch) {
+//			defSchvs.printVaccineSchedule();
+//		}
+		
+		Integer calendarId = (Integer) sc.getCustomQueryService().getDataByHQL("select vaccinationcalendarId from HealthProgram where programId = " + centerVisit.getHealthProgramId()).get(0);
 		
 		boolean anyScheduleVaccineRecceivedToday = false;
 		boolean contraindication = false;
@@ -1299,7 +1295,7 @@ public class ValidatorUtils {
 				continue;// if vaccinated earlier or invalid dose skip any validation
 			}
 
-			boolean prereqpassed = IMRUtils.passVaccinePrerequisiteCheck(dfvsh, vaccineSchedule);
+			boolean prereqpassed = IMRUtils.passVaccinePrerequisiteCheck(dfvsh, vaccineSchedule, calendarId);
 
 			// vaccine was retro or should have been vaccinated yet its status
 			// must be provided.
@@ -1646,6 +1642,10 @@ public class ValidatorUtils {
 		}
 		if (StringUtils.isEmptyOrWhitespaceOnly(hp.getName()) || !DataValidation.validate(REG_EX.NAME_CHARACTERS, hp.getName())) {
 			error.rejectValue("name", "", ErrorMessages.NAME_INVALID);
+		}
+		
+		if(hp.getVaccinationcalendarId() == null || StringUtils.isEmptyOrWhitespaceOnly(hp.getVaccinationcalendarId().toString())){
+			error.rejectValue("vaccinationcalendarId", "", "select vaccination calendar for the program");
 		}
 		
 	}

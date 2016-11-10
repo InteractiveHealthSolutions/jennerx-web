@@ -56,6 +56,7 @@ function enableGapValueTimeUnit(element) {
 		
 		$("#vaccineId_Id_"+id).val($("#vaccineId").val());
 		$("#vaccinationcalendarId_Id_"+id).val($("#vaccinationCalendarId").val());
+
 		
 	} else {
 		$('.gap' + id).prop("disabled", true).val("");
@@ -65,14 +66,17 @@ function enableGapValueTimeUnit(element) {
 
 $(function(){
 	
+	console.log('${binding_errors}');
+	$("input[class^='gap'], select[class^='gap']").val("0");
+	
 	$("input[class^='gap'], select[class^='gap'], input[class^='const_gap']").prop("disabled", true);
 	$('input[type="checkbox"]').prop('checked', false); 
-	$("input[class^='gap']", "select[class^='gap']").val("");
-	$("input[class^='gap']", "select[class^='gap']").removeAttr('value');
+	$("input[class^='gap'], select[class^='gap']").val("");
 		
 		$("#vaccinationCalendarId , #vaccineId").change(
 				function() {
-					$("input[class^='gap'], select[class^='gap']").val("");
+					$("input[class^='gap'], select[class^='gap']").val("0").val("");
+// 					$("input[class^='gap'], select[class^='gap']").val("");
 					$("input[class^='gap'], select[class^='gap'], input[class^='const_gap']").prop("disabled", true);
 					$('input[type="checkbox"]').prop('checked', false); 
 					
@@ -141,14 +145,14 @@ $(function(){
 			 	   pattern="\d{2}" maxlength="2" onkeypress="return isDigit(event);" value=""/></td>
 			
 			<td>
-			<select id="gap_unit${varstatus.index}" name="vaccineGapList[${varstatus.index}].gapTimeUnit" class="gap${varstatus.index}">
+			<select id="gap_unit${varstatus.index}" name="vaccineGapList[${varstatus.index}].gapTimeUnit" class="gap${varstatus.index}" bind-value="">
 				<option></option>
 				<c:forEach items="<%=TimeIntervalUnit.values()%>" var="timeInterval">
 					<option>${timeInterval}</option>
 				</c:forEach></select></td>		
 		</tr>
 		
-		<input type="hidden" name="vaccineGapList[${varstatus.index}].id.vaccineGapTypeId" class="const_gap${varstatus.index}" value="${vaccineGapType.vaccineGapTypeId}"/>
+		<input type="hidden" name="vaccineGapList[${varstatus.index}].id.vaccineGapTypeId" class="const_gap${varstatus.index}" id="vaccineGapTypeId_Id_${varstatus.index}" value="${vaccineGapType.vaccineGapTypeId}"/>
 		<input type="hidden" name="vaccineGapList[${varstatus.index}].id.vaccineId" class="gap${varstatus.index}" id="vaccineId_Id_${varstatus.index}" value=""/>
 		<input type="hidden" name="vaccineGapList[${varstatus.index}].id.vaccinationcalendarId" class="gap${varstatus.index}" id="vaccinationcalendarId_Id_${varstatus.index}" value="" />
 		

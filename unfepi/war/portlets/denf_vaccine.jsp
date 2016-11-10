@@ -1,6 +1,6 @@
 
 <%@ include file="/WEB-INF/template/include.jsp"%>
-
+<%@page import="org.ird.unfepi.model.Model.VaccineEntity"%>
 <script type="text/javascript">
 <!--
 function isDigit(e) {
@@ -22,34 +22,36 @@ function submitThisForm() {
 //-->
 </script>
 
+
 <form method="post" id="frm" name="frm">
 	<table class="denform-h">
 
 		<tr>
 			<td>Name<span class="mendatory-field">*</span></td>
 			<td colspan="2"><spring:bind path="command.name">
-					<input id="vaccineName" name="name" value="${status.value}" maxlength="15"/> <br>
+					<input id="vaccineName" name="name" value="${status.value}" maxlength="15" style="width: 4.94cm" /> <br>
 					<span class="error-message"><c:out value="${status.errorMessage}" /></span>
 				</spring:bind></td>
 		</tr>
 		<tr>
 			<td>Short Name<span class="mendatory-field">*</span></td>
 			<td colspan="2"><spring:bind path="command.shortName">
-					<input id="vaccineShortName" name="shortName" value="${status.value}" maxlength="10"/> <br>
+					<input id="vaccineShortName" name="shortName" value="${status.value}" maxlength="10" style="width: 4.94cm" /> <br>
 					<span class="error-message"><c:out value="${status.errorMessage}" /></span>
 				</spring:bind></td>
 		</tr>
 		<tr>
 			<td>Full Name</td>
 			<td colspan="2"><spring:bind path="command.fullName">
-					<input id="vaccineFullName" name="fullName" value="${status.value}" maxlength="30"/> <br>
+					<input id="vaccineFullName" name="fullName" value="${status.value}" maxlength="30" style="width: 4.94cm" /> <br>
 					<span class="error-message"><c:out value="${status.errorMessage}" /></span>
 				</spring:bind></td>
 		</tr>
 		<tr>
 			<td>min Grace Period Days</td>
 			<td colspan="2"><spring:bind path="command.minGracePeriodDays">
-					<input id="minGracePeriodDays" name="minGracePeriodDays" value="${status.value}" maxlength="2" onkeypress="return isDigit(event);"/> <br>
+					<input id="minGracePeriodDays" name="minGracePeriodDays" value="${status.value}" maxlength="2" 
+					onkeypress="return isDigit(event);" style="width: 4.94cm" /> <br>
 					<span class="error-message"><c:out value="${status.errorMessage}" /></span>
 				</spring:bind></td>
 		</tr>
@@ -57,7 +59,7 @@ function submitThisForm() {
 			<td>max Grace Period Days</td>
 			<td colspan="2"><spring:bind path="command.maxGracePeriodDays">
 					<input id="maxGracePeriodDays" name="maxGracePeriodDays" value="${status.value}" maxlength="2" 
-					onkeypress="return isDigit(event);" /> <br>
+					onkeypress="return isDigit(event);" style="width: 4.94cm" /> <br>
 					<span class="error-message"><c:out value="${status.errorMessage}" /></span>
 				</spring:bind></td>
 		</tr>
@@ -65,64 +67,35 @@ function submitThisForm() {
 		<tr>
 		<td>Description</td>
 		<td><spring:bind path="command.description">
-			<textarea name="description" maxlength="255">${status.value}</textarea>
+			<textarea name="description" maxlength="255"style="width: 4.95cm">${status.value}</textarea>
 			<br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
 		</td>
 		</tr>
+		<tr>
+		<td>Vaccine Entity<span class="mendatory-field">*</span></td>
+		<td><spring:bind path="command.vaccine_entity">
+			<select id="vaccine_entity" name="vaccine_entity" style="width: 5.14cm">
+				<c:forEach items="<%=VaccineEntity.values()%>" var="vac_entity">
+					<option value="${vac_entity}">${vac_entity}</option>
+				</c:forEach>
+			</select>
+			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
+			</spring:bind>
 		
-<!-- 		<tr> -->
-<!-- 	    	<td>Vaccination Calendar<span class="mendatory-field">*</span></td> -->
-<%-- 			<td colspan="2"><spring:bind path="command.vaccinationCalendar.calenderId"> --%>
-<%-- 		            <select id="calenderId" name="vaccinationCalendar.calenderId" bind-value="${status.value}" class="requiredField"> --%>
-<!-- 		                <option></option> -->
-<%-- 		                <c:forEach items="${vaccinationCalendarList}" var="calendar">  --%>
-<%-- 		                <option value="${calendar.calenderId}">${calendar.shortName}</option> --%>
-<%-- 		            	</c:forEach>  --%>
-<!-- 		            </select> -->
-<%-- 	            	<span class="error-message"><c:out value="${status.errorMessage}" /></span>  --%>
-<%-- 	            </spring:bind></td> --%>
-<!-- 		</tr> -->
-		
-<!-- 		<tr><td colspan="3" class="headerrow"></td></tr> -->
-        
-<%-- 		<c:forEach items="${vaccineGapTypeList}" var="vaccineGapType"> --%>
-<!-- 			<tr> -->
-<%-- 			<td>${vaccineGapType.name}</td> --%>
-<!-- 			<td><input maxlength="2" onkeypress="return isDigit(event);" /></td> -->
-<!-- 			<td><select> -->
-<!-- 				<option></option> -->
-<!-- 				<option>DAYS</option> -->
-<!-- 				<option>WEEKS</option> -->
-<!-- 				<option>MONTHS</option> -->
-<!-- 				<option>YEARS</option> -->
-<!-- 				</select></td> -->
-<!-- 			</tr>	     -->
-<%-- 	    </c:forEach>  --%>
-<!-- 		<tr><td colspan="3" class="headerrow"></td></tr> -->
+		</td>
+		</tr>
 		
 		<tr>
 			<td></td>
         	<td><input type="button"  id="submitBtn" value="Submit Data" onclick="subfrm();"></td>
         </tr>
-       
-<!--         <tr> -->
-<!-- 			<td>Prerequisites</td> -->
-<!-- 			<td colspan="2"> -->
-<!-- 			<select multiple="multiple" id="vaccinePrerequisites" name="vaccinePrerequisites"> -->
-<%-- 				<c:forEach items="${vaccineList}" var="prereq">		 --%>
-<%-- 					<option value="${prereq.vaccineId }">${prereq.name }</option> --%>
-<%-- 				</c:forEach> --%>
-<!-- 			</select></td> -->
 		<script type="text/javascript">
-		
 			$(function() {
-				
 				$('#vaccinePrerequisites').multiselect({
 				});
 			});
 		</script>
-<!-- 		</tr> -->
 
 	</table>
 </form>

@@ -348,7 +348,7 @@ ul{
 				
 			});
 			
-			DWRVaccineService.getVaccineSchedule(JSON.stringify(jsonArray), convertToDate($('#birthdateinh').val()), convertToDate($('#centerVisitDate').val()), '${command.childId}',  '${command.vaccinationCenterId}', '${command.uuid}', {callback : function(resultList) {
+			DWRVaccineService.getVaccineSchedule(JSON.stringify(jsonArray), convertToDate($('#birthdateinh').val()), convertToDate($('#centerVisitDate').val()), '${command.childId}',  '${command.vaccinationCenterId}', '${command.uuid}', $('#healthProgramId').val(), {callback : function(resultList) {
 // 				console.log(resultList);
 				vaccineScheduleList = resultList;
 // 				$.each(vaccineScheduleList, function(index, element){

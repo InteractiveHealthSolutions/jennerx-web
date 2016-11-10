@@ -6,6 +6,7 @@
 			<tr>
 				<th></th>
 				<th>Name</th>
+				<th>Calendar</th>
 				<th>Description</th>
 <!-- 				<th>Enrollment Limit</th> -->
 <!-- 				<th>current Enrollment count</th> -->
@@ -18,6 +19,7 @@
 				<tr>
 					<td>${map.key.programId}</td>
 					<td>${map.key.name}</td>
+					<td>${map.key.vaccinationCalendar.shortName}</td>
 					<td>${map.key.description}</td>
 <%-- 					<td>${map.key.enrollmentLimit}</td> --%>
 <!-- 					<td></td> -->

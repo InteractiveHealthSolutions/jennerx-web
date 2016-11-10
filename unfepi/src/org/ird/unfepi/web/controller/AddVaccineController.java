@@ -59,6 +59,10 @@ public class AddVaccineController extends DataEntryFormController{
 		ServiceContext sc = Context.getServices();
 		try {
 			
+			Short id =  (Short) sc.getCustomQueryService().getDataBySQL(
+					"SELECT vaccineId FROM vaccine where vaccineId REGEXP '[^9{3,}]' order by vaccineId desc limit 1;").get(0);
+			
+			vaccine.setVaccineId((short)(id+1));
 			vaccine.setCreatedDate(new Date());
 			vaccine.setCreatedByUserId(user.getUser());
 			
@@ -93,18 +97,6 @@ public class AddVaccineController extends DataEntryFormController{
 	{
 		ServiceContext sc = Context.getServices();
 		try {
-//			List<VaccinationCalendar> vaccinationCalendarL = sc.getCustomQueryService().getDataByHQL("from VaccinationCalendar") ;
-//			model.addAttribute("vaccinationCalendarList" , vaccinationCalendarL);
-//			List<VaccineGapType> vaccineGapTypeL = sc.getCustomQueryService().getDataByHQL("from VaccineGapType") ;
-//			model.addAttribute("vaccineGapTypeList" , vaccineGapTypeL);
-//			String[] vaccinesStringIds = Context.getSetting("child.vaccine-schedule.vaccines-list", null).split(",");
-//			Short[] vaccinesIds = new Short[vaccinesStringIds.length];
-//			for (int i = 0; i < vaccinesStringIds.length; i++) {
-//				vaccinesIds[i] = Short.parseShort(vaccinesStringIds[i]);
-//			}
-//			List<Vaccine> vaccineL = sc.getVaccinationService().getVaccinesById(vaccinesIds, true, new String[]{"prerequisites"}, GlobalParams.SQL_VACCINE_BIRTHDATE_GAP_ORDER);
-//			
-//			model.addAttribute("vaccineList" , vaccineL);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

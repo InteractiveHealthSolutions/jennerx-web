@@ -26,6 +26,12 @@ function subfrm(){
 		alert('select vaccination center\(s\) for the program');
 		return;
 	}
+	
+	if($('#vaccinationCalendar').val().length == 0){
+		alert('select vaccination calendar for the program');
+		return;
+	}
+	
 	submitThisForm();
 }
 
@@ -97,6 +103,16 @@ function submitThisForm() {
 					});
 				});
 			</script>
+		</tr>
+		<tr>
+			<td>Vaccination Calendar <span class="mendatory-field">*</span></td>
+			<td>
+			<select id="vaccinationCalendar" name="vaccinationcalendarId" class="requiredField" style="width:225px" bind-value="${command.vaccinationcalendarId}">
+				<option></option>
+				<c:forEach items="${vaccinationCalendars}" var="calendar">
+					<option value="${calendar.calenderId}"> ${calendar.shortName}</option>
+				</c:forEach>
+			</select></td>
 		</tr>
 <!-- 		<tr><td colspan="2" height="10px" style="border: none;"></td></tr> -->
 		<tr>

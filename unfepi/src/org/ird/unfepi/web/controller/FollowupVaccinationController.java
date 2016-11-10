@@ -152,8 +152,6 @@ public class FollowupVaccinationController extends DataEntryFormController{
 	protected void referenceData(HttpServletRequest request, Model model) throws Exception 
 	{
 		ServiceContext sc = Context.getServices();
-		
-		String child_id=request.getParameter("child_id");
 		try{	
 			List<HealthProgram> healthprograms = sc.getCustomQueryService().getDataByHQL("from HealthProgram");
 			model.addAttribute("healthprograms", healthprograms);			

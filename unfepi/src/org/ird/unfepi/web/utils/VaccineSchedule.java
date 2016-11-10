@@ -85,21 +85,31 @@ public class VaccineSchedule {
 	}
 	
 	//TODO 
-	public static ArrayList<VaccineSchedule> generateDefaultSchedule(Date birthdate, Date centerVisitDate, Integer childId, Integer vaccinationCenterId, boolean ignoreCenter, List<VaccineSchedule> scheduleRetro)
+	public static ArrayList<VaccineSchedule> generateDefaultSchedule(Date birthdate, Date centerVisitDate, Integer childId, Integer vaccinationCenterId, boolean ignoreCenter, List<VaccineSchedule> scheduleRetro , Integer healthProgramId)
 	{
 
 		ServiceContext sc = Context.getServices();
 		ArrayList<VaccineSchedule> schedule = new ArrayList<VaccineSchedule>();
 		ArrayList<VaccineSchedule> invalid_schedule = new ArrayList<VaccineSchedule>();
-
+		
+		Integer calendarId = (Integer) sc.getCustomQueryService().getDataByHQL("select vaccinationcalendarId from HealthProgram where programId = " + healthProgramId).get(0);
+//		Integer calendarId = 2;
 		try {
 			String[] vids = Context.getSetting("child.vaccine-schedule.vaccines-list", null).split(",");
 			ArrayList<Short>  vis = new ArrayList<Short>();
 			for (String vstr : vids) {
 				vis.add(Short.parseShort(vstr.trim()));
 			}
-			List<Vaccine> vaccinel = sc.getVaccinationService().getVaccinesById(vis.toArray(new Short[]{}), true, new String[]{"prerequisites"}, GlobalParams.SQL_VACCINE_BIRTHDATE_GAP_ORDER);
+//			List<Vaccine> vaccinel = sc.getVaccinationService().getVaccinesById(vis.toArray(new Short[]{}), true, new String[]{"prerequisites"}, GlobalParams.SQL_VACCINE_BIRTHDATE_GAP_ORDER);
 			
+			System.out.println(calendarId + " "+ healthProgramId + "   calendarIdcalendarId");
+			
+			String SQL_VACCINE_BIRTHDATE_GAP_ORDER_C = " IFNULL((SELECT CASE WHEN gaptimeunit = 'month' THEN (30*value) "
+					+ " WHEN gaptimeunit = 'week' THEN (7*value) "+ " WHEN gaptimeunit = 'day' THEN (0*value) "+ " WHEN gaptimeunit = 'year' THEN (365*value) "
+					+ " ELSE 9999 END FROM vaccinegap WHERE vaccinegaptypeid=1 AND vaccineid=this_.vaccineId AND vaccinationcalendarid="+ calendarId +" ), 9999)";
+			
+			/*GlobalParams.SQL_VACCINE_BIRTHDATE_GAP_ORDER*/
+			List<Vaccine> vaccinel = sc.getVaccinationService().getVaccinesById(vis.toArray(new Short[]{}), true, new String[]{"prerequisites"}, SQL_VACCINE_BIRTHDATE_GAP_ORDER_C);
 			
 			for (Vaccine vaccine : vaccinel) {
 				
@@ -107,16 +117,15 @@ public class VaccineSchedule {
 				VaccineSchedule vsch = new VaccineSchedule();
 				vsch.setVaccine(vaccine);
 				vsch.setPrerequisites(vaccine.getPrerequisites());
-				VaccineGap bdg = IMRUtils.getBirthdateGap(vaccine);
+				VaccineGap bdg = IMRUtils.getBirthdateGap(vaccine, calendarId);
 				vsch.setBirthdate_gap(bdg);
 				vsch.setBirthdate(birthdate);
-				vsch.setExpiry_date(IMRUtils.calculateExpiryDate(vaccine, birthdate, sc));
+				vsch.setExpiry_date(IMRUtils.calculateExpiryDate(vaccine, birthdate, calendarId, sc));
 				vsch.setChildId(childId);
 				vsch.setVisitdate(centerVisitDate);
 				
 				List<Short> prerequisiteForVaccineIds =  sc.getCustomQueryService().getDataByHQL("select vaccinePrerequisiteId.vaccineId from VaccinePrerequisite where vaccinePrerequisiteId.vaccinePrerequisiteId = " + vaccine.getVaccineId());
 				vsch.setPrerequisiteFor(prerequisiteForVaccineIds);
-				
 				
 				Date schduedate = null;
 				VaccineStatusType status = null;
@@ -133,7 +142,7 @@ public class VaccineSchedule {
 
 				// schedule duedate is applicable only in case of vaccines following WHO schedule
 				if(bdg != null){
-					schduedate = IMRUtils.calculateVaccineDuedate(vaccine, birthdate, null, null, null, sc);
+					schduedate = IMRUtils.calculateVaccineDuedate(vaccine, birthdate, null, null, null, calendarId, sc);
 				}
 				
 				List<Vaccination> pvacc = null;
@@ -195,15 +204,15 @@ public class VaccineSchedule {
 					
 				}
 				else {// if not given
-					prerequisite_passed = IMRUtils.passVaccinePrerequisiteCheck(vsch, schedule);
-					prerequisite_given_today = IMRUtils.isPrerequisiteVaccinatedOnCurrentVisit(vsch, schedule);
+					prerequisite_passed = IMRUtils.passVaccinePrerequisiteCheck(vsch, schedule, calendarId);
+					prerequisite_given_today = IMRUtils.isPrerequisiteVaccinatedOnCurrentVisit(vsch, schedule, calendarId);
 
 					if(pvacc!=null && pvacc.size() > 0){
 						asgnduedate = pvacc.get(0).getVaccinationDuedate();
 					}
 					else if(prerequisite_passed){
-						Date prevVaccDate = IMRUtils.getPrerequisiteVaccineDate(vsch, schedule);
-						asgnduedate = IMRUtils.calculateVaccineDuedate(vaccine, birthdate, prevVaccDate, null, ignoreCenter?null:vaccinationCenterId, sc);
+						Date prevVaccDate = IMRUtils.getPrerequisiteVaccineDate(vsch, schedule, calendarId);
+						asgnduedate = IMRUtils.calculateVaccineDuedate(vaccine, birthdate, prevVaccDate, null, ignoreCenter?null:vaccinationCenterId, calendarId, sc);
 					}
 					
 					//calculate retro/current status only if vaccine belong to schedule
@@ -293,7 +302,7 @@ public class VaccineSchedule {
 		return schedule;
 	}
 
-	public static ArrayList<VaccineSchedule> updateSchedule(ArrayList<VaccineSchedule> schedule){
+	public static ArrayList<VaccineSchedule> updateSchedule(ArrayList<VaccineSchedule> schedule, Integer calendarId){
 		ArrayList<VaccineSchedule> updatedSchedule = new ArrayList<VaccineSchedule>();
 		ServiceContext sc = Context.getServices();
 		try {			
@@ -303,8 +312,8 @@ public class VaccineSchedule {
 						&& schmap.getSchedule_duedate() != null 
 						&& !schmap.getExpired()
 						&& !schmap.getStatus().equalsIgnoreCase(VaccineStatusType.VACCINATED_EARLIER.name())){
-					boolean passedPrereqCheck = IMRUtils.passVaccinePrerequisiteCheck(schmap, schedule);
-					boolean prereqGivenToday = IMRUtils.isPrerequisiteVaccinatedOnCurrentVisit(schmap, schedule);
+					boolean passedPrereqCheck = IMRUtils.passVaccinePrerequisiteCheck(schmap, schedule, calendarId);
+					boolean prereqGivenToday = IMRUtils.isPrerequisiteVaccinatedOnCurrentVisit(schmap, schedule, calendarId);
 	
 					if(!passedPrereqCheck){
 						schmap.setStatus(VaccineStatusType.NOT_ALLOWED.name());
@@ -319,9 +328,9 @@ public class VaccineSchedule {
 							|| schmap.getStatus().equalsIgnoreCase(VaccineStatusType.SCHEDULED.name()))
 					{
 						Vaccine vac = sc.getVaccinationService().findVaccineById(schmap.getVaccine().getVaccineId());
-						schmap.setAssigned_duedate(IMRUtils.calculateVaccineDuedate(vac, schmap.getBirthdate(), IMRUtils.getPrerequisiteVaccineDate(schmap, schedule), null, schmap.getCenter(), sc));
+						schmap.setAssigned_duedate(IMRUtils.calculateVaccineDuedate(vac, schmap.getBirthdate(), IMRUtils.getPrerequisiteVaccineDate(schmap, schedule, calendarId), null, schmap.getCenter(), calendarId, sc));
 						
-						if(IMRUtils.isPrerequisiteVaccinatedOnCurrentVisit(schmap, schedule)){
+						if(IMRUtils.isPrerequisiteVaccinatedOnCurrentVisit(schmap, schedule, calendarId)){
 							schmap.setStatus(VaccineStatusType.SCHEDULED.name());
 							schmap.setCenter(null);
 							schmap.setVaccination_date(null);
@@ -364,7 +373,7 @@ public class VaccineSchedule {
 	 * @return 
 	 */
 	@SuppressWarnings("rawtypes")
-	public static Map<String, String> validateVaccineScheduleDates(ArrayList<VaccineSchedule> schedule) {
+	public static Map<String, String> validateVaccineScheduleDates(ArrayList<VaccineSchedule> schedule, Integer calendarId) {
 		Map<String, String> map = new HashMap<String, String>();
 		ServiceContext sc = Context.getServices();
 		String errormsg = "";
@@ -384,7 +393,7 @@ public class VaccineSchedule {
 						List l = sc.getCustomQueryService().getDataBySQL("SELECT vaccinationDate FROM vaccination WHERE childId = "+sch.getChildId()+" AND vaccinationDate IS NOT NULL ORDER BY vaccinationDate DESC");
 						lastVaccineDate = (Date) (l.size() > 0 ? l.get(0) : null);
 					}
-					Date shouldBeDate = IMRUtils.calculateVaccineDuedate(vac, sch.getBirthdate(), IMRUtils.getPrerequisiteVaccineDate(sch, schedule), lastVaccineDate, sch.getCenter(), sc);
+					Date shouldBeDate = IMRUtils.calculateVaccineDuedate(vac, sch.getBirthdate(), IMRUtils.getPrerequisiteVaccineDate(sch, schedule, calendarId), lastVaccineDate, sch.getCenter(), calendarId, sc);
 					
 					if(sch.getStatus().equalsIgnoreCase(VaccineStatusType.VACCINATED.name())
 							|| sch.getStatus().equalsIgnoreCase(VaccineStatusType.RETRO.name()))
@@ -594,15 +603,22 @@ public class VaccineSchedule {
 		this.prerequisiteFor = prerequisiteFor;
 	}
 
-
 	//TODO JennerX
 	public static ArrayList<VaccineSchedule> validateVaccineHistory(List<Vaccination> retroVaccinationL,
-			Date birthdate, Date centerVisitDate, Integer childId, Integer vaccinationCenterId, boolean ignoreCenter) {
+			Date birthdate, Date centerVisitDate, Integer childId, Integer vaccinationCenterId, boolean ignoreCenter, Integer healthProgramId) {
 
 		ServiceContext sc = Context.getServices();
 		ArrayList<VaccineSchedule> scheduleL = new ArrayList<VaccineSchedule>();
 		ArrayList<VaccineSchedule> scheduleH = new ArrayList<VaccineSchedule>();
 		
+		
+		System.out.println( healthProgramId + " healthProgramId ");
+		//TODO remove comment
+		Integer calendarId = (Integer) sc.getCustomQueryService().getDataByHQL("select vaccinationcalendarId from HealthProgram where programId = " + healthProgramId).get(0);
+		
+//		Integer calendarId = 2;
+		
+		System.out.println(calendarId + " " + healthProgramId + " healthProgramId calendarId");
 		
 		try {
 
@@ -610,13 +626,13 @@ public class VaccineSchedule {
 				
 				VaccineSchedule schedule = new VaccineSchedule();
 				Vaccine vaccine = sc.getVaccinationService().findVaccineById(va.getVaccineId());
-				
+
 				schedule.setVaccine(vaccine);
 				schedule.setPrerequisites(vaccine.getPrerequisites());
-				VaccineGap bdg = IMRUtils.getBirthdateGap(vaccine);
+				VaccineGap bdg = IMRUtils.getBirthdateGap(vaccine, calendarId);
 				schedule.setBirthdate_gap(bdg);
 				schedule.setBirthdate(birthdate);
-				schedule.setExpiry_date(IMRUtils.calculateExpiryDate(vaccine, birthdate, sc));
+				schedule.setExpiry_date(IMRUtils.calculateExpiryDate(vaccine, birthdate, calendarId, sc));
 				schedule.setChildId(childId);
 				schedule.setVisitdate(centerVisitDate);
 
@@ -636,7 +652,7 @@ public class VaccineSchedule {
 
 				// schedule duedate is applicable only in case of vaccines following WHO schedule
 				if(bdg != null){
-					schduedate = IMRUtils.calculateVaccineDuedate(vaccine, birthdate, null, null, null, sc);
+					schduedate = IMRUtils.calculateVaccineDuedate(vaccine, birthdate, null, null, null, calendarId, sc);
 				}
 
 				List<Vaccination> pvacc = null;
@@ -673,15 +689,15 @@ public class VaccineSchedule {
 					if(scheduleH != null && scheduleH.size() > 0){	scheduleHL.addAll(scheduleH);	}
 					if(scheduleL != null && scheduleL.size() > 0){	scheduleHL.addAll(scheduleL);	}
 					
-					prerequisite_passed = IMRUtils.passVaccinePrerequisiteCheck(schedule, scheduleHL);
-					prerequisite_given_today = IMRUtils.isPrerequisiteVaccinatedOnCurrentVisit(schedule, scheduleL);
+					prerequisite_passed = IMRUtils.passVaccinePrerequisiteCheck(schedule, scheduleHL, calendarId);
+					prerequisite_given_today = IMRUtils.isPrerequisiteVaccinatedOnCurrentVisit(schedule, scheduleL, calendarId);
 					
 					if(pvacc!=null && pvacc.size() > 0){
 						asgnduedate = pvacc.get(0).getVaccinationDuedate();
 					}
 					else if(prerequisite_passed){
-						Date prevVaccDate = IMRUtils.getPrerequisiteVaccineDate(schedule, scheduleHL);
-						asgnduedate = IMRUtils.calculateVaccineDuedate(vaccine, birthdate, prevVaccDate, null, ignoreCenter?null:vaccinationCenterId, sc);
+						Date prevVaccDate = IMRUtils.getPrerequisiteVaccineDate(schedule, scheduleHL, calendarId);
+						asgnduedate = IMRUtils.calculateVaccineDuedate(vaccine, birthdate, prevVaccDate, null, ignoreCenter?null:vaccinationCenterId, calendarId, sc);
 					}
 					
 					//calculate retro/current status only if vaccine belong to schedule

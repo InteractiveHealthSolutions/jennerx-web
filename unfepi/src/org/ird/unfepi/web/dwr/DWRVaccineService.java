@@ -28,7 +28,7 @@ import com.mysql.jdbc.StringUtils;
 
 public class DWRVaccineService {
 		
-	public ArrayList<VaccineSchedule> getVaccineSchedule(String jsonArray, Date birthdate, Date centerVisitDate, Integer childId, int vaccinationCenterId, String uuid){
+	public ArrayList<VaccineSchedule> getVaccineSchedule(String jsonArray, Date birthdate, Date centerVisitDate, Integer childId, int vaccinationCenterId, String uuid, Integer healthProgramId){
 
 		HttpServletRequest req = WebContextFactory.get().getHttpServletRequest();
 		LoggedInUser user = UserSessionUtils.getActiveUser(req);
@@ -41,14 +41,14 @@ public class DWRVaccineService {
 				e.printStackTrace();
 			}
 		}
-
+		
 		try {
 			
 			ArrayList<Vaccination> retroVaccinationL = new ArrayList<Vaccination>();
 			
 			if(childId != null){
 				ServiceContext sc = Context.getServices();
-				List<Vaccination> list = sc.getCustomQueryService().getDataByHQL("from Vaccination where childId = " + childId);
+				List<Vaccination> list = sc.getCustomQueryService().getDataByHQL("from Vaccination where childId = " + childId + " and vaccinationStatus in ('RETRO','RETRO_DATE_MISSING','VACCINATED')");
 				
 				if(list != null && list.size() > 0 ){
 					retroVaccinationL.addAll(list);
@@ -60,8 +60,6 @@ public class DWRVaccineService {
 //									+ " " + vaccination.getVaccinationDate() + "  " + vaccination.getChildId());
 //				}
 			}
-			
-			
 			
 			JSONArray array = new JSONArray(jsonArray); 
 			
@@ -84,17 +82,17 @@ public class DWRVaccineService {
 				retroVaccinationL.add(vaccination);
 			}
 			
-			ArrayList<VaccineSchedule> scheduleRetro = VaccineSchedule.validateVaccineHistory(retroVaccinationL, birthdate, centerVisitDate, childId, vaccinationCenterId, true);
+			ArrayList<VaccineSchedule> scheduleRetro = VaccineSchedule.validateVaccineHistory(retroVaccinationL, birthdate, centerVisitDate, childId, vaccinationCenterId, true, healthProgramId);
 			
-//			for (VaccineSchedule vaccineSchedule : scheduleRetro) {
-//				vaccineSchedule.printVaccineSchedule();
-//			}
-//			System.out.println("\n-=-=-=-=-=-=-\n");
-			ArrayList<VaccineSchedule> scheduleCurrent = VaccineSchedule.generateDefaultSchedule(birthdate, centerVisitDate, childId, vaccinationCenterId, true, scheduleRetro);
+			for (VaccineSchedule vaccineSchedule : scheduleRetro) {
+				vaccineSchedule.printVaccineSchedule();
+			}
+			System.out.println("\n-=-=-=-=-=-=-\n");
+			ArrayList<VaccineSchedule> scheduleCurrent = VaccineSchedule.generateDefaultSchedule(birthdate, centerVisitDate, childId, vaccinationCenterId, true, scheduleRetro, healthProgramId);
 			
-//			for (VaccineSchedule vs : scheduleCurrent) {
-//				vs.printVaccineSchedule();
-//			}			
+			for (VaccineSchedule vs : scheduleCurrent) {
+				vs.printVaccineSchedule();
+			}			
 			
 			return scheduleCurrent;
 		} catch (Exception e) {
@@ -103,7 +101,7 @@ public class DWRVaccineService {
 		}
 	}
 	
-	public ArrayList<VaccineSchedule> generateDefaultSchedule(List<VaccineSchedule> scheduleRetro , Date birthdate, Date centerVisitDate, Integer childId, Integer vaccinationCenterId, boolean ignoreCenter, String uuid) 
+	public ArrayList<VaccineSchedule> generateDefaultSchedule(List<VaccineSchedule> scheduleRetro , Date birthdate, Date centerVisitDate, Integer childId, Integer vaccinationCenterId, boolean ignoreCenter, String uuid, Integer healthProgramId) 
 	{
 		HttpServletRequest req = WebContextFactory.get().getHttpServletRequest();
 		LoggedInUser user = UserSessionUtils.getActiveUser(req);
@@ -117,13 +115,13 @@ public class DWRVaccineService {
 			}
 		}
 		
-		ArrayList<VaccineSchedule> vsch = VaccineSchedule.generateDefaultSchedule(birthdate, centerVisitDate, childId, vaccinationCenterId, ignoreCenter, scheduleRetro);
+		ArrayList<VaccineSchedule> vsch = VaccineSchedule.generateDefaultSchedule(birthdate, centerVisitDate, childId, vaccinationCenterId, ignoreCenter, scheduleRetro, healthProgramId);
 		req.getSession().setAttribute(VaccinationCenterVisit.VACCINE_SCHEDULE_KEY+uuid, vsch);
 		
 		return vsch;
 	}
 	
-	public ArrayList<VaccineSchedule> updateSchedule(ArrayList<VaccineSchedule> schedule, String uuid){
+	public ArrayList<VaccineSchedule> updateSchedule(ArrayList<VaccineSchedule> schedule, String uuid, Integer healthProgramId){
 		HttpServletRequest req = WebContextFactory.get().getHttpServletRequest();
 		LoggedInUser user=UserSessionUtils.getActiveUser(req);
 		if(user==null){
@@ -135,7 +133,7 @@ public class DWRVaccineService {
 				e.printStackTrace();
 			}
 		}
-		ArrayList<VaccineSchedule> vsch = VaccineSchedule.updateSchedule(schedule);
+		ArrayList<VaccineSchedule> vsch = VaccineSchedule.updateSchedule(schedule, healthProgramId);
 		
 		req.getSession().setAttribute(VaccinationCenterVisit.VACCINE_SCHEDULE_KEY+uuid, vsch);
 		return vsch;
@@ -158,7 +156,7 @@ public class DWRVaccineService {
 		return schedule;
 	}
 	
-	public Map<String, String> validateVaccineScheduleDates(ArrayList<VaccineSchedule> schedule){
+	public Map<String, String> validateVaccineScheduleDates(ArrayList<VaccineSchedule> schedule, Integer healthProgramId){
 		HttpServletRequest req = WebContextFactory.get().getHttpServletRequest();
 		LoggedInUser user=UserSessionUtils.getActiveUser(req);
 		if(user==null){
@@ -170,7 +168,7 @@ public class DWRVaccineService {
 				e.printStackTrace();
 			}
 		}
-		Map<String, String> res = VaccineSchedule.validateVaccineScheduleDates(schedule);
+		Map<String, String> res = VaccineSchedule.validateVaccineScheduleDates(schedule, healthProgramId);
 		return res;
 	}
 	

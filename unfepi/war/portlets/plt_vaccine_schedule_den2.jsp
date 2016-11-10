@@ -62,7 +62,7 @@
 
 // 			console.log(convertToDate($('#birthdate').val()) + " 1  " +convertToDate($('#centerVisitDate').val())+ " 2  " + '${command.centerVisit.childId}' + "  3  " + $('#vaccinationCenterId').val() + "  4  " + '${command.centerVisit.uuid}');
 			
-			DWRVaccineService.getVaccineSchedule(JSON.stringify(jsonArray), convertToDate($('#birthdate').val()), convertToDate($('#centerVisitDate').val()), '${command.centerVisit.childId}',  $('#vaccinationCenterId').val(), '${command.centerVisit.uuid}', {callback : function(resultList) {
+			DWRVaccineService.getVaccineSchedule(JSON.stringify(jsonArray), convertToDate($('#birthdate').val()), convertToDate($('#centerVisitDate').val()), '${command.centerVisit.childId}',  $('#vaccinationCenterId').val(), '${command.centerVisit.uuid}', $('#healthProgramId').val(), {callback : function(resultList) {
 				console.log(resultList);
 				vaccineScheduleList = resultList;
 // 				$.each(vaccineScheduleList, function(index, element){

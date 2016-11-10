@@ -18,30 +18,25 @@ function subfrm() {
 		return false;
 	}
 	
-	var gapsEmpty = true;
-	var gapsFieldEmpty = true;
+	var emptyGapCount = 0;
+	var emptyGapFieldCount = 0;
 	
-	$("input[id^='gap_in'").each(function(index, element){
-		
-// 		gapsEmpty = true;
-// 		gapsFieldEmpty = true;
-		
-		if($(this).prop('checked') != false){
-			gapsEmpty = false;
+	$("input[id^='gap_in'").each(function(index, element){		
+		if($(this).prop('checked')){
 			var id = (element.id).match(/\d+/g);
-			
-			if($('#gap_value'+id).val().length > 0 && $('#gap_unit'+id).val().length > 0 ){
-				gapsFieldEmpty = false;
+			if($('#gap_value'+id).val().length <= 0 || $('#gap_unit'+id).val().length <= 0 ){
+				emptyGapFieldCount++;
+				emptyGapCount++ ;
 			}
 		}
 	});
 	
-	if(gapsEmpty && $('#vaccinePrerequisites').val() == null){
+	if(emptyGapCount > 0 && $('#vaccinePrerequisites').val() == null){
 		alert("fill/select atleast one gap or prerequisite");
 		return false;
 	}
 	
-	if(!gapsEmpty && gapsFieldEmpty ){
+	if(emptyGapCount > 0 && emptyGapFieldCount > 0 ){
 		alert("fill the selected gap values ");
 		return false;
 	}
@@ -61,6 +56,7 @@ function enableGapValueTimeUnit(element) {
 		
 		$("#vaccineId_Id_"+id).val($("#vaccineId").val());
 		$("#vaccinationcalendarId_Id_"+id).val($("#vaccinationCalendarId").val());
+
 		
 	} else {
 		$('.gap' + id).prop("disabled", true).val("");
@@ -70,14 +66,16 @@ function enableGapValueTimeUnit(element) {
 
 $(function(){
 	
-	$("input[class^='gap'], select[class^='gap'], input[class^='const_gap']").prop("disabled", true);
-	$('input[type="checkbox"]').prop('checked', false); 
-	$("input[class^='gap']", "select[class^='gap']").val("");
-	$("input[class^='gap']", "select[class^='gap']").removeAttr('value');
+	console.log('${binding_errors}');
+// 	$("input[class^='gap'], select[class^='gap']").val("0");
+	
+// 	$("input[class^='gap'], select[class^='gap'], input[class^='const_gap']").prop("disabled", true);
+// 	$('input[type="checkbox"]').prop('checked', false); 
+// 	$("input[class^='gap'], select[class^='gap']").val("");
 		
 		$("#vaccinationCalendarId , #vaccineId").change(
 				function() {
-					$("input[class^='gap'], select[class^='gap']").val("");
+					$("input[class^='gap'], select[class^='gap']").val("0").val("");
 					$("input[class^='gap'], select[class^='gap'], input[class^='const_gap']").prop("disabled", true);
 					$('input[type="checkbox"]').prop('checked', false); 
 					
@@ -133,29 +131,36 @@ $(function(){
 			<td colspan="4" class="headerrow"></td>
 		</tr>
 		
-		<c:forEach items="${vaccineGapTypeList}" var="vaccineGapType" varStatus="varstatus">
-		<tr>
-			<td><span>${vaccineGapType.name}</span></td>
+		<c:forEach items="${map}" var="map" varStatus="varstatus">
+			<tr>
+			<td><span>${map.key.name}</span></td>
 			
 			<td>
-				<input type="checkbox" id="gap_in${varstatus.index}" onclick="enableGapValueTimeUnit(this)" />
+				<input type="checkbox" id="gap_in${varstatus.index}" onclick="enableGapValueTimeUnit(this)"
+					<c:if test="${not empty map.value.value}">checked="checked"</c:if> />
 			</td>
-			
 			<td>
 			<input type="text" id="gap_value${varstatus.index}" name="vaccineGapList[${varstatus.index}].value" class="gap${varstatus.index}"
-			 	   pattern="\d{2}" maxlength="2" onkeypress="return isDigit(event);" /></td>
+			 	   pattern="\d{2}" maxlength="2" onkeypress="return isDigit(event);" value="${map.value.value}"
+			 	   <c:if test="${empty map.value.value}">disabled="disabled"</c:if> /></td>
 			
 			<td>
-			<select id="gap_unit${varstatus.index}" name="vaccineGapList[${varstatus.index}].gapTimeUnit" class="gap${varstatus.index}" bind-value="${status.value}">
+			<select id="gap_unit${varstatus.index}" name="vaccineGapList[${varstatus.index}].gapTimeUnit" class="gap${varstatus.index}" 
+			<c:if test="${empty map.value.gapTimeUnit}">disabled="disabled"</c:if> >
 				<option></option>
 				<c:forEach items="<%=TimeIntervalUnit.values()%>" var="timeInterval">
-					<option>${timeInterval}</option>
+					<option <c:if test="${map.value.gapTimeUnit == timeInterval}">selected="selected"</c:if> >${timeInterval}</option>
 				</c:forEach></select></td>		
 		</tr>
 		
-		<input type="hidden" name="vaccineGapList[${varstatus.index}].id.vaccineGapTypeId" class="const_gap${varstatus.index}" value="${vaccineGapType.vaccineGapTypeId}"/>
-		<input type="hidden" name="vaccineGapList[${varstatus.index}].id.vaccineId" class="gap${varstatus.index}" id="vaccineId_Id_${varstatus.index}" />
-		<input type="hidden" name="vaccineGapList[${varstatus.index}].id.vaccinationcalendarId" class="gap${varstatus.index}" id="vaccinationcalendarId_Id_${varstatus.index}" />
+		<input type="hidden" name="vaccineGapList[${varstatus.index}].id.vaccineGapTypeId" class="const_gap${varstatus.index}" 
+		<c:if test="${empty map.value.id.vaccineGapTypeId}">disabled="disabled"</c:if> value="${map.key.vaccineGapTypeId}"/>
+		
+		<input type="hidden" name="vaccineGapList[${varstatus.index}].id.vaccineId" class="gap${varstatus.index}" id="vaccineId_Id_${varstatus.index}"
+		<c:if test="${empty map.value.id.vaccineId}">disabled="disabled"</c:if> value="${map.value.id.vaccineId}"/>
+		
+		<input type="hidden" name="vaccineGapList[${varstatus.index}].id.vaccinationcalendarId" class="gap${varstatus.index}" id="vaccinationcalendarId_Id_${varstatus.index}" 
+		<c:if test="${empty map.value.id.vaccinationcalendarId}">disabled="disabled"</c:if> value="${map.value.id.vaccinationcalendarId}" />
 		
 		</c:forEach>
 		
@@ -189,5 +194,6 @@ $(function(){
 			<td colspan="3"></td>
 			<td><input type="button" id="submitBtn" value="Submit Data" onclick="return subfrm();"></td>
 		</tr>
+		
 	</table>
 </form>
