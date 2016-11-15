@@ -87,6 +87,8 @@ public class VaccineSchedule {
 	//TODO 
 	public static ArrayList<VaccineSchedule> generateDefaultSchedule(Date birthdate, Date centerVisitDate, Integer childId, Integer vaccinationCenterId, boolean ignoreCenter, List<VaccineSchedule> scheduleRetro , Integer healthProgramId)
 	{
+		
+		System.out.println("birthdate " + birthdate.toString());
 
 		ServiceContext sc = Context.getServices();
 		ArrayList<VaccineSchedule> schedule = new ArrayList<VaccineSchedule>();
@@ -206,26 +208,40 @@ public class VaccineSchedule {
 				else {// if not given
 					prerequisite_passed = IMRUtils.passVaccinePrerequisiteCheck(vsch, schedule, calendarId);
 					prerequisite_given_today = IMRUtils.isPrerequisiteVaccinatedOnCurrentVisit(vsch, schedule, calendarId);
+					
+					//TODO
+					boolean isPrerequisiteOverAge = false;
 
 					if(pvacc!=null && pvacc.size() > 0){
 						asgnduedate = pvacc.get(0).getVaccinationDuedate();
 					}
 					else if(prerequisite_passed){
+						
+						VaccineGap oag = IMRUtils.getOverAgeGap(vaccine, calendarId);
+						if(oag != null){
+							System.out.println(vaccine.getName() + " over " + oag.getValue() + " " + oag.getGapTimeUnit());
+							
+							isPrerequisiteOverAge = IMRUtils.isPrerequisiteOverAge(vaccine,  schedule, calendarId, vsch.getBirthdate());
+							System.out.println("isPrerequisiteOverAge " + isPrerequisiteOverAge);
+						}
+						
 						Date prevVaccDate = IMRUtils.getPrerequisiteVaccineDate(vsch, schedule, calendarId);
-						asgnduedate = IMRUtils.calculateVaccineDuedate(vaccine, birthdate, prevVaccDate, null, ignoreCenter?null:vaccinationCenterId, calendarId, sc);
+//						asgnduedate = IMRUtils.calculateVaccineDuedate(vaccine, birthdate, prevVaccDate, null, ignoreCenter?null:vaccinationCenterId, calendarId, sc);
+						asgnduedate = IMRUtils.calculateVaccineDuedate(vaccine, birthdate, prevVaccDate, null, ignoreCenter?null:vaccinationCenterId, calendarId,isPrerequisiteOverAge, sc);
+					
 					}
 					
 					//calculate retro/current status only if vaccine belong to schedule
 					if(schduedate != null){
 						int minGracePeriod = vsch.getVaccine().getMinGracePeriodDays();
-						int maxGracePeriod = vsch.getVaccine().getMaxGracePeriodDays();
+//						int maxGracePeriod = vsch.getVaccine().getMaxGracePeriodDays();
 						
 						Date minGraceDate = new Date(centerVisitDate.getTime()+(-minGracePeriod* 24 * 60 * 60 * 1000));
-						Date maxGraceDate = new Date(centerVisitDate.getTime()+(maxGracePeriod* 24 * 60 * 60 * 1000));
+//						Date maxGraceDate = new Date(centerVisitDate.getTime()+(maxGracePeriod* 24 * 60 * 60 * 1000));
 						
 						current_suspect = (asgnduedate != null 
-								&& asgnduedate.compareTo(minGraceDate) >= 0 && asgnduedate.compareTo(maxGraceDate) <= 0)
-							    || (schduedate.compareTo(minGraceDate) >= 0 && schduedate.compareTo(maxGraceDate) <= 0);
+								&& asgnduedate.compareTo(minGraceDate) >= 0 /*&& asgnduedate.compareTo(maxGraceDate) <= 0*/)
+							    || (schduedate.compareTo(minGraceDate) >= 0 /*&& schduedate.compareTo(maxGraceDate) <= 0*/);
 						
 						retro_suspect = (asgnduedate != null && asgnduedate.compareTo(minGraceDate) == -1)
 							|| (schduedate.compareTo(minGraceDate) == -1);
@@ -235,6 +251,8 @@ public class VaccineSchedule {
 						
 						if(asgnduedate != null && centerVisitDate.compareTo(new Date(asgnduedate.getTime()+(-minGracePeriod* 24 * 60 * 60 * 1000))) < 0){
 							current_suspect = false;
+							retro_suspect = false;
+							status = VaccineStatusType.NOT_ALLOWED;
 						}
 					
 					}
@@ -649,7 +667,7 @@ public class VaccineSchedule {
 				boolean isexpired = false;
 				
 				boolean is_retro_history = false;
-
+				
 				// schedule duedate is applicable only in case of vaccines following WHO schedule
 				if(bdg != null){
 					schduedate = IMRUtils.calculateVaccineDuedate(vaccine, birthdate, null, null, null, calendarId, sc);
@@ -691,13 +709,25 @@ public class VaccineSchedule {
 					
 					prerequisite_passed = IMRUtils.passVaccinePrerequisiteCheck(schedule, scheduleHL, calendarId);
 					prerequisite_given_today = IMRUtils.isPrerequisiteVaccinatedOnCurrentVisit(schedule, scheduleL, calendarId);
+				
+					//TODO
+					boolean isPrerequisiteOverAge = false;
 					
 					if(pvacc!=null && pvacc.size() > 0){
 						asgnduedate = pvacc.get(0).getVaccinationDuedate();
 					}
 					else if(prerequisite_passed){
+						VaccineGap oag = IMRUtils.getOverAgeGap(vaccine, calendarId);
+						if(oag != null){
+							System.out.println(vaccine.getName() + " over " + oag.getValue() + " " + oag.getGapTimeUnit());
+							
+							isPrerequisiteOverAge = IMRUtils.isPrerequisiteOverAge(vaccine,  scheduleHL, calendarId, schedule.getBirthdate());
+							System.out.println("isPrerequisiteOverAge " + isPrerequisiteOverAge);
+						}
+						
 						Date prevVaccDate = IMRUtils.getPrerequisiteVaccineDate(schedule, scheduleHL, calendarId);
-						asgnduedate = IMRUtils.calculateVaccineDuedate(vaccine, birthdate, prevVaccDate, null, ignoreCenter?null:vaccinationCenterId, calendarId, sc);
+//						asgnduedate = IMRUtils.calculateVaccineDuedate(vaccine, birthdate, prevVaccDate, null, ignoreCenter?null:vaccinationCenterId, calendarId, sc);
+						asgnduedate = IMRUtils.calculateVaccineDuedate(vaccine, birthdate, prevVaccDate, null, ignoreCenter?null:vaccinationCenterId, calendarId,isPrerequisiteOverAge, sc);
 					}
 					
 					//calculate retro/current status only if vaccine belong to schedule

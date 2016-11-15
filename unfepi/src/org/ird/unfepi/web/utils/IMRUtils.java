@@ -166,6 +166,39 @@ public class IMRUtils {
 		return true;
 	}
 	
+	public static boolean isPrerequisiteOverAge(Vaccine vaccine, List<VaccineSchedule> schedule, Integer calendarId, Date birthdate) {
+		if(vaccine.getPrerequisites() == null || vaccine.getPrerequisites().size() == 0){
+			return false;
+		}
+		else{
+			for (VaccinePrerequisite prereq : vaccine.getPrerequisites()) {
+				
+				boolean check = isPrerequisiteOverAge(prereq.getPrerequisite(), schedule,calendarId, birthdate);
+				
+				System.out.println(vaccine.getName()+"  "+prereq.getPrerequisite().getName() + " "+ check);
+				if(!check){
+					for (VaccineSchedule vaccineSchedule : schedule) {
+						if(prereq.getPrerequisite().getVaccineId() == vaccineSchedule.getVaccine().getVaccineId()){
+							
+							long diff_ms = vaccineSchedule.getVaccination_date().getTime() - birthdate.getTime();
+							int days = (int) ((diff_ms / (1000*60*60*24)));
+							System.out.println(vaccineSchedule.getVaccination_date() + " " + vaccineSchedule.getVaccine().getName()+ "   days " + days);
+							
+							// child's over age 12 months -> 365 days 
+							if(days >= 365){
+								return true;
+							}
+						}
+					}
+				}
+				if(check){
+					return true;
+				}
+			}
+			return false;
+		}
+	}
+	
 //	public static Vaccination passVaccinePrerequisiteCheckDb(VaccineSchedule vaccineSch){
 //		
 //		ServiceContext sc = Context.getServices();
@@ -373,6 +406,7 @@ try{
 		
 		return null;
 	}
+	
 	public static boolean isPrerequisiteVaccinatedOnCurrentVisit(VaccineSchedule vaccineSch, List<VaccineSchedule> schedule, Integer calendarId) {
 		if(vaccineSch.getPrerequisites() == null || vaccineSch.getPrerequisites().size() == 0){
 			return false;
@@ -410,6 +444,17 @@ try{
 		for (VaccineGap gap : vaccine.getVaccineGaps()) {
 			if(gap.getId().getVaccinationcalendarId() == calendarId){
 				if(gap.getVaccineGapType().getName().toLowerCase().contains("expir")){
+					return gap;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public static VaccineGap getOverAgeGap(Vaccine vaccine, Integer calendarId){
+		for (VaccineGap gap : vaccine.getVaccineGaps()) {
+			if(gap.getId().getVaccinationcalendarId() == calendarId){
+				if(gap.getVaccineGapType().getName().toLowerCase().contains("over")){
 					return gap;
 				}
 			}
@@ -503,6 +548,115 @@ try{
 			}else if(unit.equals(TimeIntervalUnit.YEAR)){
 				actDuedateWrtPrevVDate.add(Calendar.YEAR, gap.getValue());
 			}
+		}
+		
+		// Calculate date for next vaccine wrt previous vaccination date first.
+		Calendar actDuedateWrtPreviousEvent = null;
+		gap = getStandardGap(vaccine, calendarId);
+		if (gap != null && previousVaccineDate != null) {
+			actDuedateWrtPreviousEvent = Calendar.getInstance();
+			actDuedateWrtPreviousEvent.setTime(previousVaccineDate);
+
+			unit = gap.getGapTimeUnit();
+
+			if (unit.equals(TimeIntervalUnit.DAY)) {
+				actDuedateWrtPreviousEvent.add(Calendar.DATE, gap.getValue());
+
+			} else if (unit.equals(TimeIntervalUnit.WEEK)) {
+				actDuedateWrtPreviousEvent.add(Calendar.DATE, gap.getValue() * 7);
+
+			} else if (unit.equals(TimeIntervalUnit.MONTH)) {
+				actDuedateWrtPreviousEvent.add(Calendar.MONTH, gap.getValue());
+
+			} else if (unit.equals(TimeIntervalUnit.YEAR)) {
+				actDuedateWrtPreviousEvent.add(Calendar.YEAR, gap.getValue());
+			}
+		}
+		
+		calculatedDuedate.setTime(actDuedateWrtBirthdate.getTime());
+		
+		if(actDuedateWrtPrevVDate != null && calculatedDuedate.getTime().before(actDuedateWrtPrevVDate.getTime())){
+			calculatedDuedate.setTime(actDuedateWrtPrevVDate.getTime());
+		}
+		
+		if(actDuedateWrtPreviousEvent != null && calculatedDuedate.getTime().before(actDuedateWrtPreviousEvent.getTime())){
+			calculatedDuedate.setTime(actDuedateWrtPreviousEvent.getTime());
+		}
+		
+		return calculatedDuedate.getTime();
+	}
+	
+	public static Date calculateVaccineDuedate(Vaccine vaccine, Date birthdate, Date prereqVaccineDate, Date previousVaccineDate, Integer vaccinationCenterId, Integer calendarId,boolean preqOverAge, ServiceContext sc)
+	{
+		Calendar calculatedDuedate = Calendar.getInstance();
+		// Calculate date for next vaccine wrt birthdate first.
+		Calendar actDuedateWrtBirthdate = Calendar.getInstance();
+		actDuedateWrtBirthdate.setTime(birthdate);
+		
+		VaccineGap gap = getBirthdateGap(vaccine, calendarId);
+		TimeIntervalUnit unit = null;
+		
+		if(gap != null){
+			unit = gap.getGapTimeUnit();
+			
+			if (unit.equals(TimeIntervalUnit.DAY)) {
+				actDuedateWrtBirthdate.add(Calendar.DATE, gap.getValue());
+	
+			} else if (unit.equals(TimeIntervalUnit.WEEK)) {
+				actDuedateWrtBirthdate.add(Calendar.DATE, gap.getValue() * 7);
+	
+			} else if (unit.equals(TimeIntervalUnit.MONTH)) {
+				actDuedateWrtBirthdate.add(Calendar.MONTH, gap.getValue());
+	
+			} else if (unit.equals(TimeIntervalUnit.YEAR)) {
+				actDuedateWrtBirthdate.add(Calendar.YEAR, gap.getValue());
+			}
+		}
+		
+		// Calculate date for next vaccine wrt previous vaccination date first.
+		Calendar actDuedateWrtPrevVDate = null;
+		gap = getPreviousVaccineGap(vaccine, calendarId);
+		if(gap != null && prereqVaccineDate != null){
+			actDuedateWrtPrevVDate = Calendar.getInstance();
+			actDuedateWrtPrevVDate.setTime(prereqVaccineDate);
+			
+			unit = gap.getGapTimeUnit();
+			
+			if(unit.equals(TimeIntervalUnit.DAY)){
+				actDuedateWrtPrevVDate.add(Calendar.DATE, gap.getValue());
+
+			}else if(unit.equals(TimeIntervalUnit.WEEK)){
+				actDuedateWrtPrevVDate.add(Calendar.DATE, gap.getValue()*7);
+
+			}else if(unit.equals(TimeIntervalUnit.MONTH)){
+				actDuedateWrtPrevVDate.add(Calendar.MONTH, gap.getValue());
+
+			}else if(unit.equals(TimeIntervalUnit.YEAR)){
+				actDuedateWrtPrevVDate.add(Calendar.YEAR, gap.getValue());
+			}
+		}
+		if(preqOverAge){
+			gap = getOverAgeGap(vaccine, calendarId);
+			if(gap != null && prereqVaccineDate != null){
+				actDuedateWrtPrevVDate = Calendar.getInstance();
+				actDuedateWrtPrevVDate.setTime(prereqVaccineDate);
+				
+				unit = gap.getGapTimeUnit();
+				
+				if(unit.equals(TimeIntervalUnit.DAY)){
+					actDuedateWrtPrevVDate.add(Calendar.DATE, gap.getValue());
+
+				}else if(unit.equals(TimeIntervalUnit.WEEK)){
+					actDuedateWrtPrevVDate.add(Calendar.DATE, gap.getValue()*7);
+
+				}else if(unit.equals(TimeIntervalUnit.MONTH)){
+					actDuedateWrtPrevVDate.add(Calendar.MONTH, gap.getValue());
+
+				}else if(unit.equals(TimeIntervalUnit.YEAR)){
+					actDuedateWrtPrevVDate.add(Calendar.YEAR, gap.getValue());
+				}
+			}
+			
 		}
 		
 		// Calculate date for next vaccine wrt previous vaccination date first.
