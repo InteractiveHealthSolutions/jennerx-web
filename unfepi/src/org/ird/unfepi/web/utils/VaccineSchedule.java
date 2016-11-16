@@ -3,12 +3,10 @@ package org.ird.unfepi.web.utils;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.ird.unfepi.GlobalParams;
 import org.ird.unfepi.constants.WebGlobals;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
@@ -88,8 +86,6 @@ public class VaccineSchedule {
 	public static ArrayList<VaccineSchedule> generateDefaultSchedule(Date birthdate, Date centerVisitDate, Integer childId, Integer vaccinationCenterId, boolean ignoreCenter, List<VaccineSchedule> scheduleRetro , Integer healthProgramId)
 	{
 		
-		System.out.println("birthdate " + birthdate.toString());
-
 		ServiceContext sc = Context.getServices();
 		ArrayList<VaccineSchedule> schedule = new ArrayList<VaccineSchedule>();
 		ArrayList<VaccineSchedule> invalid_schedule = new ArrayList<VaccineSchedule>();
@@ -97,11 +93,15 @@ public class VaccineSchedule {
 		Integer calendarId = (Integer) sc.getCustomQueryService().getDataByHQL("select vaccinationcalendarId from HealthProgram where programId = " + healthProgramId).get(0);
 //		Integer calendarId = 2;
 		try {
-			String[] vids = Context.getSetting("child.vaccine-schedule.vaccines-list", null).split(",");
-			ArrayList<Short>  vis = new ArrayList<Short>();
-			for (String vstr : vids) {
-				vis.add(Short.parseShort(vstr.trim()));
-			}
+			
+			ArrayList<Short> vis = (ArrayList<Short>) sc.getCustomQueryService().getDataBySQL("select distinct vaccine.vaccineId from vaccine inner join vaccinegap on vaccine.vaccineId = vaccinegap.vaccineId "
+					+ "where vaccine.vaccine_entity like 'CHILD_%' and vaccinegap.vaccinationcalendarId = " +calendarId);
+			
+//			String[] vids = Context.getSetting("child.vaccine-schedule.vaccines-list", null).split(",");
+//			ArrayList<Short>  vis = new ArrayList<Short>();
+//			for (String vstr : vids) {
+//				vis.add(Short.parseShort(vstr.trim()));
+//			}
 //			List<Vaccine> vaccinel = sc.getVaccinationService().getVaccinesById(vis.toArray(new Short[]{}), true, new String[]{"prerequisites"}, GlobalParams.SQL_VACCINE_BIRTHDATE_GAP_ORDER);
 			
 			System.out.println(calendarId + " "+ healthProgramId + "   calendarIdcalendarId");
@@ -112,6 +112,7 @@ public class VaccineSchedule {
 			
 			/*GlobalParams.SQL_VACCINE_BIRTHDATE_GAP_ORDER*/
 			List<Vaccine> vaccinel = sc.getVaccinationService().getVaccinesById(vis.toArray(new Short[]{}), true, new String[]{"prerequisites"}, SQL_VACCINE_BIRTHDATE_GAP_ORDER_C);
+			
 			
 			for (Vaccine vaccine : vaccinel) {
 				
@@ -233,7 +234,7 @@ public class VaccineSchedule {
 					
 					//calculate retro/current status only if vaccine belong to schedule
 					if(schduedate != null){
-						int minGracePeriod = vsch.getVaccine().getMinGracePeriodDays();
+						int minGracePeriod = vsch.getVaccine().getMinGracePeriodDays()!=null?vsch.getVaccine().getMinGracePeriodDays():0;
 //						int maxGracePeriod = vsch.getVaccine().getMaxGracePeriodDays();
 						
 						Date minGraceDate = new Date(centerVisitDate.getTime()+(-minGracePeriod* 24 * 60 * 60 * 1000));
@@ -878,33 +879,35 @@ public class VaccineSchedule {
 	
 	public void printVaccineSchedule(){
 		
-		System.out.print(this.getVaccine().getName()+ "\t");
-		System.out.print(this.getBirthdate()+ "\t");
-		System.out.print(this.getVisitdate()+ "\t");	
+		System.out.printf("%-10s", this.getVaccine().getName());
+		System.out.printf("%30s", this.getBirthdate());
+		System.out.printf("%30s", this.getVisitdate());
 		
-		System.out.print(this.getPrerequisites()+ "\t");
+		System.out.printf("%-55s", "\t" + this.getPrerequisites());
+		
 		if(this.getBirthdate_gap() != null){
 			if(this.getBirthdate_gap().getVaccine() != null && this.getBirthdate_gap().getVaccineGapType() != null){
-			System.out.print("[ " + this.getBirthdate_gap().getVaccine().getName()+" " +  this.getBirthdate_gap().getVaccineGapType().getName() + " ]"+"\t");
+			System.out.printf("%-30s","\t[ " + this.getBirthdate_gap().getVaccine().getName()+" " +  this.getBirthdate_gap().getVaccineGapType().getName() + " ]");
 			}
 		} else {
-			System.out.print( "[]\t");
+			System.out.printf( "-%30s", "\t[]");
 		}
 		
-		System.out.print(this.getSchedule_duedate()+ "\t");
-		System.out.print(this.getAuto_calculated_date()+ "\t");
-		System.out.print(this.getAssigned_duedate()+ "\t");
-		System.out.print(this.getVaccination_date()+ "\t");
-		System.out.print(this.getExpiry_date()+ "\t");
-		System.out.print(this.getCenter()+ "\t");
-		System.out.print(this.getStatus()+ "\t");
-		System.out.print(this.getIs_current_suspect()+ "\t");
-		System.out.print(this.getIs_retro_suspect()+ "\t");
-		System.out.print(this.getVaccinationObjCurrentVisit()+ "\t");
-		System.out.print(this.getChildId()+ "\t");
-		System.out.print(this.getPrerequisite_passed()+ "\t");
-		System.out.print(this.getExpired()+ "\t");
-		System.out.println(this.getPrerequisite_given_on_current_visit()+ "\t");
+		System.out.printf("%30s",this.getSchedule_duedate());
+		System.out.printf("%30s",this.getAuto_calculated_date());
+		System.out.printf("%30s",this.getAssigned_duedate());
+		System.out.printf("%30s",this.getVaccination_date());
+		System.out.printf("%30s",this.getExpiry_date());
+		System.out.printf("%7s",this.getCenter());
+		System.out.printf("%25s",this.getStatus());
+		System.out.printf("%9s",this.getIs_current_suspect());
+		System.out.printf("%9s",this.getIs_retro_suspect());
+		System.out.printf("%9s",this.getVaccinationObjCurrentVisit());
+		System.out.printf("%9s",this.getChildId());
+		System.out.printf("%9s",this.getPrerequisite_passed());
+		System.out.printf("%9s",this.getExpired());
+		System.out.printf("%9s",this.getPrerequisite_given_on_current_visit());
+		System.out.println();
 	}
 	
 }
