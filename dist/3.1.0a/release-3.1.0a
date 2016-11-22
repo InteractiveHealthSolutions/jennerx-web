@@ -1,0 +1,7 @@
+Release 3.1.0a
+
+New Features:
+=============
+-Vaccine Managment UI ( Admin > Vaccine > Vaccines )
+-Schedule Managment UI ( Admin > Calendar > Calendars Schedule )
+-Enrollment ( generate different schedule w.r.t health program )
