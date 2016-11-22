@@ -68,7 +68,7 @@ public class LoginController {
 		}
 		
 		GlobalParams.DBLOGGER.info("User "+credentials.getUsername()+" logged in", LoggerUtils.getLoggerParams(LogType.LOGIN, null,null));
-		return "mainpage";
+		return "redirect:/mainpage.htm";
 	}
 	
 	@ModelAttribute("credentials")
@@ -76,7 +76,7 @@ public class LoginController {
 		return new Credentials();
 	}
 	
-	@ModelAttribute
+//	@ModelAttribute
 	protected void referenceData(HttpServletRequest request, Model model) throws Exception {
 		model.addAttribute("logmessage", request.getSession().getAttribute("logmessage"));
 		if (request.getParameter("logmessage") != null) {

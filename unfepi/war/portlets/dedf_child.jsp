@@ -68,6 +68,7 @@ var curSelectedTab = '${editSection}';
 
 $(window).load(function() 
 {
+	console.log("window load ... ");
    // executes when complete page is fully loaded, including all frames, objects and images
    //setTimeout( setInitialFormValues, 1*1000 );
    curSelectedTab = curSelectedTab==''?$('#tt').tabs('getSelected').panel('options').title:curSelectedTab;
@@ -76,6 +77,7 @@ $(window).load(function()
 });  
 
 $( document ).ready(function() {
+	console.log("document ready ... ");
 	$('#tt').tabs({
 		tabPosition: 'left',
 		toolPosition: 'left',
@@ -117,11 +119,14 @@ function initAllFormElements() {
     for (i = 0; i < selects.length; i++) {
         all_form_elements.push(selects[i]);
     }
+    
+    console.log(all_form_elements);
 
 }
 
 // Sets the initial values of every form element.
 function setInitialFormValues() {
+	console.log("setInitialFormValues ...");
 	initAllFormElements();
 	
     var inputs = all_form_elements;
@@ -130,7 +135,7 @@ function setInitialFormValues() {
     		alert("ERROR: "+inputs[i].tagName+" - "+i+inputs[i].name+" MUST be assigned id");
     	}
     	var selattval = jQuery('#'+inputs[i].id).attr('bind-value');
-    	console.log(inputs[i].id+":"+selattval);
+//     	console.log(inputs[i].id+":"+selattval);
     	if(inputs[i].tagName.toLowerCase() == 'select' && selattval != ''){
     		initial_values.push(selattval);
     	}
@@ -138,16 +143,21 @@ function setInitialFormValues() {
             initial_values.push(inputs[i].value);
     	}
     }
+    
+    console.log(initial_values);
 }
 
 function hasFormChanged() {
     var has_changed = false;
     var elements = all_form_elements;
 
+    console.log("hasFormChanged ... ");
+    
     for (var i = 0; i < elements.length; i++) {
     	if (elements[i].value != initial_values[i]) {
         	//alert(elements[i].id+";now:"+elements[i].value +";old:"+ initial_values[i]);
         	elements[i].parentNode.style.backgroundColor = '#F2F5A9';
+        	console.log(elements[i].id + " " +elements[i].value + " -- " + initial_values[i]);
             has_changed = true;
         }
     }
@@ -255,14 +265,14 @@ function submitFrm() {
 			</div> 
 		</td>
 	</tr>
-	<tr>
-		<td>Contact Number</td>
-		<td><spring:bind path="command.contactPrimary">
-			<input type="text" id="contactPrimary" name="contactPrimary" maxlength="15" value="${status.value}" class="numbersOnly" />
-			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
-			</spring:bind>
-		</td>
-	</tr>
+<!-- 	<tr> -->
+<!-- 		<td>Contact Number</td> -->
+<%-- 		<td><spring:bind path="command.contactPrimary"> --%>
+<%-- 			<input type="text" id="contactPrimary" name="contactPrimary" maxlength="15" value="${status.value}" class="numbersOnly" /> --%>
+<%-- 			<span class="error-message"><c:out	value="${status.errorMessage}" /></span> --%>
+<%-- 			</spring:bind> --%>
+<!-- 		</td> -->
+<!-- 	</tr> -->
 	<tr>
 		<td>Additional Note</td>
 		<td><spring:bind path="command.child.description">

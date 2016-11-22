@@ -97,6 +97,8 @@ public class Model {
 	
 	public enum VaccineEntity{
 		CHILD_COMPULSORY,
-		CHILD_SUPPLEMENTARY;
+		CHILD_SUPPLEMENTARY,
+		WOMEN_COMPULSORY,
+		WOMEN_SUPPLEMENTARY;
 	}
 }

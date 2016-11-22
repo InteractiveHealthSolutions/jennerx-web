@@ -253,9 +253,9 @@ ul{
 		<td>Health Program<span class="mendatory-field">*</span></td>
 		<td><spring:bind path="command.healthProgramId">
 	            <select id="healthProgramId" name="healthProgramId" bind-value="${status.value}" onchange="healthProgramChanged();"  class="requiredField">
-	               	<option id=""></option>
+	               	<option id="" disabled="disabled"></option>
 	            	<c:forEach items="${healthprograms}" var="hprog"> 
-	            		<option id="hp${hprog.programId}" value="${hprog.programId}">${hprog.name}</option>
+	            		<option id="hp${hprog.programId}" value="${hprog.programId}" disabled="disabled">${hprog.name}</option>
 	            	</c:forEach> 
 	            </select>
 	            <span class="error-message"><c:out	value="${status.errorMessage}" /></span> 
@@ -266,7 +266,7 @@ ul{
 		<td>Site<span class="mendatory-field">*</span></td>
 		<td>
 			<spring:bind path="command.vaccinationCenterId">
-            <select id="vaccinationCenterId" name="vaccinationCenterId" bind-value="${status.value}" onchange="centerChanged();" class="requiredField">
+            <select id="vaccinationCenterId" name="vaccinationCenterId" bind-value="${status.value}" onchange="centerChanged();" class="requiredField" >
                	<option id=""></option>
             	<c:forEach items="${vaccinationCenters}" var="vcenter"> 
             	<option id="vc${vcenter.mappedId}" value="${vcenter.mappedId}">${vcenter.name}</option>

@@ -10,7 +10,7 @@
 				<th>Description</th>
 <!-- 				<th>Enrollment Limit</th> -->
 <!-- 				<th>current Enrollment count</th> -->
-				<th>Vaccination Center</th>
+				<th>Sites</th>
 				<th>edit</th>
 			</tr>
 		</thead>

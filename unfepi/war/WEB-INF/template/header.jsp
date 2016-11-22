@@ -100,6 +100,7 @@ function convertToDate(stringDate) {
   	<div id="header">
   	  <div id="logo">
        <!--  <h4>get every child fortified</h4> -->
+       <img alt="logo" src="./images/logo.png" >
       </div>
       <div id="topcornermenu">
 	<!-- <span style="color:red;font-size:40px;font-weight: bolder; ">TEST APP</span> -->

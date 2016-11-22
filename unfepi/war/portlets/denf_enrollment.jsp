@@ -390,14 +390,14 @@ ul{
 	<c:set var="commandAdditionalPathStr" value="address."></c:set>
 	<%@ include file="plt_address.jsp" %> 
    
- 	<tr>
-		<td><spring:message code="label.contactNumber"/></td>
-		<td><spring:bind path="command.centerVisit.contactPrimary">
-			<input type="text" id="contactPrimary" name="centerVisit.contactPrimary" maxlength="13" value="${status.value}" class="numbersOnly" />
-			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
-			</spring:bind>
-		</td>
-	</tr> 
+<!--  	<tr> -->
+<%-- 		<td><spring:message code="label.contactNumber"/></td> --%>
+<%-- 		<td><spring:bind path="command.centerVisit.contactPrimary"> --%>
+<%-- 			<input type="text" id="contactPrimary" name="centerVisit.contactPrimary" maxlength="13" value="${status.value}" class="numbersOnly" /> --%>
+<%-- 			<span class="error-message"><c:out	value="${status.errorMessage}" /></span> --%>
+<%-- 			</spring:bind> --%>
+<!-- 		</td> -->
+<!-- 	</tr>  -->
 </table>
 </div>
 <div id="tab2" class="tab-section">

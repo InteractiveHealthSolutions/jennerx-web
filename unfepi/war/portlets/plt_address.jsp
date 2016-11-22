@@ -3,7 +3,7 @@
 <tr>
 		<td>Location<span class="mendatory-field">*</span></td>
 		<td><spring:bind path="command.${commandAdditionalPathStr}address2">
-	            <select id="locationId"  name="${commandAdditionalPathStr}address2" bind-value="${status.value}" onchange="" class="requiredField">
+			     <select id="locationId"  name="${commandAdditionalPathStr}address2" bind-value="${status.value}" onchange="" class="requiredField">
 	               	<option id=""></option>
 	            	<c:forEach items="${locations}" var="loc"> 
 	            	<option id="loc${loc.locationId}" value="${loc.fullName}">${loc.fullName}</option>

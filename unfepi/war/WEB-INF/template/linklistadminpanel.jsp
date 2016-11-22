@@ -11,7 +11,7 @@
 	</ul>
 </li>
 <li><a href="viewVaccinators.htm">Vaccinators</a></li>
-<li><a href="viewVaccinationCenters.htm">Vaccination Centers</a></li>
+<li><a href="viewVaccinationCenters.htm">Sites</a></li>
 <li><a href="viewLocations.htm">Locations</a></li>
 
 <li><a href="#">Health Programs</a>

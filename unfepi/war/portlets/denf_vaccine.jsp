@@ -77,7 +77,9 @@ function submitThisForm() {
 		<td><spring:bind path="command.vaccine_entity">
 			<select id="vaccine_entity" name="vaccine_entity" style="width: 5.14cm">
 				<c:forEach items="<%=VaccineEntity.values()%>" var="vac_entity">
+				<c:if test="${fn:contains(vac_entity, 'CHILD')}">
 					<option value="${vac_entity}">${vac_entity}</option>
+				</c:if>
 				</c:forEach>
 			</select>
 			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
