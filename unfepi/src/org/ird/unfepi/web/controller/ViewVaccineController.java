@@ -35,7 +35,7 @@ public class ViewVaccineController extends DataDisplayController {
 		
 		model.put("vaccinesList", vaccinesL);
 		
-		System.out.println(vaccinesL.toString());
+//		System.out.println(vaccinesL.toString());
 		
 		return showForm(model);
 	}

@@ -49,7 +49,7 @@ public class EditCenterProgramController extends DataEditFormController{
 			sc.getCustomQueryService().update(cp);
 			sc.commitTransaction();
 			
-			System.out.println(cp);
+//			System.out.println(cp);
 			
 			return new ModelAndView(new RedirectView("viewHealthProgramRounds.htm?centerId="+cp.getVaccinationCenterId()+"&programId="+cp.getHealthProgramId()));
 

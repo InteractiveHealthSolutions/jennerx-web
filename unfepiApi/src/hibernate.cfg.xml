@@ -98,7 +98,9 @@
 		<mapping class="org.ird.unfepi.model.HealthProgram"/>
 		<mapping class="org.ird.unfepi.model.CenterProgram"/>
 		<mapping class="org.ird.unfepi.model.Round"/>
-		<mapping class="org.ird.unfepi.model.VaccinationCalendar"/>		
+		<mapping class="org.ird.unfepi.model.VaccinationCalendar"/>	
+		<mapping class="org.ird.unfepi.model.ItemStock"/>
+		<mapping class="org.ird.unfepi.model.ItemsDistributed"/>
 		
     </session-factory>
 </hibernate-configuration>

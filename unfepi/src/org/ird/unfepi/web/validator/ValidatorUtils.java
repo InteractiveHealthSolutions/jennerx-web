@@ -1212,8 +1212,8 @@ public class ValidatorUtils {
 			putError(dataEntrySource, "location must be specified", mobileErrors, error, DataField.ADDRESS_ADDRESS2, useFieldPrefix);
 		}
 		
-		if (address.getAddress1().length() > 15 || address.getAddress1().length() < 3 ) {
-			putError(dataEntrySource, "invalid length, should have 3 to 15 characters", mobileErrors, error, DataField.ADDRESS_ADDRESS1, useFieldPrefix);
+		if (address.getAddress1().length() > 30 || address.getAddress1().length() < 3 ) {
+			putError(dataEntrySource, "invalid length, should have 3 to 30 characters", mobileErrors, error, DataField.ADDRESS_ADDRESS1, useFieldPrefix);
 		}
 		
 //		if (StringUtils.isEmptyOrWhitespaceOnly(address.getTown())) {
@@ -1285,7 +1285,9 @@ public class ValidatorUtils {
 		for (VaccineSchedule dfvsh : defSch) {
 			VaccineSchedule vsobj = null;
 			for (VaccineSchedule vs : vaccineSchedule) {
-				if (dfvsh.getVaccine().getName().equalsIgnoreCase(vs.getVaccine().getName()) && !vs.getStatus().equalsIgnoreCase(VaccineStatusType.INVALID_DOSE.name())) {
+				if (dfvsh.getVaccine().getName().equalsIgnoreCase(vs.getVaccine().getName()) && 
+						(!vs.getStatus().equalsIgnoreCase(VaccineStatusType.INVALID_DOSE.name()) || !vs.getStatus().equalsIgnoreCase(VaccineStatusType.NOT_GIVEN.name()))
+						) {
 					vsobj = vs;
 					break;
 				}

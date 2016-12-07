@@ -113,7 +113,7 @@ public class EditRound  extends DataEditFormController{
 				} else {
 					round = roundL.get(0);
 					
-					System.out.println(round.getHealthProgram().getName());
+//					System.out.println(round.getHealthProgram().getName());
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -27,15 +27,20 @@ fieldset{
  	border:thin solid #b2b869 ; 
  	border-color: gray; 
 	display:inline-block;
+	font-family: sans-serif;
 }
 
-legend{
+legend, a{
 	font-family: Verdana;
 	font-size: small;
 	color: #e0691a;
 }
+a{
+	text-decoration: underline;
+	cursor: pointer;
+}
 
-.vaccine_history.denform-h, .current_vaccine.denform-h{
+.vaccine_history.denform-h, .current_vaccine.denform-h, .preact.denform-h{
 	outline: none;
 }
 
@@ -43,6 +48,7 @@ legend{
 	color: red;
 	font-weight: 900;
 	border: none;
+	cursor: pointer;
 }
 
 .h5_{
@@ -81,19 +87,30 @@ ul{
 	font-weight: bold;
 }
 
-#submitBtn, #RealContraindication{
-	width: auto;
-    height: 30px;
+/* #preClick{ */
+/*     cursor: pointer; */
+/*     background: transparent; */
+/*     border: 1 ridge silver; */
+/*     padding: 0; */
+/*     margin: 0 10px 10px 0; */
+/*     font-size: medium; */
+/*     font-weight: bold; */
+/*     color: orange; */
+/*     display: inline-block */
+/* } */
+
+#RealContraindication, #submitBtn{
+    width: 200px;
+    height: 50px;
     cursor: pointer;
     background: transparent;
     border: 1 ridge silver;
     padding: 0;
     margin: 0 10px 10px 0;
-    font-size: medium;
+    font-size: large;
     font-weight: bold;
     color: orange;
 }
-
 </style>
 
 <script type="text/javascript">
@@ -132,6 +149,7 @@ ul{
 	function healthProgramChanged(){
 		unSelecteSites();
 		getSites();
+		getVaccines();
 	}
 	
 	function unSelecteSites(){
@@ -155,21 +173,38 @@ ul{
 		});
 	}
 	
-// 	function getLocations(){
-// 		$.get( "addchild/locationList/"+$('#healthProgramId').val()+".htm" , function( data ) {
+	function getVaccines(){
+		$.get( "addchild/vaccineList/"+$('#healthProgramId').val()+".htm" , function( data ) {
+			var vaccines = $.parseJSON(data);
+			$("#vhst").empty();
+			$.each(vaccines, function(index, value){
+				$("#vhst").append("<tr id='trvh"+index+"'></tr>");
+				$("#trvh"+index).append("<td><input id='retro_vaccine"+value['vaccineId']+"' name='retro_vaccine' value='"+value['name']+"' readonly='readonly' style='border: hidden;'/></td>");
+				$("#trvh"+index).append("<td><input id='retro_vaccine_in"+value['vaccineId']+"' name='retro_vaccine_in' class='retro_vaccine_in' type='checkbox' onclick='checkboxVac(this)'/></td>");
+				$("#trvh"+index).append("<td><input id='retro_date"+value['vaccineId']+"' name='retro_vaccine_date' class='calendarbox retro_vaccine_date' placeholder='dd-MM-yyyy' disabled /></td>");
+				
+				var calId = "retro_date"+value['vaccineId'];
+				var max = dateDifference(new Date(), convertToDate($('#centerVisitDate').val())) + 1;
+		 		var min = dateDifference(new Date(), convertToDate($('#birthdate').val()));
+				$(".retro_vaccine_date").each(function(index, element) {
+					$(this).datepicker("option", "maxDate", '-'+max+'d');
+		 			$(this).datepicker("option", "minDate", '-'+min+'d');
+				});			
+				
+				$('#'+calId).datepicker({
+				  	duration: '',
+				    constrainInput: false,
+				    maxDate: $(this).attr('maxDate'),
+				    minDate: $(this).attr('minDate'),
+				    dateFormat: '<%=WebGlobals.GLOBAL_DATE_FORMAT_JS%>',
+				    onClose: window[$(this).attr('onclosehandler')],
+				    onSelect: window[$(this).attr('onselecthandler')]
+				});
 			
-// 			var locations = $.parseJSON(data);
-// 			$.each(locations, function(index, value){
-// 				$("#vaccinationCenterId option").each(function(){
-// 					 if (value == $(this).attr("id").replace(/\D/g,"")){
-// 						  $('#vc'+value).show();
-// 					  }
-// 				});
-// 			});
-			
-// 		});
-// 	}
-
+			});
+		});
+	}
+	
 	function birthChanged(jqControl){
 		if($('#centerVisitDate').val() == '' || $('#vaccinationCenterId').val() == ''){
 			//reset age inputs
@@ -178,21 +213,16 @@ ul{
 			$('#birthdate').val('');
 // 			alert('Tareekh pedaish say pehlay Enrollment ki tareekh aur Center ka indraj zaroori hy.');
 		}
-// 		else{
-// 			vaccineScheduleGenerator(convertToDate(jqControl.val()), convertToDate($('#centerVisitDate').val()), '${command.centerVisit.childId}', $('#vaccinationCenterId').val(), null,'${command.centerVisit.uuid}',true);
-// 		}
 	}
-
+	
 	function centerVisitDateChanged() {
 		$('#birthdate').val('');
-		
+		$('.requiredFieldAge').val('');
 		
 		var max = dateDifference(new Date(), convertToDate($('#centerVisitDate').val())) + 1;
-// 		var min = dateDifference(new Date(), convertToDate($('#birthdate').val()));
 		
 		$(".retro_vaccine_date").each(function(index, element) {
-			$(this).datepicker("option", "maxDate", '-'+max+'d');
-// 			$(this).datepicker("option", "minDate", '-'+min+'d');
+			$(this).datepicker("option", "maxDate", '-' + max + 'd');
 		});
 	}
 	
@@ -203,19 +233,17 @@ ul{
 		$(".retro_vaccine_date").each(function(index, element) {
 			$(this).val('');
 		});
-		
-// 		var max = dateDifference(new Date(), convertToDate($('#centerVisitDate').val()));
+
 		var min = dateDifference(new Date(), convertToDate($('#birthdate').val()));
-		
+
 		$(".retro_vaccine_date").each(function(index, element) {
-// 			$(this).datepicker("option", "maxDate", '-'+max+'d');
-			$(this).datepicker("option", "minDate", '-'+min+'d');
+			$(this).datepicker("option", "minDate", '-' + min + 'd');
 		});
 	}
 
 	function subfrm() {
 		DWRVaccineService.overrideSchedule(vaccineScheduleList, '${command.centerVisit.uuid}', function(result) {
-							submitThisForm();
+			submitThisForm();
 		});
 	}
 
@@ -236,6 +264,7 @@ ul{
 
 		if($('#healthProgramId').val().length != 0){
 			getSites();	
+			getVaccines();
 		}
 		
 		$('.tab-section').hide();
@@ -401,14 +430,7 @@ ul{
 </table>
 </div>
 <div id="tab2" class="tab-section">
-<table  class="denform-h">
-	<c:forEach var="va" items="${vaccineList}">
-	<tr>
-		<td><input id="retro_vaccine${va.vaccineId}" name="retro_vaccine" value="${va.fullName}" readonly="readonly" style="border: hidden;"/></td>
-		<td><input id="retro_vaccine_in${va.vaccineId}" name="retro_vaccine_in" class="retro_vaccine_in" type="checkbox" /></td>
-		<td><input id="retro_date${va.vaccineId}" name="retro_vaccine_date" class="calendarbox retro_vaccine_date" placeholder="dd-MM-yyyy" disabled /></td>  	
-	</tr>
-	</c:forEach>   
+<table  id="vhst" class="denform-h">
 </table>
 </div>
 

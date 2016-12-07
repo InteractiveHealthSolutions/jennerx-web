@@ -69,7 +69,7 @@ public class ViewImmunizationRecordsController extends DataDisplayController {
 			}
 			List<String> colNames = sc.getCustomQueryService().getDataBySQL("SELECT column_name FROM information_schema.columns WHERE table_name='"+dmpTable+"' ORDER BY ORDINAL_POSITION");
 			String qry = "SELECT * FROM "+dmpTable+" "+sf+" LIMIT "+startRecord+", "+WebGlobals.PAGER_PAGE_SIZE;
-			System.out.println(qry);
+//			System.out.println(qry);
 			list = sc.getCustomQueryService().getDataBySQLMapResult(qry );
 			totalRows=Integer.parseInt(sc.getCustomQueryService().getDataBySQL("SELECT COUNT(*) FROM "+dmpTable+" "+sf).get(0).toString());		
 			String searchFilterMessage = searchFilter.replace("'", "").replace("%", "").replace("AND", "<br>").replace("=", " is ").replace("!=", " is not ").replace("like", " contains ");

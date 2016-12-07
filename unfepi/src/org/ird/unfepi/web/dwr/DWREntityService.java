@@ -39,7 +39,7 @@ public class DWREntityService {
 		ServiceContext sc = Context.getServices();
 		
 		String qry ="SELECT locationId, name, fullName FROM location l JOIN locationtype lt ON l.locationType=lt.locationTypeId WHERE lt.typeName IN ("+IRUtils.getArrayAsString(locationTypes, ",", "'")+", null)"+(parentId==null?"":" AND (parentLocation IS NULL || parentLocation="+parentId+")")+" ORDER BY lt.locationTypeId,l.fullname";
-		System.out.println(qry);
+//		System.out.println(qry);
 		List list = sc.getCustomQueryService().getDataBySQL(qry);
 		
 		List<Map<String, String>> locations = new ArrayList<Map<String,String>>();
@@ -75,7 +75,7 @@ public class DWREntityService {
 				+ "WHERE lt.typeName IN ("+IRUtils.getArrayAsString(locationTypes, ",", "'")+", null)"
 				+(parentName==null?"":" AND (l.parentLocation IS NULL || pl.name='"+parentName+"')")
 				+" ORDER BY lt.locationTypeId,l.fullname";
-		System.out.println(qry);
+//		System.out.println(qry);
 		List list = sc.getCustomQueryService().getDataBySQL(qry);
 		
 		List<Map<String, String>> locations = new ArrayList<Map<String,String>>();
@@ -114,7 +114,7 @@ public class DWREntityService {
 			locations.add(getChild(object));
 		}
 
-		System.out.println(locations);
+//		System.out.println(locations);
 		return locations;
 	}
 	

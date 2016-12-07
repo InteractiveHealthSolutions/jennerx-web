@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.ird.unfepi.DataEntryForm;
 import org.ird.unfepi.DataEntryFormController;
 import org.ird.unfepi.GlobalParams;
@@ -23,8 +26,9 @@ import org.ird.unfepi.model.Address;
 import org.ird.unfepi.model.Child;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
 import org.ird.unfepi.model.HealthProgram;
+import org.ird.unfepi.model.ItemStock;
+import org.ird.unfepi.model.ItemsDistributed;
 import org.ird.unfepi.model.Location;
-import org.ird.unfepi.model.Round;
 import org.ird.unfepi.model.VaccinationCenter;
 import org.ird.unfepi.model.Vaccinator;
 import org.ird.unfepi.model.Vaccine;
@@ -34,6 +38,8 @@ import org.ird.unfepi.web.utils.VaccinationCenterVisit;
 import org.ird.unfepi.web.utils.VaccineSchedule;
 import org.ird.unfepi.web.utils.VaccineSchedule.VaccineStatusType;
 import org.ird.unfepi.web.validator.ChildValidator;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -47,7 +53,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 @Controller
 @RequestMapping("/addchild")
@@ -62,19 +67,36 @@ public class AddChildController extends DataEntryFormController{
 	}
 	
 	@RequestMapping(value="/siteList/{programId}" , method=RequestMethod.GET)
-	public @ResponseBody String getSiteList(@PathVariable Integer programId, Model model){
+	public @ResponseBody String getSiteList(@PathVariable Integer programId){
 		ServiceContext sc = Context.getServices();
 		List<String> current_centers = sc.getCustomQueryService().getDataBySQL("select mappedId from vaccinationcenter where mappedId in (SELECT vaccinationCenterId FROM centerprogram WHERE healthProgramId = "+ programId + "  and isActive = true)");
 		return current_centers.toString();
 	}
 	
 	@RequestMapping(value="/locationList/{programId}" , method=RequestMethod.GET)
-	public @ResponseBody String getLocationList(@PathVariable Integer programId, Model model){
+	public @ResponseBody String getLocationList(@PathVariable Integer programId){
 		ServiceContext sc = Context.getServices();
 		List<String> current_centers = sc.getCustomQueryService().getDataBySQL("select mappedId from vaccinationcenter where mappedId in (SELECT vaccinationCenterId FROM centerprogram WHERE healthProgramId = "+ programId + "  and isActive = true)");
 		return current_centers.toString();
 	}
+	
+	@RequestMapping(value="/vaccineList/{programId}" , method=RequestMethod.GET)
+	@ResponseBody
+	public String getVaccineList(@PathVariable Integer programId){
 		
+		ServiceContext sc = Context.getServices();
+		
+		Integer calendarId = (Integer) sc.getCustomQueryService().getDataByHQL("select vaccinationcalendarId from HealthProgram where programId = " + programId).get(0);
+		List list = sc.getCustomQueryService().getDataBySQLMapResult("SELECT * FROM unfepi.vaccine where vaccineId in (SELECT distinct(vaccineId) FROM unfepi.vaccinegap WHERE vaccinationcalendarId = "+calendarId+" ) and vaccine_entity like '%child%'");
+		JSONArray data =  new JSONArray();
+		for (Object object : list) {
+			data.put(new JSONObject((HashMap)object));
+//			System.out.println(new JSONObject((HashMap)object).toString());
+		}
+		
+		return data.toString();
+	}
+	
 	@RequestMapping(method=RequestMethod.GET)
 	public ModelAndView addChildFormView(HttpServletRequest request, ModelAndView modelAndView){
 		modelAndView.addObject("command", new EnrollmentWrapper());
@@ -87,13 +109,12 @@ public class AddChildController extends DataEntryFormController{
 								 HttpSession session) throws Exception {
 		
 		ewr.getChild().setDateEnrolled(ewr.getCenterVisit().getVisitDate());
-		@SuppressWarnings("unchecked")
 		List<VaccineSchedule> vaccineSchedule = (List<VaccineSchedule>) request.getSession().getAttribute(VaccinationCenterVisit.VACCINE_SCHEDULE_KEY+ewr.getCenterVisit().getUuid());
 		ServiceContext sc = Context.getServices();
 		
-//		for (VaccineSchedule vs : vaccineSchedule) {
-//			vs.printVaccineSchedule();
-//		}
+		for (VaccineSchedule vs : vaccineSchedule) {
+			vs.printVaccineSchedule();
+		}
 		
 		Iterator<VaccineSchedule> iter = vaccineSchedule.iterator();
 		while (iter.hasNext()) {
@@ -108,9 +129,10 @@ public class AddChildController extends DataEntryFormController{
 //			vs.printVaccineSchedule();
 //		}
 		
-		System.out.println(ewr.getCenterVisit().getVaccinationCenterId() +"  " + ewr.getCenterVisit().getHealthProgramId());
+//		System.out.println(ewr.getCenterVisit().getVaccinationCenterId() +"  " + ewr.getCenterVisit().getHealthProgramId());
 		new ChildValidator().validateEnrollment(ewr, vaccineSchedule, results);		
 		if(results.hasErrors()){	
+//			System.out.println(results.toString());
 			return showForm(modelAndView, "dataForm");	
 		}
 		
@@ -122,13 +144,9 @@ public class AddChildController extends DataEntryFormController{
 		Address addr = ewr.getAddress();
 		
 		try{
-//			Integer centerProgramId = (Integer) sc.getCustomQueryService().getDataByHQL("select centerProgramId from CenterProgram where vaccinationCenterId ="+ ewr.getCenterVisit().getVaccinationCenterId() +" and healthProgramId =" + ewr.getCenterVisit().getHealthProgramId()).get(0);
-//			List<Round> roundL = sc.getCustomQueryService().getDataByHQL("from Round where centerProgramId =" + centerProgramId +" and isActive = 1"); 
-			
 			Integer healthProgramId = ewr.getCenterVisit().getHealthProgramId();
 			Integer roundId = (Integer) sc.getCustomQueryService().getDataByHQL("select roundId from Round where isActive = true and healthProgramId = " + healthProgramId).get(0);
 			
-			/*List<ChildIncentivization> lotteryRes = */
 			ControllerUIHelper.doEnrollment(DataEntrySource.WEB, roundId,
 					childIdentifier, ewr.getChildNamed(), ch,
 					ewr.getBirthdateOrAge(), ewr.getChildagey(),
@@ -164,12 +182,14 @@ public class AddChildController extends DataEntryFormController{
 			model.addAttribute("vaccinationCenters", centeres);
 			List<Vaccinator> vaccinators = sc.getVaccinationService().getAllVaccinator(0, Integer.MAX_VALUE, true, new String[]{"idMapper"});
 			model.addAttribute("vaccinators", vaccinators);	
-			List<Vaccine> vaccinesL = sc.getCustomQueryService().getDataByHQL("FROM Vaccine where vaccine_entity like 'CHILD%' and isSupplementary = 0") ;
-			model.addAttribute("vaccineList", vaccinesL);
+//			List<Vaccine> vaccinesL = sc.getCustomQueryService().getDataByHQL("FROM Vaccine where vaccine_entity like 'CHILD%'") ;
+//			model.addAttribute("vaccineList", vaccinesL);
 			List<HealthProgram> healthprograms = sc.getCustomQueryService().getDataByHQL("from HealthProgram order by name");
 			model.addAttribute("healthprograms", healthprograms);
 			List<Location> locations = sc.getCustomQueryService().getDataByHQL("from Location order by name");
 			model.addAttribute("locations", locations);
+			List<ItemStock> itemStocks = sc.getCustomQueryService().getDataByHQL("from ItemStock");
+			model.addAttribute("itemStocks", itemStocks);
 		} catch (Exception e) {
 			e.printStackTrace();
 			GlobalParams.FILELOGGER.error(formType.name(), e);

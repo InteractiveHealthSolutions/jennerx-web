@@ -27,7 +27,7 @@ public class CalendarVaccineValidator implements Validator{
 		VaccineRegistrationWrapper vrw = (VaccineRegistrationWrapper)command;
 		ServiceContext sc = Context.getServices();		
 		
-		System.out.println("validator called -------");
+//		System.out.println("validator called -------");
 		
 		if(StringUtils.isEmptyOrWhitespaceOnly(vrw.getVaccineId().toString())){
 			error.rejectValue("vaccineId", "error.vaccineId.empty-vaccineId", "vaccine must be provided");
@@ -82,7 +82,7 @@ public class CalendarVaccineValidator implements Validator{
 		VaccineRegistrationWrapper vrw = (VaccineRegistrationWrapper)command;
 		ServiceContext sc = Context.getServices();		
 		
-		System.out.println("validator called isNew -------");
+//		System.out.println("validator called isNew -------");
 		
 		if(StringUtils.isEmptyOrWhitespaceOnly(vrw.getVaccineId().toString())){
 			error.rejectValue("vaccineId", "error.vaccineId.empty-vaccineId", "vaccine must be provided");

@@ -20,9 +20,9 @@ public class ProgramServiceHelper {
 //			System.out.println(hp.getName());
 //		}
 		
-		for (String string : list) {
-			System.out.println(string);
-		}
+//		for (String string : list) {
+//			System.out.println(string);
+//		}
 		return list;
 	}
 

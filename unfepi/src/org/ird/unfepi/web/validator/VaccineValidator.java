@@ -29,27 +29,15 @@ public class VaccineValidator implements Validator {
 		Vaccine v = (Vaccine) command;
 		ServiceContext sc = Context.getServices();
 		
-//		if(!DataValidation.validate(REG_EX.NO_SPECIAL_CHAR, v.getName(), 3 , 15)){
-//			error.rejectValue("name" , "" , ErrorMessages.VACCINE_NAME_INVALID);
-//		}
-//		if(!DataValidation.validate(REG_EX.NO_SPECIAL_CHAR, v.getShortName(), 3 , 10)){
-//			error.rejectValue("shortName" , "" , ErrorMessages.VACCINE_SHORTNAME_INVALID);
-//		}
-//		if(v.getFullName() != null && v.getFullName().length() > 0)
-//		{
-//			if(!DataValidation.validate(REG_EX.NO_SPECIAL_CHAR, v.getFullName(), 3 , 30)){
-//				error.rejectValue("fullName" , "" , ErrorMessages.VACCINE_FULLNAME_INVALID);
-//			}
-//		}
 		
-		if (StringUtils.isEmptyOrWhitespaceOnly(v.getName()) || !DataValidation.validate("[a-zA-Z0-9_]{3,15}", v.getName())) {
+		if (StringUtils.isEmptyOrWhitespaceOnly(v.getName()) || !DataValidation.validate("[a-zA-Z0-9_-]{3,15}", v.getName())) {
 			error.rejectValue("name" , "" , ErrorMessages.VACCINE_NAME_INVALID);
 		}
-		if (StringUtils.isEmptyOrWhitespaceOnly(v.getShortName()) || !DataValidation.validate("[a-zA-Z0-9_]{3,10}", v.getShortName())) {
+		if (StringUtils.isEmptyOrWhitespaceOnly(v.getShortName()) || !DataValidation.validate("[a-zA-Z0-9_-]{3,15}", v.getShortName())) {
 			error.rejectValue("shortName" , "" , ErrorMessages.VACCINE_SHORTNAME_INVALID);
 		}
 		if(v.getFullName() != null && v.getFullName().length() > 0){
-			if (!DataValidation.validate("[a-zA-Z0-9\\s_]{3,30}", v.getFullName())) {
+			if (!DataValidation.validate("[a-zA-Z0-9\\s_-]{3,30}", v.getFullName())) {
 				error.rejectValue("fullName" , "" , ErrorMessages.VACCINE_FULLNAME_INVALID);
 			}
 		}

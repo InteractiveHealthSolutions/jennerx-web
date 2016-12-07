@@ -207,9 +207,9 @@ public class ErrorMessages
 	public static final String ADDRESS_CITY_MISSING = "City must be specified";
 	public static final String ADDRESS_OTHER_CITY_MISSING = "Other city must be specified";
 
-	public static final String VACCINE_NAME_INVALID = "Vaccine name should be a non empty non-whitespace word (A-Za-z0-9_) of length 3-15";
-	public static final String VACCINE_SHORTNAME_INVALID = "Vaccine short name should be a non empty non-whitespace word (A-Za-z0-9_) of length 3-10";
-	public static final String VACCINE_FULLNAME_INVALID = "Vaccine full name should be a non empty word (A-Za-z0-9_space) of length 3-30";
+	public static final String VACCINE_NAME_INVALID = "Vaccine name should be a non empty non-whitespace word (A-Za-z0-9_-) of length 3-15";
+	public static final String VACCINE_SHORTNAME_INVALID = "Vaccine short name should be a non empty non-whitespace word (A-Za-z0-9_-) of length 3-10";
+	public static final String VACCINE_FULLNAME_INVALID = "Vaccine full name should be a non empty word (A-Za-z0-9_-space) of length 3-30";
 	public static final String VACCINE_GAP_INVALID = "Gap between vaccine should be between -1 to 60 , if needs greater choose proper interval";
 
 	public static final String DAILY_SUMMARY_DATE_MISSING = "Daily summary date must be specified";

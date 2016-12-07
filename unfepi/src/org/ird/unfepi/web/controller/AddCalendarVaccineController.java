@@ -31,7 +31,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -41,11 +40,11 @@ import org.springframework.web.servlet.view.RedirectView;
 @RequestMapping("/addCalendarVaccine")
 public class AddCalendarVaccineController extends DataEntryFormController{
 	
-	private static final FormType formType = FormType.VACCINE_ADD;
+	private static final FormType formType = FormType.VACCINE_SCHEDULE_ADD;
 	private Date dateFormStart = new Date();
 	
 	public AddCalendarVaccineController() {
-		super(new DataEntryForm("calendar_vaccine", "Calendar Vaccine (New)", SystemPermissions.ADD_VACCINES));
+		super(new DataEntryForm("calendar_vaccine", "Calendar Vaccine (New)", SystemPermissions.ADD_VACCINE_SCHEDULE));
 	}
 	
 	@RequestMapping(method=RequestMethod.GET)
@@ -69,7 +68,7 @@ public class AddCalendarVaccineController extends DataEntryFormController{
 		
 		new CalendarVaccineValidator().validate(wrapper, results);
 		if(results.hasErrors()){	
-			System.out.println(results.toString());
+//			System.out.println(results.toString());
 			
 			if(wrapper.getVaccinePrerequisites() != null){
 				modelAndView.addObject("preReq_selected", Arrays.asList(wrapper.getVaccinePrerequisites()));
@@ -107,7 +106,7 @@ public class AddCalendarVaccineController extends DataEntryFormController{
 //			EncounterUtil.createVaccineRegistrationEncounter(vaccine, DataEntrySource.WEB, dateFormStart, user.getUser(), sc);
 //			GlobalParams.DBLOGGER.info(IRUtils.convertToString(vaccine), LoggerUtils.getLoggerParams(LogType.TRANSACTION_INSERT, formType, user.getUser().getUsername()));
 			
-			return new ModelAndView(new RedirectView("viewVaccinationCalendar.htm?calendarId=2"));
+			return new ModelAndView(new RedirectView("viewVaccinationCalendar.htm?calendarId="+wrapper.getVaccinationCalendarId()));
 			
 		} catch (Exception e) {
 			sc.rollbackTransaction();

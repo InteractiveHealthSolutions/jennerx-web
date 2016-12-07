@@ -48,6 +48,7 @@ public class VaccineSchedule {
 		NOT_ALLOWED,
 		NOT_VACCINATED,
 		INVALID_DOSE,
+		NOT_GIVEN,
 	}
 	private Vaccine vaccine;
 	private Date birthdate;
@@ -167,7 +168,7 @@ public class VaccineSchedule {
 						
 //						System.out.println(vsr.getVaccinationHistory().getVaccineId() + "  " +  vsr.getVaccinationHistory().getVaccinationDate() + " " +  vsr.getVaccinationHistory().getVaccinationStatus());
 						
-						if(vsr.getVaccine().getVaccineId() == vaccine.getVaccineId() && vsr.getVaccinationHistory().getVaccinationStatus() != VACCINATION_STATUS.INVALID_DOSE )
+						if(vsr.getVaccine().getVaccineId() == vaccine.getVaccineId() && (vsr.getVaccinationHistory().getVaccinationStatus() != VACCINATION_STATUS.INVALID_DOSE))
 						{
 							if(vvacc != null){
 								vvacc.add(vsr.getVaccinationHistory());
@@ -180,7 +181,7 @@ public class VaccineSchedule {
 							}
 						}
 						
-						else if(vsr.getVaccine().getVaccineId() == vaccine.getVaccineId() && vsr.getVaccinationHistory().getVaccinationStatus() == VACCINATION_STATUS.INVALID_DOSE){
+						else if(vsr.getVaccine().getVaccineId() == vaccine.getVaccineId() && (vsr.getVaccinationHistory().getVaccinationStatus() == VACCINATION_STATUS.INVALID_DOSE )){
 							invalid_schedule.add(vsr);
 							break;
 						 }
@@ -220,10 +221,10 @@ public class VaccineSchedule {
 						
 						VaccineGap oag = IMRUtils.getOverAgeGap(vaccine, calendarId);
 						if(oag != null){
-							System.out.println(vaccine.getName() + " over " + oag.getValue() + " " + oag.getGapTimeUnit());
+//							System.out.println(vaccine.getName() + " over " + oag.getValue() + " " + oag.getGapTimeUnit());
 							
 							isPrerequisiteOverAge = IMRUtils.isPrerequisiteOverAge(vaccine,  schedule, calendarId, vsch.getBirthdate());
-							System.out.println("isPrerequisiteOverAge " + isPrerequisiteOverAge);
+//							System.out.println("isPrerequisiteOverAge " + isPrerequisiteOverAge);
 						}
 						
 						Date prevVaccDate = IMRUtils.getPrerequisiteVaccineDate(vsch, schedule, calendarId);
@@ -311,12 +312,11 @@ public class VaccineSchedule {
 		
 		schedule.addAll(invalid_schedule);
 		
-//		System.out.println("\n ---------\n");
+//		System.out.println("\n generate default schedule ---------\n");
 //		for (VaccineSchedule ivs : schedule) {
 //			ivs.printVaccineSchedule();
 //		}
 //		System.out.println("\n ---------\n");
-		
 		
 		return schedule;
 	}
@@ -631,13 +631,13 @@ public class VaccineSchedule {
 		ArrayList<VaccineSchedule> scheduleH = new ArrayList<VaccineSchedule>();
 		
 		
-		System.out.println( healthProgramId + " healthProgramId ");
+//		System.out.println( healthProgramId + " healthProgramId ");
 		//TODO remove comment
 		Integer calendarId = (Integer) sc.getCustomQueryService().getDataByHQL("select vaccinationcalendarId from HealthProgram where programId = " + healthProgramId).get(0);
 		
 //		Integer calendarId = 2;
 		
-		System.out.println(calendarId + " " + healthProgramId + " healthProgramId calendarId");
+//		System.out.println(calendarId + " " + healthProgramId + " healthProgramId calendarId");
 		
 		try {
 
@@ -720,10 +720,10 @@ public class VaccineSchedule {
 					else if(prerequisite_passed){
 						VaccineGap oag = IMRUtils.getOverAgeGap(vaccine, calendarId);
 						if(oag != null){
-							System.out.println(vaccine.getName() + " over " + oag.getValue() + " " + oag.getGapTimeUnit());
+//							System.out.println(vaccine.getName() + " over " + oag.getValue() + " " + oag.getGapTimeUnit());
 							
 							isPrerequisiteOverAge = IMRUtils.isPrerequisiteOverAge(vaccine,  scheduleHL, calendarId, schedule.getBirthdate());
-							System.out.println("isPrerequisiteOverAge " + isPrerequisiteOverAge);
+//							System.out.println("isPrerequisiteOverAge " + isPrerequisiteOverAge);
 						}
 						
 						Date prevVaccDate = IMRUtils.getPrerequisiteVaccineDate(schedule, scheduleHL, calendarId);
@@ -733,8 +733,8 @@ public class VaccineSchedule {
 					
 					//calculate retro/current status only if vaccine belong to schedule
 					if(schduedate != null && prerequisite_passed){
-						int minGracePeriod = schedule.getVaccine().getMinGracePeriodDays();
-						int maxGracePeriod = schedule.getVaccine().getMaxGracePeriodDays();
+						int minGracePeriod = schedule.getVaccine().getMinGracePeriodDays()!=null?schedule.getVaccine().getMinGracePeriodDays():0;
+						int maxGracePeriod = schedule.getVaccine().getMaxGracePeriodDays()!=null?schedule.getVaccine().getMaxGracePeriodDays():0;
 
 						Date minGraceDate = new Date(centerVisitDate.getTime() + (-minGracePeriod * 24 * 60 * 60 * 1000));
 //						Date maxGraceDate = new Date(centerVisitDate.getTime() + ( maxGracePeriod * 24 * 60 * 60 * 1000));
@@ -752,8 +752,8 @@ public class VaccineSchedule {
 						}
 						
 						
-						int minGracePeriod_rh = schedule.getVaccine().getMinGracePeriodDays();
-						int maxGracePeriod_rh = schedule.getVaccine().getMaxGracePeriodDays();
+						int minGracePeriod_rh = schedule.getVaccine().getMinGracePeriodDays()!=null?schedule.getVaccine().getMinGracePeriodDays():0;
+						int maxGracePeriod_rh = schedule.getVaccine().getMaxGracePeriodDays()!=null?schedule.getVaccine().getMaxGracePeriodDays():0;
 
 						Date minGraceDate_rh = new Date(va.getVaccinationDate().getTime() + (-minGracePeriod_rh * 24 * 60 * 60 * 1000));
 						Date maxGraceDate_rh = new Date(va.getVaccinationDate().getTime() + ( maxGracePeriod_rh * 24 * 60 * 60 * 1000));
@@ -868,11 +868,11 @@ public class VaccineSchedule {
 			sc.closeSession();
 		}
 		
-		System.out.println("\n ***********\n");
-		for (VaccineSchedule ivs : scheduleL) {
-			ivs.printVaccineSchedule();
-		}
-		System.out.println("\n ***********\n");
+//		System.out.println("\n validate vaccination history ***********\n");
+//		for (VaccineSchedule ivs : scheduleL) {
+//			ivs.printVaccineSchedule();
+//		}
+//		System.out.println("\n ***********\n");
 		
 		return scheduleL;
 	}

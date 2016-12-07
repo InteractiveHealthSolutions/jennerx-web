@@ -63,7 +63,7 @@ public class EditVaccineController extends DataEditFormController{
 		
 		try{
 			
-			System.out.println(vacc.getName() + " " + vacc.getShortName());
+//			System.out.println(vacc.getName() + " " + vacc.getShortName());
 			
 			vacc.setEditor(user.getUser());
 			vacc.setLastEditedDate(new Date());

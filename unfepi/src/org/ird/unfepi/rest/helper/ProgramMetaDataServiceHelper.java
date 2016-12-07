@@ -225,7 +225,7 @@ public class ProgramMetaDataServiceHelper {
 				+ "(SELECT vaccinationCenterId FROM centerprogram WHERE healthProgramId = "+ programId +" and isActive = true) )AS temp "
 				+ "WHERE loc.locationId = temp.locationId GROUP BY loc.locationId";
 		
-		System.out.println("\n" + query);
+//		System.out.println("\n" + query);
 		
 		if(json.has(RequestElements.METADATA_LOCATION)){
 			fetchAndCompareMetaData(RequestElements.METADATA_LOCATION, columns, table, query, response, json);

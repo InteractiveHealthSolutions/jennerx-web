@@ -75,7 +75,7 @@ public class ControllerUIHelper {
 		Integer pvcnum = null;
 		if (pvcnum == null) {
 			String sql = "select vaccinationRecordNum from vaccination " + " where childid=" + childid + " " + " and vaccinationdate is not null "
-					+ " and vaccinationStatus != 'INVALID_DOSE' "
+					+ " and vaccinationStatus NOT IN('NOT_VACCINATED','NOT_GIVEN','INVALID_DOSE') "
 					+ " order by vaccinationdate desc,vaccinationRecordNum asc limit 1";
 			List<Integer> lis = sc.getCustomQueryService().getDataBySQL(sql);
 			pvcnum = lis.size() == 0 ? null : lis.get(0);
@@ -550,19 +550,12 @@ public class ControllerUIHelper {
 
 		List<ChildIncentivization> incentives = new ArrayList<ChildIncentivization>();
 
-//		Integer armId = null;
-//		String sql = "SELECT armId FROM childincentive c JOIN vaccination v on c.vaccinationRecordNum = v.vaccinationRecordNum where v.childId = " + vaccineSchedule.get(0).getChildId();
-//		List arms = sc.getCustomQueryService().getDataBySQL(sql);
-//		if (arms.size() > 0) {
-//			armId = Integer.parseInt(arms.get(0).toString());
-//		}
-
 		for (VaccineSchedule vsh : vaccineSchedule) {
 			if (!StringUtils.isEmptyOrWhitespaceOnly(vsh.getStatus()) && !vsh.getStatus().equalsIgnoreCase(VaccineStatusType.NOT_ALLOWED.name())
 					&& !vsh.getStatus().equalsIgnoreCase(VaccineStatusType.VACCINATED_EARLIER.name())
 					&& (vsh.getAssigned_duedate() != null || vsh.getCenter() != null || vsh.getVaccination_date() != null)) {
 //				List<Vaccination> vtnl = sc.getVaccinationService().findByCriteria(centerVisit.getChildId(), vsh.getVaccine().getVaccineId(), null, 0, 10, false, null);
-				List<Vaccination> vtnl = sc.getCustomQueryService().getDataByHQL("FROM Vaccination WHERE childId = "+centerVisit.getChildId()+" AND vaccineId = "+vsh.getVaccine().getVaccineId()+" AND vaccinationStatus NOT LIKE 'NOT_VACCINATED'");
+				List<Vaccination> vtnl = sc.getCustomQueryService().getDataByHQL("FROM Vaccination WHERE childId = "+centerVisit.getChildId()+" AND vaccineId = "+vsh.getVaccine().getVaccineId()+" AND vaccinationStatus NOT IN('NOT_VACCINATED','NOT_GIVEN','INVALID_DOSE')");
 				
 				if (vtnl != null && vtnl.size() > 1) {
 					throw new IllegalStateException(vtnl.size() + " vaccination records found for " + vsh.getVaccine().getName() + " for child " + centerVisit.getChildId());
@@ -677,6 +670,24 @@ public class ControllerUIHelper {
 					} else if (vtn == null) {
 						vtn = handleNewNextVaccination(centerVisit.getChildId(), centerVisit.getVisitDate(), vsh.getAssigned_duedate(), vsh.getVaccine(), hasApprovedReminders, user, sc);
 					}
+				}
+				else if (vsh.getStatus().equalsIgnoreCase(VaccineStatusType.INVALID_DOSE.name())){
+					vtn.setVaccinationDate(vsh.getVaccination_date());
+					vtn.setVaccinationStatus(VACCINATION_STATUS.INVALID_DOSE);
+					vtn.setVaccinationDuedate(vsh.getAssigned_duedate() == null ? vsh.getSchedule_duedate() : vsh.getAssigned_duedate());
+					
+					vtn.setRoundId(roundId);
+					vtn.setVaccinationRecordNum(Integer.parseInt(sc.getVaccinationService().addVaccinationRecord(vtn).toString()));
+				}
+				else if (vsh.getStatus().equalsIgnoreCase(VaccineStatusType.NOT_GIVEN.name())) {
+					vtn.setVaccinationCenterId(vsh.getCenter().intValue());
+					vtn.setVaccinationDate(vsh.getVaccination_date());
+					vtn.setVaccinationDuedate(vsh.getAssigned_duedate() == null ? vsh.getSchedule_duedate() : vsh.getAssigned_duedate());
+					vtn.setVaccinationStatus(VACCINATION_STATUS.NOT_GIVEN);
+					vtn.setVaccinatorId(centerVisit.getVaccinatorId().intValue());
+					vtn.setRoundId(roundId);
+					Integer vaccNum = Integer.parseInt(sc.getVaccinationService().addVaccinationRecord(vtn).toString());
+					vtn.setVaccinationRecordNum(vaccNum);
 				}
 				vsh.setVaccinationObjCurrentVisit(vtn);
 			}
@@ -942,11 +953,6 @@ public class ControllerUIHelper {
 			Boolean hasApprovedReminders, Boolean hasApprovedLottery, Child child, User user, ServiceContext sc) {
 		List<ChildIncentivization> incentivesResult = new ArrayList<ChildIncentivization>();
 
-//		Integer armId = null;
-//		if (hasApprovedLottery != null && hasApprovedLottery) {
-//			armId = IncentiveUtils.determineIncentiveScheme();
-//		}
-
 		for (VaccineSchedule vsh : vaccineSchedule) {
 			if (!StringUtils.isEmptyOrWhitespaceOnly(vsh.getStatus()) && !vsh.getStatus().equalsIgnoreCase(VaccineStatusType.NOT_ALLOWED.name())
 					&& !vsh.getStatus().equalsIgnoreCase(VaccineStatusType.VACCINATED_EARLIER.name())
@@ -958,23 +964,17 @@ public class ControllerUIHelper {
 
 				// if today vaccinated on current center
 				if (vsh.getStatus().equalsIgnoreCase(VaccineStatusType.VACCINATED.name())) {
-//					vtn.setEpiNumber(centerVisit.getEpiNumber().toUpperCase());
 					vtn.setIsFirstVaccination(true);
 					vtn.setVaccinationCenterId(vsh.getCenter().intValue());
 					vtn.setVaccinationDate(vsh.getVaccination_date());
 					vtn.setVaccinationDuedate(vsh.getAssigned_duedate() == null ? vsh.getSchedule_duedate() : vsh.getAssigned_duedate());
 					vtn.setVaccinationStatus(VACCINATION_STATUS.VACCINATED);
 					vtn.setVaccinatorId(centerVisit.getVaccinatorId().intValue());
-//					vtn.setHasApprovedLottery(hasApprovedLottery);
 					vtn.setRoundId(roundId);
 					// vaccination must be saved before running lottery
 					Integer vaccNum = Integer.parseInt(sc.getVaccinationService().addVaccinationRecord(vtn).toString());
 					vtn.setVaccinationRecordNum(vaccNum);
 
-//					if (vtn.getHasApprovedLottery() != null && vtn.getHasApprovedLottery() && armId != null) {
-//						ChildIncentivization lotteryRes = ChildIncentivization.runIncentive(dataEntrySource, true, armId, vtn, vsh.getVaccine(), user, sc);
-//						incentivesResult.add(lotteryRes);
-//					}
 				}
 				// if retro
 				else if (vsh.getStatus().toUpperCase().contains(VaccineStatusType.RETRO.name())) {
@@ -1025,8 +1025,6 @@ public class ControllerUIHelper {
 					vtn.setVaccinationDuedate(vsh.getAssigned_duedate() == null ? vsh.getSchedule_duedate() : vsh.getAssigned_duedate());
 					vtn.setVaccinationStatus(VACCINATION_STATUS.NOT_VACCINATED);
 					vtn.setVaccinatorId(centerVisit.getVaccinatorId().intValue());
-
-					// vaccination must be saved before running lottery
 					vtn.setRoundId(roundId);
 					Integer vaccNum = Integer.parseInt(sc.getVaccinationService().addVaccinationRecord(vtn).toString());
 					vtn.setVaccinationRecordNum(vaccNum);
@@ -1038,6 +1036,16 @@ public class ControllerUIHelper {
 					
 					vtn.setRoundId(roundId);
 					vtn.setVaccinationRecordNum(Integer.parseInt(sc.getVaccinationService().addVaccinationRecord(vtn).toString()));
+				}
+				else if (vsh.getStatus().equalsIgnoreCase(VaccineStatusType.NOT_GIVEN.name())) {
+					vtn.setVaccinationCenterId(vsh.getCenter().intValue());
+					vtn.setVaccinationDate(vsh.getVaccination_date());
+					vtn.setVaccinationDuedate(vsh.getAssigned_duedate() == null ? vsh.getSchedule_duedate() : vsh.getAssigned_duedate());
+					vtn.setVaccinationStatus(VACCINATION_STATUS.NOT_GIVEN);
+					vtn.setVaccinatorId(centerVisit.getVaccinatorId().intValue());
+					vtn.setRoundId(roundId);
+					Integer vaccNum = Integer.parseInt(sc.getVaccinationService().addVaccinationRecord(vtn).toString());
+					vtn.setVaccinationRecordNum(vaccNum);
 				}
 				
 				

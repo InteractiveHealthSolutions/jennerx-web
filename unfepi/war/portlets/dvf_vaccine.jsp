@@ -7,7 +7,7 @@
 	
 	<thead>
 	<tr>
-	<tr><td colspan="7"><a onclick="addNewVaccine()" class="easyui-linkbutton" data-options="iconCls:'icon-add'" style="float: right;">New Vaccine</a></td></tr>
+	<tr><td colspan="8"><a onclick="addNewVaccine()" class="easyui-linkbutton" data-options="iconCls:'icon-add'" style="float: right;">New Vaccine</a></td></tr>
 	</tr>
 	<script>
 	function addNewVaccine(){
@@ -22,6 +22,7 @@
             <th>min Grace<br>Period Days</th>
             <th>max Grace<br>Period Days</th>
             <th>Description</th>
+            <th>vaccine_entity</th>
         </tr>
     </thead>
     <tbody>
@@ -34,6 +35,7 @@
     	<td>${vaccine['minGracePeriodDays']}</td>
     	<td>${vaccine['maxGracePeriodDays']}</td>
     	<td>${vaccine['description']}</td>
+    	<td>${fn:toLowerCase(vaccine['vaccine_entity'])}</td>
     	</tr>
     	</c:forEach>
     </tbody>

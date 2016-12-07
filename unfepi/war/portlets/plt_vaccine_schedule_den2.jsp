@@ -1,4 +1,5 @@
 <%@page import="org.ird.unfepi.web.utils.VaccineSchedule.VaccineScheduleKey"%>
+<%@include file="/WEB-INF/template/include.jsp"%>
 
 <div id="tab3" class="tab-section" style="text-align: center;">
 
@@ -16,9 +17,9 @@
 	</table>
 </fieldset>
 
-<br><br>
+<br><br><hr style="width: 50%;"><br>
 <input type="button" id="RealContraindication" value="Real Contraindication" onclick="Contraindication();">
-<br><br>
+
 <input type="button" id="submitBtn" value="Submit Data" onclick="subfrm();">
 
 
@@ -30,44 +31,25 @@
 
 		function sendVaccinationHistory() {
 			jsonArray = [];
-// 			$("input[name='retro_date']").each(function(index, element) {
-// 				if (element.value.length > 0) {
-// 					var id = (element.id).match(/\d+/g);
-// 					jsonObject = {};
-// 					jsonObject["vaccineId"] = id.toString();
-// 					jsonObject["vaccineName"] = $('#retro_vaccine' + id).val();
-// 					jsonObject["vaccinationDate"] = element.value;
-// 					jsonArray.push(jsonObject);
-// 				}
-// 			});
 
 			$("input[name ='retro_vaccine_in']:checked").each(function(index, element) {
-// 				console.log(index + "  " + element.id);
 				
 				var id = (element.id).match(/\d+/g);
 				jsonObject = {};
 				jsonObject["vaccineId"] = id.toString();
 				jsonObject["vaccineName"] = $('#retro_vaccine' + id).val();
 				
-// 				console.log($('#retro_date' + id).val() );
-				
 				if($('#retro_date' + id).val().length > 0){
 					jsonObject["vaccinationDate"] = $('#retro_date' + id).val();
 				}				
 				
-				console.log(jsonObject["vaccineId"] + " " + jsonObject["vaccineName"] + " " + jsonObject["vaccinationDate"] );
 				jsonArray.push(jsonObject);
 				
 			});
 
-// 			console.log(convertToDate($('#birthdate').val()) + " 1  " +convertToDate($('#centerVisitDate').val())+ " 2  " + '${command.centerVisit.childId}' + "  3  " + $('#vaccinationCenterId').val() + "  4  " + '${command.centerVisit.uuid}');
-			
 			DWRVaccineService.getVaccineSchedule(JSON.stringify(jsonArray), convertToDate($('#birthdate').val()), convertToDate($('#centerVisitDate').val()), '${command.centerVisit.childId}',  $('#vaccinationCenterId').val(), '${command.centerVisit.uuid}', $('#healthProgramId').val(), {callback : function(resultList) {
 				console.log(resultList);
 				vaccineScheduleList = resultList;
-// 				$.each(vaccineScheduleList, function(index, element){
-// 					console.log(element.vaccine.vaccineId +" : "+ element.vaccine.name  + "   --  " +  element.prerequisiteFor);
-// 				});
 				displaySchedule();
 				}
 			});
@@ -112,13 +94,12 @@
 			
 			$.each(vaccineScheduleList, function(index, element) {
 				var vaccineId = vaccineScheduleList[index].<%=VaccineScheduleKey.vaccine%>.vaccineId;
-				if(vaccineId == vid){
-					
+				var status = vaccineScheduleList[index].<%=VaccineScheduleKey.status%>;
+				if(vaccineId == vid && status != "INVALID_DOSE"){
 					preReq4 = element.prerequisiteFor ;
-					
-					vaccineScheduleList[index].<%=VaccineScheduleKey.status%> = "SCHEDULED";
+					vaccineScheduleList[index].<%=VaccineScheduleKey.status%> = "NOT_GIVEN";
 					vaccineScheduleList[index].<%=VaccineScheduleKey.vaccination_date%> = null;
-					vaccineScheduleList[index].<%=VaccineScheduleKey.center%> = null;
+<%-- 					vaccineScheduleList[index].<%=VaccineScheduleKey.center%> = null; --%>
 					
 					$("#tr"+ vid).remove();
 				}
@@ -143,22 +124,22 @@
 				$.each(vaccineScheduleList, function(index, element) {
 					if(element.<%=VaccineScheduleKey.status%> == "VACCINATED"){
 						element.<%=VaccineScheduleKey.status%> = "NOT_VACCINATED";
-// 						console.log(element.status +  "  " + element.vaccine.name)
 					}
 				});
 				subfrm();
 			}
 		}
 		
-
-		$("input[name ='retro_vaccine_in']").change(function(){
-			var id = (this.id).match(/\d+/g);
-			if(this.checked){
+		function checkboxVac(element){
+			var id = (element.id).match(/\d+/g);
+			if(element.checked){
 				$('#retro_date' + id).prop("disabled", false); 
 			} else{
 				$('#retro_date' + id).prop("disabled", true);
 				$('#retro_date' + id).val("");
 			}
-		});
-		
+		}		
+		function checkboxPreAct(element){
+			
+		}
 </script>

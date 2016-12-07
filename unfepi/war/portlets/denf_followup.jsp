@@ -89,6 +89,16 @@ ul{
 </style>
 <script>
 	function centerVisitDateChanged() {
+		
+		var centerVisitDate = new Date();
+		if($('#centerVisitDate').val().length != 0){
+			centerVisitDate = convertToDate($('#centerVisitDate').val());
+		}
+		
+		var max = dateDifference(new Date(), centerVisitDate)+ 1;
+		$(".retro_vaccine_date").each(function(index, element) {
+			$(this).datepicker("option", "maxDate", '-'+max+'d');
+		});			
 	}
 	
 	function dateDifference(firstDate, secondDate) {
@@ -116,6 +126,7 @@ ul{
 	function healthProgramChanged(){
 		unSelecteSites();
 		getSites();
+		getVaccines();
 	}	
 	function unSelecteSites(){
 		$("#vaccinationCenterId option:selected").removeAttr("selected");
@@ -127,7 +138,7 @@ ul{
 		$.get( "addchild/siteList/"+$('#healthProgramId').val()+".htm" , function( data ) {
 			
 			var centers = $.parseJSON(data);
-			console.log(centers);
+// 			console.log(centers);
 			$.each(centers, function(index, value){
 				$("#vaccinationCenterId option").each(function(){
 					 if (value == $(this).attr("id").replace(/\D/g,"")){
@@ -138,6 +149,86 @@ ul{
 			
 		});
 	}
+	
+	function getVaccines(){
+		var oldvaccines = [];
+		$.get( "followupVaccination/oldVaccineList/"+'${command.childId}'+".htm" , function( data ) {
+			
+			if(oldvaccines.length > 0){ /* rest array if not empty*/
+				oldvaccines.length = 0;
+			}
+			
+			oldvaccines = $.parseJSON(data);
+			console.log(oldvaccines);
+		});
+		
+		$.get( "addchild/vaccineList/"+$('#healthProgramId').val()+".htm" , function( data ) {
+			var vaccines = $.parseJSON(data);
+			$("#vhst").empty();
+			$.each(vaccines, function(index, value){
+				$("#vhst").append("<tr id='trvh"+index+"'></tr>");
+				$("#trvh"+index).append("<td><input id='retro_vaccine"+value['vaccineId']+"' name='retro_vaccine' value='"+value['name']+"' readonly='readonly' style='border: hidden;'/></td>");
+				$("#trvh"+index).append("<td><input id='retro_vaccine_in"+value['vaccineId']+"' name='retro_vaccine_in' class='retro_vaccine_in' type='checkbox' onclick='checkboxVac(this)'/></td>");
+				$("#trvh"+index).append("<td id='td"+value['vaccineId']+"'><input id='retro_date"+value['vaccineId']+"' name='retro_vaccine_date' class='calendarbox retro_vaccine_date' placeholder='dd-MM-yyyy' disabled /></td>");
+				
+				var calId = "retro_date"+value['vaccineId'];
+				var centerVisitDate = new Date();
+				
+				if($('#centerVisitDate').val().length != 0){
+					centerVisitDate = convertToDate($('#centerVisitDate').val());
+				}
+				var max = dateDifference(new Date(), centerVisitDate)+ 1;
+		 		var min = dateDifference(new Date(), convertToDate($('#birthdateinh').val()));
+		 		
+				$(".retro_vaccine_date").each(function(index, element) {
+					$(this).datepicker("option", "maxDate", '-'+max+'d');
+		 			$(this).datepicker("option", "minDate", '-'+min+'d');
+				});			
+				
+				$('#'+calId).datepicker({
+				  	duration: '',
+				    constrainInput: false,
+				    maxDate: $(this).attr('maxDate'),
+				    minDate: $(this).attr('minDate'),
+				    dateFormat: '<%=WebGlobals.GLOBAL_DATE_FORMAT_JS%>',
+				    onClose: window[$(this).attr('onclosehandler')],
+				    onSelect: window[$(this).attr('onselecthandler')]
+				});
+				
+				
+				$.each(oldvaccines, function(i, v){
+					if(value['vaccineId'] == v['vaccineId']){
+// 						console.log(v);
+// 						console.log(v['vaccinationDate']);
+						
+						$('#retro_date' + value['vaccineId']).removeAttr('name').css("display","none");
+						$('#retro_vaccine_in'+value['vaccineId']).removeAttr('name').css("display","none"); 
+						
+						var date = new Date(v['vaccinationDate'].replace(/ /g,'T'));
+						var tempdate = date.getDate()+'-'+(date.getMonth()+1)+'-'+date.getFullYear();
+						
+						$("#td"+value['vaccineId']).append("<input style='background-color: #6db735;' readonly value='"+ tempdate +"'/>");
+						
+// 						$("#td"+value['vaccineId']).append("<input style='background-color: #6db735;' readonly value='"+v['vaccinationDate']+"'/>");
+						
+					}
+				});
+				
+			
+			});
+		});
+	}
+	
+
+	function checkboxVac(element){
+		var id = (element.id).match(/\d+/g);
+		if(element.checked){
+			$('#retro_date' + id).prop("disabled", false); 
+		} else{
+			$('#retro_date' + id).prop("disabled", true);
+			$('#retro_date' + id).val("");
+		}
+	}		
 	
 	function subfrm() {
 		DWRVaccineService.overrideSchedule(vaccineScheduleList, '${command.uuid}', function(result) {
@@ -163,8 +254,11 @@ ul{
 
 		if($('#healthProgramId').val().length != 0){
 			getSites();	
+			getVaccines();
 		}
 		
+		var minday = dateDifference(new Date(), convertToDate($('#birthdateinh').val()));
+		$("#centerVisitDate").datepicker("option", "minDate", '-'+minday+'d');
 		
 		$('.tab-section').hide();
 		$('#tabs a').click(function(event){
@@ -280,14 +374,7 @@ ul{
 </table>
 </div>
 <div id="tab2" class="tab-section">
-<table  class="denform-h">
-	<c:forEach var="va" items="${vaccineList}">
-		<tr>
-		<td><input id="retro_vaccine${va.vaccineId}" name="retro_vaccine" value="${va.fullName}" readonly="readonly" style="border: hidden;"/></td>
-		<td><input id="retro_vaccine_in${va.vaccineId}" name="retro_vaccine_in" class="retro_vaccine_in" type="checkbox" /></td>
-		<td><input id="retro_date${va.vaccineId}" name="retro_vaccine_date" maxDate="+0d" class="calendarbox retro_vaccine_date" placeholder="dd-MM-yyyy" disabled /></td>  	
-	</tr>
-	</c:forEach>   
+<table  id="vhst" class="denform-h">
 </table>
 </div>
 
@@ -319,16 +406,6 @@ ul{
 
 		function sendVaccinationHistory() {
 			jsonArray = [];
-// 			$("input[name='retro_date']").each(function(index, element) {
-// 				if (element.value.length > 0) {
-// 					var id = (element.id).match(/\d+/g);
-// 					jsonObject = {};
-// 					jsonObject["vaccineId"] = id.toString();
-// 					jsonObject["vaccineName"] = $('#retro_vaccine' + id).val();
-// 					jsonObject["vaccinationDate"] = element.value;
-// 					jsonArray.push(jsonObject);
-// 				}
-// 			});
 			$("input[name ='retro_vaccine_in']:checked").each(function(index, element) {
 // 				console.log(index + "  " + element.id);
 				
@@ -337,24 +414,16 @@ ul{
 				jsonObject["vaccineId"] = id.toString();
 				jsonObject["vaccineName"] = $('#retro_vaccine' + id).val();
 				
-// 				console.log($('#retro_date' + id).val() );
-				
 				if($('#retro_date' + id).val().length > 0){
 					jsonObject["vaccinationDate"] = $('#retro_date' + id).val();
 				}				
 				
-				console.log(jsonObject["vaccineId"] + " " + jsonObject["vaccineName"] + " " + jsonObject["vaccinationDate"] );
 				jsonArray.push(jsonObject);
 				
 			});
 			
 			DWRVaccineService.getVaccineSchedule(JSON.stringify(jsonArray), convertToDate($('#birthdateinh').val()), convertToDate($('#centerVisitDate').val()), '${command.childId}',  '${command.vaccinationCenterId}', '${command.uuid}', $('#healthProgramId').val(), {callback : function(resultList) {
-// 				console.log(resultList);
 				vaccineScheduleList = resultList;
-// 				$.each(vaccineScheduleList, function(index, element){
-// 					console.log(element.vaccine.vaccineId +" : "+ element.vaccine.name  + "   --  " +  element.prerequisiteFor);
-					
-// 				});
 				displaySchedule();
 				}
 			});
@@ -398,13 +467,18 @@ ul{
 			
 			$.each(vaccineScheduleList, function(index, element) {
 				var vaccineId = vaccineScheduleList[index].<%=VaccineScheduleKey.vaccine%>.vaccineId;
-				if(vaccineId == vid){
+				var status = vaccineScheduleList[index].<%=VaccineScheduleKey.status%>;
+				
+				
+				
+				if(vaccineId == vid && status != "INVALID_DOSE"){
+					
+					console.log(vaccineId + "  " + status);
 					
 					preReq4 = element.prerequisiteFor ;
-					
-					vaccineScheduleList[index].<%=VaccineScheduleKey.status%> = "SCHEDULED";
+					vaccineScheduleList[index].<%=VaccineScheduleKey.status%> = "NOT_GIVEN";
 					vaccineScheduleList[index].<%=VaccineScheduleKey.vaccination_date%> = null;
-					vaccineScheduleList[index].<%=VaccineScheduleKey.center%> = null;
+<%-- 					vaccineScheduleList[index].<%=VaccineScheduleKey.center%> = null; --%>
 					
 					$("#tr"+ vid).remove();
 				}
@@ -429,7 +503,6 @@ ul{
 				$.each(vaccineScheduleList, function(index, element) {
 					if(element.<%=VaccineScheduleKey.status%> == "VACCINATED"){
 						element.<%=VaccineScheduleKey.status%> = "NOT_VACCINATED";
-// 						console.log(element.status +  "  " + element.vaccine.name)
 					}
 				});
 				subfrm();

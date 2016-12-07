@@ -60,6 +60,9 @@
             function birthdateOrAgeChanged(sel) {
             	if(document.getElementById("birthdateOrAge").value == 'birthdate'){
             		
+            		$('#birthdate').val('');
+            		$('.requiredFieldAge').val('');
+            		
             		$('.requiredFieldBirthDate').addClass("requiredField");
             		$('.requiredFieldAge').removeClass("requiredField");
             		
@@ -72,6 +75,10 @@
     				}
             	}
             	else if(document.getElementById("birthdateOrAge").value == 'age'){
+            		
+            		$('#birthdate').val('');
+            		$('.requiredFieldAge').val('');
+            		
             		$('.requiredFieldBirthDate').removeClass("requiredField");
             		$('.requiredFieldAge').addClass("requiredField");
             		document.getElementById("birthdatetr").style.display = 'none';
@@ -79,6 +86,10 @@
     				document.getElementById("estimatedBirthdate").value = '<%=WebGlobals.BOOLEAN_CONVERTER_TRUE_STRING%>';
             	}
             	else {
+            		
+            		$('#birthdate').val('');
+            		$('.requiredFieldAge').val('');
+            		
             		$('.requiredFieldBirthDate').removeClass("requiredField");
             		$('.requiredFieldAge').removeClass("requiredField");
             		document.getElementById("birthdatetr").style.display = 'none';
@@ -116,14 +127,17 @@
         <spring:bind path="command.childagey">
         <input type="text" id="childagey" name="childagey" size="1" maxlength="1" value="${status.value}" 
         	   onchange="ageChanged();" class="numbersOnly requiredFieldAge"/>Years<br>
+        	   <span class="error-message"><c:out	value="${status.errorMessage}" /></span>
         </spring:bind>
         <spring:bind path="command.childagem">
         <input type="text" id="childagem" name="childagem" size="2" maxlength="2" value="${status.value}" 
         	   onchange="ageChanged();" class="numbersOnly requiredFieldAge"/>Months<br>
+        	   <span class="error-message"><c:out	value="${status.errorMessage}" /></span>
         </spring:bind>
         <spring:bind path="command.childagew">
         <input type="text" id="childagew" name="childagew" size="2" maxlength="2" value="${status.value}" 
         	   onchange="ageChanged();" class="numbersOnly requiredFieldAge"/>Weeks<br>
+        	   <span class="error-message"><c:out	value="${status.errorMessage}" /></span>
         </spring:bind>
         <spring:bind path="command.childaged">
         <input type="text" id="childaged" name="childaged" size="2" maxlength="2" value="${status.value}" 
@@ -131,6 +145,7 @@
         </spring:bind>
 		<spring:bind path="command.${commandAdditionalPathStr}estimatedBirthdate">
 		<input type="hidden" id ="estimatedBirthdate" name="${commandAdditionalPathStr}estimatedBirthdate" value="${status.value}" class="numbersOnly">
+		<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 		</spring:bind>
 		<script>
 			function ageChanged() {

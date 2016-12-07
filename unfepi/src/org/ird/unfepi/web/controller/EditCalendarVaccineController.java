@@ -56,7 +56,7 @@ public class EditCalendarVaccineController extends DataEditFormController{
 			for (Iterator<VaccineGap> iterator = wrapper.getVaccineGapList().iterator(); iterator.hasNext();) {
 				VaccineGap vaccineGap = iterator.next();
 				
-				System.out.println(" vaccine gap " + vaccineGap.getValue() + "  "  + vaccineGap.getGapTimeUnit());
+//				System.out.println(" vaccine gap " + vaccineGap.getValue() + "  "  + vaccineGap.getGapTimeUnit());
 				
 				if(vaccineGap.getValue() == 0 && vaccineGap.getGapTimeUnit() == null) {
 					iterator.remove();

@@ -129,9 +129,9 @@ public class IMRUtils {
 			return false;
 		}
 		
-		System.out.println("----------------------");
-		System.out.println("current vaccine " + vaccineSch.getVaccine().getName() + " " +vaccineSch.getVaccine().getVaccineId());
-		
+//		System.out.println("----------------------");
+//		System.out.println("current vaccine " + vaccineSch.getVaccine().getName() + " " +vaccineSch.getVaccine().getVaccineId());
+//		
 		// if any pre-req is mandatory and not satified block it
 		for (VaccinePrerequisite prereq : vaccineSch.getPrerequisites()) 
 		{
@@ -141,21 +141,21 @@ public class IMRUtils {
 				for (VaccineSchedule vaccineSchedule : schedule) {
 					if(prereq.getVaccinePrerequisiteId().getVaccinePrerequisiteId() == vaccineSchedule.getVaccine().getVaccineId()){
 						
-						System.out.print("preReq " + prereq.getVaccinePrerequisiteId().getVaccinePrerequisiteId() + " " + vaccineSchedule.getVaccine().getName() + " "+vaccineSchedule.getVaccine().getVaccineId());
+//						System.out.print("preReq " + prereq.getVaccinePrerequisiteId().getVaccinePrerequisiteId() + " " + vaccineSchedule.getVaccine().getName() + " "+vaccineSchedule.getVaccine().getVaccineId());
 						if(vaccineSchedule.getVaccine().getPrerequisites() != null && vaccineSchedule.getVaccine().getPrerequisites().size() > 0){
 							
-							System.out.print(" size " +vaccineSchedule.getVaccine().getPrerequisites().size());
+//							System.out.print(" size " +vaccineSchedule.getVaccine().getPrerequisites().size());
 								
 							for (VaccinePrerequisite prereqee : vaccineSchedule.getVaccine().getPrerequisites()) {
-								System.out.println(" " + prereqee.getVaccinePrerequisiteId().getVaccinePrerequisiteId());
+//								System.out.println(" " + prereqee.getVaccinePrerequisiteId().getVaccinePrerequisiteId());
 							}
 								
 							isOverAgedVaccination(vaccineSchedule, schedule);
 						}
-						System.out.println();
+//						System.out.println();
 						Date preReqVaccDate = vaccineSchedule.getVaccination_date();
 						
-						System.out.println("preReqVaccDate " + preReqVaccDate );
+//						System.out.println("preReqVaccDate " + preReqVaccDate );
 					}
 				}
 				
@@ -175,14 +175,14 @@ public class IMRUtils {
 				
 				boolean check = isPrerequisiteOverAge(prereq.getPrerequisite(), schedule,calendarId, birthdate);
 				
-				System.out.println(vaccine.getName()+"  "+prereq.getPrerequisite().getName() + " "+ check);
+//				System.out.println(vaccine.getName()+"  "+prereq.getPrerequisite().getName() + " "+ check);
 				if(!check){
 					for (VaccineSchedule vaccineSchedule : schedule) {
 						if(prereq.getPrerequisite().getVaccineId() == vaccineSchedule.getVaccine().getVaccineId()){
 							
 							long diff_ms = vaccineSchedule.getVaccination_date().getTime() - birthdate.getTime();
 							int days = (int) ((diff_ms / (1000*60*60*24)));
-							System.out.println(vaccineSchedule.getVaccination_date() + " " + vaccineSchedule.getVaccine().getName()+ "   days " + days);
+//							System.out.println(vaccineSchedule.getVaccination_date() + " " + vaccineSchedule.getVaccine().getName()+ "   days " + days);
 							
 							// child's over age 12 months -> 365 days 
 							if(days >= 365){

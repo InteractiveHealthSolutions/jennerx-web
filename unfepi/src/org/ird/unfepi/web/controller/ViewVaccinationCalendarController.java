@@ -29,7 +29,7 @@ import com.mysql.jdbc.StringUtils;
 public class ViewVaccinationCalendarController extends DataDisplayController {
 	
 	ViewVaccinationCalendarController(){
-		super("dataForm", new  DataViewForm("vaccination_calendar", "Vaccination Calendar", SystemPermissions.VIEW_HEALTH_ROUND, false));
+		super("dataForm", new  DataViewForm("vaccination_calendar", "Vaccination Calendar", SystemPermissions.VIEW_VACCINE_SCHEDULE, false));
 	}
 	
 	@RequestMapping(value="/viewVaccinationCalendar.htm", method={RequestMethod.GET,RequestMethod.POST})

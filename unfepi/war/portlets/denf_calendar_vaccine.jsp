@@ -56,7 +56,6 @@ function enableGapValueTimeUnit(element) {
 		
 		$("#vaccineId_Id_"+id).val($("#vaccineId").val());
 		$("#vaccinationcalendarId_Id_"+id).val($("#vaccinationCalendarId").val());
-
 		
 	} else {
 		$('.gap' + id).prop("disabled", true).val("");
@@ -152,9 +151,23 @@ $(function(){
 				</c:forEach></select></td>		
 		</tr>
 		
-		<input type="hidden" name="vaccineGapList[${varstatus.index}].id.vaccineGapTypeId" class="const_gap${varstatus.index}" id="vaccineGapTypeId_Id_${varstatus.index}" value="${vaccineGapType.vaccineGapTypeId}"/>
-		<input type="hidden" name="vaccineGapList[${varstatus.index}].id.vaccineId" class="gap${varstatus.index}" id="vaccineId_Id_${varstatus.index}" value=""/>
-		<input type="hidden" name="vaccineGapList[${varstatus.index}].id.vaccinationcalendarId" class="gap${varstatus.index}" id="vaccinationcalendarId_Id_${varstatus.index}" value="" />
+		<input type="hidden" 
+			   name="vaccineGapList[${varstatus.index}].id.vaccineGapTypeId" 
+			   class="const_gap${varstatus.index}" 
+			   id="vaccineGapTypeId_Id_${varstatus.index}" 
+			   value="${vaccineGapType.vaccineGapTypeId}"/>
+		
+		<input type="hidden" 
+			   name="vaccineGapList[${varstatus.index}].id.vaccineId" 
+			   class="gap${varstatus.index}" 
+			   id="vaccineId_Id_${varstatus.index}" 
+			   value=""/>
+		
+		<input type="hidden" 
+			   name="vaccineGapList[${varstatus.index}].id.vaccinationcalendarId" 
+			   class="gap${varstatus.index}" 
+			   id="vaccinationcalendarId_Id_${varstatus.index}" 
+			   value="" />
 		
 		</c:forEach>
 		

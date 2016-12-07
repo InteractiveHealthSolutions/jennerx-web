@@ -36,7 +36,7 @@ public class AddVaccineController extends DataEntryFormController{
 	private Date dateFormStart = new Date();
 	
 	public AddVaccineController() {
-		super(new DataEntryForm("vaccine", "Vaccine (New)", SystemPermissions.ADD_VACCINES));
+		super(new DataEntryForm("vaccine", "Vaccine (New)", SystemPermissions.ADD_VACCINE_SCHEDULE));
 	}
 	
 	@RequestMapping(method=RequestMethod.GET)
