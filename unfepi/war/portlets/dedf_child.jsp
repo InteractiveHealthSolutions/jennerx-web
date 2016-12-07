@@ -202,7 +202,7 @@ function submitFrm() {
     <div title="Address">
     <table class="denform2">
     	<c:set var="commandAdditionalPathStr" value="address."></c:set>
-        <%@ include file="plt_address.jsp" %>
+        <%@ include file="plt_address2.jsp" %>
 	</table>
     </div>
     <div title="Program">

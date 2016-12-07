@@ -1,5 +1,6 @@
 <%@page import="org.ird.unfepi.model.Model.Gender"%>
 <%@page import="org.ird.unfepi.constants.WebGlobals"%>
+<%@ include file="/WEB-INF/template/include.jsp"%>
 <style>
 <!--
 .divtd {
