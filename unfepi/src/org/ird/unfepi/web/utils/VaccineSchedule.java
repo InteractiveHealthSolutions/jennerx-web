@@ -753,14 +753,18 @@ public class VaccineSchedule {
 						
 						
 						int minGracePeriod_rh = schedule.getVaccine().getMinGracePeriodDays()!=null?schedule.getVaccine().getMinGracePeriodDays():0;
-						int maxGracePeriod_rh = schedule.getVaccine().getMaxGracePeriodDays()!=null?schedule.getVaccine().getMaxGracePeriodDays():0;
-
-						Date minGraceDate_rh = new Date(va.getVaccinationDate().getTime() + (-minGracePeriod_rh * 24 * 60 * 60 * 1000));
-						Date maxGraceDate_rh = new Date(va.getVaccinationDate().getTime() + ( maxGracePeriod_rh * 24 * 60 * 60 * 1000));
-
-						is_retro_history = (asgnduedate != null && 
-								   asgnduedate.compareTo(minGraceDate_rh) >= 0 && asgnduedate.compareTo(maxGraceDate_rh) <= 0)
-								|| (schduedate.compareTo(minGraceDate_rh) >= 0 && schduedate.compareTo(maxGraceDate_rh) <= 0);
+//						int maxGracePeriod_rh = schedule.getVaccine().getMaxGracePeriodDays()!=null?schedule.getVaccine().getMaxGracePeriodDays():0;
+//						Date minGraceDate_rh = new Date(va.getVaccinationDate().getTime() + (-minGracePeriod_rh * 24 * 60 * 60 * 1000));
+//						Date maxGraceDate_rh = new Date(va.getVaccinationDate().getTime() + ( maxGracePeriod_rh * 24 * 60 * 60 * 1000));
+//						is_retro_history = (asgnduedate != null && 
+//								   asgnduedate.compareTo(minGraceDate_rh) >= 0 && asgnduedate.compareTo(maxGraceDate_rh) <= 0)
+//								|| (schduedate.compareTo(minGraceDate_rh) >= 0 && schduedate.compareTo(maxGraceDate_rh) <= 0);
+						
+						Date minGraceDate_rh = new Date(((asgnduedate != null)?asgnduedate.getTime():schduedate.getTime()) + (-minGracePeriod_rh * 24 * 60 * 60 * 1000));
+						
+						is_retro_history = (va.getVaccinationDate().compareTo(minGraceDate_rh) >= 0) && 
+										   (va.getVaccinationDate().compareTo(centerVisitDate) == -1) &&
+										   (va.getVaccinationDate().compareTo(schedule.getExpiry_date()) == -1);
 						
 						if(is_retro_history && va.getVaccinationStatus() != VACCINATION_STATUS.RETRO_DATE_MISSING){
 							va.setVaccinationStatus(VACCINATION_STATUS.RETRO);

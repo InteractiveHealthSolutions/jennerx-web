@@ -169,7 +169,7 @@ ul{
 				$("#vhst").append("<tr id='trvh"+index+"'></tr>");
 				$("#trvh"+index).append("<td><input id='retro_vaccine"+value['vaccineId']+"' name='retro_vaccine' value='"+value['name']+"' readonly='readonly' style='border: hidden;'/></td>");
 				$("#trvh"+index).append("<td><input id='retro_vaccine_in"+value['vaccineId']+"' name='retro_vaccine_in' class='retro_vaccine_in' type='checkbox' onclick='checkboxVac(this)'/></td>");
-				$("#trvh"+index).append("<td id='td"+value['vaccineId']+"'><input id='retro_date"+value['vaccineId']+"' name='retro_vaccine_date' class='calendarbox retro_vaccine_date' placeholder='dd-MM-yyyy' disabled /></td>");
+				$("#trvh"+index).append("<td id='td"+value['vaccineId']+"'><input id='retro_date"+value['vaccineId']+"' name='retro_vaccine_date' class='calendarbox retro_vaccine_date' placeholder='dd-MM-yyyy'  onkeypress='return isDateDigit(event)' disabled /></td>");
 				
 				var calId = "retro_date"+value['vaccineId'];
 				var centerVisitDate = new Date();
