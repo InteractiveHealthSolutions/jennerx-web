@@ -1,23 +1,18 @@
 package org.ird.unfepi.rest.resources;
-import java.util.Date;
 import java.util.HashMap;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.ird.unfepi.constants.WebGlobals;
 import org.ird.unfepi.rest.elements.RequestElements;
 import org.ird.unfepi.rest.elements.ResponseStatus;
 import org.ird.unfepi.rest.helper.MetadataServiceHelper;
 import org.ird.unfepi.rest.helper.MetadataServiceHelper2;
 import org.ird.unfepi.rest.helper.ResponseBuilder;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 @Path("/metadata")
@@ -81,7 +76,6 @@ public class MetadataService
 			e.printStackTrace();
 		}
 		return response;*/
-		
 		MetadataServiceHelper helper = new MetadataServiceHelper();
 		
 		try

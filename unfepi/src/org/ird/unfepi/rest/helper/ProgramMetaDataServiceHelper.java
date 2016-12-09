@@ -40,7 +40,8 @@ public class ProgramMetaDataServiceHelper {
 			
 //			System.out.println("calendarId " + calendarId);
 			
-			fillVaccine(lastEditDate, vaccinesId, response);
+//			fillVaccine(lastEditDate, vaccinesId, response);
+			fillVaccine(jsonObject, response);
 			fillVaccineGap(jsonObject, response);
 			fillVaccineGapType(jsonObject, response);
 			fillVaccinePrerequisite(jsonObject, response);
@@ -187,6 +188,34 @@ public class ProgramMetaDataServiceHelper {
 		}
 	}
 	
+	public static void fillVaccine(JSONObject json, org.json.simple.JSONObject response)
+	{
+		String[] columns = new String[] {
+				RequestElements.METADATA_FIELD_VACCINE_ID,
+				RequestElements.METADATA_FIELD_VACCINE_NAME,
+				RequestElements.METADATA_FIELD_VACCINE_ISSUPPLEMENTARY,
+				RequestElements.METADATA_FIELD_VACCINE_ENTITY,
+				RequestElements.METADATA_FIELD_VACCINE_FULL_NAME };
+		String table = "vaccine";
+
+		Integer calendarId = json.optInt("calendarId");
+		
+//		String query = "SELECT " + Arrays.toString(columns).replaceAll("\\[|\\]", "") + " FROM " + table
+//				+ " WHERE " + RequestElements.METADATA_FIELD_VACCINATIONCALENDAR_ID + " = " + calendarId;
+		
+		String query = "SELECT " + Arrays.toString(columns).replaceAll("\\[|\\]", "") + " FROM " + table
+				+ " where vaccineId in (SELECT distinct(vaccineId) FROM vaccinegap WHERE vaccinationcalendarId = "+calendarId+" ) and vaccine_entity like '%child%'";
+		
+		System.out.println(query);
+		
+		if(json.has(RequestElements.METADATA_VACCINE)){
+			fetchAndCompareMetaData(RequestElements.METADATA_VACCINE, columns, table, query, response, json);
+		}
+		else{
+			fetchMetaDataByCustomQuery(RequestElements.METADATA_VACCINE, query, columns, response);
+		}
+	}
+	
 	public static void fillVaccinationCentres(Date lastEditDate, JSONArray ids, JSONObject json, org.json.simple.JSONObject response)
 	{
 		String[] columns = new String[] {
@@ -266,6 +295,8 @@ public class ProgramMetaDataServiceHelper {
 		String query = "SELECT " + Arrays.toString(columns).replaceAll("\\[|\\]", "") + " FROM " + table
 				+ " WHERE " + RequestElements.METADATA_FIELD_VACCINATIONCALENDAR_ID + " = " + calendarId;
 		
+		System.out.println(query);
+		
 		if(json.has(RequestElements.METADATA_VACCINEGAP)){
 			fetchAndCompareMetaData(RequestElements.METADATA_VACCINEGAP, columns, table, query, response, json);
 		}
@@ -278,14 +309,16 @@ public class ProgramMetaDataServiceHelper {
 	{
 		String[] columns = new String[] {
 				RequestElements.METADATA_FIELD_VACCINEGAP_VACCINEGAPTYPEID,
-				RequestElements.METADATA_FIELD_VACCINEGAPTYPE_NAME,
-				RequestElements.METADATA_FIELD_VACCINATIONCALENDAR_ID};
+				RequestElements.METADATA_FIELD_VACCINEGAPTYPE_NAME/*,
+				RequestElements.METADATA_FIELD_VACCINATIONCALENDAR_ID*/};
 		String table = "vaccinegaptype";
 		
 		Integer calendarId = json.optInt("calendarId");
 		
 		String query = "SELECT " + Arrays.toString(columns).replaceAll("\\[|\\]", "") + " FROM " + table
-				+ " WHERE " + RequestElements.METADATA_FIELD_VACCINATIONCALENDAR_ID + " = " + calendarId;
+				/*+ " WHERE " + RequestElements.METADATA_FIELD_VACCINATIONCALENDAR_ID + " = " + calendarId*/;
+		
+		System.out.println(query);
 		
 		if(json.has(RequestElements.METADATA_VACCINEGAPTYPE)){
 			fetchAndCompareMetaData(RequestElements.METADATA_VACCINEGAPTYPE, columns, table, query, response, json);
