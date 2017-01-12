@@ -285,7 +285,7 @@ public class EnrollmentServiceHelper
 			// proceed to do enrollment if no errors found
 			if (mobileErrors.size() == 0)
 			{
-				ControllerUIHelper.doEnrollment(DataEntrySource.MOBILE, Integer.parseInt(roundId), projectId, isChildNamed, ch, dob, null, null, null, null, add, vacCentrVist, null, schedule, new Date(), submitter, sc);
+				ControllerUIHelper.doEnrollment(DataEntrySource.MOBILE, Integer.parseInt(roundId), projectId, isChildNamed, ch, dob, null, null, null, null, add, vacCentrVist, null, schedule, null,null, new Date(), submitter, sc);
 				
 				sc.commitTransaction();
 				if (supplementary.size() > 0)

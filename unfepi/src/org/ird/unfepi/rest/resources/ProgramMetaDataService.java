@@ -23,7 +23,7 @@ public class ProgramMetaDataService {
 	public String metadataVaccine(String jsonString, @QueryParam("programId") String programId){
 		String response = "";
 		try {
-			
+			System.out.println("jsonString " + jsonString);
 			JSONObject jsonObject = (jsonString.isEmpty()) ? new JSONObject() : new JSONObject(jsonString) ;	
 			jsonObject.put("programId", programId);
 			
@@ -61,6 +61,7 @@ public class ProgramMetaDataService {
 	public String metadataHealthProgram(String jsonString){
 		String response = "";
 		try {
+			
 			JSONObject jsonObject = (jsonString.isEmpty()) ? new JSONObject() : new JSONObject(jsonString) ;
 			response = ProgramMetaDataServiceHelper.getHealthProgramMetadata(jsonObject);
 			
@@ -81,6 +82,22 @@ public class ProgramMetaDataService {
 			jsonObject.put("programId", programId);
 			
 			response = ProgramMetaDataServiceHelper.getRoundMetadata(jsonObject);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return response;
+	}
+	
+	@GET
+	@Path("/itemstock")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public String metadataItemStock(String jsonString){
+		String response = "";
+		try {
+			JSONObject jsonObject = (jsonString.isEmpty()) ? new JSONObject() : new JSONObject(jsonString) ;
+			response = ProgramMetaDataServiceHelper.getItemStockMetadata(jsonObject);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

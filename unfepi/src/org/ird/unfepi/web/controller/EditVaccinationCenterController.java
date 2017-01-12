@@ -48,7 +48,7 @@ public class EditVaccinationCenterController extends DataEditFormController {
 	private static final FormType formType = FormType.VACCINATIONCENTER_CORRECT;
 	
 	EditVaccinationCenterController(){
-		super(new  DataEditForm("vaccination_center", "Vaccination Center (Edit)", SystemPermissions.CORRECT_VACCINATION_CENTERS));
+		super(new  DataEditForm("vaccination_center", "Site (Edit)", SystemPermissions.CORRECT_VACCINATION_CENTERS));
 	}
 	
 	@RequestMapping(method=RequestMethod.GET)

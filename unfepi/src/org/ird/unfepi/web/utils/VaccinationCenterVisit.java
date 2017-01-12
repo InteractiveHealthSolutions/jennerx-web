@@ -1,9 +1,12 @@
 package org.ird.unfepi.web.utils;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
+import org.ird.unfepi.model.ItemsDistributed;
 import org.ird.unfepi.model.LotterySms;
+import org.ird.unfepi.model.MuacMeasurement;
 
 public class VaccinationCenterVisit {
 	public static final String VACCINE_SCHEDULE_KEY = "VACCINE_SCHEDULE";
@@ -18,6 +21,8 @@ public class VaccinationCenterVisit {
 	private LotterySms preference = new LotterySms();
 	private String uuid;
 	private Integer healthProgramId;
+	private List<ItemsDistributed> itemsDistributedL;
+	private MuacMeasurement muacMeasurement;
 
 	//private Date nextAssignedDate;
 	
@@ -125,5 +130,25 @@ public class VaccinationCenterVisit {
 
 	public void setHealthProgramId(Integer healthProgramId) {
 		this.healthProgramId = healthProgramId;
+	}
+
+
+	public List<ItemsDistributed> getItemsDistributedL() {
+		return itemsDistributedL;
+	}
+
+
+	public void setItemsDistributedL(List<ItemsDistributed> itemsDistributedL) {
+		this.itemsDistributedL = itemsDistributedL;
+	}
+
+
+	public MuacMeasurement getMuacMeasurement() {
+		return muacMeasurement;
+	}
+
+
+	public void setMuacMeasurement(MuacMeasurement muacMeasurement) {
+		this.muacMeasurement = muacMeasurement;
 	}
 }

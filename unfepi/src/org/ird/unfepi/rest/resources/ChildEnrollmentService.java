@@ -47,6 +47,8 @@ public class ChildEnrollmentService {
 			JSONArray eventArray=(JSONArray) obj.get("event");
 			JSONArray vaccinationArray=(JSONArray) obj.get("vaccination");
 			JSONArray updateArray=(JSONArray) obj.get("update");
+			JSONArray itemsAray=(JSONArray) obj.get("itemsdistributed");
+			JSONArray muacAray=(JSONArray) obj.get("muacmeasurements");
 			
 			deviceId = (Long) obj.get(RequestElements.DEVICE_DEVICEID);
 			long lastCount = (Long) obj.get("lastCount");
@@ -56,6 +58,9 @@ public class ChildEnrollmentService {
 			jsonObject.put("Vaccination",childHelper.addVaccinations(vaccinationArray));
 			jsonObject.put("Event",childHelper.addEvent(eventArray));
 			jsonObject.put("Update",childHelper.addUpdates(updateArray));
+			jsonObject.put("ItemsDistributed",childHelper.addItemDistributed(itemsAray));
+			jsonObject.put("MuacMeasurements",childHelper.addMuacMeasurement(muacAray));
+					
 			device.setLastCount((int)lastCount);
 			deviceServiceHelper.updateDevice(device);
 			sc.commitTransaction();

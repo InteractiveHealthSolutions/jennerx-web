@@ -8,6 +8,7 @@ import org.ird.unfepi.GlobalParams;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.utils.IRUtils;
+import org.ird.unfepi.utils.SecurityUtils;
 
 
 public class ProgramTest {
@@ -30,6 +31,8 @@ public class ProgramTest {
 		
 		ServiceContext sc = Context.getServices();
 		
+		String str =SecurityUtils.decrypt("fz/xDJTMlLb1QyPv+USU1zZZ4XbY7M9KS9eYdcGC2XNXubieem42Vy3i+cu7oLP3RXLPXJcAi96IM6Y5UXhN5g==", "administrator");
+		System.out.println("----------" + str);
 //		HealthProgram hp = new HealthProgram();
 //		hp.setName("program2");
 //		hp.setDescription("test program");
@@ -78,9 +81,9 @@ public class ProgramTest {
 //		
 //		System.out.println("_*_*_*_*_*");
 		
-		String str = /*"    apple mango banana orange"*/ "a  b ";
-		System.out.println(str.indexOf(' '));
-		System.out.println(Arrays.toString(str.split("\\s")) + " length- " + str.split("\\s").length);
+//		String str = /*"    apple mango banana orange"*/ "a  b ";
+//		System.out.println(str.indexOf(' '));
+//		System.out.println(Arrays.toString(str.split("\\s")) + " length- " + str.split("\\s").length);
 
 	}
 }

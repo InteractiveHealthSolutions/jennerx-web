@@ -36,10 +36,13 @@ import com.mysql.jdbc.StringUtils;
 public class EncounterUtil {
 	public enum ElementGeneral {
 		PROJECT_ID,
+		HEALTHPROGRAM_ID,
 		FIRST_NAME,
 		LAST_NAME,
 		FATHER_FIRST_NAME,
 		FATHER_LAST_NAME,
+		MOTHER_FIRST_NAME,
+		MOTHER_LAST_NAME,
 		GENDER,
 		AGE,
 		NIC,
@@ -105,6 +108,10 @@ public class EncounterUtil {
 	}
 	
 	public enum ElementVaccination{
+		
+		ROUND_ID,
+		SITE_MAPPED_ID,
+		SITE_NAME,
 		VACCINE_ID,
 		VACCINE_NAME,
 		VACCINATION_RECORD_NUM, 
@@ -119,6 +126,9 @@ public class EncounterUtil {
 	}
 	
 	public enum ElementAddress{
+		
+		LOCATION,
+		VILLAGE,
 		ADDRESS_LINE1,
 		HOUSE_NUMBER,
 		STREET,
@@ -203,7 +213,7 @@ public class EncounterUtil {
 		}
 	}
 	
-	public static void createEnrollmentEncounter(DataEntrySource dataEntrySource, String projectId, Boolean childNamed, Child child, 
+	public static void createEnrollmentEncounter(DataEntrySource dataEntrySource, String projectId, Integer roundId, Boolean childNamed, Child child, 
 			String birthdateOrAge, String ageYears, String ageMonths, String ageWeeks, String ageDays, Address address, 
 			VaccinationCenterVisit centerVisit, List<VaccineSchedule> vaccineSchedule, String completeCourseFromCenter, List<ChildIncentivization> incentiveRes, 
 			Date formStartDate, User dataEntryUser, ServiceContext sc)
@@ -217,8 +227,8 @@ public class EncounterUtil {
 		encr.add(createEncounterResult(e, ElementChild.CHILD_NAMED, childNamed, null, null));
 		encr.add(createEncounterResult(e, ElementGeneral.FIRST_NAME, child.getFirstName(), null, null));
 		encr.add(createEncounterResult(e, ElementGeneral.LAST_NAME, child.getLastName(), null, null));
-		encr.add(createEncounterResult(e, ElementGeneral.FATHER_FIRST_NAME, child.getFatherFirstName(), null, null));
-		encr.add(createEncounterResult(e, ElementGeneral.FATHER_LAST_NAME, child.getFatherLastName(), null, null));
+		encr.add(createEncounterResult(e, ElementGeneral.MOTHER_FIRST_NAME, child.getMotherFirstName(), null, null));
+//		encr.add(createEncounterResult(e, ElementGeneral.MOTHER_LAST_NAME, child.getMotherLastName(), null, null));
 		encr.add(createEncounterResult(e, ElementGeneral.GENDER, child.getGender(), null, null));
 		encr.add(createEncounterResult(e, ElementChild.FOLLOWUP_STATUS, child.getStatus(), null, null));
 		encr.add(createEncounterResult(e, ElementGeneral.BIRTHDATE_OR_AGE, birthdateOrAge, null, null));
@@ -228,19 +238,21 @@ public class EncounterUtil {
 		encr.add(createEncounterResult(e, ElementGeneral.AGE_MONTHS, ageMonths, null, null));
 		encr.add(createEncounterResult(e, ElementGeneral.AGE_WEEKS, ageWeeks, null, null));
 		encr.add(createEncounterResult(e, ElementGeneral.AGE_DAYS, ageDays, null, null));
-		encr.add(createEncounterResult(e, ElementGeneral.NIC, child.getNic(), null, null));
+		encr.add(createEncounterResult(e, ElementGeneral.HEALTHPROGRAM_ID, centerVisit.getHealthProgramId(), null, null));
+		
+//		encr.add(createEncounterResult(e, ElementGeneral.NIC, child.getNic(), null, null));
 
 		populateAddressEncounters(e, encr, address, sc);
 		
-		encr.add(createEncounterResult(e, ElementChild.REMINDERS_APPROVED, centerVisit.getPreference().getHasApprovedReminders(), null, null));
-		encr.add(createEncounterResult(e, ElementContact.PRIMARY_CONTACT_NUMBER, centerVisit.getContactPrimary(), null, null));
-		encr.add(createEncounterResult(e, ElementContact.SECONDARY_CONTACT_NUMBER, centerVisit.getContactSecondary(), null, null));
-		encr.add(createEncounterResult(e, ElementVaccination.COMPLETE_COURSE_FROM_ENROLLMENT_CENTER, completeCourseFromCenter, null, null));
-		encr.add(createEncounterResult(e, ElementVaccination.INCENTIVE_APPROVED, centerVisit.getPreference().getHasApprovedLottery(), null, null));
+//		encr.add(createEncounterResult(e, ElementChild.REMINDERS_APPROVED, centerVisit.getPreference().getHasApprovedReminders(), null, null));
+//		encr.add(createEncounterResult(e, ElementContact.PRIMARY_CONTACT_NUMBER, centerVisit.getContactPrimary(), null, null));
+//		encr.add(createEncounterResult(e, ElementContact.SECONDARY_CONTACT_NUMBER, centerVisit.getContactSecondary(), null, null));
+//		encr.add(createEncounterResult(e, ElementVaccination.COMPLETE_COURSE_FROM_ENROLLMENT_CENTER, completeCourseFromCenter, null, null));
+//		encr.add(createEncounterResult(e, ElementVaccination.INCENTIVE_APPROVED, centerVisit.getPreference().getHasApprovedLottery(), null, null));
 
-		populateVaccinationEncounter(e, encr, centerVisit, vaccineSchedule, sc);
+		populateVaccinationEncounter(e, encr, centerVisit, roundId, vaccineSchedule, sc);
 		
-		populateIncentiveEncounter(e, encr, incentiveRes);
+//		populateIncentiveEncounter(e, encr, incentiveRes);
 	
 		saveEncounterResults(encr, sc);
 	}
@@ -280,21 +292,21 @@ public class EncounterUtil {
 		saveEncounterResults(encr, sc);
 	}
 	
-	public static void createFollowupEncounter(VaccinationCenterVisit centerVisit, List<VaccineSchedule> vaccineSchedule, 
+	public static void createFollowupEncounter(VaccinationCenterVisit centerVisit, Integer roundId, List<VaccineSchedule> vaccineSchedule, 
 			List<ChildIncentivization> incentiveResults, DataEntrySource dataEntrySource, Date formStartDate, User dataEntryUser, ServiceContext sc)
 	{
 		Encounter e = saveEncounter(centerVisit.getChildId(), centerVisit.getVaccinatorId(), centerVisit.getVaccinationCenterId(), centerVisit.getVisitDate(), formStartDate, null, dataEntryUser.getMappedId(), EncounterType.FOLLOWUP, dataEntrySource, sc);
 
 		List<EncounterResults> encr = new ArrayList<EncounterResults>();
 		
-		encr.add(createEncounterResult(e, ElementChild.REMINDERS_APPROVED, centerVisit.getPreference().getHasApprovedReminders(), null, null));
-		encr.add(createEncounterResult(e, ElementContact.PRIMARY_CONTACT_NUMBER, centerVisit.getContactPrimary(), null, null));
-		encr.add(createEncounterResult(e, ElementContact.SECONDARY_CONTACT_NUMBER, centerVisit.getContactSecondary(), null, null));
-		encr.add(createEncounterResult(e, ElementVaccination.INCENTIVE_APPROVED, centerVisit.getPreference().getHasApprovedLottery(), null, null));
+//		encr.add(createEncounterResult(e, ElementChild.REMINDERS_APPROVED, centerVisit.getPreference().getHasApprovedReminders(), null, null));
+//		encr.add(createEncounterResult(e, ElementContact.PRIMARY_CONTACT_NUMBER, centerVisit.getContactPrimary(), null, null));
+//		encr.add(createEncounterResult(e, ElementContact.SECONDARY_CONTACT_NUMBER, centerVisit.getContactSecondary(), null, null));
+//		encr.add(createEncounterResult(e, ElementVaccination.INCENTIVE_APPROVED, centerVisit.getPreference().getHasApprovedLottery(), null, null));
 		
-		populateVaccinationEncounter(e, encr, centerVisit, vaccineSchedule, sc);
+		populateVaccinationEncounter(e, encr, centerVisit, roundId, vaccineSchedule, sc);
 		
-		populateIncentiveEncounter(e, encr, incentiveResults);
+//		populateIncentiveEncounter(e, encr, incentiveResults);
 	
 		saveEncounterResults(encr, sc);
 	}
@@ -582,14 +594,18 @@ public class EncounterUtil {
 		return incentiveVariableIDPrefix;
 	}
 	
-	private static void populateVaccinationEncounter(Encounter e , List<EncounterResults> encr, VaccinationCenterVisit centerVisit, 
+	private static void populateVaccinationEncounter(Encounter e , List<EncounterResults> encr, VaccinationCenterVisit centerVisit, Integer roundId,
 			List<VaccineSchedule> vaccineSchedule, ServiceContext sc)
 	{
-		encr.add(createEncounterResult(e, ElementVaccination.EPI_NUMBER, centerVisit.getEpiNumber(), null, null));
+//		encr.add(createEncounterResult(e, ElementVaccination.EPI_NUMBER, centerVisit.getEpiNumber(), null, null));
 		encr.add(createEncounterResult(e, ElementVaccination.VISIT_DATE, WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.format(centerVisit.getVisitDate()), null, null));
-		encr.add(createEncounterResult(e, ElementVaccination.VACCINATION_CENTER, centerVisit.getVaccinationCenterId(), null, null));
-		encr.add(createEncounterResult(e, ElementVaccination.VACCINATION_CENTER_ID, sc.getVaccinationService().findVaccinationCenterById(centerVisit.getVaccinationCenterId(), true, new String[]{"idMapper"}).getIdMapper().getIdentifiers().get(0).getIdentifier(), null, null));
+		encr.add(createEncounterResult(e, ElementVaccination.SITE_MAPPED_ID, centerVisit.getVaccinationCenterId(), null, null));
+		encr.add(createEncounterResult(e, ElementVaccination.SITE_NAME, sc.getVaccinationService().findVaccinationCenterById(centerVisit.getVaccinationCenterId(), true, new String[]{"idMapper"}).getName(), null, null));
 
+		for (VaccineSchedule vsh : vaccineSchedule) {
+			vsh.printVaccineSchedule();
+		}
+		
 		for (VaccineSchedule vsh : vaccineSchedule) {
 			String vaccineVariablePrefix = null;
 			String group = null;
@@ -609,15 +625,13 @@ public class EncounterUtil {
 					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINE_NAME, vsh.getVaccine().getName(), group));
 					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_TYPE, vsh.getStatus(), group));
 					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_RECORD_NUM, vsh.getVaccinationObjCurrentVisit().getVaccinationRecordNum(), group));
-					
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.ROUND_ID, roundId, group));
 					if(vsh.getVaccinationObjCurrentVisit().getVaccinationDuedate()!= null)
 					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_DUE_DATE,  WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.format(vsh.getVaccinationObjCurrentVisit().getVaccinationDuedate()), group));
-					
 					if(vsh.getVaccinationObjCurrentVisit().getVaccinationDate()!= null)
 					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_DATE,  WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.format(vsh.getVaccinationObjCurrentVisit().getVaccinationDate()), group));
-					
-					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_CENTER, vsh.getVaccinationObjCurrentVisit().getVaccinationCenterId(), group));
-					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_CENTER_ID,  sc.getVaccinationService().findVaccinationCenterById(vsh.getVaccinationObjCurrentVisit().getVaccinationCenterId(), true, new String[]{"idMapper"}).getIdMapper().getIdentifiers().get(0).getIdentifier(), group));
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.SITE_MAPPED_ID, vsh.getVaccinationObjCurrentVisit().getVaccinationCenterId(), group));
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.SITE_NAME,  sc.getVaccinationService().findVaccinationCenterById(vsh.getVaccinationObjCurrentVisit().getVaccinationCenterId(), true, new String[]{"idMapper"}).getName(), group));
 					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_STATUS, vsh.getVaccinationObjCurrentVisit().getVaccinationStatus(), group));
 				}
 				else if(vsh.getStatus().equalsIgnoreCase(VaccineStatusType.VACCINATED.name())){
@@ -627,15 +641,13 @@ public class EncounterUtil {
 					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINE_NAME, vsh.getVaccine().getName(), group));
 					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_TYPE, vsh.getStatus(), group));
 					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_RECORD_NUM, vsh.getVaccinationObjCurrentVisit().getVaccinationRecordNum(), group));
-					
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.ROUND_ID, roundId, group));
 					if(vsh.getVaccinationObjCurrentVisit().getVaccinationDuedate()!= null)
 					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_DUE_DATE,  WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.format(vsh.getVaccinationObjCurrentVisit().getVaccinationDuedate()), group));
-					
 					if(vsh.getVaccinationObjCurrentVisit().getVaccinationDate()!= null)
 					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_DATE,  WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.format(vsh.getVaccinationObjCurrentVisit().getVaccinationDate()), group));
-					
-					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_CENTER, vsh.getVaccinationObjCurrentVisit().getVaccinationCenterId(), group));
-					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_CENTER_ID,  Utils.initializeAndUnproxy(sc.getVaccinationService().findVaccinationCenterById(vsh.getVaccinationObjCurrentVisit().getVaccinationCenterId(), true, new String[]{"idMapper"}).getIdMapper().getIdentifiers().get(0).getIdentifier()), group));
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.SITE_MAPPED_ID, vsh.getVaccinationObjCurrentVisit().getVaccinationCenterId(), group));
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.SITE_NAME,  Utils.initializeAndUnproxy(sc.getVaccinationService().findVaccinationCenterById(vsh.getVaccinationObjCurrentVisit().getVaccinationCenterId(), true, new String[]{"idMapper"}).getName()), group));
 					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_STATUS, vsh.getVaccinationObjCurrentVisit().getVaccinationStatus(), group));
 				}
 				else if(vsh.getStatus().equalsIgnoreCase(VaccineStatusType.SCHEDULED.name())){
@@ -645,11 +657,10 @@ public class EncounterUtil {
 					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINE_NAME, vsh.getVaccine().getName(), group));
 					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_TYPE, vsh.getStatus(), group));
 					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_RECORD_NUM, vsh.getVaccinationObjCurrentVisit().getVaccinationRecordNum(), group));
-					
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.ROUND_ID, roundId, group));
 					if(vsh.getVaccinationObjCurrentVisit().getVaccinationDuedate()!= null)
 					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_DUE_DATE,  WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.format(vsh.getVaccinationObjCurrentVisit().getVaccinationDuedate()), group));
 					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_STATUS, vsh.getVaccinationObjCurrentVisit().getVaccinationStatus(), group));
-					
 					if(vsh.getAuto_calculated_date()!= null)
 					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.SYSTEM_CALCULATED_DATE,  WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.format(vsh.getAuto_calculated_date()), group));
 				}
@@ -657,20 +668,47 @@ public class EncounterUtil {
 				else if(vsh.getStatus().equalsIgnoreCase(VaccineStatusType.INVALID_DOSE.name())){
 					vaccineVariablePrefix = "VACCINE_INVALID_"+vsh.getVaccine().getName().toUpperCase()+"_"+vsh.getVaccine().getVaccineId();
 					group = "VACCINE_INVALID_"+vsh.getVaccine().getName().toUpperCase();
-					
 					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINE_ID, vsh.getVaccinationObjCurrentVisit().getVaccineId(), group));
 					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINE_NAME, vsh.getVaccine().getName(), group));
 					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_TYPE, vsh.getStatus(), group));
 					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_RECORD_NUM, vsh.getVaccinationObjCurrentVisit().getVaccinationRecordNum(), group));
-					
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.ROUND_ID, roundId, group));
 					if(vsh.getVaccinationObjCurrentVisit().getVaccinationDuedate()!= null)
-					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_DUE_DATE,  WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.format(vsh.getVaccinationObjCurrentVisit().getVaccinationDuedate()), group));
-					
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_DUE_DATE,  WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.format(vsh.getVaccinationObjCurrentVisit().getVaccinationDuedate()), group));	
 					if(vsh.getVaccinationObjCurrentVisit().getVaccinationDate()!= null)
 					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_DATE,  WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.format(vsh.getVaccinationObjCurrentVisit().getVaccinationDate()), group));
-					
-//					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_CENTER, vsh.getVaccinationObjCurrentVisit().getVaccinationCenterId(), group));
-//					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_CENTER_ID,  sc.getVaccinationService().findVaccinationCenterById(vsh.getVaccinationObjCurrentVisit().getVaccinationCenterId(), true, new String[]{"idMapper"}).getIdMapper().getIdentifiers().get(0).getIdentifier(), group));
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_STATUS, vsh.getVaccinationObjCurrentVisit().getVaccinationStatus(), group));
+				}
+				else if(vsh.getStatus().equalsIgnoreCase(VaccineStatusType.NOT_VACCINATED.name())){
+					vaccineVariablePrefix = "VACCINE_CONTRAINDICATION_"+vsh.getVaccine().getName().toUpperCase()+"_"+vsh.getVaccine().getVaccineId();
+					group = "VACCINE_CONTRAINDICATION_"+vsh.getVaccine().getName().toUpperCase();
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINE_ID, vsh.getVaccinationObjCurrentVisit().getVaccineId(), group));
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINE_NAME, vsh.getVaccine().getName(), group));
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_TYPE, vsh.getStatus(), group));
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_RECORD_NUM, vsh.getVaccinationObjCurrentVisit().getVaccinationRecordNum(), group));
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.ROUND_ID, roundId, group));
+					if(vsh.getVaccinationObjCurrentVisit().getVaccinationDuedate()!= null)
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_DUE_DATE,  WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.format(vsh.getVaccinationObjCurrentVisit().getVaccinationDuedate()), group));
+					if(vsh.getVaccinationObjCurrentVisit().getVaccinationDate()!= null)
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_DATE,  WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.format(vsh.getVaccinationObjCurrentVisit().getVaccinationDate()), group));
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.SITE_MAPPED_ID, vsh.getVaccinationObjCurrentVisit().getVaccinationCenterId(), group));
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.SITE_NAME,  Utils.initializeAndUnproxy(sc.getVaccinationService().findVaccinationCenterById(vsh.getVaccinationObjCurrentVisit().getVaccinationCenterId(), true, new String[]{"idMapper"}).getName()), group));
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_STATUS, vsh.getVaccinationObjCurrentVisit().getVaccinationStatus(), group));
+				}
+				else if(vsh.getStatus().equalsIgnoreCase(VaccineStatusType.NOT_GIVEN.name())){
+					vaccineVariablePrefix = "VACCINE_NOT_GIVEN_"+vsh.getVaccine().getName().toUpperCase()+"_"+vsh.getVaccine().getVaccineId();
+					group = "VACCINE_NOT_GIVEN_"+vsh.getVaccine().getName().toUpperCase();
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINE_ID, vsh.getVaccinationObjCurrentVisit().getVaccineId(), group));
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINE_NAME, vsh.getVaccine().getName(), group));
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_TYPE, vsh.getStatus(), group));
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_RECORD_NUM, vsh.getVaccinationObjCurrentVisit().getVaccinationRecordNum(), group));
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.ROUND_ID, roundId, group));
+					if(vsh.getVaccinationObjCurrentVisit().getVaccinationDuedate()!= null)
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_DUE_DATE,  WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.format(vsh.getVaccinationObjCurrentVisit().getVaccinationDuedate()), group));
+					if(vsh.getVaccinationObjCurrentVisit().getVaccinationDate()!= null)
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_DATE,  WebGlobals.GLOBAL_JAVA_DATETIME_FORMAT.format(vsh.getVaccinationObjCurrentVisit().getVaccinationDate()), group));
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.SITE_MAPPED_ID, vsh.getVaccinationObjCurrentVisit().getVaccinationCenterId(), group));
+					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.SITE_NAME,  Utils.initializeAndUnproxy(sc.getVaccinationService().findVaccinationCenterById(vsh.getVaccinationObjCurrentVisit().getVaccinationCenterId(), true, new String[]{"idMapper"}).getName()), group));
 					encr.add(createRepeatedGroupEncounterResult(e, vaccineVariablePrefix, ElementVaccination.VACCINATION_STATUS, vsh.getVaccinationObjCurrentVisit().getVaccinationStatus(), group));
 				}
 			}
@@ -793,7 +831,9 @@ public class EncounterUtil {
 	{
 		List c = sc.getCustomQueryService().getDataBySQL("select otherIdentifier, name from location where locationId="+address.getCityId());
 		
-		encr.add(createEncounterResult(e, ElementAddress.ADDRESS_LINE1, address.getAddress1(), null, null));
+		encr.add(createEncounterResult(e, ElementAddress.VILLAGE, address.getAddress1(), null, null));
+		encr.add(createEncounterResult(e, ElementAddress.LOCATION, address.getAddress2(), null, null));
+		
 //		encr.add(createEncounterResult(e, ElementAddress.LANDMARK, address.getLandmark(), null, null));
 //		encr.add(createEncounterResult(e, ElementAddress.TOWN, address.getTown(), null, null));
 //		encr.add(createEncounterResult(e, ElementAddress.UC, address.getUc(), null, null));

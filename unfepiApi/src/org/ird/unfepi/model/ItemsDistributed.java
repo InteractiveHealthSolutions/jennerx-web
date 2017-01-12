@@ -21,8 +21,6 @@ public class ItemsDistributed{
 	@ForeignKey(name = "itemsdistributed_mappedId_child_mappedId_FK")
 	private Child child;
 	
-	private Integer itemRecordNum;
-	
 	@ManyToOne(fetch = FetchType.EAGER, targetEntity = ItemStock.class)
 	@JoinColumn(name = "itemRecordNum", insertable = false, updatable = false)
 	@ForeignKey(name = "itemsdistributed_itemRecordNum_itemstock_itemRecordNum_FK")
@@ -57,21 +55,6 @@ public class ItemsDistributed{
 	public void setChild(Child child) {
 		this.child = child;
 	}
-
-	/**
-	 * @return the itemRecordNum
-	 */
-	public Integer getItemRecordNum() {
-		return itemRecordNum;
-	}
-
-	/**
-	 * @param itemRecordNum the itemRecordNum to set
-	 */
-	public void setItemRecordNum(Integer itemRecordNum) {
-		this.itemRecordNum = itemRecordNum;
-	}
-
 	/**
 	 * @return the itemStock
 	 */

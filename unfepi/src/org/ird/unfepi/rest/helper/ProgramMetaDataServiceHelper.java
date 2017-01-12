@@ -141,6 +141,28 @@ public class ProgramMetaDataServiceHelper {
 		}
 	}
 	
+	public static String getItemStockMetadata(JSONObject jsonObject){
+		
+		org.json.simple.JSONObject response = new org.json.simple.JSONObject();
+		
+		try {
+			
+			fillItemStock(jsonObject, response);
+			
+			HashMap<String, Object> resp = new HashMap<String, Object>();
+			resp.put("METADATA", response);
+
+			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_SUCCESS, resp);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			GlobalParams.MOBILELOGGER.equals(e);
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("error", "Error in getting metadata");
+			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_INTERNAL_ERROR, map);
+		}
+	}
+	
 	public static void fillRound(JSONObject json, org.json.simple.JSONObject response)
 	{
 		String[] columns = new String[] { RequestElements.METADATA_FIELD_ROUND_ID,
@@ -350,7 +372,7 @@ public class ProgramMetaDataServiceHelper {
 		}
 	}
 	
-	private static void fillHealthProgram(JSONObject json, org.json.simple.JSONObject response)
+	public static void fillHealthProgram(JSONObject json, org.json.simple.JSONObject response)
 	{
 		String[] columns = new String[] { 
 				RequestElements.METADATA_FIELD_HEALTHPROGRAM_ID,
@@ -365,6 +387,24 @@ public class ProgramMetaDataServiceHelper {
 		}
 		else{
 			fetchMetaDataByCustomQuery(RequestElements.METADATA_HEALTHPROGRAM, query, columns, response);
+		}
+
+	}
+	
+	public static void fillItemStock(JSONObject json, org.json.simple.JSONObject response)
+	{
+		String[] columns = new String[] { 
+				RequestElements.METADATA_FIELD_ITEM_RECORD_NUM,
+				RequestElements.METADATA_FIELD_ITEM_NAME, };
+		String table = "itemstock";
+		
+		String query = "SELECT " + Arrays.toString(columns).replaceAll("\\[|\\]", "") + " FROM " + table;
+		
+		if(json.has(RequestElements.METADATA_ITEM)){
+			fetchAndCompareMetaData(RequestElements.METADATA_ITEM, columns, table, query, response, json);
+		}
+		else{
+			fetchMetaDataByCustomQuery(RequestElements.METADATA_ITEM, query, columns, response);
 		}
 
 	}

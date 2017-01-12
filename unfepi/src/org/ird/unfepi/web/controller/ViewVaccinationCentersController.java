@@ -31,7 +31,7 @@ import com.mysql.jdbc.StringUtils;
 public class ViewVaccinationCentersController extends DataDisplayController {
 	
 	ViewVaccinationCentersController(){
-		super("dataForm", new  DataSearchForm("vaccination_center", "Vaccination Centers", SystemPermissions.VIEW_VACCINATION_CENTERS, true));
+		super("dataForm", new  DataSearchForm("vaccination_center", "Sites", SystemPermissions.VIEW_VACCINATION_CENTERS, true));
 	}
 	
 	@RequestMapping(value="/viewVaccinationCenters.htm", method={RequestMethod.GET,RequestMethod.POST})

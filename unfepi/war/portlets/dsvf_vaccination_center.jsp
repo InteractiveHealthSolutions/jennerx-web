@@ -8,16 +8,15 @@
 	<table >
 	<thead>
         <tr>
-<%
-boolean edit=UserSessionUtils.hasActiveUserPermission(SystemPermissions.CORRECT_VACCINATION_CENTERS, request);
-
-if(edit){
-%>
-        	<th>edit</th>
-<%
-}
-%> 
-        	<!-- <th>---</th> -->
+			<%
+			boolean edit = UserSessionUtils.hasActiveUserPermission(SystemPermissions.CORRECT_VACCINATION_CENTERS, request);
+				if (edit) {
+			%>
+			<th>edit</th>
+			<%
+					}
+			%>
+			<!-- <th>---</th> -->
 			<th>Assigned Id</th>
 			<th>Date Registered</th>
 			<th>Name</th>

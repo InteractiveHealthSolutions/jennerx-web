@@ -1,5 +1,6 @@
 package org.ird.unfepi.web.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,12 +14,15 @@ import org.ird.unfepi.DataEntryFormController;
 import org.ird.unfepi.GlobalParams;
 import org.ird.unfepi.constants.FormType;
 import org.ird.unfepi.constants.SystemPermissions;
+import org.ird.unfepi.constants.WebGlobals;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.LoggedInUser;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Child;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
 import org.ird.unfepi.model.HealthProgram;
+import org.ird.unfepi.model.ItemStock;
+import org.ird.unfepi.model.ItemsDistributed;
 import org.ird.unfepi.model.Vaccination;
 import org.ird.unfepi.model.Vaccine;
 import org.ird.unfepi.utils.UserSessionUtils;
@@ -66,9 +70,34 @@ public class FollowupVaccinationController extends DataEntryFormController{
 		JSONArray data =  new JSONArray();
 		for (Object object : preVacList) {
 			data.put(new JSONObject((HashMap)object));
-			System.out.println(new JSONObject((HashMap)object).toString());
+//			System.out.println(new JSONObject((HashMap)object).toString());
 		}
 		return data.toString();
+	}
+	
+	@RequestMapping(value="/isPreventionActivityOn/{childId}/{visitDate}" , method=RequestMethod.GET)
+	@ResponseBody
+	public String isPreventionActivityOn(@PathVariable Integer childId, @PathVariable String visitDate){
+		
+		ServiceContext sc = Context.getServices();
+		
+		try {
+			Date date = new SimpleDateFormat(WebGlobals.GLOBAL_DATE_FORMAT_JAVA).parse(visitDate);
+			System.out.println(childId  + "   " +visitDate + "   "  + WebGlobals.GLOBAL_SQL_DATE_FORMAT.format(date));
+			
+			List<ItemsDistributed> records = sc.getCustomQueryService().getDataByHQL(
+					"from ItemsDistributed where itemDistributedId.mappedId ="+childId+ 
+					" and itemDistributedId.distributedDate ='" +WebGlobals.GLOBAL_SQL_DATE_FORMAT.format(date)+"'");
+			System.out.println(records.size());
+			
+			if(records == null || records.size() == 0 ){
+				return "true";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return "false";
 	}
 	
 	@RequestMapping(method=RequestMethod.GET)
@@ -82,16 +111,22 @@ public class FollowupVaccinationController extends DataEntryFormController{
 									HttpServletRequest request, HttpServletResponse response,
 									ModelAndView modelAndView)	throws Exception{
 		
+		if(centerVisit.getItemsDistributedL() != null && centerVisit.getItemsDistributedL().size() >0){
+			System.out.println("item list size " + centerVisit.getItemsDistributedL().size());
+			for(ItemsDistributed itm : centerVisit.getItemsDistributedL()){
+				System.out.println(itm.getItemDistributedId().getDistributedDate() + " " + itm.getItemDistributedId().getItemRecordNum() + " " + itm.getQuantity()+ " " + itm.getItemDistributedId().getMappedId());
+			}
+		}
+		
 		LoggedInUser user=UserSessionUtils.getActiveUser(request);
 		ServiceContext sc = Context.getServices();
 		
 		try{
 			List<VaccineSchedule> vaccineSchedule = (List<VaccineSchedule>) request.getSession().getAttribute(VaccinationCenterVisit.VACCINE_SCHEDULE_KEY+centerVisit.getUuid());
 			
-			for (VaccineSchedule vs : vaccineSchedule) {
-				vs.printVaccineSchedule();
-			}
-			
+//			for (VaccineSchedule vs : vaccineSchedule) {
+//				vs.printVaccineSchedule();
+//			}
 			Iterator<VaccineSchedule> iter = vaccineSchedule.iterator();
 			while (iter.hasNext()) {
 				VaccineSchedule vsh = iter.next();
@@ -139,13 +174,17 @@ public class FollowupVaccinationController extends DataEntryFormController{
 		VaccinationCenterVisit vcv = new VaccinationCenterVisit();
 		Child child = new Child();
 		Vaccination previousVaccination = new Vaccination();
+		Vaccination previousRecord = null;
 		
 		ServiceContext sc = Context.getServices();
 		try{
 			child = sc.getChildService().findChildById(Integer.parseInt(child_id), true, new String[]{"idMapper"});
 			ControllerUIHelper.prepareFollowupDisplayObjects(request, child, sc);
-			previousVaccination = ControllerUIHelper.getPreviousVaccination(child.getMappedId(), sc);		
+			previousVaccination = ControllerUIHelper.getPreviousVaccination(child.getMappedId(), sc);	
 			
+			if(previousVaccination == null){
+				previousRecord = ControllerUIHelper.getPreviousVaccinationRecord(child.getMappedId(), sc);
+			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -156,9 +195,17 @@ public class FollowupVaccinationController extends DataEntryFormController{
 			sc.closeSession();
 		}
 		
-		vcv.setHealthProgramId(previousVaccination.getRound().getHealthProgramId());
-		vcv.setVaccinationCenterId(previousVaccination.getVaccinationCenterId());
-		vcv.setVaccinatorId(previousVaccination.getVaccinatorId());
+		if(previousVaccination != null){
+			vcv.setHealthProgramId(previousVaccination.getRound().getHealthProgramId());
+			vcv.setVaccinationCenterId(previousVaccination.getVaccinationCenterId());
+			vcv.setVaccinatorId(previousVaccination.getVaccinatorId());
+		} else {
+			//if previously only invalid_dose, not_vaccinated, not_given exist
+			vcv.setHealthProgramId(previousRecord.getRound().getHealthProgramId());
+			vcv.setVaccinationCenterId(previousRecord.getVaccinationCenterId());
+			vcv.setVaccinatorId(previousRecord.getVaccinatorId());
+		}
+		
 		vcv.setChildId(child.getMappedId());
 		
 		return vcv;
@@ -174,11 +221,13 @@ public class FollowupVaccinationController extends DataEntryFormController{
 			List<HealthProgram> healthprograms = sc.getCustomQueryService().getDataByHQL("from HealthProgram");
 			model.addAttribute("healthprograms", healthprograms);			
 			
-			List<Vaccine> vaccinesL = sc.getCustomQueryService().getDataByHQL("FROM Vaccine where vaccine_entity like 'CHILD%' and isSupplementary = 0") ;
-			model.addAttribute("vaccineList", vaccinesL);
+//			List<Vaccine> vaccinesL = sc.getCustomQueryService().getDataByHQL("FROM Vaccine where vaccine_entity like 'CHILD%' and isSupplementary = 0") ;
+//			model.addAttribute("vaccineList", vaccinesL);
 			
 			model.addAttribute("vaccinationCenters", sc.getVaccinationService().getAllVaccinationCenterOrdered(true, new String[]{"idMapper"}));
 			model.addAttribute("vaccinators", sc.getVaccinationService().getAllVaccinator(0, Integer.MAX_VALUE, true, new String[]{"idMapper"}));
+			model.addAttribute("itemStocks", sc.getCustomQueryService().getDataByHQL("from ItemStock"));
+		
 		}
 		catch (Exception e) {
 			e.printStackTrace();

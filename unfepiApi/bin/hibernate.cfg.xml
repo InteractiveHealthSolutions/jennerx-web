@@ -101,7 +101,7 @@
 		<mapping class="org.ird.unfepi.model.VaccinationCalendar"/>	
 		<mapping class="org.ird.unfepi.model.ItemStock"/>
 		<mapping class="org.ird.unfepi.model.ItemsDistributed"/>
-		
+		<mapping class="org.ird.unfepi.model.MuacMeasurement"/>
     </session-factory>
 </hibernate-configuration>
 

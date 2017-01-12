@@ -57,7 +57,6 @@ public class FirstSetupService {
 		User user=	userServiceHelper.authenticateUser(pwd, userName, RequestElements.USER_TYPE_ADMIN);
 		if(user==null)
 		{
-			
 			return String.valueOf(ResponseStatus.STATUS_INCORRECT_CREDENTIALS);
 		}
 		else{
@@ -75,8 +74,6 @@ public class FirstSetupService {
 			jsonObject.put("status",String.valueOf(ResponseStatus.STATUS_SUCCESS) );
 			return jsonObject.toJSONString() ;
 		}
-		
-		
 		
 		}catch ( ParseException e){
 			e.printStackTrace();
@@ -112,6 +109,7 @@ public class FirstSetupService {
 				mappedId=(Integer) map.get(size).get("mappedId");
 			}
 			j.put(RequestElements.LASTRECORD,mappedId );
+			System.out.println(j.toString());
 			return GZipper.compress(j.toString());
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
@@ -146,7 +144,6 @@ public class FirstSetupService {
 			mappedId=(Integer) map.get(size).get("vId");
 		}
 		j.put(RequestElements.LASTRECORD, mappedId);
-		
 		return GZipper.compress(j.toString());
 		} catch (ParseException e) {
 		
@@ -181,5 +178,65 @@ public class FirstSetupService {
 		}
 	}
 	
+	@Path("/allitemdistributed")
+	@POST
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getAllItemDistributed(String json) throws IOException, JSONException{
+		System.gc();
+		JSONParser parser = new JSONParser();
+		JSONObject receivedJson;
+		try {
+			receivedJson = (JSONObject)parser.parse(json);
+
+			Long lastRecord=(Long) receivedJson.get(RequestElements.LASTRECORD);
+			ChildServiceHelper childServiceHelper=new ChildServiceHelper();
+			org.json.JSONObject j=new org.json.JSONObject();
+			List<HashMap> map=childServiceHelper.getAllItemDistributed(lastRecord);
+			j.put("allitemdistributed",map );
+			int length=map.size()-1;
+			int size=length>0?length:0;
+			int mappedId=-2;
+			if(size>0){
+				mappedId=(Integer) map.get(size).get("mappedId");
+			}
+			j.put(RequestElements.LASTRECORD,mappedId );
+			
+			return GZipper.compress(j.toString());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_INCORRECT_DATA_FORMAT_ERROR, null);
+		}
+	}
+	
+	@Path("/allmuacmeasurements")
+	@POST
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getAllMuacMeasurements(String json) throws IOException, JSONException{
+		System.gc();
+		JSONParser parser = new JSONParser();
+		JSONObject receivedJson;
+		try {
+			receivedJson = (JSONObject)parser.parse(json);
+
+			Long lastRecord=(Long) receivedJson.get(RequestElements.LASTRECORD);
+			ChildServiceHelper childServiceHelper=new ChildServiceHelper();
+			org.json.JSONObject j=new org.json.JSONObject();
+			List<HashMap> map=childServiceHelper.getAllMuacMeasurements(lastRecord);
+			j.put("allmuacmeasurements",map );
+			int length=map.size()-1;
+			int size=length>0?length:0;
+			int mappedId=-2;
+			if(size>0){
+				mappedId=(Integer) map.get(size).get("mappedId");
+			}
+			j.put(RequestElements.LASTRECORD,mappedId );
+			return GZipper.compress(j.toString());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_INCORRECT_DATA_FORMAT_ERROR, null);
+		}
+	}
 
 }

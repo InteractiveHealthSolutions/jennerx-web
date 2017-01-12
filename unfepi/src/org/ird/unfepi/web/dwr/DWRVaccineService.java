@@ -84,17 +84,17 @@ public class DWRVaccineService {
 			
 			ArrayList<VaccineSchedule> scheduleRetro = VaccineSchedule.validateVaccineHistory(retroVaccinationL, birthdate, centerVisitDate, childId, vaccinationCenterId, true, healthProgramId);
 			
-			System.out.println(" --- vaccine history start --- ");
-			for (VaccineSchedule vaccineSchedule : scheduleRetro) {
-				vaccineSchedule.printVaccineSchedule();
-			}
-			System.out.println(" --- vaccine history end --- ");
+//			System.out.println(" --- vaccine history start --- ");
+//			for (VaccineSchedule vaccineSchedule : scheduleRetro) {
+//				vaccineSchedule.printVaccineSchedule();
+//			}
+//			System.out.println(" --- vaccine history end --- ");
 			
 			ArrayList<VaccineSchedule> scheduleCurrent = VaccineSchedule.generateDefaultSchedule(birthdate, centerVisitDate, childId, vaccinationCenterId, true, scheduleRetro, healthProgramId);
 			
-			for (VaccineSchedule vs : scheduleCurrent) {
-				vs.printVaccineSchedule();
-			}			
+//			for (VaccineSchedule vs : scheduleCurrent) {
+//				vs.printVaccineSchedule();
+//			}			
 			
 			return scheduleCurrent;
 		} catch (Exception e) {

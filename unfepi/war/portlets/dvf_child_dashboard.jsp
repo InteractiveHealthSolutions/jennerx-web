@@ -69,7 +69,7 @@ if(UserSessionUtils.getActiveUser(request).isDefaultAdministrator()){%>
        		<th class="center">Vaccination Date</th>
             <th class="center">Vaccination Duedate</th>
             <th class="center">Vaccination Status</th>
-            <th class="center">Center ID</th>
+            <th class="center">Site Id</th>
             <th class="center">Vaccinator</th>
             <th class="center">Vaccination Record Num</th>
         </tr>

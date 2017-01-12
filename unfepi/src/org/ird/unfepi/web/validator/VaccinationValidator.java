@@ -1,12 +1,16 @@
 package org.ird.unfepi.web.validator;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.ird.unfepi.constants.WebGlobals;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.CenterProgram;
+import org.ird.unfepi.model.ItemsDistributed;
 import org.ird.unfepi.model.Round;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
 import org.ird.unfepi.web.utils.VaccinationCenterVisit;
@@ -38,7 +42,19 @@ public class VaccinationValidator implements Validator {
 				errors.reject("", null, "more than one round is active for the selected health program in the selected vaccination center");
 			}
 			
+			if(centerVisit.getItemsDistributedL() != null && centerVisit.getItemsDistributedL().size() >0){
+				Date date = centerVisit.getItemsDistributedL().get(0).getItemDistributedId().getDistributedDate();
+				int cid =  centerVisit.getItemsDistributedL().get(0).getItemDistributedId().getMappedId();
+				
+				List<ItemsDistributed> records = sc.getCustomQueryService().getDataByHQL("from ItemsDistributed where itemDistributedId.distributedDate = '" +WebGlobals.GLOBAL_SQL_DATE_FORMAT.format(date)+ "' and itemDistributedId.mappedId = "+cid);
+				if(records != null && records.size() > 0){
+					errors.reject("", null, "already given today !");
+				}
+			}
 			
+		}
+		catch(Exception e){
+			e.printStackTrace();
 		}
 		finally{
 			sc.closeSession();

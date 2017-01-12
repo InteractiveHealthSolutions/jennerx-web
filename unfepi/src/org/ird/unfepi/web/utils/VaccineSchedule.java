@@ -105,7 +105,7 @@ public class VaccineSchedule {
 //			}
 //			List<Vaccine> vaccinel = sc.getVaccinationService().getVaccinesById(vis.toArray(new Short[]{}), true, new String[]{"prerequisites"}, GlobalParams.SQL_VACCINE_BIRTHDATE_GAP_ORDER);
 			
-			System.out.println(calendarId + " "+ healthProgramId + "   calendarIdcalendarId");
+//			System.out.println(calendarId + " "+ healthProgramId + "   calendarIdcalendarId");
 			
 			String SQL_VACCINE_BIRTHDATE_GAP_ORDER_C = " IFNULL((SELECT CASE WHEN gaptimeunit = 'month' THEN (30*value) "
 					+ " WHEN gaptimeunit = 'week' THEN (7*value) "+ " WHEN gaptimeunit = 'day' THEN (0*value) "+ " WHEN gaptimeunit = 'year' THEN (365*value) "

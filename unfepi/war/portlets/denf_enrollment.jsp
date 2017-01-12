@@ -21,7 +21,8 @@
 <%@page import="org.ird.unfepi.web.utils.VaccineSchedule.VaccineScheduleKey"%>
 <%@page import="org.ird.unfepi.web.utils.VaccinationCenterVisit"%>
 
-<style>
+
+<style type="text/css">
 
 fieldset{
  	border:thin solid #b2b869 ; 
@@ -63,8 +64,6 @@ a{
 	padding: 2px 5px 2px 5px;
 	padding-right: 10px;
 	padding-left: 10px;
-/*  background-color: #ffc966; */
-/* 	border: 1px solid #ffaf1a; */
   	border-style: outset; 
 	background: transparent;
 	
@@ -242,6 +241,27 @@ ul{
 	}
 
 	function subfrm() {
+		
+		itemsSubmit();
+		
+		
+		var emptyItem = 0;
+		
+		$("input[id^='itemIn'").each(function(index, element){		
+			if($(this).prop('checked')){
+				var id = (element.id).match(/\d+/g);
+				if($('#itemQnty'+id).val().length <= 0){
+					emptyItem++;
+				}
+			}
+		});
+		
+		if(emptyItem > 0){
+			alert("fill the selected item's quantity ");
+			return false;
+		}
+		
+		
 		DWRVaccineService.overrideSchedule(vaccineScheduleList, '${command.centerVisit.uuid}', function(result) {
 			submitThisForm();
 		});

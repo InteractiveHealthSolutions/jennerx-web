@@ -38,7 +38,7 @@ public class ChildServiceHelper {
 		ServiceContext sc =Context.getServices();
 		//TODO divide in 10thoussand chunks
 		String query="SELECT v.vaccinationRecordNum vId,v.vaccinationCenterId centreid,v.vaccineId, v.lastEditedDate ,v.createdDate, "+
-				"v.vaccinationDate,v.vaccinationDuedate,v.vaccinationStatus, i.identifier childidentifier,v.childId, "+
+				"v.vaccinationDate,v.vaccinationDuedate,v.vaccinationStatus, i.identifier childidentifier,v.childId, v.roundId, "+
 				"v.reasonVaccineNotGiven  reason  , v.role role,v.epiNumber,v.createdByUserId creator, v.lastEditedByUserId lastEditor "+
 				"FROM unfepi.vaccination  v  inner join child c on c.mappedId=v.childId "+ 
 				"inner join identifier i on v.childid=i.mappedid  AND  i.preferred join vaccine on v.vaccineId=vaccine.vaccineId  "+ 
@@ -71,6 +71,40 @@ public class ChildServiceHelper {
 		return null;
 	}
 	
+	public List<HashMap> getAllItemDistributed(long lastRecord){
+		ServiceContext sc =Context.getServices();
+		//TODO divide in 10thoussand chunks
+		
+		String query = "select i.identifier, it.distributedDate, it.mappedId, it.quantity, it.itemRecordNum from unfepi.itemsdistributed it inner join identifier i on it.mappedId=i.mappedId LIMIT " + lastRecord + ", 10000";
+		
+		try {
+			List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
+			return map;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sc.closeSession();
+		}
+		return null; 
+	}
+	
+	public List<HashMap> getAllMuacMeasurements(long lastRecord){
+		ServiceContext sc =Context.getServices();
+		//TODO divide in 10thoussand chunks
+		
+		String query = "select i.identifier, m.mappedId, m.measureDate, m.circumference, m.colorrange from unfepi.muacmeasurement m inner join identifier i on m.mappedId=i.mappedId LIMIT " + lastRecord + ", 10000";
+
+		try {
+			List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
+			return map;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sc.closeSession();
+		}
+		return null; 
+	}
+	
 	public  List<HashMap> getUpdatedChildren(
 			String lastSyncedTime) {
 		ServiceContext sc = Context.getServices();
@@ -95,7 +129,7 @@ public class ChildServiceHelper {
 	public  List<HashMap> getUpdatedVaccinations(String lastSyncedTime) {
 		ServiceContext sc = Context.getServices();
 		String query = "SELECT  i.identifier childidentifier, v.vaccinationCenterId centreid,v.vaccineId, v.lastEditedDate ,v.createdDate, "
-				+ "v.vaccinationDate,v.vaccinationDuedate,v.vaccinationStatus,  "
+				+ "v.vaccinationDate,v.vaccinationDuedate,v.vaccinationStatus, v.roundId, "
 				+ "v.vaccinatorId ,v.role role,v.reasonVaccineNotGiven  reason,v.epiNumber,v.createdByUserId creator, v.lastEditedByUserId lastEditor "
 				+ "FROM unfepi.vaccination  v  inner join child c on c.mappedId=v.childId "
 				+ "inner join identifier i on v.childid=i.mappedid  AND  i.preferred join vaccine on v.vaccineId=vaccine.vaccineId   "
@@ -129,6 +163,37 @@ public class ChildServiceHelper {
 		return null;
 	}
 	
+	public  List<HashMap> getNewItemsDistributed(String lastSyncedTime) {
+		ServiceContext sc = Context.getServices();
+		
+		String query = "select i.identifier, it.distributedDate, it.mappedId, it.quantity, it.itemRecordNum from unfepi.itemsdistributed it inner join identifier i on it.mappedId=i.mappedId "
+				+ "where it.distributedDate >='"+lastSyncedTime+"' ;";
+		try {
+			List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
+			return map;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sc.closeSession();
+		}
+		return null;
+	}
+	
+	public  List<HashMap> getNewMuacMeasurements(String lastSyncedTime) {
+		ServiceContext sc = Context.getServices();
+		
+		String query = "select i.identifier, m.mappedId, m.measureDate, m.circumference, m.colorrange from unfepi.muacmeasurement m inner join identifier i on m.mappedId=i.mappedId "
+				+ "where m.measureDate >='"+lastSyncedTime+"' ;";
+		try {
+			List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
+			return map;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sc.closeSession();
+		}
+		return null;
+	}
 	
 
 	

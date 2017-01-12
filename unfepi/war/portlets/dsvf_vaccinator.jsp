@@ -23,18 +23,7 @@ if(editvaccdata){
             <th>Age</th>
             <th>Gender</th> 
    			<th>Center</th>
-<%
-if(nicPerm){
-%>           
-            <th>NIC</th>
-<%
-}
-if(epWalletPerm){
-%>   
-            <th>EP Wallet</th>
-<%
-}
-%>
+
             <th></th>
 			<th>Contacts</th>
             <th>Date Registered</th> 
@@ -56,18 +45,7 @@ if(editvaccdata){
             <td><fmt:formatNumber value="${map.vaccinator.age/52}" maxFractionDigits="0"></fmt:formatNumber></td>
             <td class="lowercase"><c:out value="${map.vaccinator.gender}"></c:out></td>
             <td><c:out value="${map.vaccinator.vaccinationCenter.idMapper.identifiers[0].identifier}"></c:out></td>
-<%
-if(nicPerm){
-%>           
-            <td><c:out value="${map.vaccinator.nic}"></c:out></td>
-<%
-}
-if(epWalletPerm){
-%>   
-            <td><c:out value="${map.vaccinator.epAccountNumber}"></c:out></td>
-<%
-}
-%>
+
             <td><a href="addcontactNumber.htm?programId=${map.vaccinator.idMapper.identifiers[0].identifier}" class="icon"><img alt="contact" src ="images/contact.png" class="icon"></a></td>
 			<td style="padding: 0;margin: 0">
             <div style="width:140px; overflow: visible ;display: inline-block;padding: 0;margin: 0;">

@@ -1,7 +1,10 @@
 package org.ird.unfepi.model;
 
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -15,12 +18,29 @@ public class MuacMeasurement {
 	//TODO
 //	muac range unit cm/mm datatype double/int
 	
-	public enum MalnutritionColor{
-		GREEN,
-		YELLOW,
-		ORANGE,
-		RED
+	public enum COLOR_RANGE{
+		GREEN("GREEN"),
+		YELLOW("YELLOW"),
+		ORANGE("ORANGE"),
+		RED("RED");
+		
+		private String stringValue;
+		private COLOR_RANGE(String stringValue) {
+			this.stringValue = stringValue;
+		}
+		
+		@Override
+		public String toString() {
+			return stringValue;
+		}
 	}
+	
+//	public enum COLOR_RANGE{
+//		GREEN,
+//		YELLOW,
+//		ORANGE,
+//		RED;
+//	}
 	
 	public enum MalnutritionStatus{
 		NORMAL,
@@ -38,7 +58,10 @@ public class MuacMeasurement {
 	private Child child;
 	
 	private Double circumference;
-
+	
+	@Enumerated(EnumType.STRING)
+	@Column(length = 20)
+	private COLOR_RANGE colorrange;
 	/**
 	 * @return the muacId
 	 */
@@ -80,5 +103,14 @@ public class MuacMeasurement {
 	public void setCircumference(Double circumference) {
 		this.circumference = circumference;
 	}
+
+	public COLOR_RANGE getColorrange() {
+		return colorrange;
+	}
+
+	public void setColorrange(COLOR_RANGE colorrange) {
+		this.colorrange = colorrange;
+	}
+
 	
 }

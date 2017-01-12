@@ -31,3 +31,10 @@
 		<li><a href="viewVaccinationCalendar.htm">Calendars Schedule</a></li>
 	</ul>
 </li>
+
+<li><a href="#">Prevention Activities</a>
+	<ul>
+		<li><a href="viewitem.htm">Items</a></li>
+		<li><a href="viewitemdistributed.htm">Items Distributed</a></li>
+	</ul>
+</li>

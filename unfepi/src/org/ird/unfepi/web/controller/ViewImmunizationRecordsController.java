@@ -34,7 +34,6 @@ public class ViewImmunizationRecordsController extends DataDisplayController {
 	 
 	@RequestMapping(value="/viewImmunizationRecords", method={RequestMethod.GET,RequestMethod.POST})	
 	public ModelAndView handleRequest(HttpServletRequest req, HttpServletResponse resp){
-		
 		int totalRows=0;
 		Map<String, Object> model = new HashMap<String, Object>();
 		req.setAttribute("editOrUpdateMessage", req.getParameter("editOrUpdateMessage"));
@@ -42,6 +41,7 @@ public class ViewImmunizationRecordsController extends DataDisplayController {
 		try{
 			List list =new ArrayList();
 			LoggedInUser user = UserSessionUtils.getActiveUser(req);
+			
 			String action = req.getParameter("action");
 			String pagerOffset = req.getParameter("pager.offset");
 			String searchFilter = UnfepiUtils.getStringFilter(SearchFilter.SEARCH_FILTER, req);

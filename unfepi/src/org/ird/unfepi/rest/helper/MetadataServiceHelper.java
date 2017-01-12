@@ -28,26 +28,13 @@ public class MetadataServiceHelper
 	{
 		try
 		{
-			JSONObject mainResponse = new JSONObject();
-
-			/*fillLocation(mainResponse);
-			fillLocationType(mainResponse);
-			fillVaccinationCentres(mainResponse);*/
-
-			/*fillVaccine(mainResponse);
-			fillVaccineGap(mainResponse);
-			fillVaccineGapType(mainResponse);
-			fillVaccinePrerequisite(mainResponse);*/
-			
+			JSONObject mainResponse = new JSONObject();			
 			org.json.JSONObject jsonObject = new org.json.JSONObject();
 			jsonObject.put("programId", programId);
 			ServiceContext sc = Context.getServices();
 			Integer calendarId = (Integer) sc.getCustomQueryService().getDataByHQL("select vaccinationcalendarId from HealthProgram where programId = "+ programId).get(0);
 			jsonObject.put("calendarId", calendarId);
 			
-//			System.out.println("calendarId " + calendarId);
-			
-//			ProgramMetaDataServiceHelper.fillVaccine(null, null, mainResponse);
 			ProgramMetaDataServiceHelper.fillVaccine(jsonObject, mainResponse);
 			ProgramMetaDataServiceHelper.fillVaccineGap(jsonObject, mainResponse);
 			ProgramMetaDataServiceHelper.fillVaccineGapType(jsonObject, mainResponse);
@@ -58,15 +45,13 @@ public class MetadataServiceHelper
 			ProgramMetaDataServiceHelper.fillLocationType(jsonObject, mainResponse);
 			
 			ProgramMetaDataServiceHelper.fillRound(jsonObject, mainResponse);
-			
 			fillUsers(mainResponse);
-			
+//			fillHealthProgram(mainResponse);
+			ProgramMetaDataServiceHelper.fillHealthProgram(jsonObject, mainResponse);
+			ProgramMetaDataServiceHelper.fillItemStock(jsonObject, mainResponse);
 			//fillAllChildren(mainResponse);
 			//fillAllVaccinations(mainResponse);
-			
-			fillHealthProgram(mainResponse);
-			
-			// fillRounds(programId, mainResponse);
+
 			HashMap<String, Object> resp = new HashMap<String, Object>();
 			resp.put("METADATA", mainResponse);
 
@@ -199,12 +184,17 @@ public class MetadataServiceHelper
 	}
 	
 
-	private static void fillUsers(JSONObject mainResponse)
-	{
-		String[] columns=new String[]{ RequestElements.METADATA_USER_USERNAME,RequestElements.METADATA_USER_PASSWORD, RequestElements.METADATA_USER_IDENTIFIER, RequestElements.METADATA_USER_STATUS,RequestElements.METADATA_USER_CREATEDDATE, RequestElements.METADATA_USER_LASTEDITDATE};
-		
-		String query="SELECT user.username , user.password,identifier.identifier,  user.status,user.createdDate, user.lastEditedDate   FROM unfepi.identifier inner join unfepi.user on unfepi.identifier.mappedId=unfepi.user.mappedId  inner join vaccinator on unfepi.user.mappedId=vaccinator.mappedId ; ";
-		fetchMetaDataByCustomQuery(RequestElements.METADATA_USERS,query,columns,mainResponse);
+	private static void fillUsers(JSONObject mainResponse) {
+		String[] columns = new String[] {
+				RequestElements.METADATA_USER_USERNAME,
+				RequestElements.METADATA_USER_PASSWORD,
+				RequestElements.METADATA_USER_IDENTIFIER,
+				RequestElements.METADATA_USER_STATUS,
+				RequestElements.METADATA_USER_CREATEDDATE,
+				RequestElements.METADATA_USER_LASTEDITDATE };
+
+		String query = "SELECT user.username , user.password,identifier.identifier,  user.status,user.createdDate, user.lastEditedDate   FROM unfepi.identifier inner join unfepi.user on unfepi.identifier.mappedId=unfepi.user.mappedId  inner join vaccinator on unfepi.user.mappedId=vaccinator.mappedId ; ";
+		fetchMetaDataByCustomQuery(RequestElements.METADATA_USERS, query, columns, mainResponse);
 	}
 	private static void fillUser(JSONObject mainResponse)
 	{
@@ -221,30 +211,13 @@ public class MetadataServiceHelper
 
 	}
 
-	private static void fillHealthProgram(JSONObject mainResponse)
-	{
-		String[] columns = new String[] { RequestElements.METADATA_FIELD_HEALTHPROGRAM_ID,
+	private static void fillHealthProgram(JSONObject mainResponse) {
+		String[] columns = new String[] {
+				RequestElements.METADATA_FIELD_HEALTHPROGRAM_ID,
 				RequestElements.METADATA_FIELD_HEALTHPROGRAM_NAME };
 		String table = "healthprogram";
 		fetchMetaData(/* "locationtype" */RequestElements.METADATA_HEALTHPROGRAM, columns, table, mainResponse);
 	}
-	
-	/*private static void fillRounds(int programId, JSONObject mainResponse) {
-		org.json.JSONObject jsonObject = new org.json.JSONObject() ;
-		try {
-			jsonObject.put("programId", programId);
-			String response = ProgramMetaDataServiceHelper.getRoundMetadata(jsonObject);
-			org.json.JSONObject obj = new org.json.JSONObject(response);
-			JSONArray arr = obj.getJSONArray("params");
-			org.json.JSONObject re = arr.getJSONObject(0).getJSONObject("METADATA").getJSONObject(RequestElements.METADATA_ROUND);
-			mainResponse.put("round", re);
-			
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		
-		
-	}*/
 	
 	private static void fetchMetaDataByCustomQuery(String dataType , String query, String columns[], JSONObject container){
 		

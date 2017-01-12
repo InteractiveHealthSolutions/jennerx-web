@@ -54,7 +54,7 @@ public class StarterServlet extends HttpServlet
 			Context.instantiate(prop);
 			GlobalParams.UNFEPI_PROPERTIES = prop;
 			
-			TarseelContext.instantiate(prop, "smstarseel.cfg.xml");
+//			TarseelContext.instantiate(prop, "smstarseel.cfg.xml");
 			
 			System.out.println("......PROPERTIES LOADED SUCCESSFULLY......");
 		

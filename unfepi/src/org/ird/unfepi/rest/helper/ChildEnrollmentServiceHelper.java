@@ -1,12 +1,8 @@
 package org.ird.unfepi.rest.helper;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-
-import javax.ws.rs.Path;
 
 import org.ird.unfepi.GlobalParams;
 import org.ird.unfepi.constants.EncounterType;
@@ -14,32 +10,32 @@ import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Address;
 import org.ird.unfepi.model.Child;
+import org.ird.unfepi.model.Child.STATUS;
 import org.ird.unfepi.model.ContactNumber;
-import org.ird.unfepi.model.Device;
 import org.ird.unfepi.model.Encounter;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
 import org.ird.unfepi.model.IdMapper;
 import org.ird.unfepi.model.Identifier;
 import org.ird.unfepi.model.IdentifierType;
-import org.ird.unfepi.model.User;
-import org.ird.unfepi.model.Vaccination;
-import org.ird.unfepi.model.Vaccine;
-import org.ird.unfepi.model.Child.STATUS;
+import org.ird.unfepi.model.ItemDistributedId;
+import org.ird.unfepi.model.ItemsDistributed;
 import org.ird.unfepi.model.Model.ContactTeleLineType;
 import org.ird.unfepi.model.Model.ContactType;
 import org.ird.unfepi.model.Model.Gender;
-import org.ird.unfepi.model.VaccinePrerequisite;
+import org.ird.unfepi.model.MuacMeasurement;
+import org.ird.unfepi.model.MuacMeasurement.COLOR_RANGE;
+import org.ird.unfepi.model.MuacMeasurementId;
+import org.ird.unfepi.model.User;
+import org.ird.unfepi.model.Vaccination;
+import org.ird.unfepi.model.Vaccine;
 import org.ird.unfepi.rest.elements.RequestElements;
 import org.ird.unfepi.service.ChildService;
 import org.ird.unfepi.service.UserService;
 import org.ird.unfepi.service.exception.ChildDataInconsistencyException;
 import org.ird.unfepi.utils.EncounterUtil;
 import org.ird.unfepi.web.utils.IMRUtils;
-import org.joda.time.DateTimeUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
-import com.sun.org.apache.xerces.internal.util.Status;
 
 public class ChildEnrollmentServiceHelper {
 	public static int lastCount = 0;
@@ -49,9 +45,13 @@ public class ChildEnrollmentServiceHelper {
 		JSONArray mArray = new JSONArray();
 		try {
 			for (int i = 0; i < jsonArray.size(); i++) {
+				try{
 				JSONObject obj = createEnrollment((JSONObject) jsonArray.get(i));
 				if (obj != null) {
 					mArray.add(obj);
+				}
+				}catch (Exception e) {
+					continue;
 				}
 			}
 		} catch (Exception e) {
@@ -87,7 +87,7 @@ public class ChildEnrollmentServiceHelper {
 					.get(RequestElements.ADDRESS2);
 			int userId = Integer.valueOf(objectToParse
 					.get(RequestElements.LG_USERID) != null ? objectToParse
-					.get(RequestElements.LG_USERID).toString() : "00");
+							.get(RequestElements.LG_USERID).toString() : "00");
 			String creator = (String) objectToParse
 					.get(RequestElements.CREATOR);
 			String lastEditor = (String) objectToParse
@@ -243,18 +243,137 @@ public class ChildEnrollmentServiceHelper {
 		}
 		return null;
 	}
+	//TODO
+	
+	public static JSONArray addItemDistributed(JSONArray jsonArray) {
+		ServiceContext sc = Context.getServices();
+		JSONArray mArray = new JSONArray();
+		try {
+			for (int i = 0; i < jsonArray.size(); i++) {
+				JSONObject obj = saveItemDistributed((JSONObject) jsonArray.get(i));
+				if (obj != null) {
+					mArray.add(obj);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sc.closeSession();
+		}
+		return mArray;
+	}
+	
+	public static JSONArray addMuacMeasurement(JSONArray jsonArray) {
+		ServiceContext sc = Context.getServices();
+		JSONArray mArray = new JSONArray();
+		try {
+			for (int i = 0; i < jsonArray.size(); i++) {
+				JSONObject obj = saveMuacMeasurement((JSONObject) jsonArray.get(i));
+				if (obj != null) {
+					mArray.add(obj);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sc.closeSession();
+		}
+		return mArray;
+	}
+	
+	public static JSONObject saveItemDistributed(JSONObject json) {
+
+
+		ServiceContext sc = Context.getServices();
+		String childIdentifier = "";
+		try {			
+			childIdentifier = String.valueOf(json.get(RequestElements.ITEM_IDENTIFIER));
+			IdMapper mappId = sc.getIdMapperService().findIdMapper(Long.toString((Long)json.get(RequestElements.ITEM_IDENTIFIER)));
+//			IdMapper mappId = sc.getIdMapperService().findIdMapper(String.valueOf(json.get(RequestElements.ITEM_IDENTIFIER)));
+			int childMappedId = mappId.getMappedId();
+			String distributedDate = (String) json.get(RequestElements.ITEM_DISTRIBUTEDDATE);
+			Integer quantity = (int)((Long) json.get(RequestElements.ITEM_QUANTITY)+0);
+			Integer itemRecordNum = (int)((Long) json.get(RequestElements.ITEM_RECORD_NUM)+0);
+
+			ItemsDistributed item = new ItemsDistributed();
+			ItemDistributedId id = new ItemDistributedId();
+			id.setItemRecordNum(itemRecordNum);
+			id.setDistributedDate(RestUtils.stringToDate(distributedDate));
+			id.setMappedId(childMappedId);
+
+			item.setItemDistributedId(id);
+			item.setQuantity(quantity);
+
+			sc.getCustomQueryService().save(item);
+
+			sc.commitTransaction();
+		} catch (Exception e) {
+			e.printStackTrace();
+			sc.rollbackTransaction();
+			JSONObject errorJson = new JSONObject();
+			errorJson.put("id", childIdentifier);
+			errorJson.put("message", e.getMessage());
+			return errorJson;
+		} finally {
+			sc.closeSession();
+		}
+		return null;
+	}
+
+	public static JSONObject saveMuacMeasurement(JSONObject json) {
+		ServiceContext sc = Context.getServices();
+		String childIdentifier = "";
+		try {			
+			childIdentifier = String.valueOf(json.get(RequestElements.ITEM_IDENTIFIER));
+			IdMapper mappId = sc.getIdMapperService().findIdMapper(Long.toString((Long)json.get(RequestElements.ITEM_IDENTIFIER)));
+	//		IdMapper mappId = sc.getIdMapperService().findIdMapper((String) json.get(RequestElements.ITEM_IDENTIFIER));
+			int childMappedId = mappId.getMappedId();
+			String muacDate = (String) json.get(RequestElements.MUAC_MEASUREDATE);
+			String color = (String) json.get(RequestElements.MUAC_COLORRANGE);
+
+			MuacMeasurement muac = new MuacMeasurement();
+			MuacMeasurementId id = new MuacMeasurementId();
+			id.setMappedId(childMappedId);
+			id.setMeasureDate(RestUtils.stringToDate(muacDate));
+			muac.setMuacId(id);
+
+			if("GREEN".equalsIgnoreCase(color)){
+				muac.setColorrange(COLOR_RANGE.GREEN);
+			} else if("YELLOW".equalsIgnoreCase(color)){
+				muac.setColorrange(COLOR_RANGE.YELLOW);
+			} else if("ORANGE".equalsIgnoreCase(color)){
+				muac.setColorrange(COLOR_RANGE.ORANGE);
+			} else if("RED".equalsIgnoreCase(color)){
+				muac.setColorrange(COLOR_RANGE.RED);
+			}
+
+			sc.getCustomQueryService().save(muac);
+			sc.commitTransaction();
+		} catch (Exception e) {
+			e.printStackTrace();
+			sc.rollbackTransaction();
+			JSONObject errorJson = new JSONObject();
+			errorJson.put("id", childIdentifier);
+			errorJson.put("message", e.getMessage());
+			return errorJson;
+		} finally {
+			sc.closeSession();
+		}
+		return null;
+	}
+
 
 	public JSONObject addVaccination(JSONObject json) {
-		
+
 		ServiceContext sc = Context.getServices();
 		Long childIdentifier = null;
 		try {
 			// #TODO: do role based criteria
 			Vaccination dbVaccination = null;
-			
+
 			String vaccinationStatus = (String) json.get(RequestElements.VACCINATION_VACCINATION_STATUS);
 			String vaccinationDueDate = (String) json.get(RequestElements.VACCINATION_DUEDATE);
-		
+
 			String creator = (String) json.get(RequestElements.CREATOR);
 			String createdDate = (String) json.get(RequestElements.CREATED_DATE);
 			String lastEditDate = (String) json.get(RequestElements.LAST_EDITED_DATE);
@@ -271,11 +390,11 @@ public class ChildEnrollmentServiceHelper {
 			User creatorUser = sc.getUserService().findUser(creator);
 			User lastEditorUser = sc.getUserService().findUser(lastEditor);
 			Date currentVaccinationDate = RestUtils.stringToDate(vaccinationDate);
-			
+
 			List<Vaccination> vaccinatedList 		= sc.getVaccinationService().findByCriteria(mappId.getMappedId(), vaccineId.shortValue(), org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.VACCINATED, 0, 1500, false, new String[] { "idMapper" });
 			List<Vaccination> retroList 			= sc.getVaccinationService().findByCriteria(mappId.getMappedId(), vaccineId.shortValue(), org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.RETRO, 0, 1500, false, new String[] { "idMapper" });
 			List<Vaccination> retroDateMissingList 	= sc.getVaccinationService().findByCriteria(mappId.getMappedId(), vaccineId.shortValue(), org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.RETRO_DATE_MISSING, 0, 1500, false, new String[] { "idMapper" });
-			
+
 			vaccinatedList.addAll(retroList);
 			vaccinatedList.addAll(retroDateMissingList);
 			org.ird.unfepi.model.Vaccination currentVaccination = new org.ird.unfepi.model.Vaccination();
@@ -285,7 +404,7 @@ public class ChildEnrollmentServiceHelper {
 			if (vaccinatedList != null) {
 				if (vaccinatedList.size() > 0) {
 					// #TODO: do role based criteria
-				 dbVaccination = null;
+					dbVaccination = null;
 					for (Vaccination va : vaccinatedList) {
 						if (!va.isVoided()) {
 							dbVaccination = va;
@@ -310,7 +429,7 @@ public class ChildEnrollmentServiceHelper {
 						} else {
 							if (dbVaccination != null) {
 								if (role.equalsIgnoreCase("Entrance")) {
-									
+
 									boolean preReq = IMRUtils.validatePreRequisiteGap(nextVaccineId, child.getBirthdate(), currentVaccinationDate, dbVaccination.getVaccinationDate());
 									if (preReq) {
 										if(dbVaccination.getVaccinationDate().getTime()>currentVaccinationDate.getTime()) {
@@ -385,19 +504,19 @@ public class ChildEnrollmentServiceHelper {
 			org.ird.unfepi.model.Vaccination.VACCINATION_STATUS status = null;
 			if (vaccinationStatus.equalsIgnoreCase("VACCINATED")) {
 				status = org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.VACCINATED;
-			
+
 			} else if(vaccinationStatus.equalsIgnoreCase("RETRO")){
 				status=org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.RETRO;
-			
+
 			} else if(vaccinationStatus.equalsIgnoreCase("RETRO_DATE_MISSING")) {
 				status = org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.RETRO_DATE_MISSING;
-			
+
 			} else if(vaccinationStatus.equalsIgnoreCase("INVALID_DOSE")) {
 				status = org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.INVALID_DOSE;
-			
+
 			} else if(vaccinationStatus.equalsIgnoreCase("NOT_GIVEN")) {
 				status = org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.NOT_GIVEN;
-			
+
 			} else if(vaccinationStatus.equalsIgnoreCase("NOT_VACCINATED")) {
 				status = org.ird.unfepi.model.Vaccination.VACCINATION_STATUS.NOT_VACCINATED;
 			} else{
@@ -415,16 +534,16 @@ public class ChildEnrollmentServiceHelper {
 			}
 			sc.getVaccinationService().addVaccinationRecord(currentVaccination);
 			sc.commitTransaction();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			JSONObject errorjson = new JSONObject();
 			errorjson.put("id", childIdentifier);
 			errorjson.put("message", e.getMessage() != null ? e.getMessage() : "");
 			return errorjson;
-			}finally{
-				sc.closeSession();
-			}
+		}finally{
+			sc.closeSession();
+		}
 		return null;
 	}
 
@@ -494,7 +613,7 @@ public class ChildEnrollmentServiceHelper {
 						contactMob);
 				contactMob.setLastEditedByUserId(user);
 				contactMob.setLastEditedDate(RestUtils.stringToDate(lastEditDate));
-			
+
 			}
 			sc.commitTransaction();
 

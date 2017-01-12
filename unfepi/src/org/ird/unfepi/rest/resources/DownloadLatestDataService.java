@@ -39,10 +39,8 @@ public class DownloadLatestDataService {
 
 			String lastEditDate=(String)obj.get(RequestElements.LAST_SYNC_TIME)	;
 
-
 			org.json.JSONObject j=new org.json.JSONObject();
 			j.put("allchildren",childServiceHelper.getUpdatedChildren(lastEditDate));
-
 
 			return GZipper.compress(j.toString());
 		}catch(Exception e){
@@ -95,7 +93,50 @@ public class DownloadLatestDataService {
 
 			org.json.JSONObject j=new org.json.JSONObject();
 			j.put("allencounters",childServiceHelper.getNewEucounters(lastEditDate));
-			// return j.toString();
+			
+			return GZipper.compress(j.toString());
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
+	@Path("/itemsdistributed")
+	@POST
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getItemsDistributed(String json) throws IOException, JSONException{
+		lastSynced=new Date();
+		ChildServiceHelper childServiceHelper=new ChildServiceHelper();
+		try {
+			JSONParser parser = new JSONParser();	
+			JSONObject obj = (JSONObject)parser.parse(json);
+			String lastEditDate=(String)obj.get(RequestElements.LAST_SYNC_TIME)	;
+
+			org.json.JSONObject j=new org.json.JSONObject();
+			j.put("allitemsdistributed",childServiceHelper.getNewItemsDistributed(lastEditDate));
+			
+			return GZipper.compress(j.toString());
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@Path("/muacmeasurements")
+	@POST
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getMuacMeasurements(String json) throws IOException, JSONException{
+		lastSynced=new Date();
+		ChildServiceHelper childServiceHelper=new ChildServiceHelper();
+		try {
+			JSONParser parser = new JSONParser();	
+			JSONObject obj = (JSONObject)parser.parse(json);
+			String lastEditDate=(String)obj.get(RequestElements.LAST_SYNC_TIME)	;
+
+			org.json.JSONObject j=new org.json.JSONObject();
+			j.put("allmuacmeasurements",childServiceHelper.getNewMuacMeasurements(lastEditDate));
+			
 			return GZipper.compress(j.toString());
 		}catch(Exception e){
 			e.printStackTrace();

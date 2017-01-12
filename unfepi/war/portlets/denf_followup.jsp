@@ -4,22 +4,29 @@
 <%@page import="org.ird.unfepi.utils.validation.REG_EX"%>
 <%@page import="org.ird.unfepi.constants.WebGlobals"%>
 <%@page import="org.ird.unfepi.model.Vaccination"%>
+<%@page import="org.ird.unfepi.model.MuacMeasurement.COLOR_RANGE"%>
 
-<style>
+<style type="text/css">
 
 fieldset{
  	border:thin solid #b2b869 ; 
  	border-color: gray; 
 	display:inline-block;
+	ont-family: sans-serif;
 }
 
-legend{
+legend, a{
 	font-family: Verdana;
 	font-size: small;
 	color: #e0691a;
 }
 
-.vaccine_history.denform-h, .current_vaccine.denform-h{
+a{
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.vaccine_history.denform-h, .current_vaccine.denform-h, .preact.denform-h{
 	outline: none;
 }
 
@@ -27,6 +34,7 @@ legend{
 	color: red;
 	font-weight: 900;
 	border: none;
+	cursor: pointer;
 }
 
 .h5_{
@@ -74,8 +82,8 @@ ul{
 }
 
 #submitBtn, #RealContraindication{
-	width: auto;
-    height: 30px;
+	width: 200px;
+    height: 50px;
     cursor: pointer;
     background: transparent;
     border: 1 ridge silver;
@@ -99,6 +107,14 @@ ul{
 		$(".retro_vaccine_date").each(function(index, element) {
 			$(this).datepicker("option", "maxDate", '-'+max+'d');
 		});			
+	}
+	
+	function isDigit(e) {
+		var charCode = (e.which) ? e.which : e.keyCode;
+		if ((charCode >= 48 && charCode <= 57)) {
+			return true;
+		}
+		return false;
 	}
 	
 	function dateDifference(firstDate, secondDate) {
@@ -231,6 +247,25 @@ ul{
 	}		
 	
 	function subfrm() {
+		
+		itemsSubmit();
+		
+		var emptyItem = 0;
+		
+		$("input[id^='itemIn'").each(function(index, element){		
+			if($(this).prop('checked')){
+				var id = (element.id).match(/\d+/g);
+				if($('#itemQnty'+id).val().length <= 0){
+					emptyItem++;
+				}
+			}
+		});
+		
+		if(emptyItem > 0){
+			alert("fill the selected item's quantity ");
+			return false;
+		}
+		
 		DWRVaccineService.overrideSchedule(vaccineScheduleList, '${command.uuid}', function(result) {
 							submitThisForm();
 		});
@@ -295,6 +330,7 @@ ul{
 				else {
 //					console.log('going to next page');
 					if (this.id == 't3') {
+						$('#preAct').hide();
 						$(".current_vaccine").empty();
 						$(".vaccine_history").empty();
 						sendVaccinationHistory();
@@ -395,8 +431,131 @@ ul{
 </fieldset>
 
 <br><br>
-<input type="button" id="RealContraindication" value="Real Contraindication" onclick="Contraindication();">
+
+<script type="text/javascript">
+$(function(){
+	$("input[class^='item']").val("0");
+	$("input[class^='item'], input[class^='record_item']").prop("disabled", true);
+	$("input[class^='item']").val("");
+});
+
+function enableItem(element){
+	var id = (element.id).match(/\d+/g);
+	if(element.checked){
+// 		console.log($('#centerVisitDate').val() + "  " + id + "  " + element.id);
+		
+		$('.item'+id + ',' + '.record_item'+id).prop("disabled", false);
+		$('#itemDate'+id).val($('#centerVisitDate').val());
+		$('#itemChildId'+id).val('${command.childId}');
+	} else {
+		
+		$('.item'+id).prop("disabled", true).val("");
+		$('.record_item'+id).prop("disabled", true);
+	}
+}
+
+function itemsSubmit(){
+	
+	var index = -1;
+	
+	$("#items tr td input[type='checkbox']").each(function(){
+		
+		var id = (this.id).match(/\d+/g);
+		
+		$('#itemDate'+id+','+'#itemNo'+id+','+'#itemQnty'+id).removeProp("name");
+		
+		if($(this).is( ":checked" )){
+			index++;
+			$('#itemDate'+id).prop("name","itemsDistributedL["+index+"].itemDistributedId.distributedDate");
+			$('#itemNo'+id).prop("name","itemsDistributedL["+index+"].itemDistributedId.itemRecordNum");
+			$('#itemQnty'+id).prop("name","itemsDistributedL["+index+"].quantity");
+			$('#itemChildId'+id).prop("name","itemsDistributedL["+index+"].itemDistributedId.mappedId");
+		}
+	});
+}
+
+
+
+</script>
+
+<fieldset>
+    <legend><a id="preClick" >Prevention Activity</a></legend>
+    	<div id="preAct" style=" display: none;">
+		<table id="items" style="text-align:left; width: auto;" class="preact denform-h">
+			<c:forEach var="itmstk" items="${itemStocks}" varStatus="varstatus">
+
+				<tr>
+					<td><span>${itmstk.name}</span>
+						<input class="item${varstatus.index}" 
+							   id="itemChildId${varstatus.index}" 
+							   type="hidden" 
+							   value="" />
+					
+						<input class="item${varstatus.index}" 
+							   id="itemDate${varstatus.index}" 
+							   type="hidden" 
+							   value="" />
+						
+						<input class="record_item${varstatus.index}" 
+							   id="itemNo${varstatus.index}" 
+							   type="hidden" 
+							   value="${itmstk.itemRecordNum}" />
+					</td>
+					<td><input id="itemIn${varstatus.index}" type="checkbox" onclick="enableItem(this)"></td>
+					
+					<td><input class="item${varstatus.index}" 
+							   id="itemQnty${varstatus.index}" 
+							   type="number" 
+							   onkeypress="return false;"
+							   min="1" max="10" maxlength="2" style="width:auto;" size="1"></td>
+				</tr>
+			</c:forEach>
+		</table>
+	</div>
+	<script type="text/javascript">
+	$(function(){
+		$('#preClick').click(function(e){
+			e.preventDefault();
+			
+			var vd = convertToDate($('#centerVisitDate').val());
+			
+			$.get( "followupVaccination/isPreventionActivityOn/"+'${command.childId}'+"/"+$('#centerVisitDate').val()+".htm" , function( data ) {
+				
+				console.log("false".toLowerCase() + " " + data.toLowerCase());
+				
+				console.log($.type(data));
+			});
+			
+			$('#preAct').toggle();
+		});
+		
+	});	
+	</script>
+</fieldset>
 <br><br>
+		<fieldset>
+			<legend><a id="muacClick">MUAC measurement</a></legend>
+			<div id="muacAct" style="display: none;">
+				<c:forEach items="<%=COLOR_RANGE.values()%>" var="color">
+					<input type="radio" name="muacMeasurement.colorrange" value="${color}" />${fn:toLowerCase(color)}
+				</c:forEach>
+				<input id="measureDate" name="muacMeasurement.muacId.measureDate" type="hidden" value="" />
+			</div>
+			<script type="text/javascript">
+				$(function(){
+					$('#muacClick').click(function(e){
+						e.preventDefault();
+						$('#muacAct').toggle();
+					});
+				});	
+			</script>
+		</fieldset>
+
+		<br><br><hr style="width: 50%;"><br>
+
+
+<input type="button" id="RealContraindication" value="Real Contraindication" onclick="Contraindication();">
+
 <input type="button" id="submitBtn" value="Submit Data" onclick="subfrm();">
 </div>
 
@@ -477,7 +636,7 @@ ul{
 					
 					preReq4 = element.prerequisiteFor ;
 					vaccineScheduleList[index].<%=VaccineScheduleKey.status%> = "NOT_GIVEN";
-					vaccineScheduleList[index].<%=VaccineScheduleKey.vaccination_date%> = null;
+					vaccineScheduleList[index].<%=VaccineScheduleKey.vaccination_date%> = convertToDate($('#centerVisitDate').val());
 <%-- 					vaccineScheduleList[index].<%=VaccineScheduleKey.center%> = null; --%>
 					
 					$("#tr"+ vid).remove();

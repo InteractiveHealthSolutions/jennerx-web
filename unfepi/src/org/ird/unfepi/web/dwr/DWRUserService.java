@@ -44,6 +44,7 @@ public class DWRUserService {
 	}
 	
 	public String resetPassword( String username,String newPwd , boolean sendEmail ) {
+		
 		LoggedInUser user=UserSessionUtils.getActiveUser(WebContextFactory.get().getHttpServletRequest());
 		if(user==null){
 			try {

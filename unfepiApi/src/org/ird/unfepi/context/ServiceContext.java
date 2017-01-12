@@ -10,7 +10,6 @@ import org.ird.unfepi.model.dao.DAO;
 import org.ird.unfepi.model.dao.DAOAddress;
 import org.ird.unfepi.model.dao.DAOArm;
 import org.ird.unfepi.model.dao.DAOCalendarDay;
-import org.ird.unfepi.model.dao.DAOCalendarVaccine;
 import org.ird.unfepi.model.dao.DAOChildIncentive;
 import org.ird.unfepi.model.dao.DAOCommunicationNote;
 import org.ird.unfepi.model.dao.DAOContactNumber;

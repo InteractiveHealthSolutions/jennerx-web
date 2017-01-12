@@ -89,6 +89,11 @@ public class GlobalParams
 		
 		SEARCH_FILTER,
 		COLUMNS,
+		
+		HEALTH_PROGRAM,
+		SITE,
+		ROUND,
+		VACCINE,
 		;
 		
 		public static String FILTER_PREFIX(){

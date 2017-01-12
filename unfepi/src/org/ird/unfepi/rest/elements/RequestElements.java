@@ -26,6 +26,7 @@ public class RequestElements
 	public static final String METADATA_HEALTHPROGRAM = "healthprog";
 	public static final String METADATA_ROUND = "round";
 	public static final String METADATA_CENTERPROGRAM = "centprog";
+	public static final String METADATA_ITEM = "item";
 	
 	public static final String METADATA_FIELD_LOCATION_ID = "locationId";
 	public static final String METADATA_FIELD_LOCATION_NAME = "fullName";
@@ -52,6 +53,9 @@ public class RequestElements
 	
 	public static final String METADATA_FIELD_HEALTHPROGRAM_ID = "programId";
 	public static final String METADATA_FIELD_HEALTHPROGRAM_NAME = "name";
+	
+	public static final String METADATA_FIELD_ITEM_RECORD_NUM = "itemRecordNum";
+	public static final String METADATA_FIELD_ITEM_NAME = "name";
 	
 	public static final String METADATA_FIELD_ROUND_ID = "roundId";
 	public static final String METADATA_FIELD_ROUND_NAME = "name";
@@ -216,6 +220,15 @@ public class RequestElements
 	public static final String BCG_LOTTERY = "BCGLottery";
 	public static final String PENTA_LOTTERY = "PentaReminderSMS";
 
+	public static final String ITEM_RECORD_NUM = "itemRecordNum";
+	public static final String ITEM_QUANTITY = "quantity";
+	public static final String ITEM_IDENTIFIER= "childIdentifier";
+	public static final String ITEM_DISTRIBUTEDDATE = "distributedDate";
+	
+	public static final String MUAC_COLORRANGE = "colorrange";
+	public static final String MUAC_MEASUREDATE = "measureDate";
+	public static final String MUAC_IDENTIFIER = "childIdentifier";
+	
 	// DAILY SUMMARY
 	public static final String TOTAL_ENROL_PER_DAY = "TotalEnrolmentPerDay";
 	public static final String TOTAL_FOLLOW_PER_DAY = "TotalFollowPerDay";

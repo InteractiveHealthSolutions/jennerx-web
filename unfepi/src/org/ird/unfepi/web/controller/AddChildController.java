@@ -1,18 +1,14 @@
 package org.ird.unfepi.web.controller;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.ird.unfepi.DataEntryForm;
 import org.ird.unfepi.DataEntryFormController;
 import org.ird.unfepi.GlobalParams;
@@ -29,9 +25,10 @@ import org.ird.unfepi.model.HealthProgram;
 import org.ird.unfepi.model.ItemStock;
 import org.ird.unfepi.model.ItemsDistributed;
 import org.ird.unfepi.model.Location;
+import org.ird.unfepi.model.MuacMeasurement;
+import org.ird.unfepi.model.MuacMeasurementId;
 import org.ird.unfepi.model.VaccinationCenter;
 import org.ird.unfepi.model.Vaccinator;
-import org.ird.unfepi.model.Vaccine;
 import org.ird.unfepi.utils.UserSessionUtils;
 import org.ird.unfepi.web.utils.ControllerUIHelper;
 import org.ird.unfepi.web.utils.VaccinationCenterVisit;
@@ -51,8 +48,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-
-import com.google.gson.Gson;
 
 @Controller
 @RequestMapping("/addchild")
@@ -112,9 +107,9 @@ public class AddChildController extends DataEntryFormController{
 		List<VaccineSchedule> vaccineSchedule = (List<VaccineSchedule>) request.getSession().getAttribute(VaccinationCenterVisit.VACCINE_SCHEDULE_KEY+ewr.getCenterVisit().getUuid());
 		ServiceContext sc = Context.getServices();
 		
-		for (VaccineSchedule vs : vaccineSchedule) {
-			vs.printVaccineSchedule();
-		}
+//		for (VaccineSchedule vs : vaccineSchedule) {
+//			vs.printVaccineSchedule();
+//		}
 		
 		Iterator<VaccineSchedule> iter = vaccineSchedule.iterator();
 		while (iter.hasNext()) {
@@ -123,7 +118,6 @@ public class AddChildController extends DataEntryFormController{
 				iter.remove();
 			}
 		}
-		
 //		System.out.println("\n\n");
 //		for (VaccineSchedule vs : vaccineSchedule) {
 //			vs.printVaccineSchedule();
@@ -152,8 +146,8 @@ public class AddChildController extends DataEntryFormController{
 					ewr.getBirthdateOrAge(), ewr.getChildagey(),
 					ewr.getChildagem(), ewr.getChildagew(), ewr.getChildaged(),
 					addr, centerVisit, ewr.getCompleteCourseFromCenter(),
-					vaccineSchedule, dateFormStart, user.getUser(), sc);
-
+					vaccineSchedule, ewr.getItemsDistributedL(), ewr.getMuacMeasurement(),
+					dateFormStart, user.getUser(), sc);
 			sc.commitTransaction();
 
 			String editmessage="Child Enrolled successfully. ";

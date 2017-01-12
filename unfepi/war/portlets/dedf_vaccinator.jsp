@@ -52,22 +52,22 @@ function submitThisForm() {
 		</spring:bind>
     	</td>
 	</tr>
-	<tr>
-        <td>Vaccinator`s NIC  : <span class="mendatory-field">*</span></td>
-        <td><spring:bind path="command.nic">
-             <input id="nic" name="nic" class="numbersOnly" maxlength="13" value="${status.value}"/>
-             <br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
-             </spring:bind>
-		</td>
-    </tr>
-    <tr>
-        <td>Vaccinator`s EP Account Number  : <span class="mendatory-field">*</span></td>
-        <td><spring:bind path="command.epAccountNumber">
-             <input id="epAccountNumber" name="epAccountNumber" class="numbersOnly" maxlength="20" value="${status.value}"/>
-             <br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
-             </spring:bind>
-		</td>
-    </tr>
+<!-- 	<tr> -->
+<!--         <td>Vaccinator`s NIC  : <span class="mendatory-field">*</span></td> -->
+<%--         <td><spring:bind path="command.nic"> --%>
+<%--              <input id="nic" name="nic" class="numbersOnly" maxlength="13" value="${status.value}"/> --%>
+<%--              <br><span class="error-message"><c:out	value="${status.errorMessage}" /></span> --%>
+<%--              </spring:bind> --%>
+<!-- 		</td> -->
+<!--     </tr> -->
+<!--     <tr> -->
+<!--         <td>Vaccinator`s EP Account Number  : <span class="mendatory-field">*</span></td> -->
+<%--         <td><spring:bind path="command.epAccountNumber"> --%>
+<%--              <input id="epAccountNumber" name="epAccountNumber" class="numbersOnly" maxlength="20" value="${status.value}"/> --%>
+<%--              <br><span class="error-message"><c:out	value="${status.errorMessage}" /></span> --%>
+<%--              </spring:bind> --%>
+<!-- 		</td> -->
+<!--     </tr> -->
     <tr>
         <td>Vaccinator`s Name  : <span class="mendatory-field">*</span></td>
         <td><spring:bind path="command.firstName">

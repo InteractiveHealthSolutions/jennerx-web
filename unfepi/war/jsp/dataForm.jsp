@@ -103,46 +103,49 @@ jQuery.fn.forceNumeric = function () {
 </script>
 <c:set var="dataForm" value="${model.dataFormObject}"></c:set>
 <c:if test="${empty dataForm}">
-<c:set var="dataForm" value="${dataFormObject}"></c:set>
+	<c:set var="dataForm" value="${dataFormObject}"></c:set>
 </c:if>
 <c:choose>
-<c:when test="${not empty dataForm}">
-<%
-boolean perm=false;
-DataForm formReq = null;
-try{
-	formReq = (DataForm)pageContext.getAttribute("dataForm");
-	perm=UserSessionUtils.hasActiveUserPermission(formReq.getPermission(),request);
-}catch(UserServiceException e){
-%>
-<c:redirect url="login.htm"></c:redirect>
-<%
-}
-if(perm){ 
-%>
-
-<span class="formheadingWRule">${dataForm.formTitle}</span>
-
-<% if(formReq.getServiceType().equals(ServiceType.DATA_ENTRY)){ %>
-<%@ include file="dataEntryForm.jsp" %>
-<%}
-else if(formReq.getServiceType().equals(ServiceType.DATA_EDIT)){%>
-<%@ include file="dataEditForm.jsp" %>
-<%}
-else {
-%>
-<%@ include file="dataDisplayForm.jsp" %>
-<%}%>
-
-<%
-}else{
-%>
-<%@ include file="pageDeniedAccess.jsp" %>
-<%
-}
-%>
-</c:when>
-<c:otherwise><%@ include file="pageError.jsp" %></c:otherwise>
+	<c:when test="${not empty dataForm}">
+		<%
+			boolean perm = false;
+			DataForm formReq = null;
+			try {
+				formReq = (DataForm) pageContext.getAttribute("dataForm");
+				perm = UserSessionUtils.hasActiveUserPermission(formReq.getPermission(), request);
+			} catch (UserServiceException e) {
+		%>
+				<c:redirect url="login.htm"></c:redirect>
+		<%
+			}
+			
+			if (perm) {
+		%>
+			<span class="formheadingWRule">${dataForm.formTitle}</span>
+		<%
+				if (formReq.getServiceType().equals(ServiceType.DATA_ENTRY)) {
+		%>
+					<%@ include file="dataEntryForm.jsp"%>
+		<%
+				} else if (formReq.getServiceType().equals(ServiceType.DATA_EDIT)) {
+		%>
+					<%@ include file="dataEditForm.jsp"%>
+		<%
+				} else {
+		%>
+					<%@ include file="dataDisplayForm.jsp"%>
+		<%
+				}
+		%>
+		<%
+			} else {
+		%>
+				<%@ include file="pageDeniedAccess.jsp"%>
+		<%
+			}
+		%>
+	</c:when>
+	<c:otherwise><%@ include file="pageError.jsp"%></c:otherwise>
 </c:choose>
 
 <%@ include file="/WEB-INF/template/footer.jsp" %>

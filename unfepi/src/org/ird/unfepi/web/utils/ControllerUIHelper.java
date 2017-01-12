@@ -28,11 +28,14 @@ import org.ird.unfepi.model.HealthProgram;
 import org.ird.unfepi.model.IdMapper;
 import org.ird.unfepi.model.Identifier;
 import org.ird.unfepi.model.IdentifierType;
+import org.ird.unfepi.model.ItemsDistributed;
 import org.ird.unfepi.model.Location;
 import org.ird.unfepi.model.LotterySms;
 import org.ird.unfepi.model.Model.ContactTeleLineType;
 import org.ird.unfepi.model.Model.ContactType;
 import org.ird.unfepi.model.Model.TimeIntervalUnit;
+import org.ird.unfepi.model.MuacMeasurement;
+import org.ird.unfepi.model.MuacMeasurementId;
 import org.ird.unfepi.model.ReminderSms;
 import org.ird.unfepi.model.ReminderSms.REMINDER_STATUS;
 import org.ird.unfepi.model.Storekeeper;
@@ -87,6 +90,25 @@ public class ControllerUIHelper {
 		}
 
 		return prevVaccination;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static Vaccination getPreviousVaccinationRecord(int childid, ServiceContext sc) {
+		Integer pvcnum = null;
+		if (pvcnum == null) {
+			String sql = "select vaccinationRecordNum from vaccination " + " where childid=" + childid + " " + " and vaccinationdate is not null "
+					+ " and vaccinationStatus IN('NOT_VACCINATED','NOT_GIVEN','INVALID_DOSE') "
+					+ " order by vaccinationdate desc,vaccinationRecordNum asc limit 1";
+			List<Integer> lis = sc.getCustomQueryService().getDataBySQL(sql);
+			pvcnum = lis.size() == 0 ? null : lis.get(0);
+		}
+
+		Vaccination prevRecord = null;
+		if (pvcnum != null) {
+			prevRecord = sc.getVaccinationService().getVaccinationRecord(pvcnum, true, new String[]{"vaccine"}, null);
+		}
+
+		return prevRecord;
 	}
 
 	/**
@@ -217,10 +239,18 @@ public class ControllerUIHelper {
 	 * @throws ChildDataInconsistencyException
 	 */
 	public static List<ChildIncentivization> doEnrollment(DataEntrySource dataEntrySource,Integer roundId, String projectId, Boolean childNamed, Child child, String birthdateOrAge, String ageYears, String ageMonths,
-			String ageWeeks, String ageDays, Address address, VaccinationCenterVisit centerVisit, String completeCourseFromCenter, List<VaccineSchedule> vaccineSchedule, Date formStartDate,
+			String ageWeeks, String ageDays, Address address, VaccinationCenterVisit centerVisit, String completeCourseFromCenter, List<VaccineSchedule> vaccineSchedule, List<ItemsDistributed> itemList, MuacMeasurement muac, Date formStartDate,
 			User user, ServiceContext sc) throws ChildDataInconsistencyException {
 		handleEnrollmentChild(projectId, childNamed, child, getEnrollmentVaccine(vaccineSchedule, child.getBirthdate(), sc, centerVisit.getVisitDate()), centerVisit.getVaccinationCenterId(), user, sc);
-
+		
+		if(itemList != null && itemList.size() > 0){
+			handlePreventionActivities(itemList, child.getMappedId(), sc);
+		}
+		
+		if(muac != null && muac.getColorrange() != null) {
+			handleMuacMeasurements(muac, child.getMappedId(), centerVisit.getVisitDate(), sc);
+		}
+		
 		List<ChildIncentivization> incentivesList = handleEnrollmentVaccinations(dataEntrySource,roundId, centerVisit, vaccineSchedule, centerVisit.getPreference().getHasApprovedReminders(), centerVisit
 				.getPreference().getHasApprovedLottery(), child, user, sc);
 
@@ -229,7 +259,7 @@ public class ControllerUIHelper {
 
 		handleEnrollmentContactInfo(centerVisit.getPreference().getHasApprovedReminders(), centerVisit.getContactPrimary(), centerVisit.getContactSecondary(), address, child, user, sc);
 
-		EncounterUtil.createEnrollmentEncounter(dataEntrySource, projectId, childNamed, child, birthdateOrAge, ageYears, ageMonths, ageWeeks, ageDays, address, centerVisit, vaccineSchedule,
+		EncounterUtil.createEnrollmentEncounter(dataEntrySource, projectId,roundId, childNamed, child, birthdateOrAge, ageYears, ageMonths, ageWeeks, ageDays, address, centerVisit, vaccineSchedule,
 				completeCourseFromCenter, incentivesList, formStartDate, user, sc);
 		return incentivesList;
 	}
@@ -285,7 +315,15 @@ public class ControllerUIHelper {
 	public static List<ChildIncentivization> doFollowup(DataEntrySource dataEntrySource, VaccinationCenterVisit centerVisit, List<VaccineSchedule> vaccineSchedule, Integer roundId, Date formStartDate, User user,
 			ServiceContext sc) throws VaccinationDataException, ChildDataInconsistencyException {
 		Child ch = sc.getChildService().findChildById(centerVisit.getChildId(), true, null);
-
+		
+		if(centerVisit.getItemsDistributedL() != null && centerVisit.getItemsDistributedL().size() > 0){
+			handleFollowUpPreventionActivities(centerVisit.getItemsDistributedL(), sc);
+		}
+		
+		if(centerVisit.getMuacMeasurement() != null && centerVisit.getMuacMeasurement().getColorrange() != null) {
+			handleMuacMeasurements(centerVisit.getMuacMeasurement(), centerVisit.getChildId(), centerVisit.getVisitDate(), sc);
+		}
+		
 		List<ChildIncentivization> incentiveResults = handleFollowupVaccinations(dataEntrySource, centerVisit, vaccineSchedule, centerVisit.getPreference().getHasApprovedReminders(), centerVisit
 				.getPreference().getHasApprovedLottery(), roundId, user, sc);
 
@@ -296,7 +334,7 @@ public class ControllerUIHelper {
 			handleNonEnrollmentContactInfo(centerVisit.getPreference(), centerVisit.getContactPrimary(), centerVisit.getContactSecondary(), user, sc);
 		}
 
-		EncounterUtil.createFollowupEncounter(centerVisit, vaccineSchedule, incentiveResults, dataEntrySource, formStartDate, user, sc);
+		EncounterUtil.createFollowupEncounter(centerVisit, roundId, vaccineSchedule, incentiveResults, dataEntrySource, formStartDate, user, sc);
 		return incentiveResults;
 	}
 
@@ -1325,4 +1363,22 @@ public class ControllerUIHelper {
 		}
 	}
 	
+	public static void handlePreventionActivities(List<ItemsDistributed> itemList, int mappedId, ServiceContext sc){
+		for (ItemsDistributed item : itemList) {
+			item.getItemDistributedId().setMappedId(mappedId);
+			sc.getCustomQueryService().saveOrUpdate(item);
+		}
+	}
+	
+	public static void handleMuacMeasurements(MuacMeasurement muac, int mappedId, Date visitDate, ServiceContext sc){
+		muac.getMuacId().setMappedId(mappedId);
+		muac.getMuacId().setMeasureDate(visitDate);
+		sc.getCustomQueryService().saveOrUpdate(muac);
+	}
+	
+	public static void handleFollowUpPreventionActivities(List<ItemsDistributed> itemList, ServiceContext sc){
+		for (ItemsDistributed item : itemList) {
+			sc.getCustomQueryService().saveOrUpdate(item);
+		}
+	}
 }
