@@ -1,0 +1,14 @@
+Release 3.2.0a
+
+New Features:
+=============
+- Prevention Activity and MUAC measurement 
+	added new fields in enrollment and followup forms
+	-( Children > Child Dashboard > Enrollment )
+	-( Children > Child Dashboard > [search] >Follow up )
+
+- Repotrs
+	- Data > Reports > Summary Vaccinations
+	- Data > Reports > Summary Vaccine Doses
+	- Data > Reports > Summary Events
+

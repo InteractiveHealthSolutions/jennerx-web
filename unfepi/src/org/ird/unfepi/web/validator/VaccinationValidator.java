@@ -11,6 +11,7 @@ import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.CenterProgram;
 import org.ird.unfepi.model.ItemsDistributed;
+import org.ird.unfepi.model.MuacMeasurement;
 import org.ird.unfepi.model.Round;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
 import org.ird.unfepi.web.utils.VaccinationCenterVisit;
@@ -48,7 +49,17 @@ public class VaccinationValidator implements Validator {
 				
 				List<ItemsDistributed> records = sc.getCustomQueryService().getDataByHQL("from ItemsDistributed where itemDistributedId.distributedDate = '" +WebGlobals.GLOBAL_SQL_DATE_FORMAT.format(date)+ "' and itemDistributedId.mappedId = "+cid);
 				if(records != null && records.size() > 0){
-					errors.reject("", null, "already given today !");
+					errors.reject("", null, "item(s) already given today !");
+				}
+			}
+			
+			if(centerVisit.getMuacMeasurement() != null && centerVisit.getMuacMeasurement().getColorrange() != null ){
+				Date date = centerVisit.getVisitDate();
+				int cid =  centerVisit.getChildId();
+				
+				List<MuacMeasurement> records = sc.getCustomQueryService().getDataByHQL("from MuacMeasurement where muacId.measureDate = '" +WebGlobals.GLOBAL_SQL_DATE_FORMAT.format(date)+ "' and muacId.mappedId = "+cid);
+				if(records != null && records.size() > 0){
+					errors.reject("", null, "MUAC already measured today !");
 				}
 			}
 			

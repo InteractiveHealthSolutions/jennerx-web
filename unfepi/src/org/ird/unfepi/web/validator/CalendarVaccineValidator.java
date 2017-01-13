@@ -92,10 +92,10 @@ public class CalendarVaccineValidator implements Validator{
 			error.rejectValue("vaccinationCalendarId", "error.vaccinationCalendarId.empty-vaccinationCalendarId", "vaccinationCalendar must be provided");
 		}
 				
-		if((vrw.getVaccineGapList() == null || vrw.getVaccineGapList().size() == 0) &&
-		   (vrw.getVaccinePrerequisites() == null || vrw.getVaccinePrerequisites().length == 0)){
-			error.reject("", null, "atleast one gap or Prerequisite should be entered");
-		}
+//		if((vrw.getVaccineGapList() == null || vrw.getVaccineGapList().size() == 0) &&
+//		   (vrw.getVaccinePrerequisites() == null || vrw.getVaccinePrerequisites().length == 0)){
+//			error.reject("", null, "atleast one gap or Prerequisite should be entered");
+//		}
 
 		if(isNew){
 			if(vrw.getVaccineGapList() != null){
