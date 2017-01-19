@@ -21,7 +21,7 @@ public class ProgramMetaDataServiceHelper {
 	public static String getVaccineMetadata(JSONObject jsonObject){
 
 		org.json.simple.JSONObject response = new org.json.simple.JSONObject();
-
+		ServiceContext sc = Context.getServices();
 		try {
 			JSONArray vaccinesId = jsonObject.optJSONArray(RequestElements.METADATA_VACCINE+RequestElements.METADATA_IDS);
 
@@ -34,7 +34,6 @@ public class ProgramMetaDataServiceHelper {
 			
 			Integer programId = jsonObject.optInt("programId");
 			
-			ServiceContext sc = Context.getServices();
 			Integer calendarId = (Integer) sc.getCustomQueryService().getDataByHQL("select vaccinationcalendarId from HealthProgram where programId = "+ programId).get(0);
 			jsonObject.put("calendarId", calendarId);
 			
@@ -57,6 +56,8 @@ public class ProgramMetaDataServiceHelper {
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("error", "Error in getting metadata");
 			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_INTERNAL_ERROR, map);
+		}finally {
+			sc.closeSession();
 		}
 	}
 	
@@ -178,7 +179,8 @@ public class ProgramMetaDataServiceHelper {
 //				+ "join centerprogram cp on r.centerProgramId = cp.centerProgramId where cp.healthProgramId = "+ programId;
 		
 		String query = "SELECT " + Arrays.toString(columns).replaceAll("\\[|\\]", "") + " FROM " + table
-				+ " WHERE " + RequestElements.METADATA_CENTERPROGRAM_HEALTHPROGRAMID + " = " + programId;
+				+ " WHERE " + RequestElements.METADATA_CENTERPROGRAM_HEALTHPROGRAMID + " = " + programId
+				;
 		
 		if(json.has(RequestElements.METADATA_ROUND)){
 			fetchAndCompareMetaData(RequestElements.METADATA_ROUND, columns, table, query, response, json);
@@ -217,7 +219,8 @@ public class ProgramMetaDataServiceHelper {
 				RequestElements.METADATA_FIELD_VACCINE_NAME,
 				RequestElements.METADATA_FIELD_VACCINE_ISSUPPLEMENTARY,
 				RequestElements.METADATA_FIELD_VACCINE_ENTITY,
-				RequestElements.METADATA_FIELD_VACCINE_FULL_NAME };
+				RequestElements.METADATA_FIELD_VACCINE_FULL_NAME,
+				RequestElements.METADATA_FIELD_VACCINE_SHORT_NAME};
 		String table = "vaccine";
 
 		Integer calendarId = json.optInt("calendarId");
@@ -349,7 +352,7 @@ public class ProgramMetaDataServiceHelper {
 			fetchMetaDataByCustomQuery(RequestElements.METADATA_VACCINEGAPTYPE, query, columns, response);
 		}
 	}
-
+//jennerx
 	public static void fillVaccinePrerequisite(JSONObject json, org.json.simple.JSONObject response) {
 
 		String[] columns = new String[] {
@@ -380,7 +383,7 @@ public class ProgramMetaDataServiceHelper {
 				/*RequestElements.METADATA_FIELD_VACCINATIONCALENDAR_ID*/};
 		String table = "healthprogram";
 		
-		String query = "SELECT " + Arrays.toString(columns).replaceAll("\\[|\\]", "") + " FROM " + table;
+		String query = "SELECT " + Arrays.toString(columns).replaceAll("\\[|\\]", "") + " FROM " + table + " order by programId asc" ;
 		
 		if(json.has(RequestElements.METADATA_HEALTHPROGRAM)){
 			fetchAndCompareMetaData(RequestElements.METADATA_HEALTHPROGRAM, columns, table, query, response, json);
@@ -411,18 +414,19 @@ public class ProgramMetaDataServiceHelper {
 
 	private static void fetchMetaDataByCustomQuery(String dataType , String query, String columns[], org.json.simple.JSONObject container){
 
+		ServiceContext sc = Context.getServices();
 		try
 		{
 			if (container == null)
 				container = new org.json.simple.JSONObject();
-
-			ServiceContext sc = Context.getServices();
 			List results = sc.getCustomQueryService().getDataBySQL(query);
 			ResponseBuilder.buildMetadataResponse(container, dataType, columns, results);
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
+		} finally {
+			sc.closeSession();
 		}
 
 	}
@@ -580,6 +584,8 @@ public class ProgramMetaDataServiceHelper {
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.put(dataType+"_error", /*e.getMessage()*/"no record found");
+		} finally{
+			sc.closeSession();
 		}
 	}
 

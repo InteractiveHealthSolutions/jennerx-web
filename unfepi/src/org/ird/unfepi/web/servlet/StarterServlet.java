@@ -66,16 +66,14 @@ public class StarterServlet extends HttpServlet
 			System.out.println("......EMAIL ENGINE STARTED SUCCESSFULLY......".toLowerCase());
 				
 			// start smser and notifiers etc
-			System.out.println(">>>>INSTANTIATING SCHEDULERS......");
+//			System.out.println(">>>>INSTANTIATING SCHEDULERS......");
 
 			SchedulerFactory schedFact = new StdSchedulerFactory(prop);
 			scheduler = schedFact.getScheduler();
-			SmserSystem.instantiateSmserSystem(scheduler);
-			ReportingSystem.instantiateReportingSystem(scheduler);
-		
-			startScheduler();
-		
-			System.out.println("......QUARTZ SCHEDULER STARTED SUCCESSFULLY......".toLowerCase());
+//			SmserSystem.instantiateSmserSystem(scheduler);
+//			ReportingSystem.instantiateReportingSystem(scheduler);
+//			startScheduler();
+//			System.out.println("......QUARTZ SCHEDULER STARTED SUCCESSFULLY......".toLowerCase());
 		}
 		catch (Exception e) {
 			e.printStackTrace();

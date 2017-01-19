@@ -65,6 +65,7 @@ public class AddChildController extends DataEntryFormController{
 	public @ResponseBody String getSiteList(@PathVariable Integer programId){
 		ServiceContext sc = Context.getServices();
 		List<String> current_centers = sc.getCustomQueryService().getDataBySQL("select mappedId from vaccinationcenter where mappedId in (SELECT vaccinationCenterId FROM centerprogram WHERE healthProgramId = "+ programId + "  and isActive = true)");
+		sc.closeSession();
 		return current_centers.toString();
 	}
 	
@@ -72,6 +73,7 @@ public class AddChildController extends DataEntryFormController{
 	public @ResponseBody String getLocationList(@PathVariable Integer programId){
 		ServiceContext sc = Context.getServices();
 		List<String> current_centers = sc.getCustomQueryService().getDataBySQL("select mappedId from vaccinationcenter where mappedId in (SELECT vaccinationCenterId FROM centerprogram WHERE healthProgramId = "+ programId + "  and isActive = true)");
+		sc.closeSession();
 		return current_centers.toString();
 	}
 	
@@ -88,7 +90,7 @@ public class AddChildController extends DataEntryFormController{
 			data.put(new JSONObject((HashMap)object));
 //			System.out.println(new JSONObject((HashMap)object).toString());
 		}
-		
+		sc.closeSession();
 		return data.toString();
 	}
 	

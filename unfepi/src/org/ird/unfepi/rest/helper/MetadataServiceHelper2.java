@@ -260,6 +260,8 @@ public class MetadataServiceHelper2 {
 
 		} catch(Exception e){
 			e.printStackTrace();
+		} finally {
+			sc.closeSession();
 		}
 //		return response.toString();
 	}
@@ -320,8 +322,9 @@ public class MetadataServiceHelper2 {
 		catch (Exception e)
 		{
 			e.printStackTrace();
+		} finally {
+			sc.closeSession();
 		}
-		finally{sc.closeSession();}
 	}
 
 	private static void findDeletedIds(String dataType, String[] columns, String table, JSONArray ids, String column, org.json.simple.JSONObject container)
@@ -431,6 +434,8 @@ public class MetadataServiceHelper2 {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			sc.closeSession();
 		}
 	}
 

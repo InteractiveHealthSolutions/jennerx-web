@@ -26,12 +26,14 @@ public class MetadataServiceHelper
 
 	public String getMetadata(int programId)
 	{
+		ServiceContext sc = Context.getServices();
+		
 		try
 		{
 			JSONObject mainResponse = new JSONObject();			
 			org.json.JSONObject jsonObject = new org.json.JSONObject();
 			jsonObject.put("programId", programId);
-			ServiceContext sc = Context.getServices();
+			
 			Integer calendarId = (Integer) sc.getCustomQueryService().getDataByHQL("select vaccinationcalendarId from HealthProgram where programId = "+ programId).get(0);
 			jsonObject.put("calendarId", calendarId);
 			
@@ -65,11 +67,14 @@ public class MetadataServiceHelper
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("error", "Error in getting metadata");
 			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_INTERNAL_ERROR, map);
+		} finally {
+			sc.closeSession();
 		}
 	}
 
 	public String getMetadata(String dataType, int programId)
 	{
+		ServiceContext sc = Context.getServices();
 		try
 		{
 			if (dataType == null)
@@ -90,7 +95,7 @@ public class MetadataServiceHelper
 			{
 				org.json.JSONObject jsonObject = new org.json.JSONObject();
 				jsonObject.put("programId", programId);
-				ServiceContext sc = Context.getServices();
+				
 				Integer calendarId = (Integer) sc.getCustomQueryService().getDataByHQL("select vaccinationcalendarId from HealthProgram where programId = "+ programId).get(0);
 				jsonObject.put("calendarId", calendarId);
 				
@@ -117,6 +122,8 @@ public class MetadataServiceHelper
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("error", "Error in getting metadata");
 			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_INTERNAL_ERROR, map);
+		} finally {
+			sc.closeSession();
 		}
 	}
 
@@ -219,46 +226,39 @@ public class MetadataServiceHelper
 		fetchMetaData(/* "locationtype" */RequestElements.METADATA_HEALTHPROGRAM, columns, table, mainResponse);
 	}
 	
-	private static void fetchMetaDataByCustomQuery(String dataType , String query, String columns[], JSONObject container){
-		
-		try
-		{
+	private static void fetchMetaDataByCustomQuery(String dataType, String query, String columns[], JSONObject container) {
+		ServiceContext sc = Context.getServices();
+		try {
 			if (container == null)
 				container = new JSONObject();
-		
-			ServiceContext sc = Context.getServices();
-		//	System.out.println("before results ");
+			// System.out.println("before results ");
 			List results = sc.getCustomQueryService().getDataBySQL(query);
-	//	System.out.println("results "+results.size());
+			// System.out.println("results "+results.size());
 			ResponseBuilder.buildMetadataResponse(container, dataType, columns, results);
-	//		System.out.println("after after results ");
-		}
-		catch (Exception e)
-		{
+			// System.out.println("after after results ");
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			sc.closeSession();
 		}
-		
 	}
 	
-	private static void fetchMetaData(String dataType, String[] columns, String table, JSONObject container)
-	{
+	private static void fetchMetaData(String dataType, String[] columns, String table, JSONObject container) {
 		ServiceContext sc = Context.getServices();
-		try
-		{
+		try {
 			if (container == null)
 				container = new JSONObject();
 			String query = CustomQueryBuilder.query(columns, table);
-		
+
 			List results = sc.getCustomQueryService().getDataBySQL(query);
 			ResponseBuilder.buildMetadataResponse(container, dataType, columns, results);
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			sc.closeSession();
 		}
-		finally{sc.closeSession();}
 	}
 
 	public File zipData(File tempFile)

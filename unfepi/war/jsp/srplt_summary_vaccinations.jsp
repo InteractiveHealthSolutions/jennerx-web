@@ -24,17 +24,29 @@ $(function(){
 	
 	function ShowSiteOptions(){
 		$("#sitesearchoption, #sitesearchoptionname").show();
-		var someText = ${model.sitesJ};
+// 		var someText = ${model.sitesJ};
 		$("#sitesearchoption").empty();
 		$("#sitesearchoption").append("<option value='' ></option>");
-		$.each(someText, function (index, item) {
-			selectoption = '${model.siteMappedId}';			
-			if(selectoption == item.mappedId){
-				$("#sitesearchoption").append("<option value='"+ item.mappedId +"' selected >"+item.fullName+"</option>");
-			}else{
-				$("#sitesearchoption").append("<option value='"+ item.mappedId +"' >"+item.fullName+"</option>");
-			}
-		});
+		$.get( "siteList/"+$('#healthprogramsearchoption').val()+".htm" , function( data ) {
+			var sites = $.parseJSON(data);
+			$.each(sites, function(index, site){
+				selectoption = '${model.siteMappedId}';			
+				if(selectoption == site.mappedId){
+					$("#sitesearchoption").append("<option value='"+ site.mappedId +"' selected >"+site.fullName+"</option>");
+				}else{
+					$("#sitesearchoption").append("<option value='"+ site.mappedId +"' >"+site.fullName+"</option>");
+				}
+			});
+			
+		});	
+// 		$.each(someText, function (index, item) {
+// 			selectoption = '${model.siteMappedId}';			
+// 			if(selectoption == item.mappedId){
+// 				$("#sitesearchoption").append("<option value='"+ item.mappedId +"' selected >"+item.fullName+"</option>");
+// 			}else{
+// 				$("#sitesearchoption").append("<option value='"+ item.mappedId +"' >"+item.fullName+"</option>");
+// 			}
+// 		});
 	}
 });
 </script>

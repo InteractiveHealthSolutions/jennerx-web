@@ -13,7 +13,7 @@ import org.ird.unfepi.constants.SystemPermissions;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.LoggedInUser;
 import org.ird.unfepi.context.ServiceContext;
-import org.ird.unfepi.model.Vaccinator;
+import org.ird.unfepi.model.Model.VaccineEntity;
 import org.ird.unfepi.model.Vaccine;
 import org.ird.unfepi.utils.IRUtils;
 import org.ird.unfepi.utils.LoggerUtils;
@@ -21,7 +21,6 @@ import org.ird.unfepi.utils.LoggerUtils.LogType;
 import org.ird.unfepi.utils.UserSessionUtils;
 import org.ird.unfepi.web.validator.VaccineValidator;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,6 +63,12 @@ public class EditVaccineController extends DataEditFormController{
 		try{
 			
 //			System.out.println(vacc.getName() + " " + vacc.getShortName());
+			if(vacc.getVaccine_entity().equals(VaccineEntity.CHILD_COMPULSORY)){
+				vacc.setSupplementary(false);
+			}
+			else if(vacc.getVaccine_entity().equals(VaccineEntity.CHILD_SUPPLEMENTARY)){
+				vacc.setSupplementary(true);
+			}
 			
 			vacc.setEditor(user.getUser());
 			vacc.setLastEditedDate(new Date());
@@ -96,6 +101,9 @@ public class EditVaccineController extends DataEditFormController{
 		}
 		else{
 			String vaccineName = request.getParameter("editRecord");
+			
+			System.out.println(vaccineName + "   vaccineNamevaccineNamevaccineNamevaccineName");
+			
 			ServiceContext sc = Context.getServices();
 			try{
 				vaccine = sc.getVaccinationService().getByName(vaccineName);

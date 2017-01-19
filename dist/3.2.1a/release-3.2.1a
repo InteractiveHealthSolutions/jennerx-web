@@ -1,0 +1,13 @@
+Web App
+edited Prerequisites dropdown list in addCalendarVaccine and editCalendarVaccine form
+(now it shows only the vaccine according to calender selected)
+Admin > Calendar > Calendars Schedule > [search Calendars Schedule] > Add Vaccine
+Admin > Calendar > Calendars Schedule > [search Calendars Schedule] > edit
+
+edited add&edit vaccine save method (set isSeplementary field)
+
+Database
+edited vaccineprerequisite table set mandatory field default value to 0
+
+Web Services:
+edit metadata, allvaccination, childenrollment services 

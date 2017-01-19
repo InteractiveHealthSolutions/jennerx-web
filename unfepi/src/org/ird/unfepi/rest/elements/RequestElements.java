@@ -41,6 +41,7 @@ public class RequestElements
 	public static final String METADATA_FIELD_VACCINE_ISSUPPLEMENTARY = "issupplementary";
 	public static final String METADATA_FIELD_VACCINE_ENTITY = "vaccine_entity";
 	public static final String METADATA_FIELD_VACCINE_FULL_NAME = "fullName";
+	public static final String METADATA_FIELD_VACCINE_SHORT_NAME = "shortName";
 
 	public static final String METADATA_FIELD_VACCINEGAP_VACCINEGAPTYPEID = "vaccineGapTypeId";
 	public static final String METADATA_FIELD_VACCINEGAP_GAPTIMEUNIT = "gapTimeUnit";
@@ -107,7 +108,7 @@ public class RequestElements
 	public static final String VACCINATOR = "vaccinator";
 	public static final String VACCINATION_CENTER = "vaccinationCenter";
 	public static final String VACCINATION_CENTER_VISIT_DATE = "vaccinationCenterVisitDate";
-
+	public static final String ROUND_ID = "roundId";
 	// Enrollment Form
 	public static final String CHILD_PROG_ID = "childProgID";
 	public static final String CHILD_QR_ID = "chldQrId";

@@ -384,6 +384,7 @@ public class ChildEnrollmentServiceHelper {
 			Long vaccineId = (Long) json.get(RequestElements.VACCINEID);
 			String role = (String) json.get(RequestElements.USER_ROLE);
 			childIdentifier = (Long) json.get(RequestElements.CHILD_IDENTIFIER);
+			Long roundId = (Long) json.get(RequestElements.ROUND_ID);
 
 			IdMapper mappId = sc.getIdMapperService().findIdMapper(childIdentifier.toString());
 			Child child = sc.getChildService().findChildById(mappId.getMappedId(), true, new String[] {});
@@ -495,7 +496,7 @@ public class ChildEnrollmentServiceHelper {
 			currentVaccination.setLastEditedDate(RestUtils.stringToDate(lastEditDate));
 
 			currentVaccination.setVaccinationCenterId(Integer.parseInt(centreId.toString()));
-
+			currentVaccination.setRoundId(Integer.parseInt(roundId.toString()));
 			currentVaccination.setRole(role);
 			currentVaccination.setVaccinationDate(currentVaccinationDate);
 			currentVaccination.setVaccinationDuedate(currentVaccinationDate);

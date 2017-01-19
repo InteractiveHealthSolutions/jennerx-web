@@ -49,10 +49,10 @@ if(UserSessionUtils.getActiveUser(request).isDefaultAdministrator()){%>
 <br>
 </c:forEach></td></tr>
 <tr><td colspan="2">Birthdate : <fmt:formatDate value="${model.datalist.child.birthdate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/> <c:if test="${model.datalist.child.estimatedBirthdate}">(approx)</c:if></td>
-<td>Location :<br>
-<c:forEach items="${model.datalist.address}" var="cont">
+<td>Location :
+<c:forEach items="${model.datalist.address}" var="add">
 <%-- ${fn:substring(cont.numberType,0,3)}- ${cont.number}<br> --%>
- ${add.address1}<br>
+ ${add.address2} <br>
 </c:forEach>
 </td>
 <!-- <tr> -->

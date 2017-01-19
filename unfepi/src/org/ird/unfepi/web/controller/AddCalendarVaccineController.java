@@ -97,6 +97,7 @@ public class AddCalendarVaccineController extends DataEntryFormController{
 					
 					VaccinePrerequisite vpr = new VaccinePrerequisite();
 					vpr.setVaccinePrerequisiteId(vpr_id);
+					vpr.setMandatory(false);
 					
 					sc.getCustomQueryService().save(vpr);
 				}
@@ -138,15 +139,20 @@ public class AddCalendarVaccineController extends DataEntryFormController{
 		ServiceContext sc = Context.getServices();
 		try {
 			
-//			String calendarId = request.getParameter("calendarId");
+			String calendarId = request.getParameter("calendarId");
 //			model.addAttribute("calendarId", calendarId);
-			List<VaccinationCalendar> vaccinationCalendarL = sc.getCustomQueryService().getDataByHQL("from VaccinationCalendar") ;
+			List<VaccinationCalendar> vaccinationCalendarL = sc.getCustomQueryService().getDataByHQL("from VaccinationCalendar where calenderId = " + calendarId) ;
 			model.addAttribute("vaccinationCalendarList" , vaccinationCalendarL);
 			List<VaccineGapType> vaccineGapTypeL = sc.getCustomQueryService().getDataByHQL("from VaccineGapType") ;
 			model.addAttribute("vaccineGapTypeList" , vaccineGapTypeL);
 			
 			List<HashMap> vaccineL = sc.getCustomQueryService().getDataBySQLMapResult("SELECT * FROM vaccine where vaccine_entity like 'CHILD%' OR vaccine_entity is null ORDER BY vaccineId "); 
 			model.addAttribute("vaccineList" , vaccineL);
+			
+			List<HashMap> vacPreReq = sc.getCustomQueryService().getDataBySQLMapResult("SELECT * FROM vaccine where vaccine_entity like 'CHILD%' AND vaccineId IN "
+					+ "(SELECT distinct(vaccineId) FROM vaccinegap where vaccinationcalendarId = "+ calendarId +" ) ORDER BY vaccineId"); 
+			model.addAttribute("vacPreReq" , vacPreReq);
+			 
 			
 		} catch (Exception e) {
 			e.printStackTrace();

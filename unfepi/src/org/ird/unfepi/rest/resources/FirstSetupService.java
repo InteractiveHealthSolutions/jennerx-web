@@ -132,9 +132,11 @@ public class FirstSetupService {
 			receivedJson = (JSONObject)parser.parse(json);
 		
 		Long lastRecord=(Long) receivedJson.get(RequestElements.LASTRECORD);
+		Long programId =(Long) receivedJson.get(RequestElements.METADATA_FIELD_HEALTHPROGRAM_ID);
+		
 		ChildServiceHelper childServiceHelper=new ChildServiceHelper();
 		org.json.JSONObject j=new org.json.JSONObject();
-		List<HashMap> map=childServiceHelper.getAllChidrenVaccinations(lastRecord);
+		List<HashMap> map=childServiceHelper.getAllChidrenVaccinations(lastRecord, programId);
 		j.put("allvaccinations", map);
 		
 		int length=map.size()-1;

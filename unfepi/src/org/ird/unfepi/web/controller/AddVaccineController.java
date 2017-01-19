@@ -13,6 +13,7 @@ import org.ird.unfepi.constants.SystemPermissions;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.LoggedInUser;
 import org.ird.unfepi.context.ServiceContext;
+import org.ird.unfepi.model.Model.VaccineEntity;
 import org.ird.unfepi.model.Vaccine;
 import org.ird.unfepi.utils.UserSessionUtils;
 import org.ird.unfepi.web.validator.VaccineValidator;
@@ -65,6 +66,13 @@ public class AddVaccineController extends DataEntryFormController{
 			vaccine.setVaccineId((short)(id+1));
 			vaccine.setCreatedDate(new Date());
 			vaccine.setCreatedByUserId(user.getUser());
+			
+			if(vaccine.getVaccine_entity().equals(VaccineEntity.CHILD_COMPULSORY)){
+				vaccine.setSupplementary(false);
+			}
+			else if(vaccine.getVaccine_entity().equals(VaccineEntity.CHILD_SUPPLEMENTARY)){
+				vaccine.setSupplementary(true);
+			}
 			
 			sc.getVaccinationService().addVaccine(vaccine);
 			sc.commitTransaction();

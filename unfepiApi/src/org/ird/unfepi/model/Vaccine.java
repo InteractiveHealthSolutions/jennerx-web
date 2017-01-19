@@ -86,6 +86,9 @@ public class Vaccine implements java.io.Serializable {
 	@Column(length = 20)
 	private VaccineEntity vaccine_entity;
 	
+	@Column(columnDefinition = "BIT", length = 1)
+	private boolean isSupplementary;
+	
 	public Vaccine() {
 	}
 
@@ -252,6 +255,14 @@ public class Vaccine implements java.io.Serializable {
 
 	public void setVaccine_entity(VaccineEntity vaccine_entity) {
 		this.vaccine_entity = vaccine_entity;
+	}
+
+	public boolean isSupplementary() {
+		return isSupplementary;
+	}
+
+	public void setSupplementary(boolean isSupplementary) {
+		this.isSupplementary = isSupplementary;
 	}
 	
 }

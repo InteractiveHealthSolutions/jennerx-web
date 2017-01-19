@@ -1,4 +1,4 @@
-<%@ include file="/WEB-INF/template/header.jsp" %>
+<%@ include file="/WEB-INF/template/header.jsp"%>
 <input type="hidden" id="page_nav_id" value="_li1">
 
 <%-- <link rel="stylesheet" href="galleria/themes/classic/galleria.classic.css">
@@ -12,7 +12,7 @@
     
     </div>
     </div> --%>
-    <%@ include file="summaries.jsp" %>
+<%@ include file="summaries.jsp"%>
 <%-- <script type="text/javascript">
 <!--
 $(window).load(function() {
@@ -21,4 +21,4 @@ $(window).load(function() {
 //-->
 </script> --%>
 
-<%@ include file="/WEB-INF/template/footer.jsp" %>
+<%@ include file="/WEB-INF/template/footer.jsp"%>

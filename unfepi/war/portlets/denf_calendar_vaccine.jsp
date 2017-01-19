@@ -104,7 +104,6 @@ $(function(){
 			<td colspan="3">
 			<spring:bind path="command.vaccinationCalendarId">
 				<select id="vaccinationCalendarId" name="vaccinationCalendarId" bind-value="${status.value}">
-					<option></option>
 					<c:forEach items="${vaccinationCalendarList}" var="calendar">
 						<option value="${calendar.calenderId}">${calendar.shortName}</option>
 					</c:forEach>
@@ -179,7 +178,7 @@ $(function(){
 			<td>Prerequisites</td>
 			<td colspan="3"><spring:bind path="command.vaccinePrerequisites">
 			<select multiple="multiple" id="vaccinePrerequisites" name="vaccinePrerequisites" >
-					<c:forEach items="${vaccineList}" var="prereq">
+					<c:forEach items="${vacPreReq}" var="prereq">
 						<option id="${prereq.vaccineId}" value="${prereq.vaccineId}">${prereq.name}</option>
 					</c:forEach>
 			</select>

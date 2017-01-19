@@ -102,6 +102,7 @@ public class EditCalendarVaccineController extends DataEditFormController{
 
 					VaccinePrerequisite vpr = new VaccinePrerequisite();
 					vpr.setVaccinePrerequisiteId(vpr_id);
+					vpr.setMandatory(false);
 
 					sc.getCustomQueryService().saveOrUpdate(vpr);
 				}
@@ -155,6 +156,10 @@ public class EditCalendarVaccineController extends DataEditFormController{
 			model.addAttribute("preReq_selected",vpRecords);
 			List<HashMap> vaccineL = sc.getCustomQueryService().getDataBySQLMapResult("SELECT * FROM vaccine where vaccine_entity like 'CHILD%' OR vaccine_entity is null ORDER BY vaccineId "); 
 			model.addAttribute("vaccineList" , vaccineL);
+			
+			List<HashMap> vacPreReq = sc.getCustomQueryService().getDataBySQLMapResult("SELECT * FROM vaccine where vaccine_entity like 'CHILD%' AND vaccineId IN "
+					+ "(SELECT distinct(vaccineId) FROM vaccinegap where vaccinationcalendarId = "+ calendarId +" ) ORDER BY vaccineId"); 
+			model.addAttribute("vacPreReq" , vacPreReq);
 			
 			Map<VaccineGapType, VaccineGap> map = new LinkedHashMap<VaccineGapType, VaccineGap>();
 			for (VaccineGapType vgt : vaccineGapTypeL) {

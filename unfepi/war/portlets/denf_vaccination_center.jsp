@@ -56,7 +56,7 @@ function submitThisForm() {
             </select>
     <script><!--
         $(document).ready(function() {
-            DWREntityService.getLocationList(["city"],null,{
+            DWREntityService.getLocationList(["city","Sous-prefecture"],null,{
                  async: false,
                  callback: function (resl) {
                          $('#cityId').empty().append('<option></option>');

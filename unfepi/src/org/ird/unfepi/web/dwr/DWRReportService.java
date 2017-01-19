@@ -97,7 +97,7 @@ public class DWRReportService {
 			String sort = params.get("sort");
 			String order = params.get("order");
 			
-			items = sc.getCustomQueryService().getDataBySQLMapResult("CALL SummaryFollowupAgeAppropriate('"+(center==null?"":center.trim())+"', "+d1f+", "+d1t+" , "+(pageNumber*pageSize)+", "+pageSize+", '"+(sort==null?"":sort)+"', '"+(order==null?"":order)+"')");
+//			items = sc.getCustomQueryService().getDataBySQLMapResult("CALL SummaryFollowupAgeAppropriate('"+(center==null?"":center.trim())+"', "+d1f+", "+d1t+" , "+(pageNumber*pageSize)+", "+pageSize+", '"+(sort==null?"":sort)+"', '"+(order==null?"":order)+"')");
 		
 			int totalRows = items.size();//StringUtils.isEmptyOrWhitespaceOnly(center)?sc.getVaccinationService().getAllVaccinationCenter(true, null).size():center.split(",").length;
 			map.put("rows", items);
@@ -142,7 +142,7 @@ public class DWRReportService {
 			String sort = params.get("sort");
 			String order = params.get("order");
 			
-			items = sc.getCustomQueryService().getDataBySQLMapResult("CALL SummaryFollowupAgeAppropriateWRetro('"+(center==null?"":center.trim())+"', "+d1f+", "+d1t+" , "+(pageNumber*pageSize)+", "+pageSize+", '"+(sort==null?"":sort)+"', '"+(order==null?"":order)+"')");
+//			items = sc.getCustomQueryService().getDataBySQLMapResult("CALL SummaryFollowupAgeAppropriateWRetro('"+(center==null?"":center.trim())+"', "+d1f+", "+d1t+" , "+(pageNumber*pageSize)+", "+pageSize+", '"+(sort==null?"":sort)+"', '"+(order==null?"":order)+"')");
 		
 			int totalRows = items.size();//StringUtils.isEmptyOrWhitespaceOnly(center)?sc.getVaccinationService().getAllVaccinationCenter(true, null).size():center.split(",").length;
 			map.put("rows", items);

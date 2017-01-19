@@ -120,18 +120,17 @@ public class ViewSummaryVaccineDoses extends DataDisplayController {
 
 			}	
 			
-			JSONArray jarray = new JSONArray();
-			List<HashMap> sites = sc.getCustomQueryService().getDataBySQLMapResult("select * from VaccinationCenter");
-			for (HashMap hashMap : sites) {
-				JSONObject jobj = new JSONObject(hashMap);
-				jarray.put(jobj);
-			}
-			addModelAttribute(model, "sitesJ", jarray);
-			
-			addModelAttribute(model, "sites", sc.getCustomQueryService().getDataBySQLMapResult("select * from VaccinationCenter"));
-			addModelAttribute(model, "healthprograms", sc.getCustomQueryService().getDataByHQL("from HealthProgram"));
+//			JSONArray jarray = new JSONArray();
+//			List<HashMap> sites = sc.getCustomQueryService().getDataBySQLMapResult("select * from VaccinationCenter");
+//			for (HashMap hashMap : sites) {
+//				JSONObject jobj = new JSONObject(hashMap);
+//				jarray.put(jobj);
+//			}
+//			addModelAttribute(model, "sitesJ", jarray);
+//			addModelAttribute(model, "sites", sc.getCustomQueryService().getDataBySQLMapResult("select * from VaccinationCenter"));
+			addModelAttribute(model, "healthprograms", sc.getCustomQueryService().getDataByHQL("from HealthProgram order by name"));
 			addModelAttribute(model, "rounds", sc.getCustomQueryService().getDataByHQL("from Round"));
-			addModelAttribute(model, "vaccines", sc.getCustomQueryService().getDataBySQL("SELECT distinct(shortName) FROM vaccine where vaccine_entity like 'CHILD_COMPULSORY'"));
+			addModelAttribute(model, "vaccines", sc.getCustomQueryService().getDataBySQL("SELECT distinct(shortName) FROM vaccine where vaccine_entity like 'CHILD_COMPULSORY' order by shortName"));
 
 			addModelAttribute(model, SearchFilter.VACCINE.FILTER_NAME(), vaccineName);
 			addModelAttribute(model, SearchFilter.HEALTH_PROGRAM.FILTER_NAME(), healthProgramId);

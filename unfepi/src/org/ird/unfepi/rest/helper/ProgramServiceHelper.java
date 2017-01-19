@@ -13,16 +13,14 @@ public class ProgramServiceHelper {
 		ServiceContext sc = Context.getServices();
 		
 //		List<HealthProgram> programL = sc.getCustomQueryService().getDataByHQL("from HealthProgram");
-		
 		List<String> list = sc.getCustomQueryService().getDataByHQL("select name from HealthProgram");
-		
 //		for (HealthProgram hp : programL) {
 //			System.out.println(hp.getName());
 //		}
-		
 //		for (String string : list) {
 //			System.out.println(string);
 //		}
+		sc.closeSession();
 		return list;
 	}
 

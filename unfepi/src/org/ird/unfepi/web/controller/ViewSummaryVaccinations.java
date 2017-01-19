@@ -17,8 +17,10 @@ import org.ird.unfepi.utils.UnfepiUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.mysql.jdbc.StringUtils;
@@ -28,6 +30,20 @@ public class ViewSummaryVaccinations extends DataDisplayController{
 	
 	ViewSummaryVaccinations(){
 		super("dataForm", new DataSearchForm("summary_vaccinations", "Summary Vaccinations", SystemPermissions.VIEW_SUMMARY_VACCINATIONS, false));
+	}
+	
+	@RequestMapping(value="/siteList/{programId}" , method=RequestMethod.GET)
+	public @ResponseBody String getSiteList(@PathVariable Integer programId){
+		ServiceContext sc = Context.getServices();
+		JSONArray jarray = new JSONArray();
+		List<HashMap> sites = sc.getCustomQueryService().getDataBySQLMapResult("select * from vaccinationcenter where mappedId in "
+						+ "(SELECT vaccinationCenterId FROM centerprogram WHERE healthProgramId = "+ programId + "  and isActive = true)"
+						+ " order by fullName");
+		for (HashMap hashMap : sites) {
+			JSONObject jobj = new JSONObject(hashMap);
+			jarray.put(jobj);
+		}
+		return jarray.toString();
 	}
 	
 	@RequestMapping(value="/viewSummaryVaccinations", method={RequestMethod.GET,RequestMethod.POST})
@@ -93,18 +109,16 @@ public class ViewSummaryVaccinations extends DataDisplayController{
 					addModelAttribute(model, hashMap.get("name").toString(), sc.getCustomQueryService().getDataBySQL(querytotal).get(0));
 //					System.out.println(hashMap.get("name").toString() + "   " + sc.getCustomQueryService().getDataBySQL(querytotal).toString());
 				}
-				
 			}	
-			
-			JSONArray jarray = new JSONArray();
-			List<HashMap> sites = sc.getCustomQueryService().getDataBySQLMapResult("select * from VaccinationCenter");
-			for (HashMap hashMap : sites) {
-				JSONObject jobj = new JSONObject(hashMap);
-				jarray.put(jobj);
-			}
-			addModelAttribute(model, "sitesJ", jarray);
-			addModelAttribute(model, "sites", sc.getCustomQueryService().getDataBySQLMapResult("select * from VaccinationCenter"));
-			addModelAttribute(model, "healthprograms", sc.getCustomQueryService().getDataByHQL("from HealthProgram"));
+//			JSONArray jarray = new JSONArray();
+//			List<HashMap> sites = sc.getCustomQueryService().getDataBySQLMapResult("select * from VaccinationCenter");
+//			for (HashMap hashMap : sites) {
+//				JSONObject jobj = new JSONObject(hashMap);
+//				jarray.put(jobj);
+//			}
+//			addModelAttribute(model, "sitesJ", jarray);
+//			addModelAttribute(model, "sites", sc.getCustomQueryService().getDataBySQLMapResult("select * from VaccinationCenter"));
+			addModelAttribute(model, "healthprograms", sc.getCustomQueryService().getDataByHQL("from HealthProgram order by name"));
 			addModelAttribute(model, "rounds", sc.getCustomQueryService().getDataByHQL("from Round"));
 			addModelAttribute(model, SearchFilter.HEALTH_PROGRAM.FILTER_NAME(), healthProgramId);
 			addModelAttribute(model, SearchFilter.SITE.FILTER_NAME(), siteMappedId);

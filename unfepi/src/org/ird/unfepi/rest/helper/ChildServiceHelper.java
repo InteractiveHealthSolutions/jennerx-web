@@ -34,26 +34,30 @@ public class ChildServiceHelper {
 		return null; 
 	}
 	
-	public List<HashMap> getAllChidrenVaccinations(long lastRecord){
-		ServiceContext sc =Context.getServices();
-		//TODO divide in 10thoussand chunks
-		String query="SELECT v.vaccinationRecordNum vId,v.vaccinationCenterId centreid,v.vaccineId, v.lastEditedDate ,v.createdDate, "+
-				"v.vaccinationDate,v.vaccinationDuedate,v.vaccinationStatus, i.identifier childidentifier,v.childId, v.roundId, "+
-				"v.reasonVaccineNotGiven  reason  , v.role role,v.epiNumber,v.createdByUserId creator, v.lastEditedByUserId lastEditor "+
-				"FROM unfepi.vaccination  v  inner join child c on c.mappedId=v.childId "+ 
-				"inner join identifier i on v.childid=i.mappedid  AND  i.preferred join vaccine on v.vaccineId=vaccine.vaccineId  "+ 
-				" where v.voided=0 and v.vaccinationRecordNum>"+lastRecord+"  order by vId ASC limit 10000 ";
-		try{
-				List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
-		
-		return map;
-		}catch (Exception e)
-		{
+	public List<HashMap> getAllChidrenVaccinations(long lastRecord,	long programId) {
+		ServiceContext sc = Context.getServices();
+		try {
+			// TODO divide in 10thoussand chunks
+			String query = "SELECT v.vaccinationRecordNum vId,v.vaccinationCenterId centreid,v.vaccineId, v.lastEditedDate ,v.createdDate, "
+					+ "v.vaccinationDate,v.vaccinationDuedate,v.vaccinationStatus, i.identifier childidentifier,v.childId, v.roundId, "
+					+ "v.reasonVaccineNotGiven  reason  , v.role role,v.epiNumber,v.createdByUserId creator, v.lastEditedByUserId lastEditor "
+					+ "FROM unfepi.vaccination  v  inner join child c on c.mappedId=v.childId "
+					+ "inner join identifier i on v.childid=i.mappedid  AND  i.preferred join vaccine on v.vaccineId=vaccine.vaccineId  "
+					+ " inner join round r on v.roundId =  r.roundId "
+					+ " where v.voided=0 and v.vaccinationRecordNum>"
+					+ lastRecord
+					+ " and r.healthProgramId = "
+					+ programId
+					+ "  order by vId ASC limit 10000 ";
+			List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
+			return map;
+		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
+			return null;
+		} finally {
 			sc.closeSession();
 		}
-		return null;
+
 	}
 	
 	public List<HashMap> getallEncounters(long lastRecord){
