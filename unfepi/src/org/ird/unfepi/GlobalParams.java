@@ -89,6 +89,7 @@ public class GlobalParams
 		
 		SEARCH_FILTER,
 		COLUMNS,
+		CALENDER,
 		
 		HEALTH_PROGRAM,
 		SITE,

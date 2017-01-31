@@ -109,7 +109,7 @@ public class FirstSetupService {
 				mappedId=(Integer) map.get(size).get("mappedId");
 			}
 			j.put(RequestElements.LASTRECORD,mappedId );
-			System.out.println(j.toString());
+//			System.out.println(j.toString());
 			return GZipper.compress(j.toString());
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
@@ -146,6 +146,7 @@ public class FirstSetupService {
 			mappedId=(Integer) map.get(size).get("vId");
 		}
 		j.put(RequestElements.LASTRECORD, mappedId);
+//		System.out.println(j.toString());
 		return GZipper.compress(j.toString());
 		} catch (ParseException e) {
 		
@@ -165,9 +166,10 @@ public class FirstSetupService {
 			receivedJson = (JSONObject)parser.parse(json);
 
 			Long lastRecord=(Long) receivedJson.get(RequestElements.LASTRECORD);
+			Long programId =(Long) receivedJson.get(RequestElements.METADATA_FIELD_HEALTHPROGRAM_ID);
 			ChildServiceHelper childServiceHelper=new ChildServiceHelper();
 			org.json.JSONObject j=new org.json.JSONObject();
-			List<HashMap> map=childServiceHelper.getallEncounters(lastRecord);
+			List<HashMap> map=childServiceHelper.getallEncounters(lastRecord, programId);
 			j.put("allencounters",map );
 			
 			j.put(RequestElements.LASTRECORD,lastRecord + map.size());

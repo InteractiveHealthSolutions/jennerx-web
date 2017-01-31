@@ -29,15 +29,21 @@ public class ViewImmunizationRecordDetailsController extends DataDisplayControll
 		
 		ServiceContext sc = Context.getServices();
 
-		String programId = request.getParameter("programId");
+		String identifier = request.getParameter("programId");
+		String calenderId = request.getParameter("calenderId");
+//		System.out.println(request.getRequestURL().toString() + "?" + request.getQueryString());
+		
 		Map<String, Object> model = new HashMap<String, Object>();
 		try{
-			String dmpTable = "dmp_master_epidata";
+			String dmpTable = "jennerx_data_dump_"+calenderId;
 			List<String> colNames = sc.getCustomQueryService().getDataBySQL("SELECT column_name FROM information_schema.columns WHERE table_name='"+dmpTable +"' ORDER BY ORDINAL_POSITION");
 
-			List<Map<String,Object>> dmp = sc.getCustomQueryService().getDataBySQLMapResult("SELECT * FROM "+dmpTable+" WHERE ChildId='"+programId+"'");
+			List<Map<String,Object>> dmp = sc.getCustomQueryService().getDataBySQLMapResult("SELECT * FROM "+dmpTable+" WHERE identifier='"+identifier+"'");
+			List<HashMap> data = sc.getCustomQueryService().getDataBySQLMapResult("SELECT * FROM "+dmpTable+" WHERE identifier='"+identifier+"'");
+			
 			addModelAttribute(model, "datalist", dmp);
 			addModelAttribute(model, "columnNames", colNames);
+			addModelAttribute(model, "data", data.get(0));
 
 			return showForm(model);
 		}catch (Exception e) {

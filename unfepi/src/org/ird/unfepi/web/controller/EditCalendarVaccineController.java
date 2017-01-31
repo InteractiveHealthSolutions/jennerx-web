@@ -66,7 +66,7 @@ public class EditCalendarVaccineController extends DataEditFormController{
 
 		new CalendarVaccineValidator().validate(wrapper, results, false);
 		if(results.hasErrors()){	
-			System.out.println(results.toString());
+//			System.out.println(results.toString());
 			modelAndView.addObject("binding_errors", true);
 			return showForm(modelAndView, "dataForm");	
 		}
@@ -91,6 +91,15 @@ public class EditCalendarVaccineController extends DataEditFormController{
 				for(VaccineGap vp :wrapper.getVaccineGapList()){
 					sc.getCustomQueryService().saveOrUpdate(vp);
 				}
+			}else /*if(wrapper.getVaccineGapList() ==null || wrapper.getVaccineGapList().size() == 0)*/{
+				_sc = Context.getServices();
+				List<VaccinePrerequisite> otherPreReq_del = _sc.getCustomQueryService().getDataByHQL("from VaccinePrerequisite where vaccinePrerequisiteId.vaccinePrerequisiteId = " + wrapper.getVaccineId() + " and vaccinePrerequisiteId.vaccinationcalendarId = " + wrapper.getVaccinationCalendarId());
+				for (VaccinePrerequisite vpr : otherPreReq_del) {
+//					System.out.println( wrapper.getVaccineId() + " " +vpr.getVaccinePrerequisiteId().getVaccineId() + " " + vpr.getVaccinePrerequisiteId().getVaccinePrerequisiteId());
+					_sc.getCalendarVaccineService().deleteVaccinePrerequisite(vpr);
+				}
+				_sc.commitTransaction();
+				_sc.closeSession();
 			}
 			if(wrapper.getVaccinePrerequisites() != null && wrapper.getVaccinePrerequisites().length >0){
 				for (String preq : wrapper.getVaccinePrerequisites()) {
@@ -154,7 +163,7 @@ public class EditCalendarVaccineController extends DataEditFormController{
 			model.addAttribute("vaccinationCalendarList" , vaccinationCalendarL);
 			List<Short> vpRecords = sc.getCustomQueryService().getDataByHQL("select vaccinePrerequisiteId.vaccinePrerequisiteId from VaccinePrerequisite where vaccinePrerequisiteId.vaccineId = " + vaccineId + " and vaccinePrerequisiteId.vaccinationcalendarId = " + calendarId);
 			model.addAttribute("preReq_selected",vpRecords);
-			List<HashMap> vaccineL = sc.getCustomQueryService().getDataBySQLMapResult("SELECT * FROM vaccine where vaccine_entity like 'CHILD%' OR vaccine_entity is null ORDER BY vaccineId "); 
+			List<HashMap> vaccineL = sc.getCustomQueryService().getDataBySQLMapResult("SELECT * FROM vaccine where vaccine_entity like 'CHILD%' OR vaccine_entity is null ORDER BY name "); 
 			model.addAttribute("vaccineList" , vaccineL);
 			
 			List<HashMap> vacPreReq = sc.getCustomQueryService().getDataBySQLMapResult("SELECT * FROM vaccine where vaccine_entity like 'CHILD%' AND vaccineId IN "

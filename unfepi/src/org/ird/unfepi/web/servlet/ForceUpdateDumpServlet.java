@@ -1,6 +1,7 @@
 package org.ird.unfepi.web.servlet;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -36,8 +37,16 @@ public class ForceUpdateDumpServlet extends HttpServlet{
 		
 		ServiceContext sc = Context.getServices();
 		
+//		String calenderId = req.getParameter("calenderId");
+		
 		try{
-			UnfepiUtils.executeDump("DMP_MasterEPIData2");
+			
+			List<Integer> calenderIds = sc.getCustomQueryService().getDataBySQL("select calenderId from vaccinationcalendar");
+			for (Integer calenderId : calenderIds) {
+				UnfepiUtils.executeDump("JennerX_Data_Dump", calenderId);
+			}
+			
+//			UnfepiUtils.executeDump("DMP_MasterEPIData2");
 			
 			resp.sendRedirect(req.getHeader("Referer").toString());
 		}

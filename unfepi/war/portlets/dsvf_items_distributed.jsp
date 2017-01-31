@@ -13,7 +13,8 @@
 <tbody>
 <c:forEach items="${model.itemdistributed}" var="item" varStatus="varststus">
 <tr>
-<td><a onClick="viewImmunizationDetails(this.text);" class="anchorCustom">${item['identifier']}</a></td>
+<%-- <td><a onClick="viewImmunizationDetails(this.text);" class="anchorCustom">${item['identifier']}</a></td> --%>
+<td>${item['identifier']}</td>
 <td>${item['distributedDate']}</td>
 <td>${item['items']}</td>
 <td>${item['count']}</td>

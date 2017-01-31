@@ -45,7 +45,7 @@ public class ViewSummaryEvents extends DataDisplayController{
 			String action = req.getParameter("action");
 			String pagerOffset = req.getParameter("pager.offset");		
 			
-			System.out.println(healthProgramId + "  " + siteMappedId );
+//			System.out.println(healthProgramId + "  " + siteMappedId );
 			
 			if(healthProgramId != null && siteMappedId != null){
 				int startRecord = 0;
@@ -91,7 +91,7 @@ public class ViewSummaryEvents extends DataDisplayController{
 					mainQuery += query +" group by dateEncounterEntered, result.site, result.roundId "
 							+ " order by result.site, result.roundId, dateEncounterEntered ";
 					
-					System.out.println(mainQuery);
+//					System.out.println(mainQuery);
 					
 					totalRows = sc.getCustomQueryService().getDataBySQLMapResult(mainQuery).size();			
 					
@@ -103,7 +103,7 @@ public class ViewSummaryEvents extends DataDisplayController{
 							+ ",SUM(IF(encounterType='FOLLOWUP',1,0)) 'FOLLOWUP' "
 							+ query;
 					
-					System.out.println(querytotal);
+//					System.out.println(querytotal);
 					
 //					List<HashMap> recordsum = sc.getCustomQueryService().getDataBySQLMapResult(querytotal);
 //					System.out.println(recordsum);

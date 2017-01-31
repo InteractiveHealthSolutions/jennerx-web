@@ -60,9 +60,23 @@ public class ChildServiceHelper {
 
 	}
 	
-	public List<HashMap> getallEncounters(long lastRecord){
+	public List<HashMap> getallEncounters(long lastRecord, long programId){
 		ServiceContext sc =Context.getServices();
-		String query = "select i.identifier, e.p2id, e.encounterType, e.locationId, e.dateEncounterEntered from encounter e inner join identifier i on e.p1id=i.mappedId LIMIT " + lastRecord + ", 10000";
+		String query = "select i.identifier, e.p2id, e.encounterType, e.locationId, e.dateEncounterEntered, result.roundId from encounter e inner join identifier i on e.p1id=i.mappedId ";
+		
+		query += "LEFT JOIN (  "
+				+"SELECT   "
+				+"encounterId , p1id , p2id  ,  "
+				+"group_concat(distinct(if(element like '%ROUND%' ,value,null)))'roundId'  ,  "
+				+"group_concat(distinct(if(element like 'VISIT_DATE' ,value,null)))'visitdate'  ,  "
+				+"group_concat(if(element like 'SITE_MAPPED_ID',value,null))'site'   "
+				+"FROM encounterresults  "
+				+"group by encounterId , p1id , p2id ) result USING ( encounterId , p1id , p2id )"
+				+"where encounterType IN( 'ENROLLMENT' , 'FOLLOWUP') AND result.roundId IN (select roundId from round where healthProgramId = " + programId +")  "
+				+"group by dateEncounterEntered "
+				+"order by result.site, result.roundId, dateEncounterEntered ";
+		
+		query +="LIMIT " + lastRecord + ", 10000";
 		try{
 			List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
 			return map;
@@ -130,15 +144,20 @@ public class ChildServiceHelper {
 		return null;
 	}
 	
-	public  List<HashMap> getUpdatedVaccinations(String lastSyncedTime) {
+	public  List<HashMap> getUpdatedVaccinations(String lastSyncedTime, long programId) {
 		ServiceContext sc = Context.getServices();
 		String query = "SELECT  i.identifier childidentifier, v.vaccinationCenterId centreid,v.vaccineId, v.lastEditedDate ,v.createdDate, "
 				+ "v.vaccinationDate,v.vaccinationDuedate,v.vaccinationStatus, v.roundId, "
 				+ "v.vaccinatorId ,v.role role,v.reasonVaccineNotGiven  reason,v.epiNumber,v.createdByUserId creator, v.lastEditedByUserId lastEditor "
 				+ "FROM unfepi.vaccination  v  inner join child c on c.mappedId=v.childId "
 				+ "inner join identifier i on v.childid=i.mappedid  AND  i.preferred join vaccine on v.vaccineId=vaccine.vaccineId   "
+				+ " inner join round r on v.roundId =  r.roundId "
 				+ "where v.voided=0 and v.lastEditedDate >='"
-				+ lastSyncedTime+"' order by identifier ASC ;";
+				+ lastSyncedTime+"'"
+				+ " and r.healthProgramId = "
+				+ programId
+				+ " order by identifier ASC ;";
+		
 		try {
 			List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
 			
@@ -151,11 +170,26 @@ public class ChildServiceHelper {
 		return null;
 	}
 	
-	public  List<HashMap> getNewEucounters(String lastSyncedTime) {
+	public  List<HashMap> getNewEucounters(String lastSyncedTime, long programId) {
 		ServiceContext sc = Context.getServices();
 		
-		String query = "select i.identifier, e.p2id, e.encounterType, e.locationId, e.dateEncounterEntered from encounter e inner join identifier i on e.p1id=i.mappedId "
-				+ "where e.dateEncounterEntered >='"+lastSyncedTime+"' ;";
+		String query = "select i.identifier, e.p2id, e.encounterType, e.locationId, e.dateEncounterEntered from encounter e inner join identifier i on e.p1id=i.mappedId ";
+		
+		query += "LEFT JOIN (  "
+				+"SELECT   "
+				+"encounterId , p1id , p2id  ,  "
+				+"group_concat(distinct(if(element like '%ROUND%' ,value,null)))'roundId'  ,  "
+				+"group_concat(distinct(if(element like 'VISIT_DATE' ,value,null)))'visitdate'  ,  "
+				+"group_concat(if(element like 'SITE_MAPPED_ID',value,null))'site'   "
+				+"FROM encounterresults  "
+				+"group by encounterId , p1id , p2id ) result USING ( encounterId , p1id , p2id )"
+				+"where encounterType IN( 'ENROLLMENT' , 'FOLLOWUP') AND result.roundId IN (select roundId from round where healthProgramId = " + programId +")  "
+				
+				+ "and e.dateEncounterEntered >='"+lastSyncedTime+"' "
+				
+				+"group by dateEncounterEntered "
+				+"order by result.site, result.roundId, dateEncounterEntered ";
+		
 		try {
 			List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
 			return map;

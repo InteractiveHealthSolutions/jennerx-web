@@ -525,7 +525,8 @@ public class ChildEnrollmentServiceHelper {
 			}
 			currentVaccination.setVaccinationStatus(status);
 			if (vaccinatorId != null) {
-				currentVaccination.setVaccinatorId(Integer.valueOf(vaccinatorId));
+				currentVaccination.setVaccinatorId(sc.getIdMapperService().findIdMapper(vaccinatorId).getMappedId());
+//				currentVaccination.setVaccinatorId(Integer.valueOf(vaccinatorId));
 			} else {
 				currentVaccination.setVaccinatorId(null);
 			}

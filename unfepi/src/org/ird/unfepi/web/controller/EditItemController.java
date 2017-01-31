@@ -43,7 +43,7 @@ public class EditItemController extends DataEditFormController{
 		
 		//validator
 		if(results.hasErrors()){	
-			System.out.println(results.toString());
+//			System.out.println(results.toString());
 			return showForm(modelAndView, "dataForm");	
 		}
 		

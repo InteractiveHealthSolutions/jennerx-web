@@ -31,15 +31,16 @@ public class ReportingSystem
 			_instance.schedular = scheduler;
 			
 			// *********** Notifier Rescheduler JOb
-			String notifierReschedularCron = Context.getSetting(GlobalParams.NOTIFER_RESCH_CRON_SETTING, GlobalParams.NOTIFER_RESCH_DEFAULT_CRON);
-			//_instance.notifierManager = NotifierManager.instantiateNotifierManager(scheduler, notifierReschedularCron);
-			JobDetail notifierReschedularJob = new JobDetail(GlobalParams.NOTIFIER_RESCHED_JOBNAME, GlobalParams.NOTIFIER_RESCHED_JOBGROUP, NotifierReschedularJob.class);
-			CronTrigger notifierReschedularTrigger = new CronTrigger(GlobalParams.NOTIFIER_RESCHED_TRIGGERNAME, GlobalParams.NOTIFIER_RESCHED_TRIGGERGROUP, notifierReschedularCron);
-			try{
-				_instance.schedular.scheduleJob(notifierReschedularJob, notifierReschedularTrigger);
-			}catch (SchedulerException e) {
-				e.printStackTrace();
-			}
+//			String notifierReschedularCron = Context.getSetting(GlobalParams.NOTIFER_RESCH_CRON_SETTING, GlobalParams.NOTIFER_RESCH_DEFAULT_CRON);
+//			//_instance.notifierManager = NotifierManager.instantiateNotifierManager(scheduler, notifierReschedularCron);
+//			JobDetail notifierReschedularJob = new JobDetail(GlobalParams.NOTIFIER_RESCHED_JOBNAME, GlobalParams.NOTIFIER_RESCHED_JOBGROUP, NotifierReschedularJob.class);
+//			CronTrigger notifierReschedularTrigger = new CronTrigger(GlobalParams.NOTIFIER_RESCHED_TRIGGERNAME, GlobalParams.NOTIFIER_RESCHED_TRIGGERGROUP, notifierReschedularCron);
+//			try{
+//				_instance.schedular.scheduleJob(notifierReschedularJob, notifierReschedularTrigger);
+//				
+//			}catch (SchedulerException e) {
+//				e.printStackTrace();
+//			}
 			
 			// *********** Data DUMPER Rescheduler JOb
 			String dataDumperCron = Context.getSetting(GlobalParams.DATA_DUMPER_CRON_SETTING, GlobalParams.DATA_DUMPER_DEFAULT_CRON);

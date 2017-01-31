@@ -23,7 +23,7 @@ public class ProgramMetaDataService {
 	public String metadataVaccine(String jsonString, @QueryParam("programId") String programId){
 		String response = "";
 		try {
-			System.out.println("jsonString " + jsonString);
+//			System.out.println("jsonString " + jsonString);
 			JSONObject jsonObject = (jsonString.isEmpty()) ? new JSONObject() : new JSONObject(jsonString) ;	
 			jsonObject.put("programId", programId);
 			
@@ -45,7 +45,7 @@ public class ProgramMetaDataService {
 			
 			JSONObject jsonObject = (jsonString.isEmpty()) ? new JSONObject() : new JSONObject(jsonString) ;	
 			jsonObject.put("programId", programId);
-			System.out.println("metadata - locations");
+//			System.out.println("metadata - locations");
 			response = ProgramMetaDataServiceHelper.getLocationMetadata(jsonObject); 
 			
 		} catch (Exception e) {

@@ -39,11 +39,27 @@ public class UnfepiUtils {
 			Transaction tx = ses.beginTransaction();
 			ses.createSQLQuery("CALL "+procedureName+"();").executeUpdate();
 			ses.createSQLQuery("UPDATE dmp_ SET lastDumpDate = NOW() WHERE dmpProcedureName='"+procedureName+"'").executeUpdate();
-					
 			tx.commit();
-			
 			ses.flush();
 	}
+	
+	public static void executeDump(String procedureName, Integer calenderId){
+		Session ses = Context.getNewSession();
+		try {
+			executeDump(procedureName, calenderId, ses);
+		}
+		finally{
+			ses.close();
+		}
+	}
+	
+	public static void executeDump(String procedureName,Integer calenderId, Session ses){
+		Transaction tx = ses.beginTransaction();
+		ses.createSQLQuery("CALL "+procedureName+"("+ calenderId +");").executeUpdate();
+		ses.createSQLQuery("UPDATE dmp_ SET lastDumpDate = NOW() WHERE dmpProcedureName='"+procedureName+"'").executeUpdate();
+		tx.commit();
+		ses.flush();
+}
 	
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	public static Enum getEnumFilter(SearchFilter filter, Class enumType, HttpServletRequest req){

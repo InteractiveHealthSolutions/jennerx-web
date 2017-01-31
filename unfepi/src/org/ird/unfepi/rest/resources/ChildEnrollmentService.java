@@ -42,7 +42,7 @@ public class ChildEnrollmentService {
 			JSONObject obj1 = (JSONObject)parser.parse(json);
 			String receivedJson=GZipper.decompress((String)obj1.get("compress"));
 			JSONObject obj = (JSONObject)parser.parse(receivedJson);
-			System.out.println(obj);
+//			System.out.println(obj);
 			JSONArray enrollmentArray=(JSONArray) obj.get("child");
 			JSONArray eventArray=(JSONArray) obj.get("event");
 			JSONArray vaccinationArray=(JSONArray) obj.get("vaccination");
@@ -75,7 +75,7 @@ public class ChildEnrollmentService {
 		jsonObject.put("lastCount", count);
 		sB.append(" \"lastCount\" : "+count);
 		sB.append("}");
-		System.out.println(jsonObject.toJSONString());
+//		System.out.println(jsonObject.toJSONString());
 		return jsonObject.toJSONString();
 	}
 }

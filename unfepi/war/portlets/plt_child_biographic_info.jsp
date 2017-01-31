@@ -31,9 +31,9 @@
 		</td>
     </tr>
 	<tr>
-		<td>Gender</td>
+		<td>Gender<span class="mendatory-field">*</span></td>
 		<td><spring:bind path="command.${commandAdditionalPathStr}gender">
-			<select id="gender" name="${commandAdditionalPathStr}gender" bind-value="${status.value}" style="text-transform: capitalize">
+			<select id="gender" name="${commandAdditionalPathStr}gender" bind-value="${status.value}" style="text-transform: capitalize" class="requiredField">
 				<option value=""></option>
 				<c:forEach items="<%=Gender.values()%>" var="gen_value">
 					<c:if test="${!fn:containsIgnoreCase(gen_value, 'unknown')}">

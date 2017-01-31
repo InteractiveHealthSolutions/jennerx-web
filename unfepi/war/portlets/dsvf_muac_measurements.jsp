@@ -12,7 +12,8 @@
 <tbody>
 <c:forEach items="${model.muacmeasurements}" var="muac" varStatus="varststus">
 <tr>
-<td><a onClick="viewImmunizationDetails(this.text);" class="anchorCustom">${muac['identifier']}</a></td>
+<td>${muac['identifier']}</td>
+<%-- <td><a onClick="viewImmunizationDetails(this.text);" class="anchorCustom">${muac['identifier']}</a></td> --%>
 <td>${muac['measureDate']}</td>
 <td>${muac['colorrange']}</td>
 </tr>

@@ -5,10 +5,10 @@ function viewChildDetails(programId){
 	win.focus();
 }
 
-function viewImmunizationDetails(programId){
+function viewImmunizationDetails(identifier, calenderId){
 	var win;
-
-	win=window.open('immunizationDetails.htm?programId='+programId,'ImmunizationDetails:'+programId,'width=600,height=700,resizable=no,toolbar=no,location=no,scrollbars=yes,directories=no,status=no,menubar=no,copyhistory=no');
+	var url = "immunizationDetails.htm?calenderId="+ calenderId + "&" +"programId="+ identifier ;
+	win=window.open(url ,'ImmunizationDetails:'+identifier,'width=600,height=700,resizable=no,toolbar=no,location=no,scrollbars=yes,directories=no,status=no,menubar=no,copyhistory=no');
 	win.focus();
 }
 

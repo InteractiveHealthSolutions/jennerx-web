@@ -36,7 +36,7 @@ public class MetadataServiceHelper
 			
 			Integer calendarId = (Integer) sc.getCustomQueryService().getDataByHQL("select vaccinationcalendarId from HealthProgram where programId = "+ programId).get(0);
 			jsonObject.put("calendarId", calendarId);
-			
+			//TODO
 			ProgramMetaDataServiceHelper.fillVaccine(jsonObject, mainResponse);
 			ProgramMetaDataServiceHelper.fillVaccineGap(jsonObject, mainResponse);
 			ProgramMetaDataServiceHelper.fillVaccineGapType(jsonObject, mainResponse);
@@ -99,12 +99,19 @@ public class MetadataServiceHelper
 				Integer calendarId = (Integer) sc.getCustomQueryService().getDataByHQL("select vaccinationcalendarId from HealthProgram where programId = "+ programId).get(0);
 				jsonObject.put("calendarId", calendarId);
 				
-				fillVaccine(mainResponse);
+				//Old
+				/*fillVaccine(mainResponse);
 				fillVaccineGap(mainResponse);
 				fillVaccineGapType(mainResponse);
-				fillVaccinePrerequisite(mainResponse);
+				fillVaccinePrerequisite(mainResponse);*/
+				
 				// fillRounds(programId, mainResponse);
 				ProgramMetaDataServiceHelper.fillRound(jsonObject, mainResponse);
+				
+				ProgramMetaDataServiceHelper.fillVaccine(jsonObject, mainResponse);
+				ProgramMetaDataServiceHelper.fillVaccineGap(jsonObject, mainResponse);
+				ProgramMetaDataServiceHelper.fillVaccineGapType(jsonObject, mainResponse);
+				ProgramMetaDataServiceHelper.fillVaccinePrerequisite(jsonObject, mainResponse);
 				
 				HashMap<String, Object> resp = new HashMap<String, Object>();
 				resp.put("METADATA", mainResponse);

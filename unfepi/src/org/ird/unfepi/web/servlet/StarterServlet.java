@@ -71,9 +71,9 @@ public class StarterServlet extends HttpServlet
 			SchedulerFactory schedFact = new StdSchedulerFactory(prop);
 			scheduler = schedFact.getScheduler();
 //			SmserSystem.instantiateSmserSystem(scheduler);
-//			ReportingSystem.instantiateReportingSystem(scheduler);
-//			startScheduler();
-//			System.out.println("......QUARTZ SCHEDULER STARTED SUCCESSFULLY......".toLowerCase());
+			ReportingSystem.instantiateReportingSystem(scheduler);
+			startScheduler();
+			System.out.println("......QUARTZ SCHEDULER STARTED SUCCESSFULLY......".toLowerCase());
 		}
 		catch (Exception e) {
 			e.printStackTrace();

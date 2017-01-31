@@ -56,7 +56,7 @@ public class EditVaccineController extends DataEditFormController{
 		
 		new VaccineValidator().validate(vacc, results, false);
 		if(results.hasErrors()){	
-			System.out.println(results.toString());
+//			System.out.println(results.toString());
 			return showForm(modelAndView, "dataForm");	
 		}
 		
@@ -102,7 +102,7 @@ public class EditVaccineController extends DataEditFormController{
 		else{
 			String vaccineName = request.getParameter("editRecord");
 			
-			System.out.println(vaccineName + "   vaccineNamevaccineNamevaccineNamevaccineName");
+//			System.out.println(vaccineName + "   vaccineNamevaccineNamevaccineNamevaccineName");
 			
 			ServiceContext sc = Context.getServices();
 			try{

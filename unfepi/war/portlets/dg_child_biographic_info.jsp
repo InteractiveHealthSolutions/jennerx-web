@@ -8,6 +8,8 @@
 		<td>
 		<c:set var="childsessvar" value="childfollowup"></c:set>
 		<fmt:formatDate value="${sessionScope[childsessvar].dateEnrolled}" pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>"/>
+		<input type="hidden" id="enrolldatein" value="<fmt:formatDate value="${sessionScope[childsessvar].dateEnrolled}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/>">
+		
 		</td>
 	</tr>
 	<tr>
@@ -19,8 +21,8 @@
   		</td>
 	</tr>
 	<tr>
-		<td>Father`s Name</td>
-		<td>${sessionScope[childsessvar].fatherFirstName} ${sessionScope[childsessvar].fatherLastName}</td>
+		<td>Mother`s Name</td>
+		<td>${sessionScope[childsessvar].motherFirstName} ${sessionScope[childsessvar].motherLastName}</td>
 	</tr>
 	<tr>
 		<td>DOB , Age</td>

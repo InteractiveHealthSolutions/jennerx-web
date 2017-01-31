@@ -231,7 +231,7 @@ public class ProgramMetaDataServiceHelper {
 		String query = "SELECT " + Arrays.toString(columns).replaceAll("\\[|\\]", "") + " FROM " + table
 				+ " where vaccineId in (SELECT distinct(vaccineId) FROM vaccinegap WHERE vaccinationcalendarId = "+calendarId+" ) and vaccine_entity like '%child%'";
 		
-		System.out.println(query);
+//		System.out.println(query);
 		
 		if(json.has(RequestElements.METADATA_VACCINE)){
 			fetchAndCompareMetaData(RequestElements.METADATA_VACCINE, columns, table, query, response, json);
@@ -320,7 +320,7 @@ public class ProgramMetaDataServiceHelper {
 		String query = "SELECT " + Arrays.toString(columns).replaceAll("\\[|\\]", "") + " FROM " + table
 				+ " WHERE " + RequestElements.METADATA_FIELD_VACCINATIONCALENDAR_ID + " = " + calendarId;
 		
-		System.out.println(query);
+//		System.out.println(query);
 		
 		if(json.has(RequestElements.METADATA_VACCINEGAP)){
 			fetchAndCompareMetaData(RequestElements.METADATA_VACCINEGAP, columns, table, query, response, json);
@@ -343,7 +343,7 @@ public class ProgramMetaDataServiceHelper {
 		String query = "SELECT " + Arrays.toString(columns).replaceAll("\\[|\\]", "") + " FROM " + table
 				/*+ " WHERE " + RequestElements.METADATA_FIELD_VACCINATIONCALENDAR_ID + " = " + calendarId*/;
 		
-		System.out.println(query);
+//		System.out.println(query);
 		
 		if(json.has(RequestElements.METADATA_VACCINEGAPTYPE)){
 			fetchAndCompareMetaData(RequestElements.METADATA_VACCINEGAPTYPE, columns, table, query, response, json);

@@ -62,9 +62,10 @@ public class DownloadLatestDataService {
 			JSONObject obj = (JSONObject)parser.parse(json);
 
 			String lastEditDate=(String)obj.get(RequestElements.LAST_SYNC_TIME)	;
+			Long programId =(Long) obj.get(RequestElements.METADATA_FIELD_HEALTHPROGRAM_ID);
 
 			org.json.JSONObject j=new org.json.JSONObject();
-			j.put("allvaccinations",childServiceHelper.getUpdatedVaccinations(lastEditDate));
+			j.put("allvaccinations",childServiceHelper.getUpdatedVaccinations(lastEditDate, programId));
 			if(lastSynced==null){
 				lastSynced=new Date();
 			}
@@ -90,9 +91,10 @@ public class DownloadLatestDataService {
 			JSONParser parser = new JSONParser();	
 			JSONObject obj = (JSONObject)parser.parse(json);
 			String lastEditDate=(String)obj.get(RequestElements.LAST_SYNC_TIME)	;
+			Long programId =(Long) obj.get(RequestElements.METADATA_FIELD_HEALTHPROGRAM_ID);
 
 			org.json.JSONObject j=new org.json.JSONObject();
-			j.put("allencounters",childServiceHelper.getNewEucounters(lastEditDate));
+			j.put("allencounters",childServiceHelper.getNewEucounters(lastEditDate, programId));
 			
 			return GZipper.compress(j.toString());
 		}catch(Exception e){

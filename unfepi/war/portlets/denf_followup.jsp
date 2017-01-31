@@ -285,6 +285,13 @@ ul{
 <script type="text/javascript">
 	$(function() {
 		
+		if($("#healthProgramId").val().length == 0){
+			
+			$("option[id^='hp'").each(function(index, element){		
+				$('#'+element.id).prop("disabled", false);
+			});
+		}
+		
 		$("#vaccinationCenterId option").hide();
 
 		if($('#healthProgramId').val().length != 0){
@@ -292,7 +299,10 @@ ul{
 			getVaccines();
 		}
 		
-		var minday = dateDifference(new Date(), convertToDate($('#birthdateinh').val()));
+// 		var minday = dateDifference(new Date(), convertToDate($('#birthdateinh').val()));
+// 		enrolldatein
+		console.log($('#enrolldatein').val()+ "  -------");
+		var minday = dateDifference(new Date(), convertToDate($('#enrolldatein').val()));
 		$("#centerVisitDate").datepicker("option", "minDate", '-'+minday+'d');
 		
 		$('.tab-section').hide();

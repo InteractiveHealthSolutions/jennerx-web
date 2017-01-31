@@ -21,10 +21,8 @@ import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Child;
 import org.ird.unfepi.model.Encounter.DataEntrySource;
 import org.ird.unfepi.model.HealthProgram;
-import org.ird.unfepi.model.ItemStock;
 import org.ird.unfepi.model.ItemsDistributed;
 import org.ird.unfepi.model.Vaccination;
-import org.ird.unfepi.model.Vaccine;
 import org.ird.unfepi.utils.UserSessionUtils;
 import org.ird.unfepi.web.utils.ControllerUIHelper;
 import org.ird.unfepi.web.utils.VaccinationCenterVisit;
@@ -83,12 +81,12 @@ public class FollowupVaccinationController extends DataEntryFormController{
 		
 		try {
 			Date date = new SimpleDateFormat(WebGlobals.GLOBAL_DATE_FORMAT_JAVA).parse(visitDate);
-			System.out.println(childId  + "   " +visitDate + "   "  + WebGlobals.GLOBAL_SQL_DATE_FORMAT.format(date));
+//			System.out.println(childId  + "   " +visitDate + "   "  + WebGlobals.GLOBAL_SQL_DATE_FORMAT.format(date));
 			
 			List<ItemsDistributed> records = sc.getCustomQueryService().getDataByHQL(
 					"from ItemsDistributed where itemDistributedId.mappedId ="+childId+ 
 					" and itemDistributedId.distributedDate ='" +WebGlobals.GLOBAL_SQL_DATE_FORMAT.format(date)+"'");
-			System.out.println(records.size());
+//			System.out.println(records.size());
 			
 			if(records == null || records.size() == 0 ){
 				return "true";
@@ -111,12 +109,12 @@ public class FollowupVaccinationController extends DataEntryFormController{
 									HttpServletRequest request, HttpServletResponse response,
 									ModelAndView modelAndView)	throws Exception{
 		
-		if(centerVisit.getItemsDistributedL() != null && centerVisit.getItemsDistributedL().size() >0){
-			System.out.println("item list size " + centerVisit.getItemsDistributedL().size());
-			for(ItemsDistributed itm : centerVisit.getItemsDistributedL()){
-				System.out.println(itm.getItemDistributedId().getDistributedDate() + " " + itm.getItemDistributedId().getItemRecordNum() + " " + itm.getQuantity()+ " " + itm.getItemDistributedId().getMappedId());
-			}
-		}
+//		if(centerVisit.getItemsDistributedL() != null && centerVisit.getItemsDistributedL().size() >0){
+//			System.out.println("item list size " + centerVisit.getItemsDistributedL().size());
+//			for(ItemsDistributed itm : centerVisit.getItemsDistributedL()){
+//				System.out.println(itm.getItemDistributedId().getDistributedDate() + " " + itm.getItemDistributedId().getItemRecordNum() + " " + itm.getQuantity()+ " " + itm.getItemDistributedId().getMappedId());
+//			}
+//		}
 		
 		LoggedInUser user=UserSessionUtils.getActiveUser(request);
 		ServiceContext sc = Context.getServices();
@@ -195,11 +193,11 @@ public class FollowupVaccinationController extends DataEntryFormController{
 			sc.closeSession();
 		}
 		
-		if(previousVaccination != null){
+		if (previousVaccination != null) {
 			vcv.setHealthProgramId(previousVaccination.getRound().getHealthProgramId());
 			vcv.setVaccinationCenterId(previousVaccination.getVaccinationCenterId());
 			vcv.setVaccinatorId(previousVaccination.getVaccinatorId());
-		} else {
+		} else if (previousRecord != null) {
 			//if previously only invalid_dose, not_vaccinated, not_given exist
 			vcv.setHealthProgramId(previousRecord.getRound().getHealthProgramId());
 			vcv.setVaccinationCenterId(previousRecord.getVaccinationCenterId());

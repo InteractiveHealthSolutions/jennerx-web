@@ -60,7 +60,7 @@ public class ViewItemsDistributed extends DataDisplayController{
 		
 		List<HashMap> records = sc.getCustomQueryService().getDataBySQLMapResult(query);
 		
-		System.out.println(records.toString());
+//		System.out.println(records.toString());
 	
 		addModelAttribute(model,"itemdistributed", records);
 		addModelAttribute(model, "totalRows", totalRows);
