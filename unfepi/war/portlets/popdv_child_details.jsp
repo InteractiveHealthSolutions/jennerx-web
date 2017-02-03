@@ -6,7 +6,6 @@
 
 <%@ include file="/WEB-INF/template/include.jsp"%>
 
-<%-- <c:catch var="catchException"> --%>
 <c:out value="${lmessage}"></c:out>
 <div class="dvwform">
 <table>
@@ -19,9 +18,6 @@ if(UserSessionUtils.getActiveUser(request).isDefaultAdministrator()){%>
 <tr>
       		<td>Program ID</td><td><c:out value="${model.programId}"></c:out></td>
 </tr>
-<!-- <tr> -->
-<%--       		<td>Last EPI number assigned</td><td><c:out value="${model.epiNumber}"></c:out></td> --%>
-<!-- </tr> -->
 <tr>
             <td>Date enrolled</td><td><fmt:formatDate value="${model.child.dateEnrolled}" /></td>
 </tr>
@@ -41,7 +37,6 @@ if(UserSessionUtils.getActiveUser(request).isDefaultAdministrator()){%>
             <td>Mother`s last name</td><td><c:out value="${model.child.motherLastName}"></c:out></td>
 </tr>
 <tr>
-<%--             <td>CNIC</td><td><c:out value="${model.child.nic}"></c:out></td> --%>
 </tr>
 <tr>
             <td>Date of birth</td><td><fmt:formatDate value="${model.child.birthdate}"  type="date"/> 
@@ -65,9 +60,6 @@ if(UserSessionUtils.getActiveUser(request).isDefaultAdministrator()){%>
             <td>Termination reason</td><td><c:out value="${model.child.terminationReason}"></c:out></td>
 </tr>
 </c:if>
-<%-- <tr>
-            <td>Completion Date</td><td><fmt:formatDate value="${model.child.dateOfCompletion}" type="date"/></td>
-</tr> --%>
 <tr><td></td><td><a onclick="showHide(this)" hideshow="hideshow1" class="anchorCustom" ><< less</a></td></tr>
 <tr class="hideshow1">
             <td>Additional note</td><td><c:out value="${model.child.description}"></c:out></td>
@@ -101,33 +93,6 @@ if(permed){
 <tr class="hideshow1">
             <td>Last updated</td><td><c:out value="${model.child.lastEditedDate}" /></td>    
 </tr>
-<%-- <c:if test="${not empty model.preferences}"> --%>
-<!-- <tr> -->
-<!--     <td colspan="2" class="headerrow">Program Preference</td> -->
-<!-- </tr> -->
-<!-- <tr> -->
-<!-- 	<td colspan="2"> -->
-<!-- <div style="overflow: auto;"> -->
-<!-- 	<table class="dvwform"> -->
-<!-- 	  <tr> -->
-<!-- 	    <th>Date of preference</th> -->
-<!-- 	    <th>Data entry datetime</th> -->
-<!-- 	    <th>Approved reminders?</th> -->
-<!-- 	    <th>Approved lottery?</th> -->
-<!-- 	  </tr> -->
-<%-- 	  <c:forEach items="${model.preferences}" var="prf" > --%>
-<!-- 	  <tr> -->
-<%-- 	    <td><span style="color: maroon;"><fmt:formatDate value="${prf.datePreferenceChanged}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></span></td> --%>
-<%-- 	    <td><fmt:formatDate value="${prf.createdDate}" pattern="<%=WebGlobals.GLOBAL_DATETIME_FORMAT_JAVA%>"/></td> --%>
-<%-- 	    <td>${prf.hasApprovedReminders}</td> --%>
-<%-- 	    <td>${prf.hasApprovedLottery}</td> --%>
-<!-- 	  </tr> -->
-<%-- 	  </c:forEach> --%>
-<!-- 	</table> -->
-<!-- </div> -->
-<!-- 	</td> -->
-<!-- </tr> -->
-<%-- </c:if> --%>
 <c:forEach items="${model.contacts}" var="con" >
 	<tr>
         <td colspan="2" class="headerrow">${con.numberType} Contact Number</td>
@@ -231,21 +196,8 @@ if(permed){
      <tr><td>Vaccination status</td><td><c:out value="${rec.vaccination.vaccinationStatus}"></c:out></td></tr>
      <tr><td>Vaccination due date</td><td><fmt:formatDate value="${rec.vaccination.vaccinationDuedate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td></tr>
      <tr><td>Vaccination date</td><td><fmt:formatDate value="${rec.vaccination.vaccinationDate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>"/></td></tr>
-<%-- 	 <tr><td>Approved incentive</td><td><c:out value="${rec.vaccination.hasApprovedLottery}"></c:out></td></tr> --%>
-<%--      <tr><td>Reminders pending</td><td><c:out value="${rec.remindersPending}"></c:out></td></tr> --%>
-<%--      <tr><td>Reminder late?/ Max days</td><td><c:out value="${rec.anyReminderLate}"/><c:out value="${rec.maxDaysLate}"/></td></tr> --%>
    	 <tr><td>Vaccination center</td><td><c:out value="${rec.center.idMapper.identifiers[0].identifier} : ${rec.center.name}"></c:out></td></tr> 
-<%-- 	 <tr><td>EPI number</td><td><c:out value="${rec.vaccination.epiNumber}"></c:out></td></tr>  --%>
 	 <tr><td>Vaccinator</td><td><c:out value="${rec.vaccinator.idMapper.identifiers[0].identifier} : ${rec.vaccinator.firstName}"></c:out></td></tr>
-<%--      <tr><td>Timeliness</td><td><c:out value="${rec.vaccination.timelinessStatus}"/><c:if test="${not empty rec.vaccination.timelinessFactor}">(${rec.vaccination.timelinessFactor})</c:if></td></tr> --%>
-<%-- <tr><td>Reason untimely vaccination</td> <td><c:out value="${rec.vaccination.reasonNotTimelyVaccination}"></c:out></td></tr>
-     <tr><td>Other reason untimely vaccination</td> <td><c:out value="${rec.vaccination.reasonNotTimelyVaccinationOther}"></c:out></td></tr> --%>
-     <%-- <tr><td>Weight</td> <td><c:out value="${rec.vaccination.weight}"></c:out></td></tr>
-     <tr><td>Height</td> <td><c:out value="${rec.vaccination.height}"></c:out></td></tr>
-     <tr><td>Brought by</td><td><c:out value="${rec.vaccination.broughtByRelationship.relationName}"></c:out></td></tr>
-	 <tr><td>Other brought by</td><td><c:out value="${rec.vaccination.otherBroughtByRelationship}"></c:out></td></tr>
-	 <tr><td>Previous vaccination record</td><td><c:out value="${rec.vaccination.previousVaccinationRecordNum}"></c:out></td></tr>
-	 <tr><td>Next vaccination record</td><td><c:out value="${rec.vaccination.nextVaccinationRecordNum}"></c:out></td></tr> --%>
 <tr><td></td><td><a onclick="showHide(this)" hideshow="hideshow1" class="anchorCustom" ><< less</a></td></tr>
 	 <tr class="hideshow1"><td>Additional note</td><td><c:out value="${rec.vaccination.description}"></c:out></td></tr>
 <%

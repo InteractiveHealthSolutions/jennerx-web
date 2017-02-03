@@ -17,28 +17,16 @@
 
 <link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.8.18.custom.css?v=${version_css_js}">
 <link rel="stylesheet" type="text/css" href="css/style.css?v=${version_css_js}">
-<!-- ABOVE FOUR CSS COMBINED INTO THIS ONE -->
-<%-- <link rel="stylesheet" type="text/css" href="css/all-min.css?v=${version_css_js}"> --%>
 
-<!-- modernizr enables HTML5 elements and feature detects -->
-<%-- <script type="text/javascript" src="js/modernizr-1.5.min.js?v=${version_css_js}"></script> --%>
-<%-- <script type="text/javascript" src="gen_validatorv31.js?v=${version_css_js}"></script> --%>
 <script type="text/javascript" src="date.js?v=${version_css_js}"></script>
 <script type="text/javascript" src="immunization.js?v=${version_css_js}"></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js?v=${version_css_js}"></script>
-<%-- <script type="text/javascript" src="js/jquery-ui-timepicker-addon.js?v=${version_css_js}"></script> --%>
-<%-- <script type="text/javascript" src="js/jquery-ui-sliderAccess.js?v=${version_css_js}"></script> --%>
-<%-- <script src="css/ui/jquery.ui.core.js?v=${version_css_js}"></script>
-<script src="css/ui/jquery.ui.widget.js?v=${version_css_js}"></script> --%>
+
 <link rel="stylesheet" type="text/css" href="js/jquery.multiselect.css?v=${version_css_js}">
 <script type="text/javascript" src="js/jquery.multiselect.min.js?v=${version_css_js}"></script>
 
-<!-- <link rel="stylesheet" type="text/css" href="css/multi-select.css"> -->
-<!-- <script type="text/javascript" src="js/jquery.multi-select.js"></script> -->
-
-
 <script type="text/javascript" src="js/jquery.easyui.min.js?v=${version_css_js}"></script>
-<script type="text/javascript" src="dwrloader.js?v=${version_css_js}"></script>
+<%-- <script type="text/javascript" src="dwrloader.js?v=${version_css_js}"></script> --%>
 
 <script type='text/javascript' src='${pageContext.request.contextPath}/dwr/interface/DWRAdminTaskService.js?v=${version_css_js}'></script>
 <script type='text/javascript' src='${pageContext.request.contextPath}/dwr/interface/DWRChildService.js?v=${version_css_js}'></script>

@@ -53,7 +53,7 @@ public class ViewSummaryVaccineDoses extends DataDisplayController {
 					startRecord = Integer.parseInt(req.getParameter("pager.offset"));
 				}
 
-				List<HashMap> vaccineL = sc.getCustomQueryService().getDataBySQLMapResult("select * from vaccine where shortName like '%"+ vaccineName +"%' and vaccine_entity like 'CHILD_COMPULSORY'");
+				List<HashMap> vaccineL = sc.getCustomQueryService().getDataBySQLMapResult("select * from vaccine where shortName like '"+ vaccineName +"%' and vaccine_entity like 'CHILD_COMPULSORY'");
 //				System.out.println("vaccineL size " + vaccineL.size());
 
 				String mainQuery = "SELECT "
@@ -107,7 +107,7 @@ public class ViewSummaryVaccineDoses extends DataDisplayController {
 						+", sum(if(vaccineId IN ("+vaccineId+") and (TIMESTAMPDIFF(MONTH, c.birthdate, v.vaccinationDate) BETWEEN 24 AND 59),1,0)) 'total_24_59' "
 						+ query;
 				
-//				System.out.println(querytotal);
+				System.out.println(querytotal);
 						
 				List<HashMap> recordsum = sc.getCustomQueryService().getDataBySQLMapResult(querytotal);
 //				System.out.println(recordsum);

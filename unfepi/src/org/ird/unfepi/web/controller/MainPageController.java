@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.ird.unfepi.GlobalParams;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
+import org.ird.unfepi.model.Round;
+import org.ird.unfepi.model.VaccinationCenter;
 import org.ird.unfepi.utils.date.DateUtils;
 import org.ird.unfepi.utils.date.DateUtils.TIME_INTERVAL;
 import org.springframework.stereotype.Controller;
@@ -57,6 +59,12 @@ public class MainPageController {
 
 			model.put("avgEnrollmentsPerWeek", (week==null||totalEnrollments==null)?null:new Float(totalEnrollments/(week+0.0)));
 			model.put("avgSuccessfulEventsPerWeek", (week==null||totalSuccessEvnts==null)?null:new Float(totalSuccessEvnts/(week+0.0)));
+			
+			List<Round> roundList = sc.getCustomQueryService().getDataByHQL("from Round");
+			model.put("roundList", roundList);
+			
+			List<VaccinationCenter> siteList = sc.getCustomQueryService().getDataByHQL("from VaccinationCenter");
+			model.put("siteList", siteList);
 			
 		}
 		catch (Exception e) {

@@ -65,7 +65,7 @@ public class DWRReportService {
 			sc.closeSession();
 		}
 		
-	    //System.out.println(map);
+	    System.out.println(map);
 		return map;
 	}
 	

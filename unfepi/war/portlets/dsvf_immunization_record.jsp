@@ -5,9 +5,8 @@
 <%@page import="org.ird.unfepi.constants.WebGlobals"%>
 	<script src="immunization.js" type="text/javascript"></script>
 	<script type="text/javascript" >
-	function callViewImmunizationDetails(){
-		console.log($("#calendersearchoption").val()  + "  " + $("#childIdentifier").text());
-		viewImmunizationDetails($("#childIdentifier").text(), $("#calendersearchoption").val() );
+	function callViewImmunizationDetails(childIdentifier){
+		viewImmunizationDetails(childIdentifier, $("#calendersearchoption").val() );
 	}
 	</script>
 
@@ -47,7 +46,7 @@
 		<tbody>
 			<c:forEach items="${model.datalist}" var="map">
 				<tr>
-					<td><a id="childIdentifier" onClick="callViewImmunizationDetails()" class="anchorCustom">${map.identifier}</a></td>
+					<td><a id="childIdentifier" onClick="callViewImmunizationDetails(this.text)" class="anchorCustom">${map.identifier}</a></td>
 
 					<td><fmt:formatDate value="${map.birthdate}" pattern="<%=WebGlobals.GLOBAL_DATE_FORMAT_JAVA%>" /></td>
 

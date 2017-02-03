@@ -4,8 +4,8 @@
 <div class="dvwform centerdivh">
 <table>
 			<tr>
-<!-- 			<td colspan="16"><span class="formheadingS">Project Summary</span> -->
-			<%-- <a class="linkiconS iconcsv" href="exportdata?extype=<%=SystemPermissions.DOWNLOAD_SUMMARY_PROJECT_CSV%>"></a> --%></td>
+			<td colspan="16"><span class="formheadingS">Project Summary</span>
+			<a class="linkiconS iconcsv" href="exportdata?extype=<%=SystemPermissions.DOWNLOAD_SUMMARY_PROJECT_CSV%>"></a></td>
 			</tr>
 				<tr>
 				<th>Total Enrollments</th>
@@ -711,30 +711,6 @@ function addPercentage(value, percentage) {
 
 //-->
 </script>
-<form>
-<div class="searchpalette right">
-<select id="vaccinationCentercombo" name="vaccinationCentercombo" multiple="multiple"></select>
-Date 
-        <input id="filterDatefrom" name="filterDatefrom" class="calendarbox"  readonly="readonly" value=""/> 
-		<input id="filterDateto" name="filterDateto" class="calendarbox"  readonly="readonly" value=""/>
-		<a class="clearDate" onclick="clearFilterDate();">X</a>
-		<script>
-		function clearFilterDate(){	
-			$('input[id^="filterDate"]').val("");
-			refreshDatagrids();
-		}
-		
-		$(function() {
-			$('input[id^="filterDate"]').datepicker({
-		    	duration: '',
-		        constrainInput: false,
-		        maxDate: "+0d",
-		        dateFormat: '<%=WebGlobals.GLOBAL_DATE_FORMAT_JS%>',
-		        onSelect: filterDateChanged
-		     });
-		});
-		</script>
-</div>
 <script type="text/javascript">
 function exportCSV(csvType){
 	var centerparam = $('#vaccinationCentercombo').val()!=null?$('#vaccinationCentercombo').val().join(','):"";
@@ -792,6 +768,30 @@ $(".export").on('click', function (event) {
     // We actually need this to be a typical hyperlink
 });
 </script>
+<form>
+<div class="searchpalette right">
+<select id="vaccinationCentercombo" name="vaccinationCentercombo" multiple="multiple"></select>
+Date 
+        <input id="filterDatefrom" name="filterDatefrom" class="calendarbox"  readonly="readonly" value=""/> 
+		<input id="filterDateto" name="filterDateto" class="calendarbox"  readonly="readonly" value=""/>
+		<a class="clearDate" onclick="clearFilterDate();">X</a>
+		<script>
+		function clearFilterDate(){	
+			$('input[id^="filterDate"]').val("");
+			refreshDatagrids();
+		}
+		
+		$(function() {
+			$('input[id^="filterDate"]').datepicker({
+		    	duration: '',
+		        constrainInput: false,
+		        maxDate: "+0d",
+		        dateFormat: '<%=WebGlobals.GLOBAL_DATE_FORMAT_JS%>',
+		        onSelect: filterDateChanged
+		     });
+		});
+		</script>
+</div>
 <div id="tt" class="easyui-tabs" plain="true" border="false">
 	<div title="Enrollment by Center">
 		<div class="headingRuleUp" id="toolbarEnrByCenter" style="background-color: transparent;" >
