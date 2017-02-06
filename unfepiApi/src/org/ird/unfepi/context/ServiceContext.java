@@ -21,6 +21,9 @@ import org.ird.unfepi.model.dao.DAOEncounter;
 import org.ird.unfepi.model.dao.DAOEncounterResults;
 import org.ird.unfepi.model.dao.DAOIdMapper;
 import org.ird.unfepi.model.dao.DAOIncentiveParams;
+import org.ird.unfepi.model.dao.DAOLocationAttribute;
+import org.ird.unfepi.model.dao.DAOLocationAttributeType;
+import org.ird.unfepi.model.dao.DAOLocationType;
 import org.ird.unfepi.model.dao.DAOLotterySms;
 import org.ird.unfepi.model.dao.DAONotifier;
 import org.ird.unfepi.model.dao.DAOResponse;
@@ -58,7 +61,10 @@ import org.ird.unfepi.model.dao.hibernatedimpl.DAOHealthProgramImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOHibernateImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOIdMapperImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOIncentiveParamsImpl;
+import org.ird.unfepi.model.dao.hibernatedimpl.DAOLocationAttributeImpl;
+import org.ird.unfepi.model.dao.hibernatedimpl.DAOLocationAttributeTypeImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOLocationImpl;
+import org.ird.unfepi.model.dao.hibernatedimpl.DAOLocationTypeImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOLotterySmsImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAONotifierImpl;
 import org.ird.unfepi.model.dao.hibernatedimpl.DAOPermissionImpl;
@@ -201,8 +207,17 @@ public class ServiceContext {
 		DAOWomenImpl womendao = new DAOWomenImpl(session);
 		this.womenService = new WomenServiceImpl(this,womendao);
 		
+//		DAOLocationImpl locdao = new DAOLocationImpl(session);
+//		this.setLocationService(new LocationServiceImpl(this,locdao));
+		
+		
 		DAOLocationImpl locdao = new DAOLocationImpl(session);
-		this.setLocationService(new LocationServiceImpl(this,locdao));
+		DAOLocationType ltdao = new DAOLocationTypeImpl(session);
+		DAOLocationAttribute locattrdao = new DAOLocationAttributeImpl(session);
+		DAOLocationAttributeType locattrtypedao = new DAOLocationAttributeTypeImpl(session);
+		this.setLocationService(new LocationServiceImpl(this, locdao, ltdao, locattrdao, locattrtypedao));
+		
+		
 		
 		DAODirectQuery dirqudao = new DAODirectQueryImpl(session);
 		DAO dao = new DAOHibernateImpl(session);

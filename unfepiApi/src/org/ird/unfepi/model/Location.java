@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,6 +19,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.ForeignKey;
+
 @Entity
 @Table(name = "location")
 public class Location {
@@ -39,38 +39,16 @@ public class Location {
 	
 	private String otherIdentifier;
 	
-	private String address1;
-	
-	private String address2;
-	
-	private String cityVillage;
-	
-	private String stateProvince;
-	
-	private String country;
-	
-	private String postalCode;
-	
 	private String latitude;
 	
 	private String longitude;
-	
-	private String countyDistrict;
-	
-	private String address3;
-	
-	private String address4;
-	
-	private String address5;
-
-	private String address6;
 	
 	@ManyToOne(targetEntity = Location.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "parentLocation")
 	@ForeignKey(name = "location_parentLocation_location_locationId_FK")
 	private Location parentLocation;
 	
-	@OneToMany(fetch = FetchType.LAZY, targetEntity = Location.class, mappedBy = "parentLocation" ,cascade=CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, targetEntity = Location.class, mappedBy = "parentLocation")
 	private Set<Location> childLocations;
 	
 	@OneToOne(targetEntity = LocationType.class)
@@ -143,54 +121,6 @@ public class Location {
 		this.otherIdentifier = otherIdentifier;
 	}
 
-	public String getAddress1() {
-		return address1;
-	}
-
-	public void setAddress1(String address1) {
-		this.address1 = address1;
-	}
-
-	public String getAddress2() {
-		return address2;
-	}
-
-	public void setAddress2(String address2) {
-		this.address2 = address2;
-	}
-
-	public String getCityVillage() {
-		return cityVillage;
-	}
-
-	public void setCityVillage(String cityVillage) {
-		this.cityVillage = cityVillage;
-	}
-
-	public String getStateProvince() {
-		return stateProvince;
-	}
-
-	public void setStateProvince(String stateProvince) {
-		this.stateProvince = stateProvince;
-	}
-
-	public String getCountry() {
-		return country;
-	}
-
-	public void setCountry(String country) {
-		this.country = country;
-	}
-
-	public String getPostalCode() {
-		return postalCode;
-	}
-
-	public void setPostalCode(String postalCode) {
-		this.postalCode = postalCode;
-	}
-
 	public String getLatitude() {
 		return latitude;
 	}
@@ -205,46 +135,6 @@ public class Location {
 
 	public void setLongitude(String longitude) {
 		this.longitude = longitude;
-	}
-
-	public String getCountyDistrict() {
-		return countyDistrict;
-	}
-
-	public void setCountyDistrict(String countyDistrict) {
-		this.countyDistrict = countyDistrict;
-	}
-
-	public String getAddress3() {
-		return address3;
-	}
-
-	public void setAddress3(String address3) {
-		this.address3 = address3;
-	}
-
-	public String getAddress4() {
-		return address4;
-	}
-
-	public void setAddress4(String address4) {
-		this.address4 = address4;
-	}
-
-	public String getAddress5() {
-		return address5;
-	}
-
-	public void setAddress5(String address5) {
-		this.address5 = address5;
-	}
-
-	public String getAddress6() {
-		return address6;
-	}
-
-	public void setAddress6(String address6) {
-		this.address6 = address6;
 	}
 
 	public Location getParentLocation() {

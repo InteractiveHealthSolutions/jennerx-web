@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 @SessionAttributes("command")
@@ -44,6 +43,7 @@ public class AddLocationController  extends DataEntryFormController {
 	
 	@RequestMapping(method=RequestMethod.GET)
 	public ModelAndView addLocationView(HttpServletRequest request, ModelAndView modelAndView){
+		modelAndView.addObject("hello", "lelo");
 		modelAndView.addObject("command", formBackingObject());
 		return showForm(modelAndView, "dataForm");	
 	}
@@ -62,8 +62,8 @@ public class AddLocationController  extends DataEntryFormController {
 			ControllerUIHelper.doLocationRegistration(loc, user.getUser(), sc);
 			sc.commitTransaction();
 			GlobalParams.DBLOGGER.info(IRUtils.convertToString(loc), LoggerUtils.getLoggerParams(LogType.TRANSACTION_INSERT, formType, user.getUser().getUsername()));
-			return new ModelAndView(new RedirectView("viewLocations.htm?action=search&"+SearchFilter.NAME_PART.FILTER_NAME()+"="+loc.getName()));
-			
+			return new ModelAndView(UnfepiUtils.redirectView("viewLocations.htm","action=search&"+SearchFilter.NAME_PART.FILTER_NAME()+"="+loc.getName()));
+		
 		} catch (Exception e) {
 			sc.rollbackTransaction();
 			e.printStackTrace();

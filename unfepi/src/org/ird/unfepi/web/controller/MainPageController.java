@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.ird.unfepi.GlobalParams;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
+import org.ird.unfepi.model.HealthProgram;
+import org.ird.unfepi.model.Location;
 import org.ird.unfepi.model.Round;
 import org.ird.unfepi.model.VaccinationCenter;
 import org.ird.unfepi.utils.date.DateUtils;
@@ -66,6 +68,11 @@ public class MainPageController {
 			List<VaccinationCenter> siteList = sc.getCustomQueryService().getDataByHQL("from VaccinationCenter");
 			model.put("siteList", siteList);
 			
+			List<HealthProgram> healthProgramList = sc.getCustomQueryService().getDataByHQL("from HealthProgram");
+			model.put("healthProgramList", healthProgramList);
+			
+			List<Location> locationList = sc.getCustomQueryService().getDataByHQL("from Location");
+			model.put("locationList", locationList);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

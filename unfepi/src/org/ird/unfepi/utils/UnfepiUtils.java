@@ -1,5 +1,6 @@
 package org.ird.unfepi.utils;
 
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,6 +17,8 @@ import org.ird.unfepi.context.Context;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.util.UriUtils;
 
 import com.mysql.jdbc.StringUtils;
 
@@ -127,5 +130,9 @@ public class UnfepiUtils {
 			hc.add(c);
 		}
 		return hc;
+	}
+	
+	public static RedirectView redirectView(String url, String payload) throws UnsupportedEncodingException {
+		return new RedirectView(url+"?"+UriUtils.encodeQuery(payload, "UTF-8"));
 	}
 }

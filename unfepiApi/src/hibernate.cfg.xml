@@ -102,6 +102,11 @@
 		<mapping class="org.ird.unfepi.model.ItemStock"/>
 		<mapping class="org.ird.unfepi.model.ItemsDistributed"/>
 		<mapping class="org.ird.unfepi.model.MuacMeasurement"/>
+		
+		
+		<mapping class="org.ird.unfepi.model.LocationAttribute" />
+		<mapping class="org.ird.unfepi.model.LocationAttributeType" />
+		
     </session-factory>
 </hibernate-configuration>
 
