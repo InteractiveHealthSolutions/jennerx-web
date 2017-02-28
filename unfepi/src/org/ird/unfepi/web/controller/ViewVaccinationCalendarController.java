@@ -40,33 +40,43 @@ public class ViewVaccinationCalendarController extends DataDisplayController {
 		
 		String calendarId = req.getParameter("calendarId");
 		
-		if(!StringUtils.isEmptyOrWhitespaceOnly(calendarId)){
-			
-			List<LinkedHashMap> vaccinesL = sc.getCustomQueryService().getDataBySQLMapResult("SELECT * FROM vaccine ORDER BY vaccineId");   /*where vaccine_entity like 'CHILD%'*/
-			List<LinkedHashMap> vaccineGapsL = sc.getCustomQueryService().getDataBySQLMapResult("SELECT vg.vaccineId , group_concat(concat(vgt.name ,'(',vg.value,' ',vg.gapTimeUnit, ')') ORDER BY vg.vaccineGapTypeId SEPARATOR ',') AS gaps FROM vaccinegap vg  JOIN vaccinegaptype vgt ON vg.vaccineGapTypeId = vgt.vaccineGapTypeId WHERE vg.vaccinationcalendarId = "+ calendarId +" GROUP BY vg.vaccineId ORDER BY vg.vaccineId;"); 
-			List<LinkedHashMap> prerequisiteL = sc.getCustomQueryService().getDataBySQLMapResult("SELECT vp.vaccineId, group_concat(v.name) AS prerequisites FROM vaccineprerequisite vp JOIN vaccine v on vp.vaccineprerequisiteId = v.vaccineId WHERE vaccinationcalendarId = "+ calendarId +" GROUP BY vaccineId ");
-			
-			Map<Map, Map<String, String>> data = new LinkedHashMap<Map, Map<String,String>>();
-			
-			for (HashMap vaccine : vaccinesL) {
-				for (HashMap gap : vaccineGapsL) {
-					Map<String, String> vaccineGaps = new LinkedHashMap<String, String>();
-					if (vaccine.get("vaccineId") == gap.get("vaccineId")) {
-						String gapString = (String) gap.get("gaps");
-						Pattern pattern = Pattern.compile("([A-Za-z\\s]+Gap)\\((\\d+\\s[A-Z]+)\\)");
-						Matcher matcher = pattern.matcher(gapString);
-						while (matcher.find()) {
-							vaccineGaps.put(matcher.group(1).trim(), matcher.group(2).trim());
+		try {
+			if(!StringUtils.isEmptyOrWhitespaceOnly(calendarId)){
+				
+				List<LinkedHashMap> vaccinesL = sc.getCustomQueryService().getDataBySQLMapResult("SELECT * FROM vaccine ORDER BY vaccineId");   /*where vaccine_entity like 'CHILD%'*/
+				List<LinkedHashMap> vaccineGapsL = sc.getCustomQueryService().getDataBySQLMapResult("SELECT vg.vaccineId , group_concat(concat(vgt.name ,'(',vg.value,' ',vg.gapTimeUnit, ')') ORDER BY vg.vaccineGapTypeId SEPARATOR ',') AS gaps FROM vaccinegap vg  JOIN vaccinegaptype vgt ON vg.vaccineGapTypeId = vgt.vaccineGapTypeId WHERE vg.vaccinationcalendarId = "+ calendarId +" GROUP BY vg.vaccineId ORDER BY vg.vaccineId;"); 
+				List<LinkedHashMap> prerequisiteL = sc.getCustomQueryService().getDataBySQLMapResult("SELECT vp.vaccineId, group_concat(v.name) AS prerequisites FROM vaccineprerequisite vp JOIN vaccine v on vp.vaccineprerequisiteId = v.vaccineId WHERE vaccinationcalendarId = "+ calendarId +" GROUP BY vaccineId ");
+				
+				Map<Map, Map<String, String>> data = new LinkedHashMap<Map, Map<String,String>>();
+				
+				for (HashMap vaccine : vaccinesL) {
+					for (HashMap gap : vaccineGapsL) {
+						Map<String, String> vaccineGaps = new LinkedHashMap<String, String>();
+						if (vaccine.get("vaccineId") == gap.get("vaccineId")) {
+							String gapString = (String) gap.get("gaps");
+							Pattern pattern = Pattern.compile("([A-Za-z\\s]+Gap)\\((\\d+\\s[A-Z]+)\\)");
+							Matcher matcher = pattern.matcher(gapString);
+							while (matcher.find()) {
+								vaccineGaps.put(matcher.group(1).trim(), matcher.group(2).trim());
+							}
+							data.put(vaccine, vaccineGaps);
 						}
-						data.put(vaccine, vaccineGaps);
 					}
 				}
+				model.put("data", data);
+				model.put("prerequisites", prerequisiteL);
+				addModelAttribute(model, "calenderId", calendarId);
 			}
-			model.put("data", data);
-			model.put("prerequisites", prerequisiteL);
-			addModelAttribute(model, "calenderId", calendarId);
+			return showForm(model);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			req.getSession().setAttribute("exceptionTrace",e);
+			return new ModelAndView("exception");		
 		}
-		return showForm(model);
+		finally{
+			sc.closeSession();
+		} 
 	}
 	
 	@ModelAttribute

@@ -71,7 +71,10 @@ public class MainPageController {
 			List<HealthProgram> healthProgramList = sc.getCustomQueryService().getDataByHQL("from HealthProgram");
 			model.put("healthProgramList", healthProgramList);
 			
-			List<Location> locationList = sc.getCustomQueryService().getDataByHQL("from Location");
+//			Commune
+			
+			List<Location> locationList = sc.getCustomQueryService().getDataByHQL(
+					"from Location where locationType in (select locationTypeId from LocationType where typeName like '%Commune%') ");
 			model.put("locationList", locationList);
 		}
 		catch (Exception e) {

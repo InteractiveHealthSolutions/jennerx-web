@@ -29,8 +29,8 @@ public class EPICertificateTest {
 		Context.instantiate(prop);
 		GlobalParams.UNFEPI_PROPERTIES = prop;
 		
-		TarseelContext.instantiate(prop, "smstarseel.cfg.xml");
+//		TarseelContext.instantiate(prop, "smstarseel.cfg.xml");
 
-		new ResponseReaderJob().readResponses("EPICertificateTest");
+//		new ResponseReaderJob().readResponses("EPICertificateTest");
 	}
 }

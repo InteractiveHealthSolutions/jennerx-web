@@ -1,5 +1,6 @@
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Properties;
 
 import net.jmatrix.eproperties.EProperties;
@@ -7,6 +8,8 @@ import net.jmatrix.eproperties.EProperties;
 import org.ird.unfepi.GlobalParams;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
+import org.ird.unfepi.model.RoundVaccine;
+import org.ird.unfepi.model.VialCount;
 import org.ird.unfepi.utils.IRUtils;
 import org.ird.unfepi.utils.SecurityUtils;
 
@@ -31,8 +34,22 @@ public class ProgramTest {
 		
 		ServiceContext sc = Context.getServices();
 		
-		String str =SecurityUtils.decrypt("fz/xDJTMlLb1QyPv+USU1zZZ4XbY7M9KS9eYdcGC2XNXubieem42Vy3i+cu7oLP3RXLPXJcAi96IM6Y5UXhN5g==", "administrator");
-		System.out.println("----------" + str);
+		RoundVaccine rv = new RoundVaccine();
+		
+//		VialCount vc =  new VialCount();
+//		vc.setDate(new Date());
+//		vc.setCount(12);
+//		vc.setBeginning(true);
+//		vc.setRoundId(1);
+//		vc.setVaccineId((short)1);
+//		vc.setWasteCount(2);
+		
+		
+		sc.getCustomQueryService().save(rv);
+		sc.commitTransaction();
+		
+//		String str =SecurityUtils.decrypt("fz/xDJTMlLb1QyPv+USU1zZZ4XbY7M9KS9eYdcGC2XNXubieem42Vy3i+cu7oLP3RXLPXJcAi96IM6Y5UXhN5g==", "administrator");
+//		System.out.println("----------" + str);
 //		HealthProgram hp = new HealthProgram();
 //		hp.setName("program2");
 //		hp.setDescription("test program");

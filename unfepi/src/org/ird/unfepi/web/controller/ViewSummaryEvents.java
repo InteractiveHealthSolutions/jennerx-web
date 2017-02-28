@@ -88,8 +88,8 @@ public class ViewSummaryEvents extends DataDisplayController{
 							+" AND result.roundId IN (select roundId from round where healthProgramId = " + healthProgramId + ") "
 							+ "AND  site = "+ siteMappedId ;
 							
-					mainQuery += query +" group by dateEncounterEntered, result.site, result.roundId "
-							+ " order by result.site, result.roundId, dateEncounterEntered ";
+					mainQuery += query +" group by DATE(dateEncounterEntered), result.site, result.roundId "
+							+ " order by result.site, result.roundId, DATE(dateEncounterEntered) ";
 					
 //					System.out.println(mainQuery);
 					

@@ -92,9 +92,9 @@ public class DWRVaccineService {
 			
 			ArrayList<VaccineSchedule> scheduleCurrent = VaccineSchedule.generateDefaultSchedule(birthdate, centerVisitDate, childId, vaccinationCenterId, true, scheduleRetro, healthProgramId);
 			
-//			for (VaccineSchedule vs : scheduleCurrent) {
-//				vs.printVaccineSchedule();
-//			}			
+			for (VaccineSchedule vs : scheduleCurrent) {
+				vs.printVaccineSchedule();
+			}			
 			
 			return scheduleCurrent;
 		} catch (Exception e) {

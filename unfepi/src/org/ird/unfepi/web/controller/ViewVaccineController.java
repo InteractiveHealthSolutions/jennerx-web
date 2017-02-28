@@ -31,13 +31,22 @@ public class ViewVaccineController extends DataDisplayController {
 		ServiceContext sc = Context.getServices();
 		Map<String, Object> model = new HashMap<String, Object>();
 		
-		List<HashMap> vaccinesL = sc.getCustomQueryService().getDataBySQLMapResult("SELECT * FROM vaccine where vaccine_entity like 'CHILD%' OR vaccine_entity is null ORDER BY vaccineId ");   /*where vaccine_entity like 'CHILD%'*/
-		
-		model.put("vaccinesList", vaccinesL);
-		
-//		System.out.println(vaccinesL.toString());
-		
-		return showForm(model);
+		try{
+			List<HashMap> vaccinesL = sc.getCustomQueryService().getDataBySQLMapResult("SELECT * FROM vaccine where vaccine_entity like 'CHILD%' OR vaccine_entity is null ORDER BY vaccineId ");   /*where vaccine_entity like 'CHILD%'*/
+			model.put("vaccinesList", vaccinesL);
+			
+//			System.out.println(vaccinesL.toString());
+			return showForm(model);
+
+		}catch (Exception e) {
+			e.printStackTrace();
+			req.getSession().setAttribute("exceptionTrace",e);
+			return new ModelAndView("exception");		
+		}
+		finally{
+			sc.closeSession();
+		}
+
 	}
 	
 	

@@ -35,11 +35,22 @@ public class ViewItemController  extends DataDisplayController{
 		ServiceContext sc = Context.getServices();
 		Map<String, Object> model = new LinkedHashMap<String, Object>();
 		
-		List<ItemStock> itemStocksL = sc.getCustomQueryService().getDataByHQL("from ItemStock");
-		totalRows = itemStocksL.size();
-		addModelAttribute(model,"itemStocks", itemStocksL);
-		addModelAttribute(model, "totalRows", totalRows);
+		try{
+			List<ItemStock> itemStocksL = sc.getCustomQueryService().getDataByHQL("from ItemStock");
+			totalRows = itemStocksL.size();
+			addModelAttribute(model,"itemStocks", itemStocksL);
+			addModelAttribute(model, "totalRows", totalRows);
+			
+			return showForm(model);
+
+		}catch (Exception e) {
+			e.printStackTrace();
+			req.getSession().setAttribute("exceptionTrace",e);
+			return new ModelAndView("exception");		
+		}
+		finally{
+			sc.closeSession();
+		}
 		
-		return showForm(model);
 	}
 }

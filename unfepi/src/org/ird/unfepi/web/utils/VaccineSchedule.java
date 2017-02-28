@@ -282,6 +282,7 @@ public class VaccineSchedule {
 					}
 					else if(retro_suspect){
 						status = VaccineStatusType.RETRO;
+						vaccdate = schduedate;
 						vsch.setCenter(vaccinationCenterId);
 					}
 					else if(prerequisite_passed){

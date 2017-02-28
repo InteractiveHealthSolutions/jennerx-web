@@ -84,8 +84,8 @@ public class ViewSummaryVaccinations extends DataDisplayController{
 						+ " WHERE vac.vaccinationStatus LIKE 'VACCINATED' AND vac.roundId IN("
 						+ " SELECT rd.roundId FROM round rd where healthprogramId = "+ healthProgramId + ") "
 						+ " AND vac.vaccinationCenterId = " + siteMappedId
-						+ " GROUP BY vac.vaccinationDate, vac.vaccinationCenterId, vac.roundId "
-						+ " ORDER BY vac.vaccinationCenterId , vac.roundId, vac.vaccinationDate";
+						+ " GROUP BY DATE(vac.vaccinationDate), vac.vaccinationCenterId, vac.roundId "
+						+ " ORDER BY vac.vaccinationCenterId , vac.roundId, DATE(vac.vaccinationDate)";
 //						+ " limit "+startRecord +", 20";
 				
 //				System.out.println(mainQuery);

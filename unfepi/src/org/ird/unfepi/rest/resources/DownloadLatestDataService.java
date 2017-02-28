@@ -103,7 +103,6 @@ public class DownloadLatestDataService {
 		return null;
 	}
 	
-	
 	@Path("/itemsdistributed")
 	@POST
 	@Produces(MediaType.TEXT_PLAIN)

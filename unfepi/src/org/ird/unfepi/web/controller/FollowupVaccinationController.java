@@ -61,22 +61,20 @@ public class FollowupVaccinationController extends DataEntryFormController{
 	@RequestMapping(value="/oldVaccineList/{childId}" , method=RequestMethod.GET)
 	@ResponseBody
 	public String getVaccineList(@PathVariable Integer childId){
-		
 		ServiceContext sc = Context.getServices();
-		
 		List preVacList = sc.getCustomQueryService().getDataBySQLMapResult("SELECT * FROM Vaccination WHERE childId = "+childId+" AND vaccinationStatus NOT IN('NOT_VACCINATED','NOT_GIVEN','INVALID_DOSE')");
 		JSONArray data =  new JSONArray();
 		for (Object object : preVacList) {
 			data.put(new JSONObject((HashMap)object));
 //			System.out.println(new JSONObject((HashMap)object).toString());
 		}
+		sc.closeSession();
 		return data.toString();
 	}
 	
 	@RequestMapping(value="/isPreventionActivityOn/{childId}/{visitDate}" , method=RequestMethod.GET)
 	@ResponseBody
 	public String isPreventionActivityOn(@PathVariable Integer childId, @PathVariable String visitDate){
-		
 		ServiceContext sc = Context.getServices();
 		
 		try {
@@ -93,6 +91,8 @@ public class FollowupVaccinationController extends DataEntryFormController{
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			sc.closeSession();
 		}
 		
 		return "false";

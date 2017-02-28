@@ -46,7 +46,6 @@ function dateDifference(firstDate, secondDate) {
 	var millisecondsPerDay = 1000 * 60 * 60 * 24;
 	var millisBetween = startDay.getTime() - endDay.getTime();
 	var days = millisBetween / millisecondsPerDay;
-	
 	return Math.floor(days);
 }
 

@@ -148,7 +148,6 @@ public class ChildEnrollmentServiceHelper {
 			ch.setLastEditedByUserId(user);
 			ch.setLastEditedDate(RestUtils.stringToDate(lastEditedDate));
 			ch.setCreatedByUserId(user);
-			ch.setCreatedDate(RestUtils.stringToDate(createdDate));
 			ch.setCreator(user);
 			ch.setMappedId(idMapper.getMappedId());
 			ch.setStatus(STATUS.FOLLOW_UP);

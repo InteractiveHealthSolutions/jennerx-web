@@ -47,10 +47,12 @@ public class MetadataServiceHelper
 			ProgramMetaDataServiceHelper.fillLocationType(jsonObject, mainResponse);
 			
 			ProgramMetaDataServiceHelper.fillRound(jsonObject, mainResponse);
+			ProgramMetaDataServiceHelper.fillRoundVaccine(jsonObject, mainResponse);
 			fillUsers(mainResponse);
 //			fillHealthProgram(mainResponse);
 			ProgramMetaDataServiceHelper.fillHealthProgram(jsonObject, mainResponse);
 			ProgramMetaDataServiceHelper.fillItemStock(jsonObject, mainResponse);
+			ProgramMetaDataServiceHelper.fillVialCount(jsonObject, mainResponse);
 			//fillAllChildren(mainResponse);
 			//fillAllVaccinations(mainResponse);
 

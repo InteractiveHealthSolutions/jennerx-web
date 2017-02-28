@@ -54,8 +54,6 @@ public class StarterServlet extends HttpServlet
 			Context.instantiate(prop);
 			GlobalParams.UNFEPI_PROPERTIES = prop;
 			
-//			TarseelContext.instantiate(prop, "smstarseel.cfg.xml");
-			
 			System.out.println("......PROPERTIES LOADED SUCCESSFULLY......");
 		
 			//setup email server
@@ -66,11 +64,11 @@ public class StarterServlet extends HttpServlet
 			System.out.println("......EMAIL ENGINE STARTED SUCCESSFULLY......".toLowerCase());
 				
 			// start smser and notifiers etc
-//			System.out.println(">>>>INSTANTIATING SCHEDULERS......");
+			System.out.println(">>>>INSTANTIATING SCHEDULERS......");
 
 			SchedulerFactory schedFact = new StdSchedulerFactory(prop);
 			scheduler = schedFact.getScheduler();
-//			SmserSystem.instantiateSmserSystem(scheduler);
+
 			ReportingSystem.instantiateReportingSystem(scheduler);
 			startScheduler();
 			System.out.println("......QUARTZ SCHEDULER STARTED SUCCESSFULLY......".toLowerCase());

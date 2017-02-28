@@ -49,14 +49,14 @@ function submitThisForm() {
 <form method="post" id="frm" name="frm" >
 <table class="denform-h">
 	<tr>
-		<td>City<span class="mendatory-field">*</span></td>
+		<td>Sous-prefecture / City<span class="mendatory-field">*</span></td>
 		<td>
             <select id="cityId" name="cityId" onchange="treeDataLoaderLocations(this.value);" bind-value="${cityIdselected}">
                   <option></option>
             </select>
     <script><!--
         $(document).ready(function() {
-            DWREntityService.getLocationList(["city","Sous-prefecture"],null,{
+            DWREntityService.getLocationList(["Sous-prefecture"],null,{
                  async: false,
                  callback: function (resl) {
                          $('#cityId').empty().append('<option></option>');
@@ -71,7 +71,7 @@ function submitThisForm() {
 		</td>
 	</tr>
 	<tr>
-		<td>Area</td>
+		<td>Site Location<span class="mendatory-field">*</span></td>
         <td>
        <input name="centerLocation" id="cc" class="easyui-combotree" style="width:250px;"/>
 <script type="text/javascript">

@@ -86,8 +86,8 @@ public class ViewSummaryVaccineDoses extends DataDisplayController {
 						+"AND v.roundId IN(SELECT roundId FROM round where healthprogramId = "+ healthProgramId + ") "
 						+"AND v.vaccinationCenterId = " + siteMappedId;
 
-				mainQuery += query +" GROUP BY v.vaccinationDate, v.vaccinationCenterId ,v.roundId  "
-						+"ORDER BY v.vaccinationCenterId ,v.roundId ,v.vaccinationDate ";
+				mainQuery += query +" GROUP BY DATE(v.vaccinationDate), v.vaccinationCenterId ,v.roundId  "
+						+"ORDER BY v.vaccinationCenterId ,v.roundId ,DATE(v.vaccinationDate) ";
 
 				totalRows = sc.getCustomQueryService().getDataBySQLMapResult(mainQuery).size();
 //				System.out.println(vaccineL.toString());

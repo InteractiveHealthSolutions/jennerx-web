@@ -179,14 +179,35 @@ public class ProgramMetaDataServiceHelper {
 //				+ "join centerprogram cp on r.centerProgramId = cp.centerProgramId where cp.healthProgramId = "+ programId;
 		
 		String query = "SELECT " + Arrays.toString(columns).replaceAll("\\[|\\]", "") + " FROM " + table
-				+ " WHERE " + RequestElements.METADATA_CENTERPROGRAM_HEALTHPROGRAMID + " = " + programId
-				;
+				+ " WHERE " + RequestElements.METADATA_CENTERPROGRAM_HEALTHPROGRAMID + " = " + programId;
 		
 		if(json.has(RequestElements.METADATA_ROUND)){
 			fetchAndCompareMetaData(RequestElements.METADATA_ROUND, columns, table, query, response, json);
 		}
 		else{
 			fetchMetaDataByCustomQuery(RequestElements.METADATA_ROUND, query, columns, response);
+		}
+	}
+	
+	public static void fillRoundVaccine(JSONObject json, org.json.simple.JSONObject response)
+	{
+		String[] columns = new String[] { 
+				RequestElements.METADATA_FIELD_ROUNDVACCINE_VACCINEID,
+				RequestElements.METADATA_FIELD_ROUNDVACCINE_ROUNDID,
+				RequestElements.METADATA_FIELD_ROUNDVACCINE_STATUS};
+		String table = "roundvaccine";
+
+		Integer programId = json.optInt("programId");		
+		
+		String query = "SELECT " + Arrays.toString(columns).replaceAll("\\[|\\]", "") + " FROM " + table
+				+ " WHERE " + RequestElements.METADATA_FIELD_ROUNDVACCINE_ROUNDID 
+				+ " IN (SELECT roundId FROM round where healthProgramId = "+programId +") ";
+		
+		if(json.has(RequestElements.METADATA_ROUNDVACCINE)){
+			fetchAndCompareMetaData(RequestElements.METADATA_ROUNDVACCINE, columns, table, query, response, json);
+		}
+		else{
+			fetchMetaDataByCustomQuery(RequestElements.METADATA_ROUNDVACCINE, query, columns, response);
 		}
 	}
 	
@@ -408,6 +429,33 @@ public class ProgramMetaDataServiceHelper {
 		}
 		else{
 			fetchMetaDataByCustomQuery(RequestElements.METADATA_ITEM, query, columns, response);
+		}
+
+	}
+	
+
+	public static void fillVialCount(JSONObject json, org.json.simple.JSONObject response)
+	{
+		String[] columns = new String[] { 
+				RequestElements.METADATA_FIELD_VIAL_VACCINEID,
+				RequestElements.METADATA_FIELD_VIAL_DATE,
+				RequestElements.METADATA_FIELD_VIAL_COUNT,
+				RequestElements.METADATA_FIELD_VIAL_WASTECOUNT,
+				RequestElements.METADATA_FIELD_VIAL_CENTREID,
+				RequestElements.METADATA_FIELD_VIAL_ROUNDID,
+				RequestElements.METADATA_FIELD_VIAL_ISBEGINNING, };
+		String table = "vialcount";
+		Integer programId = json.optInt("programId");
+		
+		String sub_query = "SELECT roundId FROM round WHERE healthProgramId = " + programId ;		
+		String query = "SELECT " + Arrays.toString(columns).replaceAll("\\[|\\]", "") + " FROM " + table
+				+ " WHERE " + RequestElements.METADATA_FIELD_VIAL_ROUNDID + " IN( " + sub_query + ")";
+		
+		if(json.has(RequestElements.METADATA_VIAL)){
+			fetchAndCompareMetaData(RequestElements.METADATA_VIAL, columns, table, query, response, json);
+		}
+		else{
+			fetchMetaDataByCustomQuery(RequestElements.METADATA_VIAL, query, columns, response);
 		}
 
 	}

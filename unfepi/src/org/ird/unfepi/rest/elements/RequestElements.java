@@ -58,6 +58,21 @@ public class RequestElements
 	public static final String METADATA_FIELD_ITEM_RECORD_NUM = "itemRecordNum";
 	public static final String METADATA_FIELD_ITEM_NAME = "name";
 	
+	public static final String METADATA_FIELD_VIAL_VACCINEID = "vaccineId";
+	public static final String METADATA_FIELD_VIAL_DATE = "date";
+	public static final String METADATA_FIELD_VIAL_COUNT = "count";
+	public static final String METADATA_FIELD_VIAL_WASTECOUNT = "wasteCount";
+	public static final String METADATA_FIELD_VIAL_CENTREID = "centreId";
+	public static final String METADATA_FIELD_VIAL_ROUNDID = "roundId";
+	public static final String METADATA_FIELD_VIAL_ISBEGINNING = "beginning";
+	public static final String METADATA_VIAL = "vialCount";
+	
+	
+	public static final String METADATA_FIELD_ROUNDVACCINE_VACCINEID = "vaccineId";
+	public static final String METADATA_FIELD_ROUNDVACCINE_ROUNDID = "roundId";
+	public static final String METADATA_FIELD_ROUNDVACCINE_STATUS ="status";
+	public static final String METADATA_ROUNDVACCINE = "VaccineStatus";
+	
 	public static final String METADATA_FIELD_ROUND_ID = "roundId";
 	public static final String METADATA_FIELD_ROUND_NAME = "name";
 	public static final String METADATA_FIELD_ROUND_CENTERPROGRAMID = "centerProgramId";

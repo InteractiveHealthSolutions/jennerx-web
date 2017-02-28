@@ -182,7 +182,7 @@ public class IMRUtils {
 							
 							long diff_ms = vaccineSchedule.getVaccination_date().getTime() - birthdate.getTime();
 							int days = (int) ((diff_ms / (1000*60*60*24)));
-//							System.out.println(vaccineSchedule.getVaccination_date() + " " + vaccineSchedule.getVaccine().getName()+ "   days " + days);
+							System.out.println(vaccineSchedule.getVaccination_date() + " " + vaccineSchedule.getVaccine().getName()+ "   days " + days);
 							
 							// child's over age 12 months -> 365 days 
 							if(days >= 365){

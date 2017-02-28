@@ -146,6 +146,8 @@ ul{
 	}
 	
 	function healthProgramChanged(){
+		
+		getRound();
 		unSelecteSites();
 		getSites();
 		getVaccines();
@@ -155,6 +157,17 @@ ul{
 		$("#vaccinationCenterId option:selected").removeAttr("selected");
 		$("#vaccinationCenterId").val("");
 		$("#vaccinationCenterId option").hide();
+	}
+	
+	
+	function getRound(){
+		$.get( "addchild/round/"+$('#healthProgramId').val()+".htm" , function( data ) {
+			var data = $.parseJSON(data);
+			var min = dateDifference(data.startDate, new Date())+1;
+		 	var max = dateDifference(data.endDate, new Date())+1;	
+		 	$("#centerVisitDate").datepicker("option", "maxDate", max+'d');
+			$("#centerVisitDate").datepicker("option", "minDate", min+'d');
+		});
 	}
 	
 	function getSites(){
@@ -241,12 +254,8 @@ ul{
 	}
 
 	function subfrm() {
-		
 		itemsSubmit();
-		
-		
 		var emptyItem = 0;
-		
 		$("input[id^='itemIn'").each(function(index, element){		
 			if($(this).prop('checked')){
 				var id = (element.id).match(/\d+/g);
@@ -255,12 +264,10 @@ ul{
 				}
 			}
 		});
-		
 		if(emptyItem > 0){
 			alert("fill the selected item's quantity ");
 			return false;
 		}
-		
 		
 		DWRVaccineService.overrideSchedule(vaccineScheduleList, '${command.centerVisit.uuid}', function(result) {
 			submitThisForm();
@@ -365,19 +372,7 @@ ul{
 <form method="post" id="frm" name="frm" >
 <div id="tab1" class="tab-section" >
 <table class="denform-h">
-	<tr>
-    	<td><spring:message code="label.enrollmentdate"/> <span class="mendatory-field">*</span></td>
-        <td><spring:bind path="command.centerVisit.visitDate">
-       			<input id="centerVisitDate" name="centerVisit.visitDate" value="${status.value}" 
-       				   maxDate="+0d" class="calendarbox requiredField" onclosehandler="centerVisitDateChanged" 
-       				   onkeypress="return isDateDigit(event)" placeholder="dd-MM-yyyy"/>
-       				   
-				<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
-			</spring:bind>
-			<script type="text/javascript">
-			</script>
-    	</td>
-    </tr>
+	
     <tr>
     	<td><spring:message code="label.vaccinatorId"/><span class="mendatory-field">*</span></td>
 		<td><spring:bind path="command.centerVisit.vaccinatorId">
@@ -420,7 +415,19 @@ ul{
 			</script>
 		</td>
 	</tr>
-	
+	<tr>
+    	<td><spring:message code="label.enrollmentdate"/> <span class="mendatory-field">*</span></td>
+        <td><spring:bind path="command.centerVisit.visitDate">
+       			<input id="centerVisitDate" name="centerVisit.visitDate" value="${status.value}" 
+       				   maxDate="+0d" minDate="+0d" class="calendarbox requiredField" onclosehandler="centerVisitDateChanged" 
+       				   onkeypress="return isDateDigit(event)" placeholder="dd-MM-yyyy"/>
+       				   
+				<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
+			</spring:bind>
+			<script type="text/javascript">
+			</script>
+    	</td>
+    </tr>
 	
 	<tr>
     	<td><spring:message code="label.childIdentifier"></spring:message><span class="mendatory-field">*</span></td>

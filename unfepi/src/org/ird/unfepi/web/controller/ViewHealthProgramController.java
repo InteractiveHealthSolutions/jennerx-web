@@ -1,11 +1,9 @@
 package org.ird.unfepi.web.controller;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,19 +36,28 @@ public class ViewHealthProgramController extends DataDisplayController  {
 		
 		Map<HealthProgram, List<CenterProgram>> programMap = new LinkedHashMap<HealthProgram, List<CenterProgram>>();
 		
-		List<HealthProgram> hpRecords = sc.getCustomQueryService().getDataByHQL("from HealthProgram ");
-		
-		for (HealthProgram hp : hpRecords) {
-			List<CenterProgram> cpRecords = sc.getCustomQueryService().getDataByHQL(
-					"from CenterProgram where healthProgramId = "+ hp.getProgramId() + " order by vaccinationCenter.name");
+		try{
+			List<HealthProgram> hpRecords = sc.getCustomQueryService().getDataByHQL("from HealthProgram ");
 			
-			programMap.put(hp, cpRecords);
+			for (HealthProgram hp : hpRecords) {
+				List<CenterProgram> cpRecords = sc.getCustomQueryService().getDataByHQL(
+						"from CenterProgram where healthProgramId = "+ hp.getProgramId() + " order by vaccinationCenter.name");
+				
+				programMap.put(hp, cpRecords);
+			}
+			
+			totalRows=hpRecords.size();
+			addModelAttribute(model, "healthprograms", programMap);
+			addModelAttribute(model, "totalRows", totalRows);
+			
+			return showForm(model);
+		}catch (Exception e) {
+			e.printStackTrace();
+			req.getSession().setAttribute("exceptionTrace",e);
+			return new ModelAndView("exception");		
 		}
-		
-		totalRows=hpRecords.size();
-		addModelAttribute(model, "healthprograms", programMap);
-		addModelAttribute(model, "totalRows", totalRows);
-		
-		return showForm(model);
+		finally{
+			sc.closeSession();
+		}
 	}
 }

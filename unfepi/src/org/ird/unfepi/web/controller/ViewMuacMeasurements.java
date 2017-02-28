@@ -36,7 +36,6 @@ public class ViewMuacMeasurements extends DataDisplayController{
 		ServiceContext sc = Context.getServices();
 		Map<String, Object> model = new LinkedHashMap<String, Object>();
 		
-//		MuacMeasurement
 		try {
 			String action = req.getParameter("action");
 			String pagerOffset = req.getParameter("pager.offset");

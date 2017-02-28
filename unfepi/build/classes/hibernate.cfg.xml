@@ -97,9 +97,11 @@
 		<mapping class="org.ird.unfepi.model.ItemsDistributed"/>
 		<mapping class="org.ird.unfepi.model.MuacMeasurement"/>
 		
-		
 		<mapping class="org.ird.unfepi.model.LocationAttribute" />
 		<mapping class="org.ird.unfepi.model.LocationAttributeType" />
+		
+		<mapping class="org.ird.unfepi.model.VialCount" />
+		<mapping class="org.ird.unfepi.model.RoundVaccine" />
 		
     </session-factory>
 </hibernate-configuration>

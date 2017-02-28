@@ -41,17 +41,25 @@ public class ViewHealthProgramRoundController extends DataDisplayController{
 		Map<String, Object> model = new HashMap<String, Object>();
 		
 		String programId = req.getParameter("programId");
-		
-		if(!StringUtils.isEmptyOrWhitespaceOnly(programId)){
-			
-			List<CenterProgram> centerProgramL = sc.getCustomQueryService().getDataByHQL("from CenterProgram where healthProgramId = "+Integer.parseInt(programId) + " and isActive = true order by vaccinationCenter.name");
-			List<Round> roundL = sc.getCustomQueryService().getDataByHQL("from Round where healthProgramId = " + programId );
-			
-			addModelAttribute(model, "centerPrograms", centerProgramL );
-			addModelAttribute(model, "rounds", roundL);
-			addModelAttribute(model, "programId", programId);
+		try{
+			if(!StringUtils.isEmptyOrWhitespaceOnly(programId)){
+				
+				List<CenterProgram> centerProgramL = sc.getCustomQueryService().getDataByHQL("from CenterProgram where healthProgramId = "+Integer.parseInt(programId) + " and isActive = true order by vaccinationCenter.name");
+				List<Round> roundL = sc.getCustomQueryService().getDataByHQL("from Round where healthProgramId = " + programId );
+				
+				addModelAttribute(model, "centerPrograms", centerProgramL );
+				addModelAttribute(model, "rounds", roundL);
+				addModelAttribute(model, "programId", programId);
+			}
+			return showForm(model);
+		}catch (Exception e) {
+			e.printStackTrace();
+			req.getSession().setAttribute("exceptionTrace",e);
+			return new ModelAndView("exception");		
 		}
-		return showForm(model);
+		finally{
+			sc.closeSession();
+		}
 	}
 	
 	@ModelAttribute

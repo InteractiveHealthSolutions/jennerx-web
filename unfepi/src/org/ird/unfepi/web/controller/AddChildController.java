@@ -61,6 +61,17 @@ public class AddChildController extends DataEntryFormController{
 		super(new DataEntryForm("enrollment", "Enrollment (New)", SystemPermissions.ADD_CHILDREN_DATA));
 	}
 	
+	@RequestMapping(value="/round/{programId}" , method=RequestMethod.GET)
+	public @ResponseBody String getRound(@PathVariable Integer programId){
+		ServiceContext sc = Context.getServices();
+//		List record = sc.getCustomQueryService().getDataBySQLMapResult("select * from round where isActive = true and healthProgramId = " + programId);
+		HashMap rounds = (HashMap) sc.getCustomQueryService().getDataBySQLMapResult("select * from round where isActive = true and healthProgramId = " + programId).get(0);
+		
+		JSONObject json = new JSONObject(rounds);
+		sc.closeSession();
+		return json.toString();
+	}
+	
 	@RequestMapping(value="/siteList/{programId}" , method=RequestMethod.GET)
 	public @ResponseBody String getSiteList(@PathVariable Integer programId){
 		ServiceContext sc = Context.getServices();

@@ -23,7 +23,26 @@ $(document).ready(function () {
 </script>
 
 <script type="text/javascript">
-<!--
+jQuery.fn.forceNumeric = function () {
+    return this.each(function () {
+        $(this).keypress(function (e) {
+            if (/\D/g.test(this.value))
+            {
+                // Filter non-digits from input value.
+                this.value = this.value.replace(/\D/g, '');
+            }
+             var key = e.which || e.keyCode;
+                if(key == 8 || key == 9 || key == 13 || 
+                	key == 35 || key == 36 || 
+                	key == 37 || key == 39 || 
+                	key == 46 || key == 45 ||
+                	/^\d+$/.test(String.fromCharCode(key))){
+                	return true;
+                }
+            return false;
+        });
+    });
+};
 
 $( document ).ready(function() {
 	$('select[bind-value]').each(function() {
@@ -59,30 +78,6 @@ $( document ).ready(function() {
 	$(".numbersOnly").forceNumeric();
 });
 
-jQuery.fn.forceNumeric = function () {
-    return this.each(function () {
-        $(this).keypress(function (e) {
-            if (/\D/g.test(this.value))
-            {
-                // Filter non-digits from input value.
-                this.value = this.value.replace(/\D/g, '');
-            }
-            
-             var key = e.which || e.keyCode;
-                
-                if(key == 8 || key == 9 || key == 13 || 
-                	key == 35 || key == 36 || 
-                	key == 37 || key == 39 || 
-                	key == 46 || key == 45 ||
-                	/^\d+$/.test(String.fromCharCode(key))){
-                	return true;
-                }
-
-            return false;
-        });
-    });
-};
-//-->
 </script>
 <c:set var="dataForm" value="${model.dataFormObject}"></c:set>
 <c:if test="${empty dataForm}">

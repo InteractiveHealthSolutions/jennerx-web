@@ -1,19 +1,34 @@
 package org.ird.unfepi.rest.resources;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.ird.unfepi.constants.WebGlobals;
+import org.ird.unfepi.context.Context;
+import org.ird.unfepi.context.ServiceContext;
+import org.ird.unfepi.model.Device;
+import org.ird.unfepi.model.LocationAttribute;
+import org.ird.unfepi.model.RoundVaccine;
+import org.ird.unfepi.model.VialCount;
 import org.ird.unfepi.rest.elements.RequestElements;
 import org.ird.unfepi.rest.elements.ResponseStatus;
 import org.ird.unfepi.rest.helper.MetadataServiceHelper;
 import org.ird.unfepi.rest.helper.MetadataServiceHelper2;
 import org.ird.unfepi.rest.helper.ResponseBuilder;
+import org.ird.unfepi.rest.helper.RestUtils;
+import org.ird.unfepi.utils.GZipper;
 import org.json.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 @Path("/metadata")
 public class MetadataService
@@ -45,22 +60,131 @@ public class MetadataService
 		
 	}
 	
-//	@POST
-//	@Path("/vaccinePrerequisite")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	@Consumes(MediaType.APPLICATION_JSON)
-//	public String metadataVaccinePrerequisite(String jsonString){
-//		String response = "";
-//		try {
-//			JSONObject jsonObject = new JSONObject(jsonString);
-//			JSONArray jsonArray = jsonObject.getJSONArray(RequestElements.METADATA_VACCINEPREREQUISITE);
-//			response = MetadataServiceHelper2.fillVaccinePrerequisite(jsonArray);
-//			
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return response;
-//	}
+	@POST
+	@Path("/save/vialcount")
+	@Produces(MediaType.TEXT_PLAIN)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public String saveVialInfo(String json)
+	{
+		JSONParser parser = new JSONParser();		
+		ServiceContext sc=Context.getServices();
+		try {
+			org.json.simple.JSONObject obj1 = (org.json.simple.JSONObject)parser.parse(json);
+			String receivedJson=GZipper.decompress((String)obj1.get("compress"));
+			org.json.simple.JSONObject obj2 = (org.json.simple.JSONObject)parser.parse(receivedJson);
+			
+//			org.json.simple.JSONObject obj2 = (org.json.simple.JSONObject)parser.parse(json);
+			JSONArray vialArray=(JSONArray) obj2.get("vialCount");
+			for (int i = 0; i < vialArray.size(); i++) {
+				try{
+					org.json.simple.JSONObject objectToParse = (org.json.simple.JSONObject) vialArray.get(i);
+					String date = (String) objectToParse.get(RequestElements.METADATA_FIELD_VIAL_DATE);
+					Integer count = ((Long)objectToParse.get(RequestElements.METADATA_FIELD_VIAL_COUNT)).intValue();
+					Integer wasteCount = ((Long) objectToParse.get(RequestElements.METADATA_FIELD_VIAL_WASTECOUNT)).intValue();
+					Integer centreId = ((Long) objectToParse.get(RequestElements.METADATA_FIELD_VIAL_CENTREID)).intValue();
+					Integer roundId = ((Long) objectToParse.get(RequestElements.METADATA_FIELD_VIAL_ROUNDID)).intValue();
+//					boolean isBeginning = Boolean.parseBoolean(((Long)objectToParse.get(RequestElements.METADATA_FIELD_VIAL_ISBEGINNING)).toString());
+					boolean isBeginning = (Long)objectToParse.get(RequestElements.METADATA_FIELD_VIAL_ISBEGINNING) == 1;
+					short vaccineId = ((Long)objectToParse.get(RequestElements.METADATA_FIELD_VIAL_VACCINEID)).shortValue();
+					
+					VialCount vialCount = new VialCount();
+					vialCount.setDate(WebGlobals.GLOBAL_SQL_DATE_FORMAT.parse(date));
+					vialCount.setCount(count);
+					vialCount.setWasteCount(wasteCount);
+					vialCount.setCentreId(centreId);
+					vialCount.setRoundId(roundId);
+					vialCount.setBeginning(isBeginning);
+					vialCount.setVaccineId(vaccineId);
+					
+					sc.getCustomQueryService().save(vialCount);
+				}catch (Exception e) {
+					e.printStackTrace();
+					continue;
+				}
+			}
+			sc.commitTransaction();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return e.getMessage();
+		} finally{
+			sc.closeSession();
+		}
+		return "saved successfully";
+	}
+	
+	@POST
+	@Path("/save/roundvaccine")
+	@Produces(MediaType.TEXT_PLAIN)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public String saveRoundVaccine(String json)
+	{
+		JSONParser parser = new JSONParser();		
+		ServiceContext sc=Context.getServices();
+		try {
+			org.json.simple.JSONObject obj1 = (org.json.simple.JSONObject)parser.parse(json);
+			String receivedJson=GZipper.decompress((String)obj1.get("compress"));
+			org.json.simple.JSONObject obj2 = (org.json.simple.JSONObject)parser.parse(receivedJson);
+			
+//			org.json.simple.JSONObject obj2 = (org.json.simple.JSONObject)parser.parse(json);
+			JSONArray vialArray=(JSONArray) obj2.get("VaccineStatus");
+			for (int i = 0; i < vialArray.size(); i++) {
+				try{
+					org.json.simple.JSONObject objectToParse = (org.json.simple.JSONObject) vialArray.get(i);
+					Integer roundId = ((Long) objectToParse.get(RequestElements.METADATA_FIELD_ROUNDVACCINE_ROUNDID)).intValue();
+					boolean status = (Long)objectToParse.get(RequestElements.METADATA_FIELD_ROUNDVACCINE_STATUS) == 1;
+					short vaccineId = ((Long)objectToParse.get(RequestElements.METADATA_FIELD_ROUNDVACCINE_VACCINEID)).shortValue();
+					RoundVaccine roundVaccine;
+					List<RoundVaccine> records = sc.getCustomQueryService().getDataByHQL("from RoundVaccine where vaccineId = " +vaccineId + " and roundId = "+ roundId);
+					if(records != null && records.size() > 0){
+						roundVaccine = records.get(0);
+					} else {
+						roundVaccine =  new RoundVaccine();
+						roundVaccine.setRoundId(roundId);
+						roundVaccine.setVaccineId(vaccineId);
+					}
+					roundVaccine.setStatus(status);
+					sc.getCustomQueryService().saveOrUpdate(roundVaccine);
+				}catch (Exception e) {
+					e.printStackTrace();
+					continue;
+				}
+			}
+			sc.commitTransaction();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return e.getMessage();
+		} finally{
+			sc.closeSession();
+		}
+		return "saved successfully";
+	}
+
+	@GET
+	@Path("/devicehealthprogram")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public String deviceHealthProgram(@QueryParam("device") String jsonString){
+		String response = "";
+		try {
+			JSONObject jsonObject = new JSONObject(jsonString);
+			System.out.println(jsonString);
+			
+			String healthprogramId = (String) jsonObject.get("programId");
+			String deviceId = (String) jsonObject.get("deviceId");
+			
+			ServiceContext sc = Context.getServices();
+			
+			Device device = (Device) sc.getCustomQueryService().getDataByHQL("fron Device where deviceId = " + deviceId).get(0) ;
+			//TODO 
+//			save this in db
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return response;
+	}
 	
 	@GET
 	@Path("/metadata")
@@ -161,4 +285,6 @@ public class MetadataService
 		}
 		return response;
 	}
+	
+
 }

@@ -1,6 +1,7 @@
 package org.ird.unfepi.web.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.mysql.jdbc.StringUtils;
 
 @Controller
 @RequestMapping("/location")
@@ -94,24 +97,37 @@ public class LocationModalController {
 
 	@RequestMapping(value = "/newlocationattribute", method = RequestMethod.POST)
 	public @ResponseBody String addlocationattribute(HttpServletRequest request, HttpServletResponse response) throws InstanceAlreadyExistsException {
-//		Context.instantiate(null);
-		ServiceContext sc = Context.getServices();	
-		ArrayList<Integer> ids = new ArrayList<Integer>();
+
+		ServiceContext sc = Context.getServices();
 		String locationParent = request.getParameter("locationParent");
 		ArrayList<LocationAttributeType> locationAttributeTypes = (ArrayList<LocationAttributeType>) sc.getLocationService().getAllLocationAttributeType(true, null);
 		ArrayList<LocationAttribute> locationAttributes = new ArrayList<LocationAttribute>();
+		
 		for(int i=0; i<locationAttributeTypes.size(); i++) {
-			LocationAttribute locationAttribute = new LocationAttribute();
-			locationAttribute.setLocationId(strToInt(locationParent));
-			locationAttribute.setLocationAttributeTypeId(locationAttributeTypes.get(i).getLocationAttributeTypeId());
-			locationAttribute.setValue(request.getParameter("locationAttribute_" + Integer.toString(locationAttributeTypes.get(i).getLocationAttributeTypeId())));
-			locationAttributes.add(locationAttribute);
+			String value = request.getParameter("locationAttribute_" + Integer.toString(locationAttributeTypes.get(i).getLocationAttributeTypeId()));
+			if(value != null && !StringUtils.isEmptyOrWhitespaceOnly(value)){
+				LocationAttribute locationAttribute;
+				List<LocationAttribute> records = sc.getCustomQueryService().getDataByHQL("from LocationAttribute where "
+						+ "locationAttributeTypeId = " +locationAttributeTypes.get(i).getLocationAttributeTypeId() 
+						+ " and locationId = " + strToInt(locationParent));
+				if(records != null && records.size() > 0){
+					locationAttribute = records.get(0);
+				} else {
+					locationAttribute = new LocationAttribute();
+				}
+//				LocationAttribute locationAttribute = new LocationAttribute();
+				locationAttribute.setLocationId(strToInt(locationParent));
+				locationAttribute.setLocationAttributeTypeId(locationAttributeTypes.get(i).getLocationAttributeTypeId());
+				locationAttribute.setValue(value);
+				locationAttributes.add(locationAttribute);
+			}
 		}
 		for(int i=0; i<locationAttributes.size(); i++) {
-			ids.add((Integer) sc.getLocationService().addLocationAttribute(locationAttributes.get(i)));
+			sc.getCustomQueryService().saveOrUpdate(locationAttributes.get(i));
+//			ids.add((Integer) sc.getLocationService().addLocationAttribute(locationAttributes.get(i)));
 		}
 		sc.commitTransaction();
-		return "New Attribute Created";
+		return "LocationAttribute(s) added/updated for locationId " + locationParent;
 	}
 
 	@RequestMapping(value = "/newlocationupdate", method = RequestMethod.POST)
