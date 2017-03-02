@@ -24,7 +24,8 @@ public class SummaryPerAreaController {
 	public @ResponseBody String getHealthProgramList(@PathVariable Integer locationId){
 		ServiceContext sc = Context.getServices();
 		List<String> healthprograms = sc.getCustomQueryService().getDataBySQL("SELECT distinct(healthProgramId) FROM centerprogram "
-				+ "where vaccinationCenterId in (SELECT mappedId FROM identifier where locationId =" +locationId + " )");
+				+ "where vaccinationCenterId in (SELECT mappedId FROM identifier where locationId =" +locationId + " OR "
+				+ " locationId IN (SELECT locationId FROM location WHERE parentLocation = " +locationId + ") )");
 		sc.closeSession();
 		return healthprograms.toString();
 	}
@@ -80,7 +81,9 @@ public class SummaryPerAreaController {
 					+"LEFT JOIN vaccinationcenter c ON c.mappedId=v.vaccinationCenterId  "
 					+"WHERE v.vaccinationStatus = 'VACCINATED'   "
 					+"AND v.vaccineId IN (select vaccineId from vaccinegap where vaccineGapTypeId=1 and vaccinationcalendarId = "+calendarId+")    "
-					+"AND v.vaccinationCenterId in (SELECT mappedId FROM identifier where locationId = "+ area + ")    "
+					+"AND v.vaccinationCenterId in (SELECT mappedId FROM identifier where locationId = "+ area + ""
+							+ " OR locationId IN (SELECT locationId FROM location WHERE parentLocation = "+ area + ")"
+							+ ")    "
 					+"AND r.healthProgramId = " +healthprogram+" "
 					+"AND r.roundId = "+ round + " "
 					+"GROUP BY day, r.roundId, v.vaccinationCenterId "
@@ -124,8 +127,8 @@ public class SummaryPerAreaController {
 		String order = req.getParameter("order");
 		int pageSize = req.getParameter("rows") == null ? WebGlobals.PAGER_PAGE_SIZE : Integer.parseInt(req.getParameter("rows"));
 		
-		System.out.println("area "+ area + " healthprogram " + healthprogram + " round " + round);
-		System.out.println("pageNumber "+ pageNumber + " sort " + sort + " order " +order + " pageSize " + pageSize);
+//		System.out.println("area "+ area + " healthprogram " + healthprogram + " round " + round);
+//		System.out.println("pageNumber "+ pageNumber + " sort " + sort + " order " +order + " pageSize " + pageSize);
 		
 		JSONObject response = new JSONObject();
 		try {
@@ -139,7 +142,9 @@ public class SummaryPerAreaController {
 						+" from vaccination vtn   "
 						+" left join child ch on vtn.childId = ch.mappedId  "
 						+" where vaccineId in (select vaccineId from vaccinegap where vaccineGapTypeId=1 and vaccinationcalendarId = "+calendarId+")  "
-						+" and vaccinationCenterId in (SELECT mappedId FROM identifier where locationId = "+area+")  "
+						+" and vaccinationCenterId in (SELECT mappedId FROM identifier where locationId = "+area+" "
+						+ " OR locationId IN (SELECT locationId FROM location WHERE parentLocation = "+ area + ")"
+								+ ")  "
 						+" and roundId = "+round+"  "
 						+" and vaccinationStatus = 'VACCINATED' ) vr   "
 						+" on vr.vaccineId = v.vaccineId  "

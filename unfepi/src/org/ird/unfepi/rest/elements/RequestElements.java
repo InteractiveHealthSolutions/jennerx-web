@@ -42,6 +42,8 @@ public class RequestElements
 	public static final String METADATA_FIELD_VACCINE_ENTITY = "vaccine_entity";
 	public static final String METADATA_FIELD_VACCINE_FULL_NAME = "fullName";
 	public static final String METADATA_FIELD_VACCINE_SHORT_NAME = "shortName";
+	public static final String METADATA_FIELD_VACCINE_SHORT_NAME_OTHER = "shortNameOther";
+	public static final String METADATA_FIELD_VACCINE_STANDARD_ORDER = "standardOrder";
 
 	public static final String METADATA_FIELD_VACCINEGAP_VACCINEGAPTYPEID = "vaccineGapTypeId";
 	public static final String METADATA_FIELD_VACCINEGAP_GAPTIMEUNIT = "gapTimeUnit";

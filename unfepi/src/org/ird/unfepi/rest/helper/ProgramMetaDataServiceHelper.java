@@ -241,7 +241,9 @@ public class ProgramMetaDataServiceHelper {
 				RequestElements.METADATA_FIELD_VACCINE_ISSUPPLEMENTARY,
 				RequestElements.METADATA_FIELD_VACCINE_ENTITY,
 				RequestElements.METADATA_FIELD_VACCINE_FULL_NAME,
-				RequestElements.METADATA_FIELD_VACCINE_SHORT_NAME};
+				RequestElements.METADATA_FIELD_VACCINE_SHORT_NAME,
+				RequestElements.METADATA_FIELD_VACCINE_SHORT_NAME_OTHER,
+				RequestElements.METADATA_FIELD_VACCINE_STANDARD_ORDER};
 		String table = "vaccine";
 
 		Integer calendarId = json.optInt("calendarId");

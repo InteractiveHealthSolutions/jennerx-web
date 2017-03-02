@@ -95,7 +95,24 @@ public class AddChildController extends DataEntryFormController{
 		ServiceContext sc = Context.getServices();
 		
 		Integer calendarId = (Integer) sc.getCustomQueryService().getDataByHQL("select vaccinationcalendarId from HealthProgram where programId = " + programId).get(0);
-		List list = sc.getCustomQueryService().getDataBySQLMapResult("SELECT * FROM unfepi.vaccine where vaccineId in (SELECT distinct(vaccineId) FROM unfepi.vaccinegap WHERE vaccinationcalendarId = "+calendarId+" ) and vaccine_entity like '%child%'");
+//		List list = sc.getCustomQueryService().getDataBySQLMapResult("SELECT * FROM unfepi.vaccine where vaccineId in (SELECT distinct(vaccineId) FROM unfepi.vaccinegap WHERE vaccinationcalendarId = "+calendarId+" ) and vaccine_entity like '%child%'");
+		
+		String query = "SELECT  v.*, "
+				+" (CASE  "
+				+" WHEN gaptimeunit = 'month' THEN (30*value)  "
+				+" WHEN gaptimeunit = 'week' THEN (7*value)  "
+				+" WHEN gaptimeunit = 'day' THEN (0*value)  "
+				+" WHEN gaptimeunit = 'year' THEN (365*value)  "
+				+" ELSE 9999  "
+				+" END )birthdategap "
+				+" FROM vaccinegap g  "
+				+" LEFT JOIN vaccine v ON v.vaccineId = g.vaccineId "
+				+" WHERE g.vaccineGapTypeId = 1 AND g.vaccinationcalendarId = "+calendarId+" "
+				+" ORDER BY birthdategap, v.standardOrder ;";
+		
+		List list = sc.getCustomQueryService().getDataBySQLMapResult(query);
+		
+		
 		JSONArray data =  new JSONArray();
 		for (Object object : list) {
 			data.put(new JSONObject((HashMap)object));

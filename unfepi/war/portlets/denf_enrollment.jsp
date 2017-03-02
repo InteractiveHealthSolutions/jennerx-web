@@ -164,9 +164,11 @@ ul{
 		$.get( "addchild/round/"+$('#healthProgramId').val()+".htm" , function( data ) {
 			var data = $.parseJSON(data);
 			var min = dateDifference(data.startDate, new Date())+1;
-		 	var max = dateDifference(data.endDate, new Date())+1;	
-		 	$("#centerVisitDate").datepicker("option", "maxDate", max+'d');
+// 		 	var max = dateDifference(data.endDate, new Date())+1;	
+// 		 	$("#centerVisitDate").datepicker("option", "maxDate", max+'d');
+			$("#centerVisitDate").datepicker("option", "maxDate", '0d');
 			$("#centerVisitDate").datepicker("option", "minDate", min+'d');
+		 	
 		});
 	}
 	

@@ -89,6 +89,11 @@ public class Vaccine implements java.io.Serializable {
 	@Column(columnDefinition = "BIT", length = 1)
 	private boolean isSupplementary;
 	
+	private Integer standardOrder ;
+	
+	@Column(length = 30)
+	private String shortNameOther;
+	
 	public Vaccine() {
 	}
 
@@ -263,6 +268,22 @@ public class Vaccine implements java.io.Serializable {
 
 	public void setSupplementary(boolean isSupplementary) {
 		this.isSupplementary = isSupplementary;
+	}
+
+	public Integer getStandardOrder() {
+		return standardOrder;
+	}
+
+	public void setStandardOrder(Integer standardOrder) {
+		this.standardOrder = standardOrder;
+	}
+
+	public String getShortNameOther() {
+		return shortNameOther;
+	}
+
+	public void setShortNameOther(String shortNameOther) {
+		this.shortNameOther = shortNameOther;
 	}
 	
 }

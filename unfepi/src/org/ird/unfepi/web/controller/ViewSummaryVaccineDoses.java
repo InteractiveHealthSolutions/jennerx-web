@@ -59,14 +59,14 @@ public class ViewSummaryVaccineDoses extends DataDisplayController {
 				String mainQuery = "SELECT "
 						+"DATE(vaccinationDate) 'date'"
 						+", count(vaccinationDate) 'count'"
-						+", group_concat(vaccineId) "
-						+", group_concat(vaccinationRecordNum)  "
-						+", group_concat(childId)  "
-						+", group_concat(vaccinationStatus) "
+//						+", group_concat(vaccineId) "
+//						+", group_concat(vaccinationRecordNum)  "
+//						+", group_concat(childId)  "
+//						+", group_concat(vaccinationStatus) "
 						+", group_concat(distinct(v.roundId)) 'roundId' "
 						+", group_concat(distinct(vc.name)) 'site' "
-						+", TIMESTAMPDIFF(DAY, r.startDate, v.vaccinationDate) 'day'"
-						+", group_concat(TIMESTAMPDIFF(MONTH, c.birthdate, v.vaccinationDate)) 'age' ";
+						+", TIMESTAMPDIFF(DAY, r.startDate, v.vaccinationDate) 'day' ";
+//						+", group_concat(TIMESTAMPDIFF(MONTH, c.birthdate, v.vaccinationDate)) 'age' ";
 
 				String query = "";
 				String vaccineId = "";
