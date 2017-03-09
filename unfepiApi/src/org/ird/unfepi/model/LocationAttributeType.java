@@ -27,6 +27,9 @@ public class LocationAttributeType {
 	@Column(name="attributeName")
 	public String attributeName;
 
+	@Column(name="displayName")
+	public String displayName;
+
 	@Column(name="description")
 	public String description;
 
@@ -83,6 +86,14 @@ public class LocationAttributeType {
 		this.category = category;
 	}
 
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+	
 	/**
 	 * Gets the created by user id.
 	 *

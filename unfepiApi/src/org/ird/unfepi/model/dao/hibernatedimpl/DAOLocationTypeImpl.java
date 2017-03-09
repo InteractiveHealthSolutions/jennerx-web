@@ -59,6 +59,40 @@ public class DAOLocationTypeImpl extends DAOHibernateImpl implements DAOLocation
 		return (list.size() == 0 ? null : list.get(0));
 	}
 	
+	@Override
+	public LocationType findByLevel(int level, boolean isreadonly, String[] mappingsToJoin) {
+		Criteria cri = session.createCriteria(LocationType.class)
+				.add(Restrictions.eq("level", level)).setReadOnly(isreadonly);
+		
+		if(mappingsToJoin != null)
+			for (String mapping : mappingsToJoin) {
+				cri.setFetchMode(mapping, FetchMode.JOIN);
+			}
+		
+		setLAST_QUERY_TOTAL_ROW_COUNT((Number) cri.setProjection(Projections.rowCount()).uniqueResult());
+		cri.setProjection(null).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+
+		List<LocationType> list = cri.list();
+		return (list.size() == 0 ? null : list.get(0));
+	}
+	
+	@Override
+	public LocationType findByDescription(String description, boolean isreadonly, String[] mappingsToJoin) {
+		Criteria cri = session.createCriteria(LocationType.class)
+				.add(Restrictions.eq("description", description)).setReadOnly(isreadonly);
+		
+		if(mappingsToJoin != null)
+			for (String mapping : mappingsToJoin) {
+				cri.setFetchMode(mapping, FetchMode.JOIN);
+			}
+		
+		setLAST_QUERY_TOTAL_ROW_COUNT((Number) cri.setProjection(Projections.rowCount()).uniqueResult());
+		cri.setProjection(null).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+
+		List<LocationType> list = cri.list();
+		return (list.size() == 0 ? null : list.get(0));
+	}
+	
 	private void setLAST_QUERY_TOTAL_ROW_COUNT(Number LAST_QUERY_TOTAL_ROW_COUNT) {
 		this.LAST_QUERY_TOTAL_ROW_COUNT = LAST_QUERY_TOTAL_ROW_COUNT;
 	}

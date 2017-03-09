@@ -35,6 +35,15 @@ public class LocationAttribute {
 	@Column(name="locationAttributeTypeId")
 	public Integer locationAttributeTypeId;
 	
+	@Column(name="typeName")
+	public String typeName;
+	
+	@Column(name="typeValue1")
+	public String typeValue1;
+	
+	@Column(name="typeValue2")
+	public String typeValue2;
+
 	/** The location. */
 	@OneToOne(targetEntity = Location.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "locationId", insertable = false, updatable = false)
@@ -113,6 +122,30 @@ public class LocationAttribute {
 		this.locationAttributeType = locationAttributeType;
 	}
 	
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
+	}
+
+	public String getTypeValue1() {
+		return typeValue1;
+	}
+
+	public void setTypeValue1(String typeValue1) {
+		this.typeValue1 = typeValue1;
+	}
+
+	public String getTypeValue2() {
+		return typeValue2;
+	}
+
+	public void setTypeValue2(String typeValue2) {
+		this.typeValue2 = typeValue2;
+	}
+
 	/**
 	 * Gets the created by user id.
 	 *

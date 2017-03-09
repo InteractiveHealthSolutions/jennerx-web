@@ -293,7 +293,7 @@ public class ChildServiceHelper {
 		
 		String query =   " SELECT v.vaccineId, name, issupplementary, vaccine_entity,  "
 				+ " fullName, shortName, shortNameOther, standardOrder  "
-				+ " , if(t1.status is null,0, t1.status) 'voided' "
+				+ " , if(t1.status is null,0, t1.status) 'status' "
 				+ " FROM vaccine v "
 				+ " LEFT JOIN (SELECT vaccineId, roundId, status FROM roundvaccine  "
 				+ " WHERE roundId IN (SELECT roundId FROM round where healthProgramId = "+ programId +" and isActive = true) ) as t1 "

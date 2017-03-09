@@ -63,7 +63,7 @@ public class DAOLocationImpl extends DAOHibernateImpl implements DAOLocation {
 	@Override
 	public Location findByName(String name, boolean isreadonly, String[] mappingsToJoin) {
 		Criteria cri = session.createCriteria(Location.class).setReadOnly(isreadonly)
-				.add(Restrictions.eq("fullName", name));
+				.add(Restrictions.eq("name", name));
 		
 		if(mappingsToJoin != null)
 			for (String mapping : mappingsToJoin) {
@@ -71,7 +71,97 @@ public class DAOLocationImpl extends DAOHibernateImpl implements DAOLocation {
 			}
 		
 		List<Location> list = cri.list();
-		//setLAST_QUERY_TOTAL_ROW_COUNT(list.size());
+		setLAST_QUERY_TOTAL_ROW_COUNT(list.size());
+		return (list.size() == 0 ? null : list.get(0));
+	}
+	
+	@Override
+	public Location findByShortName(String shortName, boolean isreadonly, String[] mappingsToJoin) {
+		Criteria cri = session.createCriteria(Location.class).setReadOnly(isreadonly)
+				.add(Restrictions.eq("shortName", shortName));
+		
+		if(mappingsToJoin != null)
+			for (String mapping : mappingsToJoin) {
+				cri.setFetchMode(mapping, FetchMode.JOIN);
+			}
+		
+		List<Location> list = cri.list();
+		setLAST_QUERY_TOTAL_ROW_COUNT(list.size());
+		return (list.size() == 0 ? null : list.get(0));
+	}
+
+	@Override
+	public Location findByFullName(String fullName, boolean isreadonly, String[] mappingsToJoin) {
+		Criteria cri = session.createCriteria(Location.class).setReadOnly(isreadonly)
+				.add(Restrictions.eq("fullName", fullName));
+		
+		if(mappingsToJoin != null)
+			for (String mapping : mappingsToJoin) {
+				cri.setFetchMode(mapping, FetchMode.JOIN);
+			}
+		
+		List<Location> list = cri.list();
+		setLAST_QUERY_TOTAL_ROW_COUNT(list.size());
+		return (list.size() == 0 ? null : list.get(0));
+	}
+
+	@Override
+	public Location findByDescription(String description, boolean isreadonly, String[] mappingsToJoin) {
+		Criteria cri = session.createCriteria(Location.class).setReadOnly(isreadonly)
+				.add(Restrictions.eq("description", description));
+		
+		if(mappingsToJoin != null)
+			for (String mapping : mappingsToJoin) {
+				cri.setFetchMode(mapping, FetchMode.JOIN);
+			}
+		
+		List<Location> list = cri.list();
+		setLAST_QUERY_TOTAL_ROW_COUNT(list.size());
+		return (list.size() == 0 ? null : list.get(0));
+	}
+
+	@Override
+	public Location findByIdentifier(String identifier, boolean isreadonly, String[] mappingsToJoin) {
+		Criteria cri = session.createCriteria(Location.class).setReadOnly(isreadonly)
+				.add(Restrictions.eq("otherIdentifier", identifier));
+		
+		if(mappingsToJoin != null)
+			for (String mapping : mappingsToJoin) {
+				cri.setFetchMode(mapping, FetchMode.JOIN);
+			}
+		
+		List<Location> list = cri.list();
+		setLAST_QUERY_TOTAL_ROW_COUNT(list.size());
+		return (list.size() == 0 ? null : list.get(0));
+	}
+
+	@Override
+	public Location findByLatitude(String latitude, boolean isreadonly, String[] mappingsToJoin) {
+		Criteria cri = session.createCriteria(Location.class).setReadOnly(isreadonly)
+				.add(Restrictions.eq("latitude", latitude));
+		
+		if(mappingsToJoin != null)
+			for (String mapping : mappingsToJoin) {
+				cri.setFetchMode(mapping, FetchMode.JOIN);
+			}
+		
+		List<Location> list = cri.list();
+		setLAST_QUERY_TOTAL_ROW_COUNT(list.size());
+		return (list.size() == 0 ? null : list.get(0));
+	}
+
+	@Override
+	public Location findByLongitude(String longitude, boolean isreadonly, String[] mappingsToJoin) {
+		Criteria cri = session.createCriteria(Location.class).setReadOnly(isreadonly)
+				.add(Restrictions.eq("longitude", longitude));
+		
+		if(mappingsToJoin != null)
+			for (String mapping : mappingsToJoin) {
+				cri.setFetchMode(mapping, FetchMode.JOIN);
+			}
+		
+		List<Location> list = cri.list();
+		setLAST_QUERY_TOTAL_ROW_COUNT(list.size());
 		return (list.size() == 0 ? null : list.get(0));
 	}
 	

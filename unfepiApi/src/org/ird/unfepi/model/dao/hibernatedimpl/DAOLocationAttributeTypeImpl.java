@@ -56,6 +56,23 @@ public class DAOLocationAttributeTypeImpl  extends DAOHibernateImpl implements D
 	}
 	
 	@Override
+	public LocationAttributeType findByDescription(String description, boolean isreadonly, String[] mappingsToJoin) {
+		Criteria cri = session.createCriteria(LocationAttributeType.class)
+				.add(Restrictions.eq("description", description)).setReadOnly(isreadonly);
+		
+		if(mappingsToJoin != null)
+			for (String mapping : mappingsToJoin) {
+				cri.setFetchMode(mapping, FetchMode.JOIN);
+			}
+		
+		setLAST_QUERY_TOTAL_ROW_COUNT((Number) cri.setProjection(Projections.rowCount()).uniqueResult());
+		cri.setProjection(null).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+
+		List<LocationAttributeType> list = cri.list();
+		return (list.size() == 0 ? null : list.get(0));
+	}
+	
+	@Override
 	public LocationAttributeType findByCategory(String category, boolean isreadonly, String[] mappingsToJoin) {
 		Criteria cri = session.createCriteria(LocationAttributeType.class)
 				.add(Restrictions.eq("category", category)).setReadOnly(isreadonly);

@@ -13,6 +13,8 @@ public interface DAOLocationAttributeType extends DAO{
 
 	LocationAttributeType findByName(String name, boolean isreadonly, String[] mappingsToJoin);
 	
+	LocationAttributeType findByDescription(String description, boolean isreadonly, String[] mappingsToJoin);
+
 	LocationAttributeType findByCategory(String category, boolean isreadonly, String[] mappingsToJoin);
 
 	Number LAST_QUERY_TOTAL_ROW_COUNT();

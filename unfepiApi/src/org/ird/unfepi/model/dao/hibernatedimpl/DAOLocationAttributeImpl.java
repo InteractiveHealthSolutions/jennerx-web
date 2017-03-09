@@ -40,6 +40,74 @@ public class DAOLocationAttributeImpl  extends DAOHibernateImpl implements DAOLo
 		return (list.size() == 0 ? null : list.get(0));
 	}
 
+	@Override
+	public LocationAttribute findByValue(String value, boolean isreadonly, String[] mappingsToJoin) {
+		Criteria cri = session.createCriteria(LocationAttribute.class)
+				.add(Restrictions.eq("value", value)).setReadOnly(isreadonly);
+		
+		if(mappingsToJoin != null)
+			for (String mapping : mappingsToJoin) {
+				cri.setFetchMode(mapping, FetchMode.JOIN);
+			}
+
+		setLAST_QUERY_TOTAL_ROW_COUNT((Number) cri.setProjection(Projections.rowCount()).uniqueResult());
+		cri.setProjection(null).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+
+		List<LocationAttribute> list = cri.list();
+		return (list.size() == 0 ? null : list.get(0));
+	}
+
+	@Override
+	public LocationAttribute findByTypeName(String typeName, boolean isreadonly, String[] mappingsToJoin) {
+		Criteria cri = session.createCriteria(LocationAttribute.class)
+				.add(Restrictions.eq("typeName", typeName)).setReadOnly(isreadonly);
+		
+		if(mappingsToJoin != null)
+			for (String mapping : mappingsToJoin) {
+				cri.setFetchMode(mapping, FetchMode.JOIN);
+			}
+
+		setLAST_QUERY_TOTAL_ROW_COUNT((Number) cri.setProjection(Projections.rowCount()).uniqueResult());
+		cri.setProjection(null).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+
+		List<LocationAttribute> list = cri.list();
+		return (list.size() == 0 ? null : list.get(0));
+	}
+
+	@Override
+	public LocationAttribute findByTypeValue1(String typeValue, boolean isreadonly, String[] mappingsToJoin) {
+		Criteria cri = session.createCriteria(LocationAttribute.class)
+				.add(Restrictions.eq("typeValue1", typeValue)).setReadOnly(isreadonly);
+		
+		if(mappingsToJoin != null)
+			for (String mapping : mappingsToJoin) {
+				cri.setFetchMode(mapping, FetchMode.JOIN);
+			}
+
+		setLAST_QUERY_TOTAL_ROW_COUNT((Number) cri.setProjection(Projections.rowCount()).uniqueResult());
+		cri.setProjection(null).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+
+		List<LocationAttribute> list = cri.list();
+		return (list.size() == 0 ? null : list.get(0));
+	}
+
+	@Override
+	public LocationAttribute findByTypeValue2(String typeValue, boolean isreadonly, String[] mappingsToJoin) {
+		Criteria cri = session.createCriteria(LocationAttribute.class)
+				.add(Restrictions.eq("typeValue2", typeValue)).setReadOnly(isreadonly);
+		
+		if(mappingsToJoin != null)
+			for (String mapping : mappingsToJoin) {
+				cri.setFetchMode(mapping, FetchMode.JOIN);
+			}
+
+		setLAST_QUERY_TOTAL_ROW_COUNT((Number) cri.setProjection(Projections.rowCount()).uniqueResult());
+		cri.setProjection(null).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+
+		List<LocationAttribute> list = cri.list();
+		return (list.size() == 0 ? null : list.get(0));
+	}
+
 	/* (non-Javadoc)
 	 * @see org.ird.unfepi.model.dao.LocationAttribute#getAll()
 	 */

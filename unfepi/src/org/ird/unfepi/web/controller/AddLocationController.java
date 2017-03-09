@@ -43,7 +43,6 @@ public class AddLocationController  extends DataEntryFormController {
 	
 	@RequestMapping(method=RequestMethod.GET)
 	public ModelAndView addLocationView(HttpServletRequest request, ModelAndView modelAndView){
-		modelAndView.addObject("hello", "lelo");
 		modelAndView.addObject("command", formBackingObject());
 		return showForm(modelAndView, "dataForm");	
 	}

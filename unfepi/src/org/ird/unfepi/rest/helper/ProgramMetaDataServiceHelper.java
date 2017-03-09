@@ -246,7 +246,7 @@ public class ProgramMetaDataServiceHelper {
 				RequestElements.METADATA_FIELD_VACCINE_SHORT_NAME,
 				RequestElements.METADATA_FIELD_VACCINE_SHORT_NAME_OTHER,
 				RequestElements.METADATA_FIELD_VACCINE_STANDARD_ORDER,
-				"voided"};
+				"status"};
 		String table = "vaccine";
 
 		Integer calendarId = json.optInt("calendarId");
@@ -256,7 +256,7 @@ public class ProgramMetaDataServiceHelper {
 		
 		String query =   " SELECT v.vaccineId, name, issupplementary, vaccine_entity,  "
 				+ " fullName, shortName, shortNameOther, standardOrder  "
-				+ " , if(t1.status is null,0, t1.status) 'voided' "
+				+ " , if(t1.status is null,0, t1.status) 'status' "
 				+ " FROM vaccine v "
 				+ " LEFT JOIN (SELECT vaccineId, roundId, status FROM roundvaccine  "
 				+ " WHERE roundId IN (SELECT roundId FROM round where healthProgramId = "+programId+" and isActive = true) ) as t1 "
