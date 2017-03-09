@@ -134,9 +134,53 @@ public class DownloadLatestDataService {
 			JSONParser parser = new JSONParser();	
 			JSONObject obj = (JSONObject)parser.parse(json);
 			String lastEditDate=(String)obj.get(RequestElements.LAST_SYNC_TIME)	;
-
+			Long programId =(Long) obj.get(RequestElements.METADATA_FIELD_HEALTHPROGRAM_ID);
 			org.json.JSONObject j=new org.json.JSONObject();
 			j.put("allmuacmeasurements",childServiceHelper.getNewMuacMeasurements(lastEditDate));
+			
+			return GZipper.compress(j.toString());
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@Path("/vialcounts")
+	@POST
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getVialcounts(String json) throws IOException, JSONException{
+		lastSynced=new Date();
+		ChildServiceHelper childServiceHelper=new ChildServiceHelper();
+		try {
+			JSONParser parser = new JSONParser();	
+			JSONObject obj = (JSONObject)parser.parse(json);
+			String lastEditDate=(String)obj.get(RequestElements.LAST_SYNC_TIME)	;
+			Long programId =(Long) obj.get(RequestElements.METADATA_FIELD_HEALTHPROGRAM_ID);
+
+			org.json.JSONObject j=new org.json.JSONObject();
+			j.put("allvialcounts",childServiceHelper.getNewVialcounts(lastEditDate, programId));
+			
+			return GZipper.compress(j.toString());
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@Path("/vaccinestatus")
+	@POST
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getCurrentVaccineStatus(String json) throws IOException, JSONException{
+		lastSynced=new Date();
+		ChildServiceHelper childServiceHelper=new ChildServiceHelper();
+		try {
+			JSONParser parser = new JSONParser();	
+			JSONObject obj = (JSONObject)parser.parse(json);
+			String lastEditDate=(String)obj.get(RequestElements.LAST_SYNC_TIME)	;
+			Long programId =(Long) obj.get(RequestElements.METADATA_FIELD_HEALTHPROGRAM_ID);
+
+			org.json.JSONObject j=new org.json.JSONObject();
+			j.put("allvaccinestatus",childServiceHelper.getNewVaccineStatus(lastEditDate, programId));
 			
 			return GZipper.compress(j.toString());
 		}catch(Exception e){

@@ -123,6 +123,24 @@ public class ChildServiceHelper {
 		return null; 
 	}
 	
+	public List<HashMap> getAllVialCounts(long lastRecord, long programId){
+		ServiceContext sc =Context.getServices();
+		//TODO divide in 10thoussand chunks
+		
+		String query = "SELECT * FROM unfepi.vialcount WHERE roundId IN (SELECT roundId FROM round where healthProgramId = "
+					   + programId +") LIMIT " + lastRecord + ", 10000";
+
+		try {
+			List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
+			return map;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sc.closeSession();
+		}
+		return null; 
+	}
+	
 	public  List<HashMap> getUpdatedChildren(
 			String lastSyncedTime) {
 		ServiceContext sc = Context.getServices();
@@ -233,6 +251,64 @@ public class ChildServiceHelper {
 		return null;
 	}
 	
-
+	public  List<HashMap> getNewVialcounts(String lastSyncedTime, long programId) {
+		ServiceContext sc = Context.getServices();
+		
+		String query = "select* from unfepi.vialcount where roundId in (select roundId from round where healthProgramId = "
+					   + programId + ") and date >='"+lastSyncedTime+"' ;";
+		try {
+			List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
+			return map;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sc.closeSession();
+		}
+		return null;
+	}
 	
+	public  List<HashMap> getCurrentVaccineStatus(String lastSyncedTime, long programId) {
+		ServiceContext sc = Context.getServices();
+		
+		String query = "select* from unfepi.vialcount where roundId in (select roundId from round where healthProgramId = "
+					   + programId + ") and date >='"+lastSyncedTime+"' ;";
+		try {
+			List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
+			return map;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sc.closeSession();
+		}
+		return null;
+	}
+	
+	public  List<HashMap> getNewVaccineStatus(String lastSyncedTime, long programId) {
+		ServiceContext sc = Context.getServices();
+		
+//		String query = "select* from unfepi.vialcount where roundId in (select roundId from round where healthProgramId = "
+//					   + programId + ") and date >='"+lastSyncedTime+"' ;";
+		
+		Integer calendarId = (Integer) sc.getCustomQueryService().getDataByHQL("select vaccinationcalendarId from HealthProgram where programId = "+ programId).get(0);
+		
+		String query =   " SELECT v.vaccineId, name, issupplementary, vaccine_entity,  "
+				+ " fullName, shortName, shortNameOther, standardOrder  "
+				+ " , if(t1.status is null,0, t1.status) 'voided' "
+				+ " FROM vaccine v "
+				+ " LEFT JOIN (SELECT vaccineId, roundId, status FROM roundvaccine  "
+				+ " WHERE roundId IN (SELECT roundId FROM round where healthProgramId = "+ programId +" and isActive = true) ) as t1 "
+				+ " ON t1.vaccineId = v.vaccineId "
+				+ " where v.vaccineId in (SELECT distinct(vaccineId) FROM vaccinegap WHERE vaccinationcalendarId = "+calendarId+" )  "
+				+ " and vaccine_entity like '%child%' ";
+		
+		try {
+			List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
+			return map;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sc.closeSession();
+		}
+		return null;
+	}
 }

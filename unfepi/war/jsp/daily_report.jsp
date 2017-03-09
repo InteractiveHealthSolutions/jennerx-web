@@ -338,11 +338,8 @@ function filterReport2(){
 	});
 
 }
-	
 </script>
 	<div title="Summary per Area">
-	
-	
 	<table class="filter">
 	<tr>
 	<td class="search_filter">Area</td>
@@ -376,5 +373,5 @@ function filterReport2(){
 		<br><br>
 		<table id="summaryPerAreaMinMaxAgetable" class="easyui-datagrid" ></table>
 	</div>
-
+	
 </div>

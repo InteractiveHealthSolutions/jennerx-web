@@ -57,8 +57,6 @@ public class SummaryPerAreaController {
 			
 			String query = "SELECT "+"TIMESTAMPDIFF(DAY,r.startDate,v.vaccinationDate) 'day', ";
 			
-			
-			
 			JSONArray columns = new JSONArray();
 			JSONArray sub = new JSONArray();
 			sub.put(new JSONObject().put("field", "day").put("title", "day").put("width", 50));
@@ -68,9 +66,8 @@ public class SummaryPerAreaController {
 			
 			for (String name : vaccine) {
 				query += " COUNT( CASE WHEN vc.name LIKE '"+name+"%' THEN v.vaccineId ELSE NULL END) "+name+",  ";
-				sub.put(new JSONObject().put("field", name).put("title", name).put("width", 75));
-				
-				tablewidth = tablewidth + 75;
+				sub.put(new JSONObject().put("field", name).put("title", name).put("width", 80));
+				tablewidth = tablewidth + 80;
 			}
 			columns.put(sub);
 					
@@ -99,7 +96,6 @@ public class SummaryPerAreaController {
 //					System.out.println(new JSONObject((HashMap)object).toString());
 			}	
 			
-//			Integer totalPopulation = (Integer) sc.getCustomQueryService().getDataByHQL("select value from LocationAttribute where  ").get(0);
 			response.put("rows", data);
 			response.put("total", total);
 			response.put("columns", columns);

@@ -103,14 +103,18 @@ public class MetadataService
 				}
 			}
 			sc.commitTransaction();
+			
+			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_SUCCESS, null);
+			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return e.getMessage();
+			sc.rollbackTransaction();
+			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_INTERNAL_ERROR, null);
+//			return e.getMessage();
 		} finally{
 			sc.closeSession();
 		}
-		return "saved successfully";
+//		return "saved successfully";
 	}
 	
 	@POST
@@ -158,7 +162,7 @@ public class MetadataService
 		} finally{
 			sc.closeSession();
 		}
-		return "saved successfully";
+		return "saved/updated successfully";
 	}
 
 	@GET

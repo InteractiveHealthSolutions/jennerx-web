@@ -201,7 +201,9 @@ public class ProgramMetaDataServiceHelper {
 		
 		String query = "SELECT " + Arrays.toString(columns).replaceAll("\\[|\\]", "") + " FROM " + table
 				+ " WHERE " + RequestElements.METADATA_FIELD_ROUNDVACCINE_ROUNDID 
-				+ " IN (SELECT roundId FROM round where healthProgramId = "+programId +") ";
+				+ " IN (SELECT roundId FROM round where healthProgramId = "+programId +" and isActive = true) ";
+		
+		System.out.println(query);
 		
 		if(json.has(RequestElements.METADATA_ROUNDVACCINE)){
 			fetchAndCompareMetaData(RequestElements.METADATA_ROUNDVACCINE, columns, table, query, response, json);
@@ -243,18 +245,26 @@ public class ProgramMetaDataServiceHelper {
 				RequestElements.METADATA_FIELD_VACCINE_FULL_NAME,
 				RequestElements.METADATA_FIELD_VACCINE_SHORT_NAME,
 				RequestElements.METADATA_FIELD_VACCINE_SHORT_NAME_OTHER,
-				RequestElements.METADATA_FIELD_VACCINE_STANDARD_ORDER};
+				RequestElements.METADATA_FIELD_VACCINE_STANDARD_ORDER,
+				"voided"};
 		String table = "vaccine";
 
 		Integer calendarId = json.optInt("calendarId");
-		
+		Integer programId = json.optInt("programId");
 //		String query = "SELECT " + Arrays.toString(columns).replaceAll("\\[|\\]", "") + " FROM " + table
-//				+ " WHERE " + RequestElements.METADATA_FIELD_VACCINATIONCALENDAR_ID + " = " + calendarId;
+//				+ " where vaccineId in (SELECT distinct(vaccineId) FROM vaccinegap WHERE vaccinationcalendarId = "+calendarId+" ) and vaccine_entity like '%child%'";
 		
-		String query = "SELECT " + Arrays.toString(columns).replaceAll("\\[|\\]", "") + " FROM " + table
-				+ " where vaccineId in (SELECT distinct(vaccineId) FROM vaccinegap WHERE vaccinationcalendarId = "+calendarId+" ) and vaccine_entity like '%child%'";
+		String query =   " SELECT v.vaccineId, name, issupplementary, vaccine_entity,  "
+				+ " fullName, shortName, shortNameOther, standardOrder  "
+				+ " , if(t1.status is null,0, t1.status) 'voided' "
+				+ " FROM vaccine v "
+				+ " LEFT JOIN (SELECT vaccineId, roundId, status FROM roundvaccine  "
+				+ " WHERE roundId IN (SELECT roundId FROM round where healthProgramId = "+programId+" and isActive = true) ) as t1 "
+				+ " ON t1.vaccineId = v.vaccineId "
+				+ " where v.vaccineId in (SELECT distinct(vaccineId) FROM vaccinegap WHERE vaccinationcalendarId = "+ calendarId +" )  "
+				+ " and vaccine_entity like '%child%' ";
 		
-//		System.out.println(query);
+		System.out.println(query);
 		
 		if(json.has(RequestElements.METADATA_VACCINE)){
 			fetchAndCompareMetaData(RequestElements.METADATA_VACCINE, columns, table, query, response, json);

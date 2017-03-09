@@ -242,5 +242,37 @@ public class FirstSetupService {
 			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_INCORRECT_DATA_FORMAT_ERROR, null);
 		}
 	}
+	
+	@Path("/allvialcounts")
+	@POST
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getAllVialCounts(String json) throws IOException, JSONException{
+		System.gc();
+		JSONParser parser = new JSONParser();
+		JSONObject receivedJson;
+		try {
+			receivedJson = (JSONObject)parser.parse(json);
+
+			Long lastRecord=(Long) receivedJson.get(RequestElements.LASTRECORD);
+			Long programId =(Long) receivedJson.get(RequestElements.METADATA_FIELD_HEALTHPROGRAM_ID);
+			
+			ChildServiceHelper childServiceHelper=new ChildServiceHelper();
+			org.json.JSONObject j=new org.json.JSONObject();
+			List<HashMap> map=childServiceHelper.getAllVialCounts(lastRecord, programId);
+			j.put("allvialcounts",map );
+			int length=map.size()-1;
+			int size=length>0?length:0;
+			int id=-2;
+			if(size>0){
+				id=(Integer) map.get(size).get("id");
+			}
+			j.put(RequestElements.LASTRECORD,id );
+			return GZipper.compress(j.toString());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_INCORRECT_DATA_FORMAT_ERROR, null);
+		}
+	}
 
 }
