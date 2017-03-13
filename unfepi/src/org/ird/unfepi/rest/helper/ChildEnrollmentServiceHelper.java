@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.ird.unfepi.GlobalParams;
 import org.ird.unfepi.constants.EncounterType;
+import org.ird.unfepi.constants.WebGlobals;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.Address;
@@ -19,6 +20,7 @@ import org.ird.unfepi.model.Identifier;
 import org.ird.unfepi.model.IdentifierType;
 import org.ird.unfepi.model.ItemDistributedId;
 import org.ird.unfepi.model.ItemsDistributed;
+import org.ird.unfepi.model.VialCount;
 import org.ird.unfepi.model.Model.ContactTeleLineType;
 import org.ird.unfepi.model.Model.ContactType;
 import org.ird.unfepi.model.Model.Gender;
@@ -280,6 +282,24 @@ public class ChildEnrollmentServiceHelper {
 		return mArray;
 	}
 	
+	public static JSONArray addVialCounts(JSONArray jsonArray) {
+		ServiceContext sc = Context.getServices();
+		JSONArray mArray = new JSONArray();
+		try {
+			for (int i = 0; i < jsonArray.size(); i++) {
+				JSONObject obj = saveVialCounts((JSONObject) jsonArray.get(i));
+				if (obj != null) {
+					mArray.add(obj);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sc.closeSession();
+		}
+		return mArray;
+	}
+	
 	public static JSONObject saveItemDistributed(JSONObject json) {
 
 
@@ -353,6 +373,39 @@ public class ChildEnrollmentServiceHelper {
 			sc.rollbackTransaction();
 			JSONObject errorJson = new JSONObject();
 			errorJson.put("id", childIdentifier);
+			errorJson.put("message", e.getMessage());
+			return errorJson;
+		} finally {
+			sc.closeSession();
+		}
+		return null;
+	}
+	
+	public static JSONObject saveVialCounts(JSONObject objectToParse) {
+		ServiceContext sc = Context.getServices();
+		try {			
+			String date = (String) objectToParse.get(RequestElements.METADATA_FIELD_VIAL_DATE);
+			Integer count = ((Long)objectToParse.get(RequestElements.METADATA_FIELD_VIAL_COUNT)).intValue();
+			Integer wasteCount = ((Long) objectToParse.get(RequestElements.METADATA_FIELD_VIAL_WASTECOUNT)).intValue();
+			Integer centreId = ((Long) objectToParse.get(RequestElements.METADATA_FIELD_VIAL_CENTREID)).intValue();
+			Integer roundId = ((Long) objectToParse.get(RequestElements.METADATA_FIELD_VIAL_ROUNDID)).intValue();
+			boolean isBeginning = (Long)objectToParse.get(RequestElements.METADATA_FIELD_VIAL_ISBEGINNING) == 1;
+			short vaccineId = ((Long)objectToParse.get(RequestElements.METADATA_FIELD_VIAL_VACCINEID)).shortValue();
+			
+			VialCount vialCount = new VialCount();
+			vialCount.setDate(WebGlobals.GLOBAL_SQL_DATE_FORMAT.parse(date));
+			vialCount.setCount(count);
+			vialCount.setWasteCount(wasteCount);
+			vialCount.setCentreId(centreId);
+			vialCount.setRoundId(roundId);
+			vialCount.setBeginning(isBeginning);
+			vialCount.setVaccineId(vaccineId);
+			
+			sc.getCustomQueryService().save(vialCount);
+		} catch (Exception e) {
+			e.printStackTrace();
+			sc.rollbackTransaction();
+			JSONObject errorJson = new JSONObject();
 			errorJson.put("message", e.getMessage());
 			return errorJson;
 		} finally {

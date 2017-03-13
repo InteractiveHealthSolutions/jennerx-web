@@ -40,7 +40,7 @@ public class SummaryPerRoundController {
 			Integer calendarId = (Integer) sc.getCustomQueryService().getDataByHQL("select vaccinationcalendarId from HealthProgram where programId =" + healthprogram).get(0);
 			String calenderName = (String) sc.getCustomQueryService().getDataByHQL("select shortName from VaccinationCalendar where calenderId = " + calendarId).get(0);
 			String vaccines = "SELECT DISTINCT  vaccine.shortName FROM vaccine JOIN vaccinegap ON vaccine.vaccineId = vaccinegap.vaccineId "
-						 + "WHERE vaccine.vaccine_entity LIKE 'CHILD_%' AND vaccinegap.vaccinationcalendarId = " + calendarId;
+						 + "WHERE vaccine.vaccine_entity LIKE 'CHILD_%' AND vaccinegap.vaccinationcalendarId = " + calendarId + " ORDER BY standardOrder";
 
 			
 			List<String> vaccine = sc.getCustomQueryService().getDataBySQL(vaccines);

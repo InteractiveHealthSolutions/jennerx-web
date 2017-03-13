@@ -278,7 +278,7 @@ public class LocationModalController {
 
 	@RequestMapping(value = "/updatelocationattributetype", method = RequestMethod.POST)
 //	public @ResponseBody String addlocationType(HttpServletRequest request, HttpServletResponse response) throws JSONException, InstanceAlreadyExistsException {
-	public @ResponseBody String updatelocationAttributeType(@RequestParam("id")String locationAttributeTypeId, @RequestParam("name")String name, @RequestParam("displayName")String displayName, @RequestParam("description")String description, @RequestParam("Category")String category) throws InstanceAlreadyExistsException {
+	public @ResponseBody String updatelocationAttributeType(@RequestParam("id")String locationAttributeTypeId, @RequestParam("name")String name, @RequestParam("displayName")String displayName, @RequestParam("description")String description, @RequestParam("category")String category) throws InstanceAlreadyExistsException {
 		ServiceContext sc = Context.getServices();
 		JSONObject result = new JSONObject();
 		String status = "";

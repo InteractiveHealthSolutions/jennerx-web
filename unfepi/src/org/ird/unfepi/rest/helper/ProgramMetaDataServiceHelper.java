@@ -203,7 +203,7 @@ public class ProgramMetaDataServiceHelper {
 				+ " WHERE " + RequestElements.METADATA_FIELD_ROUNDVACCINE_ROUNDID 
 				+ " IN (SELECT roundId FROM round where healthProgramId = "+programId +" and isActive = true) ";
 		
-		System.out.println(query);
+//		System.out.println(query);
 		
 		if(json.has(RequestElements.METADATA_ROUNDVACCINE)){
 			fetchAndCompareMetaData(RequestElements.METADATA_ROUNDVACCINE, columns, table, query, response, json);
@@ -256,7 +256,7 @@ public class ProgramMetaDataServiceHelper {
 		
 		String query =   " SELECT v.vaccineId, name, issupplementary, vaccine_entity,  "
 				+ " fullName, shortName, shortNameOther, standardOrder  "
-				+ " , if(t1.status is null,0, t1.status) 'status' "
+				+ " , if(t1.status is null,1, t1.status) 'status' "
 				+ " FROM vaccine v "
 				+ " LEFT JOIN (SELECT vaccineId, roundId, status FROM roundvaccine  "
 				+ " WHERE roundId IN (SELECT roundId FROM round where healthProgramId = "+programId+" and isActive = true) ) as t1 "
@@ -264,7 +264,7 @@ public class ProgramMetaDataServiceHelper {
 				+ " where v.vaccineId in (SELECT distinct(vaccineId) FROM vaccinegap WHERE vaccinationcalendarId = "+ calendarId +" )  "
 				+ " and vaccine_entity like '%child%' ";
 		
-		System.out.println(query);
+//		System.out.println(query);
 		
 		if(json.has(RequestElements.METADATA_VACCINE)){
 			fetchAndCompareMetaData(RequestElements.METADATA_VACCINE, columns, table, query, response, json);
@@ -278,7 +278,8 @@ public class ProgramMetaDataServiceHelper {
 	{
 		String[] columns = new String[] {
 				RequestElements.METADATA_FIELD_VACCINATION_CENTRE_ID,
-				RequestElements.METADATA_FIELD_VACCINATION_CENTRE_NAME };
+				RequestElements.METADATA_FIELD_VACCINATION_CENTRE_NAME,
+				"locationId"};
 		String table = "vaccinationcenter";
 		
 		Integer programId = json.optInt("programId");
@@ -286,8 +287,8 @@ public class ProgramMetaDataServiceHelper {
 		String sub_query = "SELECT " + RequestElements.METADATA_CENTERPROGRAM_VACCINATIONCENTERID 
 				+ " FROM centerprogram WHERE "+ RequestElements.METADATA_CENTERPROGRAM_HEALTHPROGRAMID + " = " + programId 
 				+ " and isActive = true";
-		String query = "SELECT " + Arrays.toString(columns).replaceAll("\\[|\\]", "") + " FROM " + table
-				+ " WHERE " + RequestElements.METADATA_FIELD_VACCINATION_CENTRE_ID + " IN( " + sub_query + ")";
+		String query = "SELECT vc." + Arrays.toString(columns).replaceAll("\\[|\\]", "") + " FROM " + table
+				+ " vc LEFT JOIN identifier i ON vc.mappedId=i.mappedId WHERE vc." + RequestElements.METADATA_FIELD_VACCINATION_CENTRE_ID + " IN( " + sub_query + ")";
 		
 		if(json.has(RequestElements.METADATA_VACCINATION_CENTRES)){
 			fetchAndCompareMetaData(RequestElements.METADATA_VACCINATION_CENTRES, columns, table, query, response, json);

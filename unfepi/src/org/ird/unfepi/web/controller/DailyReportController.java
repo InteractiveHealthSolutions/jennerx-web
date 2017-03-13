@@ -60,7 +60,7 @@ public class DailyReportController {
 					+"                 SELECT 366 start, 730 end, '12-23' name UNION "
 					+"                 SELECT 731 start, 1830 end, '24-59' name "
 					+ ") ag ON TIMESTAMPDIFF(DAY,c.birthdate,v.vaccinationDate) BETWEEN ag.start AND ag.end "
-					+"        WHERE vaccinationStatus='VACCINATED' ";
+					+"        WHERE vaccinationStatus='VACCINATED' and voided = false ";
 					
 					if(roundId != null && roundId.length() > 0){
 						query += "  AND roundId = "+roundId;
@@ -78,7 +78,7 @@ public class DailyReportController {
 					
 					query += ") e ON e.vaccineId=vc.vaccineId "
 						  +"where vc.vaccineId in (select vaccineId from vaccinegap where vaccineGapTypeId=1 and vaccinationcalendarId = "+hp.getVaccinationcalendarId() +") "
-					      +"GROUP BY vc.name ORDER BY vc.vaccineId ";
+					      +"GROUP BY vc.name ORDER BY vc.standardOrder ";
 
 			JSONArray rows =  new JSONArray();
 			rows.put(new JSONObject().put("name", "vaccine"));
@@ -145,7 +145,7 @@ public class DailyReportController {
 					+"                 SELECT 366 start, 730 end, '12-23' name UNION "
 					+"                 SELECT 731 start, 1830 end, '24-59' name "
 					+ ") ag ON TIMESTAMPDIFF(DAY,c.birthdate,v.vaccinationDate) BETWEEN ag.start AND ag.end "
-					+"        WHERE vaccinationStatus='VACCINATED' ";
+					+"        WHERE vaccinationStatus='VACCINATED' and voided = false ";
 			
 			
 			if(roundId != null && roundId.length() > 0){
@@ -162,7 +162,7 @@ public class DailyReportController {
 			
 			query += ") e ON e.vaccineId=vc.vaccineId "
 					+"where vc.vaccineId in (select vaccineId from vaccinegap where vaccineGapTypeId=1 and vaccinationcalendarId = "+hp.getVaccinationcalendarId() +") "
-					+"GROUP BY vc.shortName ORDER BY vc.vaccineId ";
+					+"GROUP BY vc.shortName ORDER BY vc.standardOrder ";
 
 			JSONArray rows =  new JSONArray();
 			rows.put(new JSONObject().put("name", "vaccine"));
@@ -230,7 +230,7 @@ public class DailyReportController {
 					 +"LEFT JOIN encounter e  "
 					 +"ON ( DATE(vaccinationDate) = DATE(dateEncounterEntered) and v.childId = e.p1id and v.vaccinationCenterId = e.locationId) "
 					 +"WHERE vaccineId in (select vaccineId from vaccinegap where vaccineGapTypeId=1 and vaccinationcalendarId ="+hp.getVaccinationcalendarId() +") "
-					 +" and vaccinationStatus in ( 'VACCINATED', 'NOT_VACCINATED') ";
+					 +" and vaccinationStatus in ( 'VACCINATED', 'NOT_VACCINATED') and voided = false ";
 			
 			if(roundId != null && roundId.length() > 0){
 				query += "  and roundId = " + roundId;

@@ -41,7 +41,7 @@ public class ChildServiceHelper {
 			String query = "SELECT v.vaccinationRecordNum vId,v.vaccinationCenterId centreid,v.vaccineId, v.lastEditedDate ,v.createdDate, "
 					+ "v.vaccinationDate,v.vaccinationDuedate,v.vaccinationStatus, i.identifier childidentifier,v.childId, v.roundId, "
 					+ "v.reasonVaccineNotGiven  reason  , v.role role,v.epiNumber,v.createdByUserId creator, v.lastEditedByUserId lastEditor "
-					+ "FROM unfepi.vaccination  v  inner join child c on c.mappedId=v.childId "
+					+ "FROM vaccination  v  inner join child c on c.mappedId=v.childId "
 					+ "inner join identifier i on v.childid=i.mappedid  AND  i.preferred join vaccine on v.vaccineId=vaccine.vaccineId  "
 					+ " inner join round r on v.roundId =  r.roundId "
 					+ " where v.voided=0 and v.vaccinationRecordNum>"
@@ -93,7 +93,7 @@ public class ChildServiceHelper {
 		ServiceContext sc =Context.getServices();
 		//TODO divide in 10thoussand chunks
 		
-		String query = "select i.identifier, it.distributedDate, it.mappedId, it.quantity, it.itemRecordNum from unfepi.itemsdistributed it inner join identifier i on it.mappedId=i.mappedId LIMIT " + lastRecord + ", 10000";
+		String query = "select i.identifier, it.distributedDate, it.mappedId, it.quantity, it.itemRecordNum from itemsdistributed it inner join identifier i on it.mappedId=i.mappedId LIMIT " + lastRecord + ", 10000";
 		
 		try {
 			List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
@@ -110,7 +110,7 @@ public class ChildServiceHelper {
 		ServiceContext sc =Context.getServices();
 		//TODO divide in 10thoussand chunks
 		
-		String query = "select i.identifier, m.mappedId, m.measureDate, m.circumference, m.colorrange from unfepi.muacmeasurement m inner join identifier i on m.mappedId=i.mappedId LIMIT " + lastRecord + ", 10000";
+		String query = "select i.identifier, m.mappedId, m.measureDate, m.circumference, m.colorrange from muacmeasurement m inner join identifier i on m.mappedId=i.mappedId LIMIT " + lastRecord + ", 10000";
 
 		try {
 			List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
@@ -127,7 +127,7 @@ public class ChildServiceHelper {
 		ServiceContext sc =Context.getServices();
 		//TODO divide in 10thoussand chunks
 		
-		String query = "SELECT * FROM unfepi.vialcount WHERE roundId IN (SELECT roundId FROM round where healthProgramId = "
+		String query = "SELECT * FROM vialcount WHERE roundId IN (SELECT roundId FROM round where healthProgramId = "
 					   + programId +") LIMIT " + lastRecord + ", 10000";
 
 		try {
@@ -167,7 +167,7 @@ public class ChildServiceHelper {
 		String query = "SELECT  i.identifier childidentifier, v.vaccinationCenterId centreid,v.vaccineId, v.lastEditedDate ,v.createdDate, "
 				+ "v.vaccinationDate,v.vaccinationDuedate,v.vaccinationStatus, v.roundId, "
 				+ "v.vaccinatorId ,v.role role,v.reasonVaccineNotGiven  reason,v.epiNumber,v.createdByUserId creator, v.lastEditedByUserId lastEditor "
-				+ "FROM unfepi.vaccination  v  inner join child c on c.mappedId=v.childId "
+				+ "FROM vaccination  v  inner join child c on c.mappedId=v.childId "
 				+ "inner join identifier i on v.childid=i.mappedid  AND  i.preferred join vaccine on v.vaccineId=vaccine.vaccineId   "
 				+ " inner join round r on v.roundId =  r.roundId "
 				+ "where v.voided=0 and v.lastEditedDate >='"
@@ -222,7 +222,7 @@ public class ChildServiceHelper {
 	public  List<HashMap> getNewItemsDistributed(String lastSyncedTime) {
 		ServiceContext sc = Context.getServices();
 		
-		String query = "select i.identifier, it.distributedDate, it.mappedId, it.quantity, it.itemRecordNum from unfepi.itemsdistributed it inner join identifier i on it.mappedId=i.mappedId "
+		String query = "select i.identifier, it.distributedDate, it.mappedId, it.quantity, it.itemRecordNum from itemsdistributed it inner join identifier i on it.mappedId=i.mappedId "
 				+ "where it.distributedDate >='"+lastSyncedTime+"' ;";
 		try {
 			List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
@@ -238,7 +238,7 @@ public class ChildServiceHelper {
 	public  List<HashMap> getNewMuacMeasurements(String lastSyncedTime) {
 		ServiceContext sc = Context.getServices();
 		
-		String query = "select i.identifier, m.mappedId, m.measureDate, m.circumference, m.colorrange from unfepi.muacmeasurement m inner join identifier i on m.mappedId=i.mappedId "
+		String query = "select i.identifier, m.mappedId, m.measureDate, m.circumference, m.colorrange from muacmeasurement m inner join identifier i on m.mappedId=i.mappedId "
 				+ "where m.measureDate >='"+lastSyncedTime+"' ;";
 		try {
 			List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
@@ -254,7 +254,7 @@ public class ChildServiceHelper {
 	public  List<HashMap> getNewVialcounts(String lastSyncedTime, long programId) {
 		ServiceContext sc = Context.getServices();
 		
-		String query = "select* from unfepi.vialcount where roundId in (select roundId from round where healthProgramId = "
+		String query = "select* from vialcount where roundId in (select roundId from round where healthProgramId = "
 					   + programId + ") and date >='"+lastSyncedTime+"' ;";
 		try {
 			List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
@@ -270,7 +270,7 @@ public class ChildServiceHelper {
 	public  List<HashMap> getCurrentVaccineStatus(String lastSyncedTime, long programId) {
 		ServiceContext sc = Context.getServices();
 		
-		String query = "select* from unfepi.vialcount where roundId in (select roundId from round where healthProgramId = "
+		String query = "select* from vialcount where roundId in (select roundId from round where healthProgramId = "
 					   + programId + ") and date >='"+lastSyncedTime+"' ;";
 		try {
 			List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
@@ -293,7 +293,7 @@ public class ChildServiceHelper {
 		
 		String query =   " SELECT v.vaccineId, name, issupplementary, vaccine_entity,  "
 				+ " fullName, shortName, shortNameOther, standardOrder  "
-				+ " , if(t1.status is null,0, t1.status) 'status' "
+				+ " , if(t1.status is null,1, t1.status) 'status' "
 				+ " FROM vaccine v "
 				+ " LEFT JOIN (SELECT vaccineId, roundId, status FROM roundvaccine  "
 				+ " WHERE roundId IN (SELECT roundId FROM round where healthProgramId = "+ programId +" and isActive = true) ) as t1 "

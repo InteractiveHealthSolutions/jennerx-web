@@ -16,6 +16,7 @@
 
 <script>
 function getLocations() { 
+	console.log('${model.locationNodes}');
 	return ${model.locationNodes}; 
 } 
 

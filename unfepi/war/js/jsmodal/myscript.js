@@ -306,8 +306,8 @@ $(document).ready(function(){
 			}
 			else {//VALIDATION
 				var errorStr = "";
-		        if(!(document.getElementById("updatelocationTypeName").options[document.getElementById("updatelocationTypeName").selectedIndex].text >= 3)) { errorStr += "Location Type Name must have atleast 3 characters.<br/>"; }
-			    if(!(document.getElementById("updatelocationTypeName").options[document.getElementById("updatelocationTypeName").selectedIndex].text <= 50)) { errorStr += "Location Type Name must have atmost 50 characters.<br/>"; }
+//		        if(!(document.getElementById("updatelocationTypeName").options[document.getElementById("updatelocationTypeName").selectedIndex].text >= 3)) { errorStr += "Location Type Name must have atleast 3 characters.<br/>"; }
+//			    if(!(document.getElementById("updatelocationTypeName").options[document.getElementById("updatelocationTypeName").selectedIndex].text <= 50)) { errorStr += "Location Type Name must have atmost 50 characters.<br/>"; }
 			    if(!(pattern.test(document.getElementById("updatelocationTypeLevel").value ))) { errorStr += "Location Type Level must have numbers only.<br/>"; }
 //			    if(!(pattern.test(document.getElementById("updatelocationTypeName").options[document.getElementById("updatelocationTypeName").selectedIndex].text))) { errorStr += "Name must have alphabets only."; }
 //			    $("#alertModalBody").html(errorStr); 
@@ -1063,7 +1063,7 @@ function remove(array, value) {
     return newArray;
 }
 function openModals(id) {
-	if(id === 'addLocationBtn') { 
+	if(id === 'addLocationBtn') { 		
 		document.getElementById("nextBtnLocation").setAttribute("type", "hidden"); 
 //		document.getElementById("nextBtnLocation").style.visibility = "hidden";
 		document.getElementById("addParentLocationListDiv").innerHTML = "";
@@ -1084,15 +1084,17 @@ function openModals(id) {
 	    var parentOption = document.createElement("option");
 	    parentOption.setAttribute("value", "0");
 	    document.getElementById("addParent").appendChild(parentOption);
-	    if(!jQuery.isEmptyObject(zNodes)) { 
+	    if(!jQuery.isEmptyObject(zNodes)) {
 	    	var idArray = [];
 	    	var nameArray = [];
 	    	var tempArray = [];
 	    	for (var i = 0; i < zNodes.length; i++) {
-	    		idArray.push(zNodes[i].id[0]);
-	    		nameArray.push(zNodes[i].name[0]);
-	    		tempArray.push(zNodes[i].name[0]);
+	    		console.log(zNodes[i]);
+	    		idArray.push(zNodes[i].id);
+	    		nameArray.push(zNodes[i].name);
+	    		tempArray.push(zNodes[i].name);
 	    	} tempArray.sort();
+	    	
 	    	for (var i = 0; i < tempArray.length; i++) {
 	    		var name = tempArray[i];
 	    		var id = idArray[nameArray.indexOf(tempArray[i])];

@@ -70,10 +70,10 @@ public class MetadataService
 		ServiceContext sc=Context.getServices();
 		try {
 			org.json.simple.JSONObject obj1 = (org.json.simple.JSONObject)parser.parse(json);
-			String receivedJson=GZipper.decompress((String)obj1.get("compress"));
-			org.json.simple.JSONObject obj2 = (org.json.simple.JSONObject)parser.parse(receivedJson);
+//			String receivedJson=GZipper.decompress((String)obj1.get("compress"));
+//			org.json.simple.JSONObject obj2 = (org.json.simple.JSONObject)parser.parse(receivedJson);
 			
-//			org.json.simple.JSONObject obj2 = (org.json.simple.JSONObject)parser.parse(json);
+			org.json.simple.JSONObject obj2 = (org.json.simple.JSONObject)parser.parse(json);
 			JSONArray vialArray=(JSONArray) obj2.get("vialCount");
 			for (int i = 0; i < vialArray.size(); i++) {
 				try{
@@ -110,11 +110,9 @@ public class MetadataService
 			e.printStackTrace();
 			sc.rollbackTransaction();
 			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_INTERNAL_ERROR, null);
-//			return e.getMessage();
 		} finally{
 			sc.closeSession();
 		}
-//		return "saved successfully";
 	}
 	
 	@POST
@@ -155,14 +153,16 @@ public class MetadataService
 				}
 			}
 			sc.commitTransaction();
+			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_SUCCESS, null);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return e.getMessage();
+			sc.rollbackTransaction();
+			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_INTERNAL_ERROR, null);
+//			return e.getMessage();
 		} finally{
 			sc.closeSession();
 		}
-		return "saved/updated successfully";
+//		return "saved/updated successfully";
 	}
 
 	@GET
