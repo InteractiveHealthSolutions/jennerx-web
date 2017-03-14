@@ -303,15 +303,27 @@ public class ProgramMetaDataServiceHelper {
 		String[] columns = new String[] { RequestElements.METADATA_FIELD_LOCATION_ID,
 				RequestElements.METADATA_FIELD_LOCATION_NAME,
 				RequestElements.METADATA_FIELD_LOCATION_PARENT,
-		"locationType" };
+				"locationType" , "attributeName", "value"
+		};
 		String table = "location";
 
 		Integer programId = json.optInt("programId");
 		
-		String query = "SELECT loc.locationId, loc.fullName, loc.parentLocation, loc.locationType from location AS loc, "
-				+ "(SELECT locationId from identifier where mappedId in"
-				+ "(SELECT vaccinationCenterId FROM centerprogram WHERE healthProgramId = "+ programId +" and isActive = true) )AS temp "
-				+ "WHERE loc.locationId = temp.locationId GROUP BY loc.locationId";
+//		String query = "SELECT loc.locationId, loc.fullName, loc.parentLocation, loc.locationType from location AS loc, "
+//				+ "(SELECT locationId from identifier where mappedId in"
+//				+ "(SELECT vaccinationCenterId FROM centerprogram WHERE healthProgramId = "+ programId +" and isActive = true) )AS temp "
+//				+ "WHERE loc.locationId = temp.locationId GROUP BY loc.locationId";
+		
+		String query = " SELECT l.locationId, l.fullName, l.parentLocation, l.locationType, locAttr.attributeName, locAttr.value "
+				+ " FROM centerprogram cp "
+				+ " LEFT JOIN identifier i ON cp.vaccinationCenterId=i.mappedId "
+				+ " LEFT JOIN location l ON i.locationId=l.locationId "
+				+ " LEFT JOIN  ( "
+				+ " 	select la.locationAttributeId, la.locationAttributeTypeId, lat.attributeName , la.locationId, la.value  "
+				+ " 	from locationattribute la  "
+				+ " 	LEFT JOIN locationattributetype lat ON la.locationAttributeTypeId=lat.locationAttributeTypeId  "
+				+ " 	where attributeName = 'TotalPopulation' ) as locAttr  ON l.locationId=locAttr.locationId "
+				+ " WHERE cp.healthProgramId = "+ programId +" and cp.isActive = true";
 		
 //		System.out.println("\n" + query);
 		
