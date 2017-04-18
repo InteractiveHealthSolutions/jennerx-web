@@ -85,10 +85,10 @@ public class DeviceServiceHelper {
 		try{
 		List<HashMap> map = sc.getCustomQueryService().getDataBySQLMapResult(query);
 		if(map.size()>0){
-					java.text.SimpleDateFormat sdf = 
-			     new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					String currentTime = sdf.format(map.get(0).get("lastSyncDate"));
 		device=new Device((Integer)map.get(0).get("deviceId"), String.valueOf(map.get(0).get("androidId")), (String)map.get(0).get("serialId"), (String)map.get(0).get("macId"), (Integer)map.get(0).get("lastCount"),(Date)map.get(0).get("lastSyncDate"));
+		device.setHealthProgramId((Integer)map.get(0).get("healthProgramId"));
 		return device;
 		}
 		}catch(Exception e){

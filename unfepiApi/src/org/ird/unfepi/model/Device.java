@@ -5,8 +5,13 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.ForeignKey;
 
 @Entity
 @Table(name = "device")
@@ -29,29 +34,36 @@ public class Device  implements Serializable{
 	@Column(name="lastSyncDate")
 	private Date lastSyncDate;
 	
+	private Integer healthProgramId;
+
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = HealthProgram.class)
+	@JoinColumn(name = "healthProgramId", insertable = false, updatable = false)
+	@ForeignKey(name = "child_healthProgramId_healthprogram_programId_FK")
+	private HealthProgram healthProgram;
 	
-	public Device(int deviceId, String androidId, String serialId,
-			String macId, int lastCount ,Date lastSyncDate ) {
+	public Device(){
+		
+	}
+	
+	public Device(int deviceId, String androidId, String serialId,String macId, 
+			int lastCount, Date lastSyncDate/*, Integer healthProgramId*/) {
 		super();
 		this.deviceId = deviceId;
 		this.androidId = androidId;
 		this.serialId = serialId;
 		this.macId = macId;
 		this.lastCount = lastCount;
-		this.lastSyncDate=lastSyncDate;
+		this.lastSyncDate = lastSyncDate;
+		this.healthProgramId = null;
 	}
 	
 	
 	public Date getLastSyncDate() {
 		return lastSyncDate;
 	}
-
-
 	public void setLastSyncDate(Date lastSyncDate) {
 		this.lastSyncDate = lastSyncDate;
 	}
-
-
 	public int getDeviceId() {
 		return deviceId;
 	}
@@ -82,6 +94,16 @@ public class Device  implements Serializable{
 	public void setLastCount(int lastCount) {
 		this.lastCount = lastCount;
 	}
-	
-	
+	public Integer getHealthProgramId() {
+		return healthProgramId;
+	}
+	public void setHealthProgramId(Integer healthProgramId) {
+		this.healthProgramId = healthProgramId;
+	}
+	public HealthProgram getHealthProgram() {
+		return healthProgram;
+	}
+	public void setHealthProgram(HealthProgram healthProgram) {
+		this.healthProgram = healthProgram;
+	}
 }

@@ -246,6 +246,10 @@ public class ProgramMetaDataServiceHelper {
 				RequestElements.METADATA_FIELD_VACCINE_SHORT_NAME,
 				RequestElements.METADATA_FIELD_VACCINE_SHORT_NAME_OTHER,
 				RequestElements.METADATA_FIELD_VACCINE_STANDARD_ORDER,
+				RequestElements.METADATA_FIELD_VACCINE_MINGRACEPERIODDAYS,
+				RequestElements.METADATA_FIELD_VACCINE_MAXGRACEPERIODDAYS,
+				RequestElements.METADATA_FIELD_VACCINE_ISATTENUATED,
+				RequestElements.METADATA_FIELD_VACCINE_NUMBEROFDOSES,
 				"status"};
 		String table = "vaccine";
 
@@ -255,7 +259,7 @@ public class ProgramMetaDataServiceHelper {
 //				+ " where vaccineId in (SELECT distinct(vaccineId) FROM vaccinegap WHERE vaccinationcalendarId = "+calendarId+" ) and vaccine_entity like '%child%'";
 		
 		String query =   " SELECT v.vaccineId, name, issupplementary, vaccine_entity,  "
-				+ " fullName, shortName, shortNameOther, standardOrder  "
+				+ " fullName, shortName, shortNameOther, standardOrder , minGracePeriodDays 'minGrace', maxGracePeriodDays 'maxGrace', isAttenuated , numberOfDoses  "
 				+ " , if(t1.status is null,1, t1.status) 'status' "
 				+ " FROM vaccine v "
 				+ " LEFT JOIN (SELECT vaccineId, roundId, status FROM roundvaccine  "
@@ -314,7 +318,7 @@ public class ProgramMetaDataServiceHelper {
 //				+ "(SELECT vaccinationCenterId FROM centerprogram WHERE healthProgramId = "+ programId +" and isActive = true) )AS temp "
 //				+ "WHERE loc.locationId = temp.locationId GROUP BY loc.locationId";
 		
-		String query = " SELECT l.locationId, l.fullName, l.parentLocation, l.locationType, locAttr.attributeName, locAttr.value "
+		String query = " SELECT distinct(l.locationId), l.fullName, l.parentLocation, l.locationType, locAttr.attributeName, locAttr.value "
 				+ " FROM centerprogram cp "
 				+ " LEFT JOIN identifier i ON cp.vaccinationCenterId=i.mappedId "
 				+ " LEFT JOIN location l ON i.locationId=l.locationId "
@@ -464,11 +468,10 @@ public class ProgramMetaDataServiceHelper {
 		String[] columns = new String[] { 
 				RequestElements.METADATA_FIELD_VIAL_VACCINEID,
 				RequestElements.METADATA_FIELD_VIAL_DATE,
-				RequestElements.METADATA_FIELD_VIAL_COUNT,
-				RequestElements.METADATA_FIELD_VIAL_WASTECOUNT,
+				RequestElements.METADATA_FIELD_VIAL_STARTCOUNT,
+				RequestElements.METADATA_FIELD_VIAL_ENDCOUNT,
 				RequestElements.METADATA_FIELD_VIAL_CENTREID,
-				RequestElements.METADATA_FIELD_VIAL_ROUNDID,
-				RequestElements.METADATA_FIELD_VIAL_ISBEGINNING, };
+				RequestElements.METADATA_FIELD_VIAL_ROUNDID, };
 		String table = "vialcount";
 		Integer programId = json.optInt("programId");
 		

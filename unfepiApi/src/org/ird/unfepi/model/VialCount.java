@@ -33,8 +33,8 @@ public class VialCount {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date date;
 	
-	private Integer count;
-	private Integer wasteCount;
+	private Integer startCount;
+	private Integer endCount;
 	
 	private Integer centreId;
 	
@@ -50,7 +50,6 @@ public class VialCount {
 	@ForeignKey(name = "vialcount_roundId_round_roundId_FK")
 	private Round round;
 	
-	private boolean beginning;
 
 	public Integer getId() {
 		return id;
@@ -82,22 +81,6 @@ public class VialCount {
 
 	public void setDate(Date date) {
 		this.date = date;
-	}
-
-	public Integer getCount() {
-		return count;
-	}
-
-	public void setCount(Integer count) {
-		this.count = count;
-	}
-
-	public Integer getWasteCount() {
-		return wasteCount;
-	}
-
-	public void setWasteCount(Integer wasteCount) {
-		this.wasteCount = wasteCount;
 	}
 
 	public Integer getCentreId() {
@@ -132,14 +115,20 @@ public class VialCount {
 		this.round = round;
 	}
 
-	public boolean isBeginning() {
-		return beginning;
+	public Integer getStartCount() {
+		return startCount;
 	}
 
-	public void setBeginning(boolean beginning) {
-		this.beginning = beginning;
+	public void setStartCount(Integer startCount) {
+		this.startCount = startCount;
 	}
 
-	
-	
+	public Integer getEndCount() {
+		return endCount;
+	}
+
+	public void setEndCount(Integer endCount) {
+		this.endCount = endCount;
+	}
+
 }

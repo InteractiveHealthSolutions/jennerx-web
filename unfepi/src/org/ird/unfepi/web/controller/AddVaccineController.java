@@ -74,6 +74,9 @@ public class AddVaccineController extends DataEntryFormController{
 				vaccine.setSupplementary(true);
 			}
 			
+			Integer maxOrder = (Integer) sc.getCustomQueryService().getDataBySQL("SELECT max(standardOrder) FROM vaccine").get(0);
+			vaccine.setStandardOrder(maxOrder+10);
+			
 			sc.getVaccinationService().addVaccine(vaccine);
 			sc.commitTransaction();
 			

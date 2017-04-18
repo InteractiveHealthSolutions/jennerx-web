@@ -60,7 +60,7 @@
             function birthdateOrAgeChanged(sel) {
             	if(document.getElementById("birthdateOrAge").value == 'birthdate'){
             		
-            		$('#birthdate').val('');
+//             		$('#birthdate').val('');
             		$('.requiredFieldAge').val('');
             		
             		$('.requiredFieldBirthDate').addClass("requiredField");
@@ -77,7 +77,7 @@
             	else if(document.getElementById("birthdateOrAge").value == 'age'){
             		
             		$('#birthdate').val('');
-            		$('.requiredFieldAge').val('');
+//             		$('.requiredFieldAge').val('');
             		
             		$('.requiredFieldBirthDate').removeClass("requiredField");
             		$('.requiredFieldAge').addClass("requiredField");
@@ -114,9 +114,9 @@
         <td>
         <spring:bind path="command.${commandAdditionalPathStr}birthdate">
         <input id="birthdate" name="${commandAdditionalPathStr}birthdate" 
-        	   maxDate="+0d" value="${status.value}" class="calendarbox requiredFieldBirthDate"
+        	   maxDate="+0d" value="${status.value}" class="requiredFieldBirthDate calendarbox"
         	   onkeypress="return isDateDigit(event)" placeholder="dd-MM-yyyy"
-        	   onclosehandler="birthDate_Changed"/>
+        	   onclosehandler="birthDate_Changed" />
         <span class="error-message"><c:out	value="${status.errorMessage}" /></span>
         </spring:bind>
         </td>

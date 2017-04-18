@@ -105,7 +105,6 @@ public class EditChildController extends DataEditFormController {
 					GlobalParams.DBLOGGER.info(IRUtils.convertToString(child), LoggerUtils.getLoggerParams(LogType.TRANSACTION_UPDATE, FormType.CHILD_BIOGRAPHIC_CORRECT, user.getUser().getUsername()));
 				
 				} else if (editSection.equalsIgnoreCase("address")) {
-//					Address add = ((ChildDataBean)command).getAddress();
 					Address add = cb.getAddress();
 					add.setEditor(user.getUser());
 					sc.getDemographicDetailsService().updateAddress(add);
@@ -116,31 +115,16 @@ public class EditChildController extends DataEditFormController {
 					
 					Child child = cb.getChild();
 					STATUS uneditedChildStatus = (STATUS) request.getSession().getAttribute("uneditedChildStatus"+child.getMappedId());
-//					Boolean uneditedChildReminderPreference = (Boolean) request.getSession().getAttribute("uneditedChildReminderPreference"+child.getMappedId());
-//					Boolean uneditedChildIncentivePreference = (Boolean) request.getSession().getAttribute("uneditedChildIncentivePreference"+child.getMappedId());
 					child.setEditor(user.getUser());
-					
-					//child terminated from followup? cancel all vaccine reminders
+
 					if (uneditedChildStatus.name().equalsIgnoreCase(STATUS.FOLLOW_UP.name())
 							&& child.getStatus().name().equalsIgnoreCase(STATUS.TERMINATED.name())) {
-//						List<ReminderSms> reml = sc.getReminderService().findReminderSmsRecordByCriteria(child.getMappedId(), null, null, new ReminderType[]{ReminderType.NEXT_VACCINATION_REMINDER}, null, null, null, null, null, REMINDER_STATUS.SCHEDULED, false, 0, 100, false, null);
-//					
-//						for (ReminderSms reminderSms : reml) {
-//							reminderSms.setReminderStatus(REMINDER_STATUS.CANCELLED);
-//							reminderSms.setSmsCancelReason((reminderSms.getSmsCancelReason()==null?"":reminderSms.getSmsCancelReason())+new SimpleDateFormat("dd-MM-yy HH:mm").format(new Date())+" Child status "+child.getStatus()+";");
-//							sc.getReminderService().updateReminderSmsRecord(reminderSms);
-//						}
+
 						
 						GlobalParams.DBLOGGER.info(IRUtils.convertToString(child), LoggerUtils.getLoggerParams(LogType.TRANSACTION_UPDATE, FormType.CHILD_BIOGRAPHIC_CORRECT, user.getUser().getUsername()));
 					}
 					
 					sc.getChildService().updateChild(child);
-
-//					if(cb.getPreference().getHasApprovedReminders() != uneditedChildReminderPreference){
-//						ControllerUIHelper.doChangePreference(cb.getPreference(), user.getUser(), sc);
-//						
-//						GlobalParams.DBLOGGER.info(IRUtils.convertToString(cb.getPreference()), LoggerUtils.getLoggerParams(LogType.TRANSACTION_UPDATE, FormType.CHANGE_PREFERENCE, user.getUser().getUsername()));
-//					}
 					
 					ControllerUIHelper.handleNonEnrollmentContactInfo(cb.getPreference(), cb.getContactPrimary(), cb.getContactSecondary(), user.getUser(), sc);
 					GlobalParams.DBLOGGER.info(IRUtils.convertToString(cb), LoggerUtils.getLoggerParams(LogType.TRANSACTION_UPDATE, FormType.CONTACT_NUMBER_CORRECT, user.getUser().getUsername()));
@@ -151,33 +135,6 @@ public class EditChildController extends DataEditFormController {
 						ved.setEditor(user.getUser());
 						sc.getVaccinationService().updateVaccinationRecord(ved);
 						
-//						if (ved.getVaccinationStatus().equals(VACCINATION_STATUS.SCHEDULED)) {
-//							List<ReminderSms> rsms=sc.getReminderService().findByCriteria(null, null, false, null, ved.getVaccinationRecordNum(), false, null); 	
-//							//verify rsms are equal to daynums in arm
-//							for (ReminderSms r : rsms) {
-//								if (r.getReminderStatus().equals(REMINDER_STATUS.SCHEDULED)) {
-//									int hour = r.getDueDate().getHours();
-//									int min = r.getDueDate().getMinutes();
-//									int sec = r.getDueDate().getSeconds();
-//									
-//									Calendar cal=Calendar.getInstance();
-//									cal.setTime(new Date(ved.getVaccinationDuedate().getTime()));
-//									cal.set(Calendar.HOUR_OF_DAY, hour);
-//									cal.set(Calendar.MINUTE, min);
-//									cal.set(Calendar.SECOND, sec);
-//									cal.add(Calendar.DATE, r.getDayNumber());
-//									
-//									if (!DateUtils.datesEqual(r.getDueDate(), cal.getTime())) {
-//										r.setDueDate(cal.getTime());
-//										r.setEditor(user.getUser());
-//										sc.getReminderService().updateReminderSmsRecord(r);
-//									}
-//								
-//								} else {
-//									r.setDescription((r.getDescription() == null?"":r.getDescription())+"-vaccination due date changed.");
-//								}
-//							}
-//						}
 						GlobalParams.DBLOGGER.info(IRUtils.convertToString(ved), LoggerUtils.getLoggerParams(LogType.TRANSACTION_UPDATE, FormType.FOLLOWUP_CORRECT, user.getUser().getUsername()));
 					}
 				}

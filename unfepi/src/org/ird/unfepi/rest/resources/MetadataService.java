@@ -79,21 +79,20 @@ public class MetadataService
 				try{
 					org.json.simple.JSONObject objectToParse = (org.json.simple.JSONObject) vialArray.get(i);
 					String date = (String) objectToParse.get(RequestElements.METADATA_FIELD_VIAL_DATE);
-					Integer count = ((Long)objectToParse.get(RequestElements.METADATA_FIELD_VIAL_COUNT)).intValue();
-					Integer wasteCount = ((Long) objectToParse.get(RequestElements.METADATA_FIELD_VIAL_WASTECOUNT)).intValue();
+					Integer startCount = ((Long)objectToParse.get(RequestElements.METADATA_FIELD_VIAL_STARTCOUNT)).intValue();
+					Integer endCount = ((Long) objectToParse.get(RequestElements.METADATA_FIELD_VIAL_ENDCOUNT)).intValue();
 					Integer centreId = ((Long) objectToParse.get(RequestElements.METADATA_FIELD_VIAL_CENTREID)).intValue();
 					Integer roundId = ((Long) objectToParse.get(RequestElements.METADATA_FIELD_VIAL_ROUNDID)).intValue();
 //					boolean isBeginning = Boolean.parseBoolean(((Long)objectToParse.get(RequestElements.METADATA_FIELD_VIAL_ISBEGINNING)).toString());
-					boolean isBeginning = (Long)objectToParse.get(RequestElements.METADATA_FIELD_VIAL_ISBEGINNING) == 1;
+//					boolean isBeginning = (Long)objectToParse.get(RequestElements.METADATA_FIELD_VIAL_ISBEGINNING) == 1;
 					short vaccineId = ((Long)objectToParse.get(RequestElements.METADATA_FIELD_VIAL_VACCINEID)).shortValue();
 					
 					VialCount vialCount = new VialCount();
 					vialCount.setDate(WebGlobals.GLOBAL_SQL_DATE_FORMAT.parse(date));
-					vialCount.setCount(count);
-					vialCount.setWasteCount(wasteCount);
+					vialCount.setStartCount(startCount);
+					vialCount.setEndCount(endCount);
 					vialCount.setCentreId(centreId);
 					vialCount.setRoundId(roundId);
-					vialCount.setBeginning(isBeginning);
 					vialCount.setVaccineId(vaccineId);
 					
 					sc.getCustomQueryService().save(vialCount);
@@ -134,7 +133,8 @@ public class MetadataService
 				try{
 					org.json.simple.JSONObject objectToParse = (org.json.simple.JSONObject) vialArray.get(i);
 					Integer roundId = ((Long) objectToParse.get(RequestElements.METADATA_FIELD_ROUNDVACCINE_ROUNDID)).intValue();
-					boolean status = (Long)objectToParse.get(RequestElements.METADATA_FIELD_ROUNDVACCINE_STATUS) == 1;
+					//boolean status = (Long)objectToParse.get(RequestElements.METADATA_FIELD_ROUNDVACCINE_STATUS) == 1;
+					boolean status = (Boolean) objectToParse.get(RequestElements.METADATA_FIELD_ROUNDVACCINE_STATUS) ;
 					short vaccineId = ((Long)objectToParse.get(RequestElements.METADATA_FIELD_ROUNDVACCINE_VACCINEID)).shortValue();
 					RoundVaccine roundVaccine;
 					List<RoundVaccine> records = sc.getCustomQueryService().getDataByHQL("from RoundVaccine where vaccineId = " +vaccineId + " and roundId = "+ roundId);
@@ -175,15 +175,15 @@ public class MetadataService
 			JSONObject jsonObject = new JSONObject(jsonString);
 			System.out.println(jsonString);
 			
-			String healthprogramId = (String) jsonObject.get("programId");
-			String deviceId = (String) jsonObject.get("deviceId");
+			Integer healthprogramId = (Integer) jsonObject.get("programId");
+			Integer deviceId = (Integer) jsonObject.get("deviceId");
 			
 			ServiceContext sc = Context.getServices();
 			
-			Device device = (Device) sc.getCustomQueryService().getDataByHQL("fron Device where deviceId = " + deviceId).get(0) ;
-			//TODO 
-//			save this in db
-			
+			Device device = (Device) sc.getCustomQueryService().getDataByHQL("from Device where deviceId = " + deviceId).get(0) ;
+			device.setHealthProgramId(healthprogramId);
+			sc.getCustomQueryService().saveOrUpdate(device);
+			sc.commitTransaction();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

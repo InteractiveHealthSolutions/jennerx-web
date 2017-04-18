@@ -8,8 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -93,6 +91,10 @@ public class Vaccine implements java.io.Serializable {
 	
 	@Column(length = 30)
 	private String shortNameOther;
+	
+	private Boolean isAttenuated;
+	private Integer numberOfDoses ;
+	
 	
 	public Vaccine() {
 	}
@@ -285,5 +287,20 @@ public class Vaccine implements java.io.Serializable {
 	public void setShortNameOther(String shortNameOther) {
 		this.shortNameOther = shortNameOther;
 	}
-	
+
+	public Integer getNumberOfDoses() {
+		return numberOfDoses;
+	}
+
+	public void setNumberOfDoses(Integer numberOfDoses) {
+		this.numberOfDoses = numberOfDoses;
+	}
+
+	public Boolean getIsAttenuated() {
+		return isAttenuated;
+	}
+
+	public void setIsAttenuated(Boolean isAttenuated) {
+		this.isAttenuated = isAttenuated;
+	}	
 }

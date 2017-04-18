@@ -385,20 +385,19 @@ public class ChildEnrollmentServiceHelper {
 		ServiceContext sc = Context.getServices();
 		try {			
 			String date = (String) objectToParse.get(RequestElements.METADATA_FIELD_VIAL_DATE);
-			Integer count = ((Long)objectToParse.get(RequestElements.METADATA_FIELD_VIAL_COUNT)).intValue();
-			Integer wasteCount = ((Long) objectToParse.get(RequestElements.METADATA_FIELD_VIAL_WASTECOUNT)).intValue();
+			Integer startCount = ((Long)objectToParse.get(RequestElements.METADATA_FIELD_VIAL_STARTCOUNT)).intValue();
+			Integer endCount = ((Long) objectToParse.get(RequestElements.METADATA_FIELD_VIAL_ENDCOUNT)).intValue();
 			Integer centreId = ((Long) objectToParse.get(RequestElements.METADATA_FIELD_VIAL_CENTREID)).intValue();
 			Integer roundId = ((Long) objectToParse.get(RequestElements.METADATA_FIELD_VIAL_ROUNDID)).intValue();
-			boolean isBeginning = (Long)objectToParse.get(RequestElements.METADATA_FIELD_VIAL_ISBEGINNING) == 1;
+//			boolean isBeginning = (Long)objectToParse.get(RequestElements.METADATA_FIELD_VIAL_ISBEGINNING) == 1;
 			short vaccineId = ((Long)objectToParse.get(RequestElements.METADATA_FIELD_VIAL_VACCINEID)).shortValue();
 			
 			VialCount vialCount = new VialCount();
 			vialCount.setDate(WebGlobals.GLOBAL_SQL_DATE_FORMAT.parse(date));
-			vialCount.setCount(count);
-			vialCount.setWasteCount(wasteCount);
+			vialCount.setStartCount(startCount);
+			vialCount.setEndCount(endCount);
 			vialCount.setCentreId(centreId);
 			vialCount.setRoundId(roundId);
-			vialCount.setBeginning(isBeginning);
 			vialCount.setVaccineId(vaccineId);
 			
 			sc.getCustomQueryService().save(vialCount);

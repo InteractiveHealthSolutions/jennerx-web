@@ -44,6 +44,11 @@ public class RequestElements
 	public static final String METADATA_FIELD_VACCINE_SHORT_NAME = "shortName";
 	public static final String METADATA_FIELD_VACCINE_SHORT_NAME_OTHER = "shortNameOther";
 	public static final String METADATA_FIELD_VACCINE_STANDARD_ORDER = "standardOrder";
+	public static final String METADATA_FIELD_VACCINE_MINGRACEPERIODDAYS= "minGrace";
+	public static final String METADATA_FIELD_VACCINE_MAXGRACEPERIODDAYS = "maxGrace";
+	public static final String METADATA_FIELD_VACCINE_ISATTENUATED= "isAttenuated";
+	public static final String METADATA_FIELD_VACCINE_NUMBEROFDOSES= "numberOfDoses";
+	
 
 	public static final String METADATA_FIELD_VACCINEGAP_VACCINEGAPTYPEID = "vaccineGapTypeId";
 	public static final String METADATA_FIELD_VACCINEGAP_GAPTIMEUNIT = "gapTimeUnit";
@@ -62,8 +67,8 @@ public class RequestElements
 	
 	public static final String METADATA_FIELD_VIAL_VACCINEID = "vaccineId";
 	public static final String METADATA_FIELD_VIAL_DATE = "date";
-	public static final String METADATA_FIELD_VIAL_COUNT = "count";
-	public static final String METADATA_FIELD_VIAL_WASTECOUNT = "wasteCount";
+	public static final String METADATA_FIELD_VIAL_STARTCOUNT = "startCount";
+	public static final String METADATA_FIELD_VIAL_ENDCOUNT = "endCount";
 	public static final String METADATA_FIELD_VIAL_CENTREID = "centreId";
 	public static final String METADATA_FIELD_VIAL_ROUNDID = "roundId";
 	public static final String METADATA_FIELD_VIAL_ISBEGINNING = "beginning";

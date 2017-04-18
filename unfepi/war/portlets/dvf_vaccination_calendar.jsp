@@ -74,7 +74,9 @@
 						${preq.prerequisites}
 					</c:if>
 					</c:forEach></td>
-				<td><a href="editCalendarVaccine.htm?calendarId=${model.calenderId}&cvaccineId=${data.key.vaccineId}" class="linkiconS iconedit"></a></td>
+				<td><c:if test="${permissionToEdit == true}">
+				<a href="editCalendarVaccine.htm?calendarId=${model.calenderId}&cvaccineId=${data.key.vaccineId}" class="linkiconS iconedit"></a>
+				</c:if></td>
 			</tr>
 		</c:forEach>
 

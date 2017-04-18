@@ -62,7 +62,7 @@ public class FollowupVaccinationController extends DataEntryFormController{
 	@ResponseBody
 	public String getVaccineList(@PathVariable Integer childId){
 		ServiceContext sc = Context.getServices();
-		List preVacList = sc.getCustomQueryService().getDataBySQLMapResult("SELECT * FROM Vaccination WHERE childId = "+childId+" AND vaccinationStatus NOT IN('NOT_VACCINATED','NOT_GIVEN','INVALID_DOSE')");
+		List preVacList = sc.getCustomQueryService().getDataBySQLMapResult("SELECT * FROM vaccination WHERE childId = "+childId+" AND vaccinationStatus NOT IN('NOT_VACCINATED','NOT_GIVEN','INVALID_DOSE')");
 		JSONArray data =  new JSONArray();
 		for (Object object : preVacList) {
 			data.put(new JSONObject((HashMap)object));

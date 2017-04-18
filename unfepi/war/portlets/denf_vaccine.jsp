@@ -88,6 +88,30 @@ function submitThisForm() {
 		</td>
 		</tr>
 		
+		<!--  -->
+		
+		<tr>
+		<td>Is Attenuated<span class="mendatory-field">*</span></td>
+		<td><spring:bind path="command.isAttenuated">
+			<select id="isAttenuated" name="isAttenuated" style="width: 5.14cm">
+				<option></option>
+				<option value="<%=WebGlobals.BOOLEAN_CONVERTER_TRUE_STRING%>" >Yes</option>
+				<option value="<%=WebGlobals.BOOLEAN_CONVERTER_FALSE_STRING%>">No</option>
+			</select>
+			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
+			</spring:bind>
+		</td>
+		</tr>
+		
+		<tr>
+		<td>Number of doses<span class="mendatory-field">*</span></td>
+		<td><spring:bind path="command.numberOfDoses">
+			<input type="number" id="numberOfDoses" name="numberOfDoses" style="width: 5cm" min="0"/>
+			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
+			</spring:bind>
+		</td>
+		</tr>
+		
 		<tr>
 			<td></td>
         	<td><input type="button"  id="submitBtn" value="Submit Data" onclick="subfrm();"></td>

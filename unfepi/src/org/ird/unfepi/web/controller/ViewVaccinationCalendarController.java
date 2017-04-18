@@ -15,6 +15,7 @@ import org.ird.unfepi.DataViewForm;
 import org.ird.unfepi.constants.SystemPermissions;
 import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.ServiceContext;
+import org.ird.unfepi.model.Device;
 import org.ird.unfepi.model.VaccinationCalendar;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -84,8 +85,20 @@ public class ViewVaccinationCalendarController extends DataDisplayController {
 	{
 		ServiceContext sc = Context.getServices();
 		try {
+			
+			String calendarId = request.getParameter("calendarId");
+			
 			List<VaccinationCalendar> vaccinationCalendars = sc.getCustomQueryService().getDataByHQL("from VaccinationCalendar");
 			model.addAttribute("vaccinationCalendars", vaccinationCalendars);
+			
+			Boolean permissionToEdit = true;
+			List<Device> syncDevices =  sc.getCustomQueryService().getDataBySQL("SELECT * FROM device where healthProgramId in (select programId from healthprogram where vaccinationcalendarId = "+calendarId+")");
+			if(syncDevices != null && syncDevices.size() >0){
+				permissionToEdit = false;
+			}
+			
+			model.addAttribute("permissionToEdit", permissionToEdit);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			request.setAttribute("errorMessagev", "An error occurred while retrieving reference data list. Error message is:"+e.getMessage());

@@ -49,5 +49,13 @@ public class VaccineValidator implements Validator {
 			}
 		}
 		
+		if (v.getIsAttenuated() == null || StringUtils.isEmptyOrWhitespaceOnly(v.getIsAttenuated().toString())){
+			error.rejectValue("isAttenuated" , "" , "isAttenuated is empty");
+		}
+		
+		if (v.getNumberOfDoses()== null || StringUtils.isEmptyOrWhitespaceOnly(v.getNumberOfDoses().toString())){
+			error.rejectValue("numberOfDoses" , "" , "numberOfDoses is empty");
+		}
+		
 	}
 }
