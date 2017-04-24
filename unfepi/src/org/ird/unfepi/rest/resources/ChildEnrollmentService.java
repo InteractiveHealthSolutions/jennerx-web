@@ -50,6 +50,7 @@ public class ChildEnrollmentService {
 			JSONArray itemsAray=(JSONArray) obj.get("itemsdistributed");
 			JSONArray muacAray=(JSONArray) obj.get("muacmeasurements");
 			JSONArray vialAry=(JSONArray) obj.get("vialCount");
+			JSONArray roundVacAry=(JSONArray) obj.get("VaccineStatus");
 			
 			deviceId = (Long) obj.get(RequestElements.DEVICE_DEVICEID);
 			long lastCount = (Long) obj.get("lastCount");
@@ -62,6 +63,8 @@ public class ChildEnrollmentService {
 			jsonObject.put("ItemsDistributed",childHelper.addItemDistributed(itemsAray));
 			jsonObject.put("MuacMeasurements",childHelper.addMuacMeasurement(muacAray));
 			jsonObject.put("VialCounts",childHelper.addVialCounts(vialAry));
+			jsonObject.put("VaccineStatus",childHelper.addRoundVaccineCounts(vialAry));
+			
 					
 			device.setLastCount((int)lastCount);
 			deviceServiceHelper.updateDevice(device);

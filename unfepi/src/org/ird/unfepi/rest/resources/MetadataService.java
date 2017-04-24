@@ -41,12 +41,18 @@ public class MetadataService
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)	
-	public String downloadAll(@QueryParam("programId") int programId)
+	public String downloadAll(@QueryParam("programId") int programId, @QueryParam("deviceId") int deviceId)
 	{	
 		MetadataServiceHelper helper = new MetadataServiceHelper();
 		
 		try
 		{
+			ServiceContext sc = Context.getServices();
+			Device device = (Device) sc.getCustomQueryService().getDataByHQL("from Device where deviceId = " + deviceId).get(0) ;
+			device.setHealthProgramId(programId);
+			sc.getCustomQueryService().saveOrUpdate(device);
+			sc.commitTransaction();
+			
 			String metadata = helper.getMetadata(programId);
 			return metadata;
 		}
@@ -158,11 +164,9 @@ public class MetadataService
 			e.printStackTrace();
 			sc.rollbackTransaction();
 			return ResponseBuilder.buildResponse(ResponseStatus.STATUS_INTERNAL_ERROR, null);
-//			return e.getMessage();
 		} finally{
 			sc.closeSession();
 		}
-//		return "saved/updated successfully";
 	}
 
 	@GET
@@ -195,17 +199,7 @@ public class MetadataService
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String metadataVaccine(String jsonString, @QueryParam("programId") int programId){
-		/*String response = "";
-		try {
-			JSONObject jsonObject = new JSONObject(jsonString);			
-			response = MetadataServiceHelper2.getVaccineMetadata(jsonObject);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return response;*/
 		MetadataServiceHelper helper = new MetadataServiceHelper();
-		
 		try
 		{
 			String metadata = helper.getMetadata(RequestElements.METADATA_VACCINE, programId);
@@ -226,16 +220,7 @@ public class MetadataService
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String metadataVaccinationCentres(String jsonString){
-		/*String response = "";
-		try {
-			JSONObject jsonObject = new JSONObject(jsonString);
-			response = MetadataServiceHelper2.getLocationMetadata(jsonObject);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return response;*/
-		
+	
 		MetadataServiceHelper helper = new MetadataServiceHelper();
 		
 		try
@@ -260,12 +245,6 @@ public class MetadataService
 		String response = "";
 		try {
 			JSONObject jsonObject = new JSONObject(jsonString);
-//			JSONArray usersId = jsonObject.getJSONArray(RequestElements.METADATA_USERS+RequestElements.METADATA_IDS);
-//			
-//			String lastEditDateStr = jsonObject.getString(RequestElements.LAST_SYNC_TIME);
-//			Date lastEditDate = WebGlobals.GLOBAL_SQL_DATETIME_FORMAT.parse(lastEditDateStr);
-						
-//			response = MetadataServiceHelper2.fillUsers(lastEditDate, usersId);
 			response = MetadataServiceHelper2.getUsersMetadata(jsonObject);
 			
 		} catch (Exception e) {

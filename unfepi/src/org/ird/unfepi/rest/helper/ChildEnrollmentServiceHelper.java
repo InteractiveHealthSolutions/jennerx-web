@@ -20,6 +20,7 @@ import org.ird.unfepi.model.Identifier;
 import org.ird.unfepi.model.IdentifierType;
 import org.ird.unfepi.model.ItemDistributedId;
 import org.ird.unfepi.model.ItemsDistributed;
+import org.ird.unfepi.model.RoundVaccine;
 import org.ird.unfepi.model.VialCount;
 import org.ird.unfepi.model.Model.ContactTeleLineType;
 import org.ird.unfepi.model.Model.ContactType;
@@ -300,6 +301,24 @@ public class ChildEnrollmentServiceHelper {
 		return mArray;
 	}
 	
+	public static JSONArray addRoundVaccineCounts(JSONArray jsonArray) {
+		ServiceContext sc = Context.getServices();
+		JSONArray mArray = new JSONArray();
+		try {
+			for (int i = 0; i < jsonArray.size(); i++) {
+				JSONObject obj = saveRoundVaccine((JSONObject) jsonArray.get(i));
+				if (obj != null) {
+					mArray.add(obj);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sc.closeSession();
+		}
+		return mArray;
+	}
+	
 	public static JSONObject saveItemDistributed(JSONObject json) {
 
 
@@ -401,6 +420,36 @@ public class ChildEnrollmentServiceHelper {
 			vialCount.setVaccineId(vaccineId);
 			
 			sc.getCustomQueryService().save(vialCount);
+			sc.commitTransaction();
+		} catch (Exception e) {
+			e.printStackTrace();
+			sc.rollbackTransaction();
+			JSONObject errorJson = new JSONObject();
+			errorJson.put("message", e.getMessage());
+			return errorJson;
+		} finally {
+			sc.closeSession();
+		}
+		return null;
+	}
+	
+	public static JSONObject saveRoundVaccine(JSONObject objectToParse) {
+		ServiceContext sc = Context.getServices();
+		try {			
+			Integer roundId = ((Long) objectToParse.get(RequestElements.METADATA_FIELD_ROUNDVACCINE_ROUNDID)).intValue();
+			boolean status = (Boolean) objectToParse.get(RequestElements.METADATA_FIELD_ROUNDVACCINE_STATUS) ;
+			short vaccineId = ((Long)objectToParse.get(RequestElements.METADATA_FIELD_ROUNDVACCINE_VACCINEID)).shortValue();
+			RoundVaccine roundVaccine;
+			List<RoundVaccine> records = sc.getCustomQueryService().getDataByHQL("from RoundVaccine where vaccineId = " +vaccineId + " and roundId = "+ roundId);
+			if(records != null && records.size() > 0){
+				roundVaccine = records.get(0);
+			} else {
+				roundVaccine =  new RoundVaccine();
+				roundVaccine.setRoundId(roundId);
+				roundVaccine.setVaccineId(vaccineId);
+			}
+			roundVaccine.setStatus(status);
+			sc.getCustomQueryService().saveOrUpdate(roundVaccine);
 		} catch (Exception e) {
 			e.printStackTrace();
 			sc.rollbackTransaction();
