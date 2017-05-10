@@ -31,8 +31,8 @@ public class SummaryPerRoundController {
 		String order = req.getParameter("order");
 		int pageSize = req.getParameter("rows") == null ? WebGlobals.PAGER_PAGE_SIZE : Integer.parseInt(req.getParameter("rows"));
 		
-		System.out.println(" healthprogram " + healthprogram + " round " + round);
-		System.out.println("pageNumber "+ pageNumber + " sort " + sort + " order " +order + " pageSize " + pageSize);
+//		System.out.println(" healthprogram " + healthprogram + " round " + round);
+//		System.out.println("pageNumber "+ pageNumber + " sort " + sort + " order " +order + " pageSize " + pageSize);
 		
 		JSONObject response = new JSONObject();
 		try {
@@ -71,7 +71,7 @@ public class SummaryPerRoundController {
 					+ " LEFT JOIN location pl ON l.parentLocation = pl.locationId "
 					+ " where vc.mappedId in (SELECT vaccinationCenterId FROM centerprogram WHERE healthProgramId = "+ healthprogram +" and isActive = true) "
 					+ " and v.vaccinationStatus = 'VACCINATED' "
-					+ " AND v.vaccineId IN (select vaccineId from vaccinegap where vaccineGapTypeId=1 and vaccinationcalendarId = 1)  "
+					+ " AND v.vaccineId IN (select vaccineId from vaccinegap where vaccineGapTypeId=1 and vaccinationcalendarId = "+calendarId+")  "
 					+ " and v.roundId = "+ round 
 					+ " GROUP BY area";
 			

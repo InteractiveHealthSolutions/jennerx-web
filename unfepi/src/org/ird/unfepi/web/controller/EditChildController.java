@@ -172,7 +172,7 @@ public class EditChildController extends DataEditFormController {
 				ew.setChild(p);
 				List<Address> addl = sc.getDemographicDetailsService().getAddress(p.getMappedId(), false, null);
 				ew.setAddress(addl.size()>0?addl.get(0):new Address());
-				ew.setPreference(sc.getChildService().findLotterySmsByChild(p.getMappedId(), false, 0, 10, null).get(0));
+//				ew.setPreference(sc.getChildService().findLotterySmsByChild(p.getMappedId(), false, 0, 10, null).get(0));
 				List<ContactNumber> conl = sc.getDemographicDetailsService().getContactNumber(p.getMappedId(), true, null);
 				for (ContactNumber cn : conl) {
 					if (cn.getNumberType().name().equalsIgnoreCase(ContactType.PRIMARY.name())) {
