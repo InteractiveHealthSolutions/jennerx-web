@@ -36,8 +36,6 @@
 	<ul>
 		<li><a href="viewitem.htm">Items</a></li>
 		<li><a href="viewitemdistributed.htm">Items Distributed</a></li>
+		<li><a href="viewmuacmeasurements.htm">MUAC Measurements</a></li>
 	</ul>
 </li>
-
-
-<li><a href="viewmuacmeasurements.htm">MUAC Measurements</a></li>

@@ -1,6 +1,7 @@
 package org.ird.unfepi.web.controller;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -62,7 +63,6 @@ public class EditVaccineController extends DataEditFormController{
 		
 		try{
 			
-//			System.out.println(vacc.getName() + " " + vacc.getShortName());
 			if(vacc.getVaccine_entity().equals(VaccineEntity.CHILD_COMPULSORY)){
 				vacc.setSupplementary(false);
 			}
@@ -72,6 +72,14 @@ public class EditVaccineController extends DataEditFormController{
 			
 			vacc.setEditor(user.getUser());
 			vacc.setLastEditedDate(new Date());
+			
+			List<Vaccine> numOfdoses = sc.getCustomQueryService().getDataByHQL("from Vaccine where shortName = '"+vacc.getShortName()+"' and vaccineId <> " + vacc.getVaccineId());
+			if(numOfdoses != null && numOfdoses.size() > 0){
+				for (Vaccine vac: numOfdoses) {
+					vac.setNumberOfDoses(vacc.getNumberOfDoses());
+					sc.getCustomQueryService().update(vac);
+				}
+			}
 
 			sc.getVaccinationService().updateVaccine(vacc);
 			sc.commitTransaction();

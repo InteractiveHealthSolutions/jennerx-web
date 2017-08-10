@@ -72,9 +72,12 @@ public class AddVaccinationCenterController extends DataEntryFormController {
 		LoggedInUser user=UserSessionUtils.getActiveUser(request);		
 		ServiceContext sc = Context.getServices();
 		try {
-			String cityIdParam = request.getParameter("cityId");
+			String cityId = request.getParameter("cityId");
 			String centerLocation = request.getParameter("centerLocation");
-			String cityId = sc.getCustomQueryService().getDataByHQL("SELECT otherIdentifier FROM Location WHERE locationId="+cityIdParam).get(0).toString();
+			
+//			String cityIdParam = request.getParameter("cityId");
+//			String cityId = sc.getCustomQueryService().getDataByHQL("SELECT otherIdentifier FROM Location WHERE locationId="+cityIdParam).get(0).toString();
+			
 			String sql = "SELECT IFNULL(MAX(SUBSTRING(i.identifier, "+(cityId.length()+1)+",LENGTH(i.identifier)-"+(cityId.length()-1)+")),0) FROM vaccinationcenter v JOIN idmapper id ON v.mappedId=id.mappedId JOIN identifier i ON id.mappedId=i.mappedId WHERE i.identifier NOT LIKE '%999' AND i.identifier LIKE '"+cityId+"%'";
 			int maxidstk = Integer.parseInt(sc.getCustomQueryService().getDataBySQL(sql ).get(0).toString());
 			String vcProgramId = cityId+StringUtils.leftPad(""+(maxidstk+1), 3, "0");//request.getParameter("autogenIdPart")+request.getParameter("storekeeperIdAssigned");
@@ -82,11 +85,11 @@ public class AddVaccinationCenterController extends DataEntryFormController {
 			EncounterUtil.createVaccinationCenterRegistrationEncounter(Short.parseShort(cityId), vcProgramId, vaccw.getVaccinationCenter(), vaccw.getVaccineDayMapList(), DataEntrySource.WEB, dateFormStart, user.getUser(), sc);		
 			sc.commitTransaction();
 			GlobalParams.DBLOGGER.info(IRUtils.convertToString(vaccw.getVaccinationCenter()), LoggerUtils.getLoggerParams(LogType.TRANSACTION_INSERT, formType, user.getUser().getUsername()));
-			for (Map<String, Object> vdml : vaccw.getVaccineDayMapList()) {
-				String[] strarr = (String[]) vdml.get("daylist");
-				Vaccine vaccine = (Vaccine)vdml.get("vaccine");
-				GlobalParams.DBLOGGER.info("Vaccine="+vaccine.getName()+";Days="+Arrays.toString(strarr), LoggerUtils.getLoggerParams(LogType.TRANSACTION_INSERT, formType, user.getUser().getUsername()));
-			}
+//			for (Map<String, Object> vdml : vaccw.getVaccineDayMapList()) {
+//				String[] strarr = (String[]) vdml.get("daylist");
+//				Vaccine vaccine = (Vaccine)vdml.get("vaccine");
+//				GlobalParams.DBLOGGER.info("Vaccine="+vaccine.getName()+";Days="+Arrays.toString(strarr), LoggerUtils.getLoggerParams(LogType.TRANSACTION_INSERT, formType, user.getUser().getUsername()));
+//			}
 			return new ModelAndView(new RedirectView("viewVaccinationCenters.htm?action=search&"+SearchFilter.PROGRAM_ID.FILTER_NAME()+"="+vcProgramId));
 			
 		} catch (Exception e) {

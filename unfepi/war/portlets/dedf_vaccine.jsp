@@ -100,7 +100,7 @@ function submitThisForm() {
 		<tr>
 		<td>Number of doses<span class="mendatory-field">*</span></td>
 		<td><spring:bind path="command.numberOfDoses">
-			<input type="number" id="numberOfDoses" name="numberOfDoses" style="width: 5cm" min="0"  bind-value="${status.value}"/>
+			<input type="number" id="numberOfDoses" name="numberOfDoses" style="width: 5cm" min="0"  value="${status.value}"/>
 			<span class="error-message"><c:out	value="${status.errorMessage}" /></span>
 			</spring:bind>
 		</td>

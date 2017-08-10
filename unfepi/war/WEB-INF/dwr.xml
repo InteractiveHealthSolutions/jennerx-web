@@ -96,6 +96,7 @@
 			<include method="getLocationList" />
 			<include method="getLocationListByParentName" />
 			<include method="getLocationHierarchy" />
+			<include method="getLocationListByLevel" />
 		</create>
 		<create creator="new" javascript="DWRUserService">
 			<param name="class" value="org.ird.unfepi.web.dwr.DWRUserService" />

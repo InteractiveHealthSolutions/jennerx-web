@@ -15,6 +15,7 @@ import org.ird.unfepi.context.LoggedInUser;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.ItemStock;
 import org.ird.unfepi.utils.UserSessionUtils;
+import org.ird.unfepi.web.validator.ItemValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -44,9 +45,9 @@ public class AddItemController extends DataEntryFormController{
 	public ModelAndView onSubmit(@ModelAttribute("command")ItemStock itemStock, BindingResult results,
 								 HttpServletRequest request, HttpServletResponse response,ModelAndView modelAndView) throws Exception {
 		
-		//validator
+		new ItemValidator().validate(itemStock, results);
 		if(results.hasErrors()){	
-			System.out.println(results.toString());
+//			System.out.println(results.toString());
 			return showForm(modelAndView, "dataForm");	
 		}
 		

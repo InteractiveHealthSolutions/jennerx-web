@@ -184,4 +184,8 @@ public class StringUtils {
 	  public static boolean isEmpty(String str) {
 	      return str == null || str.length() == 0;
 	  }
+	  
+	public static boolean isNumeric(String s) {
+		return s != null && s.matches("[-+]?\\d*\\.?\\d+");
+	}  
 }

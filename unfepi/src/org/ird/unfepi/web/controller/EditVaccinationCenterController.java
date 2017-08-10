@@ -20,6 +20,7 @@ import org.ird.unfepi.context.Context;
 import org.ird.unfepi.context.LoggedInUser;
 import org.ird.unfepi.context.ServiceContext;
 import org.ird.unfepi.model.CalendarDay;
+import org.ird.unfepi.model.Identifier;
 import org.ird.unfepi.model.VaccinationCenter;
 import org.ird.unfepi.model.VaccinationCenterVaccineDay;
 import org.ird.unfepi.model.VaccinationCenterVaccineDayId;
@@ -70,8 +71,14 @@ public class EditVaccinationCenterController extends DataEditFormController {
 //		ServiceContext sc = (ServiceContext)request.getAttribute("sc");
 		ServiceContext sc = Context.getServices();
 		try{
+			String centerLocation = request.getParameter("centerLocation");
+			
 			vaccw.getVaccinationCenter().setEditor(user.getUser());
 			sc.getVaccinationService().updateVaccinationCenter(vaccw.getVaccinationCenter());
+			
+			Identifier identifier = (Identifier) sc.getCustomQueryService().getDataByHQL("from Identifier where mappedId = " +  vaccw.getVaccinationCenter().getMappedId()).get(0);
+			identifier.setLocationId(Integer.parseInt(centerLocation));
+			sc.getCustomQueryService().update(identifier);
 			
 			List<VaccinationCenterVaccineDay> list2 = sc.getVaccinationService().findVaccinationCenterVaccineDayByCriteria(vaccw.getVaccinationCenter().getMappedId(), null, null, false);
 			for (int i = 0; i < list2.size(); i++) {

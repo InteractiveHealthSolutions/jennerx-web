@@ -21,9 +21,9 @@
 <tr>            
             <td>Full name</td><td><c:out value="${model.vaccinationCenter.fullName}"></c:out></td>
 </tr>
-<tr>            
-            <td>Short name</td><td><c:out value="${model.vaccinationCenter.shortName}"></c:out></td>
-</tr>
+<!-- <tr>             -->
+<%--             <td>Short name</td><td><c:out value="${model.vaccinationCenter.shortName}"></c:out></td> --%>
+<!-- </tr> -->
 <!-- <tr> -->
 <!--             <td>Vaccine days</td><td> -->
 <%-- 			<c:forEach items="${model.vaccineDayMapList}" var="vdml"> --%>

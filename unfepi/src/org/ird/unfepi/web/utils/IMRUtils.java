@@ -109,6 +109,9 @@ public class IMRUtils {
 								&& vaccineSchedule.getVaccination_date() == null){
 								return false;
 							}
+							if(vaccineSchedule.getVaccination_date() == null){
+								return false;
+							}
 						}
 					}
 					
@@ -182,7 +185,7 @@ public class IMRUtils {
 							
 							long diff_ms = vaccineSchedule.getVaccination_date().getTime() - birthdate.getTime();
 							int days = (int) ((diff_ms / (1000*60*60*24)));
-							System.out.println(vaccineSchedule.getVaccination_date() + " " + vaccineSchedule.getVaccine().getName()+ "   days " + days);
+//							System.out.println(vaccineSchedule.getVaccination_date() + " " + vaccineSchedule.getVaccine().getName()+ "   days " + days);
 							
 							// child's over age 12 months -> 365 days 
 							if(days >= 365){
@@ -454,7 +457,7 @@ try{
 	public static VaccineGap getOverAgeGap(Vaccine vaccine, Integer calendarId){
 		for (VaccineGap gap : vaccine.getVaccineGaps()) {
 			if(gap.getId().getVaccinationcalendarId() == calendarId){
-				if(gap.getVaccineGapType().getName().toLowerCase().contains("over")){
+				if(gap.getVaccineGapType().getName().toLowerCase().contains("over age gap")){
 					return gap;
 				}
 			}

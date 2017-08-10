@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>MSF- JennerX</title>
+<link rel="icon" sizes="16x16 32x32" type="image/x-icon" href="images/msficon.gif" />
 <meta name="description" content="website description">
 <meta name="keywords" content="website keywords, website keywords">
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />

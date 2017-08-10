@@ -39,21 +39,9 @@
 boolean nicPerm=UserSessionUtils.hasActiveUserPermission(SystemPermissions.VIEW_STOREKEEPER_NIC, request);
 boolean epWalletPerm=UserSessionUtils.hasActiveUserPermission(SystemPermissions.VIEW_STOREKEEPER_EP_WALLET_NUMBER, request);
 
-if(nicPerm){
+// if(nicPerm){
 %>          
-<tr> 
-            <td>NIC</td><td><c:out value="${model.vaccinator.nic}"></c:out></td>
-</tr>
-<%
-}
-if(epWalletPerm){
-%>  
-<tr> 
-            <td>EP wallet number</td><td><c:out value="${model.vaccinator.epAccountNumber}"></c:out></td>
-</tr>            
-<%
-}
-%> 
+
 <tr> 
             <td>Qualification</td><td><c:out value="${model.vaccinator.qualification}"></c:out></td>
 </tr>

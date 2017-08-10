@@ -1,6 +1,7 @@
 package org.ird.unfepi.web.controller;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -76,6 +77,14 @@ public class AddVaccineController extends DataEntryFormController{
 			
 			Integer maxOrder = (Integer) sc.getCustomQueryService().getDataBySQL("SELECT max(standardOrder) FROM vaccine").get(0);
 			vaccine.setStandardOrder(maxOrder+10);
+			
+			List<Vaccine> numOfdoses = sc.getCustomQueryService().getDataByHQL("from Vaccine where shortName = '"+vaccine.getShortName()+"'");
+			if(numOfdoses != null && numOfdoses.size() > 0){
+				for (Vaccine vac: numOfdoses) {
+					vac.setNumberOfDoses(vaccine.getNumberOfDoses());
+					sc.getCustomQueryService().update(vac);
+				}
+			}			
 			
 			sc.getVaccinationService().addVaccine(vaccine);
 			sc.commitTransaction();

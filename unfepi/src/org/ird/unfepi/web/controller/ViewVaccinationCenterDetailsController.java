@@ -25,7 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class ViewVaccinationCenterDetailsController extends DataDisplayController{
 	
 	ViewVaccinationCenterDetailsController(){
-		super("popupForm", new  DataViewForm("vaccination_center_details", "Vaccination Center Details", SystemPermissions.VIEW_VACCINATION_CENTERS, false));
+		super("popupForm", new  DataViewForm("vaccination_center_details", "Site Details", SystemPermissions.VIEW_VACCINATION_CENTERS, false));
 	}
 	
 	@RequestMapping(value="/vaccinationCenterDetails", method={RequestMethod.GET,RequestMethod.POST})

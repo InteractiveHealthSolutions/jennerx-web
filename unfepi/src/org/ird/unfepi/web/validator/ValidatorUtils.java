@@ -1642,7 +1642,7 @@ public class ValidatorUtils {
 				error.rejectValue("enrollmentLimit", "", "invalid enrollmentLimit");
 			}
 		}
-		if (StringUtils.isEmptyOrWhitespaceOnly(hp.getName()) || !DataValidation.validate(REG_EX.NAME_CHARACTERS, hp.getName())) {
+		if (StringUtils.isEmptyOrWhitespaceOnly(hp.getName()) || !DataValidation.validate(GlobalParams.HEALTHPROGRAM_NAME_REGEX, hp.getName())) {
 			error.rejectValue("name", "", ErrorMessages.NAME_INVALID);
 		}
 		

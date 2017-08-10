@@ -55,6 +55,36 @@ public class DWREntityService {
 		return locations;
 	}
 	
+	public List<Map<String, String>> getLocationListByLevel (String[] locationTypeLevels, Integer parentId) {
+		HttpServletRequest req = WebContextFactory.get().getHttpServletRequest();
+		LoggedInUser user=UserSessionUtils.getActiveUser(req);
+		if(user==null){
+			try {
+				WebContextFactory.get().forwardToString("login.htm");
+			} catch (ServletException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		ServiceContext sc = Context.getServices();
+		
+		String qry ="SELECT locationId, name, fullName FROM location l JOIN locationtype lt ON l.locationType=lt.locationTypeId WHERE lt.level IN ("+IRUtils.getArrayAsString(locationTypeLevels, ",", "'")+", null)"+(parentId==null?"":" AND (parentLocation IS NULL || parentLocation="+parentId+")")+" ORDER BY lt.locationTypeId,l.fullname";
+		List list = sc.getCustomQueryService().getDataBySQL(qry);
+		
+		List<Map<String, String>> locations = new ArrayList<Map<String,String>>();
+
+		for (Object object : list) {
+			HashMap<String, String> loc = new HashMap<String, String>();
+			Object[] oar = (Object[]) object;
+			loc.put("locationId", oar[0].toString());
+			loc.put("name", oar[1].toString());
+			loc.put("fullname", oar[2].toString());
+			locations.add(loc);
+		}		
+		return locations;
+	}
+	
 	public List<Map<String, String>> getLocationListByParentName (String[] locationTypes, String parentName) {
 		HttpServletRequest req = WebContextFactory.get().getHttpServletRequest();
 		LoggedInUser user=UserSessionUtils.getActiveUser(req);
@@ -106,7 +136,7 @@ public class DWREntityService {
 		}
 		ServiceContext sc = Context.getServices();
 		
-		List<Location> list = sc.getCustomQueryService().getDataByHQL("FROM Location WHERE locationType.locationTypeId NOT IN (4,5,6,7) AND "+(!StringUtils.isEmptyOrWhitespaceOnly(parentId)?" locationId = "+parentId:" parentLocation IS NULL"));
+		List<Location> list = sc.getCustomQueryService().getDataByHQL("FROM Location WHERE "+(!StringUtils.isEmptyOrWhitespaceOnly(parentId)?" locationId = "+parentId:" parentLocation IS NULL"));
 	
 		List<Map<String, Object>> locations = new ArrayList<Map<String,Object>>();
 

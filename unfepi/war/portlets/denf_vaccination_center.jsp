@@ -56,7 +56,7 @@ function submitThisForm() {
             </select>
     <script><!--
         $(document).ready(function() {
-            DWREntityService.getLocationList(["Sous-prefecture"],null,{
+        	 DWREntityService.getLocationListByLevel(["1","2"],null,{
                  async: false,
                  callback: function (resl) {
                          $('#cityId').empty().append('<option></option>');
@@ -103,20 +103,9 @@ function treeDataLoaderLocations(parentId){
 		</spring:bind>
     	</td>
 	</tr>
-   <%--  <tr>
-		<td>Center Type :<span class="mendatory-field">*</span></td>
-		<td><spring:bind path="command.vaccinationCenter.centerType">
-			<select id="centerType" name="vaccinationCenter.centerType" bind-value="${status.value}">
-				<c:forEach items="<%=CenterType.values()%>" var="centerType_value"  >
-					<option>${centerType_value}</option>
-				</c:forEach>
-			</select>
-			<br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
-			</spring:bind>
-		</td>
-	</tr> --%>
+
     <tr>
-        <td>Center Name(unique and identifiable): <span class="mendatory-field">*</span></td>
+        <td>Site Name(unique and identifiable): <span class="mendatory-field">*</span></td>
         <td><spring:bind path="command.vaccinationCenter.name">
              <input type="text" id="name" name="vaccinationCenter.name" maxlength="30" value="<c:out value="${status.value}"/>"/>
              <br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
@@ -124,50 +113,14 @@ function treeDataLoaderLocations(parentId){
 		</td>
     </tr>
     <tr>
-        <td>Center Full Name : <span class="mendatory-field">*</span></td>
+        <td>Site Full Name : <span class="mendatory-field">*</span></td>
         <td><spring:bind path="command.vaccinationCenter.fullName">
              <input type="text" id="fullName" name="vaccinationCenter.fullName" maxlength="50" value="<c:out value="${status.value}"/>"/>
              <br><span class="error-message"><c:out	value="${status.errorMessage}" /></span>
              </spring:bind>
 		</td>
     </tr>
- <!--    <tr  height="0">
-        <td colspan="2" class="separator-heading">VACCINE DAYS</td>
-    </tr> -->
-<!--     <tr height="0"> -->
-<!--     	<td colspan="2"> -->
-<!-- 	    <table class="previousDataDisplay" hidden="true"> -->
-<%-- 	    <c:forEach items="${command.vaccineDayMapList}" var="vdm" varStatus="vdmlistvarsta"> --%>
-<!-- 	    	<tr> -->
-<!-- 	    		<td colspan="12" class="headerrow"> -->
-<!-- 	    		<input type="checkbox"  checked="checked"   -->
-<%-- 	    			onclick='var checkBoxes = $(".${vdm["vaccine"].name} input");checkBoxes.attr("checked", !checkBoxes.attr("checked"));'> ${vdm['vaccine'].name}:${vdmlistvarsta.index} --%>
-<%-- 	    		<input type="hidden" name="command.vaccineDayMapList[${vdmlistvarsta.index}]['vaccine'].name"> --%>
-<!--     			</td> -->
-<!--     		</tr> -->
-<%--     		<tr class="${vdm['vaccine'].name}"> --%>
-<!-- 	    		<td class="columnHeadingDiv"> -->
-<%-- 	    		<c:forEach items="${command.calendarDays}" var="calday" varStatus="caldayvarsta"> --%>
-<!-- 	    		<div class="columnHeadingDiv"> -->
-<%-- 	    			<spring:bind path="command.vaccineDayMapList[${vdmlistvarsta.index}]['daylist'][${caldayvarsta.index}]"> --%>
-<%-- 	    				<c:choose> --%>
-<%-- 	    				<c:when test="${not empty status.value}"> --%>
-<%-- 		    				<input  type="checkbox" name="${status.expression}" value="${calday.dayFullName}" checked="checked">${calday.dayFullName}:${caldayvarsta.index} --%>
-<%-- 	    				</c:when> --%>
-<%-- 	    				<c:otherwise> --%>
-<%-- 		    				<input type="checkbox" name="${status.expression}" value="${calday.dayFullName}"  checked="checked">${calday.dayFullName}:${caldayvarsta.index} --%>
-<%-- 	    				</c:otherwise> --%>
-<%-- 	    				</c:choose> --%>
-<%-- 	    			</spring:bind> --%>
-<!-- 	    		</div> -->
-<%--     			<c:if test="${caldayvarsta.index %2 ==0}"><br></c:if> --%>
-<%-- 	    		</c:forEach>  --%>
-<!-- 	    		</td> -->
-<!-- 	    	</tr> -->
-<%-- 	    </c:forEach> --%>
-<!--    	    </table> -->
-<!--     	</td> -->
-<!--     </tr> -->
+
 	<tr>
 		<td>Additional Note</td>
 		<td><spring:bind path="command.vaccinationCenter.description">

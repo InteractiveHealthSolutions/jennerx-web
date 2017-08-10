@@ -64,7 +64,7 @@
 		 </script>
 		 </td>
 		 <td><a onclick="goForSearch(document.searchfrm);" class="searchButton"></a></td>
-		 <td><a onclick="exportdata(document.searchfrm, '<%=SystemPermissions.DOWNLOAD_ENCOUNTER_CSV%>');" class="linkiconM iconcsv"></a></td>
+<%-- 		 <td><a onclick="exportdata(document.searchfrm, '<%=SystemPermissions.DOWNLOAD_ENCOUNTER_CSV%>');" class="linkiconM iconcsv"></a></td> --%>
     </tr>
 </table>
 </form>

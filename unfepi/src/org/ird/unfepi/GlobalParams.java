@@ -281,8 +281,10 @@ public class GlobalParams
 	public static final int NIC_LENGTH = 13;
 	//TODO new 
 	public static final int HEALTHPROGRAM_NAME_LENGTH = 15;
-	public static final String HEALTHPROGRAM_NAME_REGEX = "[a-zA-Z\\s].{"+(HEALTHPROGRAM_NAME_LENGTH-1)+"}"; 
+	public static final String HEALTHPROGRAM_NAME_REGEX = "[a-zA-Z\\.\\-/\\s].{"+(HEALTHPROGRAM_NAME_LENGTH-1)+"}"; 
 	public static final String HEALTHPROGRAM_ROLE_NAME = "healthprogram";
+	
+	public static final String ITEM_NAME_REGEX = "[a-zA-Z0-9\\-\\s].{15}";
 
 	public static final Logger DBLOGGER = LoggerFactory.getLogger("dbAppender");
 	public static final Logger FILELOGGER = LoggerFactory.getLogger("fileAppender");
