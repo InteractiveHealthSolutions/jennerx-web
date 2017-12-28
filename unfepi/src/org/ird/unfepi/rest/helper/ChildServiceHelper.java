@@ -141,8 +141,7 @@ public class ChildServiceHelper {
 		return null; 
 	}
 	
-	public  List<HashMap> getUpdatedChildren(
-			String lastSyncedTime) {
+	public  List<HashMap> getUpdatedChildren(String lastSyncedTime) {
 		ServiceContext sc = Context.getServices();
 		String query = "Select  distinct "
 				+ "i.identifier as childIdentifier ,c.birthdate,c.createdDate,c.createdByUserId creator,c.firstName,c.lastName, c.motherFirstName, "
